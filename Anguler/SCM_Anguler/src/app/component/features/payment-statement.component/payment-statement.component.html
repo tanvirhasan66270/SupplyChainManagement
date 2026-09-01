@@ -1,0 +1,282 @@
+<div class="container-fluid py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-success border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1">Payment Statement Ledger</h4>
+      <p class="text-muted mb-0 small">Manage and verify customer order payments.</p>
+    </div>
+    @if (userRole !== 'CUSTOMER' && userRole !== 'SALES_OFFICER') {
+    <button class="btn btn-success px-4 py-2 fw-bold shadow-sm" (click)="openDrawer()" [disabled]="!selectedOrderId">
+      <i class="bi bi-cash-coin me-2"></i>Record Payment
+    </button>
+    }
+  </div>
+
+  @if (errorMessage) {
+  <div class="alert alert-danger alert-dismissible fade show shadow-sm border-2 mb-4 fs-7" role="alert">
+    <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>Validation Error:</strong> {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="errorMessage = null" aria-label="Close"></button>
+  </div>
+  }
+
+  <!-- Order Selection & Search Filter -->
+  <div class="card mb-4 shadow-sm border-0 bg-light">
+    <div class="card-body">
+      <div class="row align-items-center g-3">
+        <div class="col-md-5">
+          <label class="fw-bold small text-uppercase text-secondary mb-1">Filter by Customer Order</label>
+          <select class="form-select border-success fw-bold text-dark" [(ngModel)]="selectedOrderId" (change)="onOrderSelect()">
+            <option value="ALL">-- All Customer Orders (All Payments) --</option>
+            @for (o of orders; track o.id) {
+            <option [value]="o.id">{{ o.orderNumber }} - {{ o.customerName }} (৳{{ o.totalAmount }})</option>
+            }
+          </select>
+        </div>
+        <div class="col-md-7">
+          <label class="fw-bold small text-uppercase text-secondary mb-1">Search Payment Statements</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-start-0 ps-0 fw-semibold" placeholder="Search by Transaction ID, Method, Status, Amount..." [(ngModel)]="searchText">
+            <button class="btn btn-outline-secondary" type="button" *ngIf="searchText" (click)="searchText = ''">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light text-uppercase fs-8 tracking-wider">
+            <tr>
+              <th class="ps-4">Transaction ID</th>
+              <th>Order Number</th>
+              <th>Paid Amount</th>
+              <th>Payment Method</th>
+              <th>Date</th>
+              <th>Verification Status</th>
+              <th>Proof of Payment</th>
+
+              @if (userRole !== 'MANAGER' && userRole !== 'SALES_OFFICER' ) {
+                <th class="text-end px-4">Actions</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of filteredPayments; track p.id) {
+            <tr>
+              <td class="ps-4">
+                <span class="badge bg-dark font-monospace fs-8">{{ p.transactionId }}</span>
+              </td>
+              <td>
+                <span class="badge bg-secondary-subtle text-secondary border font-monospace fs-8 px-2 py-1">{{ p.orderNumber || '—' }}</span>
+              </td>
+              <td><strong class="text-success font-monospace fs-6">৳{{ p.paidAmount | number:'1.2-2' }}</strong></td>
+              <td><span class="badge bg-light text-dark border px-2 py-1 text-uppercase fw-semibold">{{ p.paymentMethod }}</span></td>
+              <td>
+                <small class="text-muted font-monospace"><i class="bi bi-clock me-1"></i>{{ p.createdAt | date:'medium' }}</small>
+              </td>
+              <td>
+                <span class="badge px-2.5 py-1.5 fs-8 text-uppercase fw-bold" [ngClass]="{
+                      'bg-success-subtle text-success border border-success': p.issueStatus === 'CONFIRMED_BY_OFFICER',
+                      'bg-warning-subtle text-warning border border-warning': p.issueStatus === 'PENDING_VERIFICATION',
+                      'bg-danger-subtle text-danger border border-danger': p.issueStatus === 'FAILED_OR_REJECTED'
+                    }">
+                  {{ p.issueStatus }}
+                </span>
+              </td>
+              <td>
+                @if (p.paymentCheckImage) {
+                <button class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-bold d-inline-flex align-items-center gap-1.5 shadow-sm" (click)="viewImageCard(p)">
+                  <i class="bi bi-image"></i> View Image
+                </button>
+                } @else {
+                <span class="text-muted small">No Image</span>
+                }
+              </td>
+              <td class="text-end px-4">
+                <div class="d-flex justify-content-end gap-1">
+                  @if (userRole === 'COMMERCIAL_OFFICER' || userRole === 'ADMIN') {
+                  <button class="btn btn-icon btn-light text-success border-0 shadow-sm" title="Verify Payment" (click)="openStatusModal(p)">
+                    <i class="bi bi-shield-check"></i>
+                  </button>
+                  }
+                  @if (userRole === 'ADMIN') {
+                  <button class="btn btn-icon btn-light text-warning border-0" title="Edit Payment" (click)="edit(p)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-icon btn-light text-danger border-0" title="Delete Payment" (click)="delete(p.id)">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                  }
+                </div>
+              </td>
+            </tr>
+            }
+            @empty {
+            <tr>
+              <td colspan="7" class="text-center py-5 text-muted">
+                <i class="bi bi-receipt fs-1 d-block mb-2 text-secondary"></i>
+                No payment statements found matching your search.
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Update Modal -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);" *ngIf="isStatusModalOpen">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+        <div class="modal-header bg-dark text-white px-4 py-3">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-shield-check me-2 text-success"></i> Verify Payment Status
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeStatusModal()"></button>
+        </div>
+        <div class="modal-body p-4 bg-light">
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Transaction Ref</label>
+            <div class="font-monospace fw-bold text-dark fs-6">{{ selectedPaymentForStatus?.transactionId }}</div>
+            <div class="text-success fw-bold mt-1">Amount: ৳{{ selectedPaymentForStatus?.paidAmount | number:'1.2-2' }}</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Select Verification State</label>
+            <select class="form-select fw-bold border-success text-success" [(ngModel)]="newIssueStatus">
+              @for (st of availableStatuses; track st) {
+              <option [value]="st">{{ st }}</option>
+              }
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer bg-white px-4 py-3 border-top">
+          <button type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill" (click)="closeStatusModal()">Cancel</button>
+          <button type="button" class="btn btn-success px-4 fw-bold rounded-pill d-flex align-items-center gap-2" (click)="updatePaymentStatus()">
+            <i class="bi bi-check2-circle"></i> Confirm Status
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="isStatusModalOpen"></div>
+
+  <!-- Drawer Form for Add/Edit -->
+  <div class="offcanvas offcanvas-end shadow" [class.show]="isDrawerOpen" [style.visibility]="isDrawerOpen ? 'visible' : 'hidden'" style="width: 520px;">
+    <div class="offcanvas-header bg-dark text-white px-4 py-3 border-bottom">
+      <h5 class="offcanvas-title fw-bold mb-0">
+        {{ isEdit ? 'Update Payment Statement' : 'Record New Payment' }}
+      </h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="offcanvas-body px-4 py-3">
+      <form #paymentForm="ngForm" (ngSubmit)="paymentForm.valid && save()">
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Target Customer Order</label>
+          <select class="form-select fs-7 bg-light" [(ngModel)]="payment.customerOrderId" name="customerOrderId" required [disabled]="true">
+            <option [value]="0">-- Order --</option>
+            @for (o of orders; track o.id) {
+            <option [value]="o.id">{{ o.orderNumber }} - ৳{{ o.totalAmount }}</option>
+            }
+          </select>
+          <small class="text-muted d-block mt-1">Payment will be logged against this order.</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Paid Amount</label>
+          <input type="number" class="form-control fs-6 font-monospace fw-bold text-success border-success" [(ngModel)]="payment.paidAmount" name="paidAmount" required min="1" placeholder="0.00">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Payment Engine / Method</label>
+          <select class="form-select fs-7" [(ngModel)]="payment.paymentMethod" name="paymentMethod" required>
+            <option value="CASH">CASH Payment</option>
+            <option value="BANK">BANK Transfer</option>
+            <option value="BKASH">BKASH Transfer</option>
+            <option value="NAGAD">NAGAD Transfer</option>
+            <option value="ROCKET">ROCKET Transfer</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Payment Document / Proof (Image)</label>
+          <input type="file" class="form-control fs-7" accept="image/*" (change)="onFileChange($event)" #fileInput>
+          <small class="text-muted">Upload receipt, bank slip, or screenshot.</small>
+        </div>
+
+        <div class="d-flex gap-2 pt-2 border-top mt-4">
+          <button class="btn btn-success flex-grow-1 py-2 d-flex align-items-center justify-content-center gap-2 fw-semibold" type="submit">
+            <i class="bi bi-cloud-arrow-up-fill"></i> {{ isEdit ? 'Save Changes' : 'Submit Payment' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3" (click)="reset()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  @if (isDrawerOpen) {
+  <div class="offcanvas-backdrop fade show" (click)="closeDrawer()"></div>
+  }
+
+  <!-- Image Card View Modal -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);" *ngIf="isImageModalOpen">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden">
+        <div class="modal-header bg-dark text-white px-4 py-3">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-image me-2 text-primary"></i> Proof of Payment
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeImageModal()"></button>
+        </div>
+        <div class="modal-body p-4 bg-light text-center">
+          <div class="card border-0 shadow-sm rounded-3 overflow-hidden bg-white mx-auto" style="max-width: 100%;">
+            <img [src]="getImageUrl(selectedPaymentForImage?.paymentCheckImage)" class="img-fluid rounded-3" style="max-height: 500px; object-fit: contain;" alt="Payment Proof">
+            <div class="card-body bg-white border-top p-3 text-start">
+              <div class="row">
+                <div class="col-6">
+                  <span class="text-secondary small d-block">Transaction ID</span>
+                  <strong class="font-monospace text-dark">{{ selectedPaymentForImage?.transactionId }}</strong>
+                </div>
+                <div class="col-6 text-end">
+                  <span class="text-secondary small d-block">Amount Paid</span>
+                  <strong class="text-success fs-5">৳{{ selectedPaymentForImage?.paidAmount | number:'1.2-2' }}</strong>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-6">
+                  <span class="text-secondary small d-block">Payment Method</span>
+                  <span class="badge bg-light text-dark border px-2 py-1 text-uppercase fw-semibold">{{ selectedPaymentForImage?.paymentMethod }}</span>
+                </div>
+                <div class="col-6 text-end">
+                  <span class="text-secondary small d-block">Verification Status</span>
+                  <span class="badge px-2.5 py-1.5 fs-8 text-uppercase fw-bold" [ngClass]="{
+                        'bg-success-subtle text-success border border-success': selectedPaymentForImage?.issueStatus === 'CONFIRMED_BY_OFFICER',
+                        'bg-warning-subtle text-warning border border-warning': selectedPaymentForImage?.issueStatus === 'PENDING_VERIFICATION',
+                        'bg-danger-subtle text-danger border border-danger': selectedPaymentForImage?.issueStatus === 'FAILED_OR_REJECTED'
+                      }">
+                    {{ selectedPaymentForImage?.issueStatus }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer bg-white px-4 py-3 border-top">
+          <a [href]="getImageUrl(selectedPaymentForImage?.paymentCheckImage)" target="_blank" class="btn btn-outline-primary px-4 fw-bold rounded-pill">
+            <i class="bi bi-box-arrow-up-right me-1"></i> Open in New Tab
+          </a>
+          <button type="button" class="btn btn-secondary px-4 fw-bold rounded-pill" (click)="closeImageModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="isImageModalOpen"></div>
+
+</div>

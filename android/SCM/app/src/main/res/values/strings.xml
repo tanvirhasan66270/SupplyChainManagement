@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">SCM Enterprise</string>
+    <string name="scm_logo">SCM Logo</string>
+    <string name="customer">CUSTOMER</string>
+    <string name="logo">Logo</string>
+    <string name="notifications">Notifications</string>
+    <string name="profile">Profile</string>
+    <string name="welcome_back">Welcome back, %1$s 👋</string>
+    <string name="manage_orders_desc">Manage your orders, payments, and track shipments in real-time.</string>
+    <string name="log_out">Log Out</string>
+    <string name="wallet_balance">Wallet Balance</string>
+    <string name="due_payments">Due Payments</string>
+    <string name="total_orders">TOTAL ORDERS</string>
+    <string name="active_orders">ACTIVE ORDERS</string>
+    <string name="delivered">DELIVERED</string>
+    <string name="pending">PENDING</string>
+    <string name="place_new_order">Place New Order</string>
+    <string name="track_product">Track Product</string>
+    <string name="billing_ledger">Billing Ledger</string>
+    <string name="support_desk">Support Desk</string>
+    <string name="active_order_pipeline_logs">Active Order Pipeline Logs</string>
+    <string name="no_logistics_records">No logistics records registered</string>
+    <string name="recent_notifications">Recent Notifications</string>
+    <string name="no_recent_notifications">No recent notifications</string>
+    <string name="recommended_for_you">Recommended For You</string>
+    <string name="view_all">View All ></string>
+    <string name="recent_orders">Recent Orders</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="orders">Orders</string>
+    <string name="shipments">Shipments</string>
+    <string name="billing">Billing</string>
+</resources>

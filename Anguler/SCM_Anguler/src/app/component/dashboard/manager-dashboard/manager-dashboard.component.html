@@ -1,0 +1,1064 @@
+<div class="manager-dashboard px-3 py-4">
+  <!-- ───────────────── TOP BAR ───────────────── -->
+  <div class="dashboard-header bg-white p-4 rounded-4 shadow-sm border mb-4 d-flex justify-content-between align-items-center">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h2 class="fw-bold text-dark fs-4 mb-0">Welcome back, <span class="text-primary">{{ userName }}</span> <span class="fs-4">👋</span></h2>
+      </div>
+      <p class="text-muted fs-8 mb-0 d-flex align-items-center gap-2">
+        <span class="text-dark fw-bold">Manager</span> &bull; Overall enterprise operations & approvals.
+        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 fs-9"><span class="pulse-dot-green me-1"></span> Live</span>
+      </p>
+    </div>
+    <div class="header-actions d-flex gap-2">
+      <button class="btn btn-outline-secondary btn-sm px-3 fw-semibold rounded-3 d-flex align-items-center gap-1" (click)="showSettings = !showSettings" title="Dashboard Settings"><i class="bi bi-gear"></i></button>
+      <button class="btn btn-outline-danger btn-sm px-3 fw-semibold rounded-3 d-flex align-items-center gap-1" (click)="logout()"><i class="bi bi-box-arrow-right"></i> Log Out</button>
+    </div>
+  </div>
+
+  <!-- ───────────────── KPI ROW ───────────────── -->
+  <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
+    <div class="col" *ngFor="let kpi of kpis">
+      <div class="card border-0 shadow-sm p-3 rounded-4 bg-white border-start border-5 border-{{ kpi.color }} h-100">
+        <div class="text-secondary small text-uppercase fw-bold mb-2">{{ kpi.label }}</div>
+        <div class="fs-3 fw-bold text-dark font-monospace mb-1">{{ kpi.value }}</div>
+        <div class="small font-monospace">
+          <span class="fw-bold" [class.text-success]="kpi.trend > 0" [class.text-danger]="kpi.trend < 0"
+            [class.text-secondary]="kpi.trend === 0">
+            <i class="bi"
+              [ngClass]="kpi.trend > 0 ? 'bi-arrow-up-right' : (kpi.trend < 0 ? 'bi-arrow-down-left' : 'bi-dash')"></i>
+            {{ kpi.trend > 0 ? '+' : '' }}{{ kpi.trend }}%
+          </span>
+          <span class="text-muted small ms-1">vs last month</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── LOADING SKELETON ───────────────── -->
+  <div *ngIf="isLoading" class="row g-4 mb-4">
+    <div class="col-md-7">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <div class="skeleton skeleton-title mb-3"></div>
+        <div class="skeleton skeleton-chart"></div>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <div class="skeleton skeleton-title mb-3"></div>
+        <div class="skeleton skeleton-bar mb-2"></div>
+        <div class="skeleton skeleton-bar mb-2"></div>
+        <div class="skeleton skeleton-bar mb-2"></div>
+        <div class="skeleton skeleton-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── QUICK ACTIONS ───────────────── -->
+  <div class="card border-0 shadow-sm p-4 bg-white rounded-4 mb-4">
+    <h6 class="fw-bold text-dark mb-3">
+      <i class="bi bi-lightning-charge text-warning me-2"></i> Managerial Quick Shortcuts
+    </h6>
+    <div class="row g-3" *ngIf="!isLoading">
+      <div class="col-md-2">
+        <div (click)="toggleShortcut('REPORT')" [class.border-primary]="activeShortcut === 'REPORT'"
+          class="action-card p-3 rounded-3 border d-flex align-items-center gap-3 text-decoration-none shadow-sm hover-elevate transition-all bg-white"
+          style="cursor:pointer">
+          <i class="bi bi-file-earmark-bar-graph fs-2 text-primary"></i>
+          <div>
+            <strong class="text-dark d-block">Daily Rept</strong>
+            <small class="text-muted fw-semibold">{{ dailyReports.length }} Submitted</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div (click)="toggleShortcut('AUDIT')" [class.border-success]="activeShortcut === 'AUDIT'"
+          class="action-card p-3 rounded-3 border d-flex align-items-center gap-3 text-decoration-none shadow-sm hover-elevate transition-all bg-white"
+          style="cursor:pointer">
+          <i class="bi bi-shield-check fs-2 text-success"></i>
+          <div>
+            <strong class="text-dark d-block">Audit Logs</strong>
+            <small class="text-muted fw-semibold">{{ activities.length }} Records</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div (click)="toggleShortcut('WAREHOUSE')" [class.border-warning]="activeShortcut === 'WAREHOUSE'"
+          class="action-card p-3 rounded-3 border d-flex align-items-center gap-3 text-decoration-none shadow-sm hover-elevate transition-all bg-white"
+          style="cursor:pointer">
+          <i class="bi bi-building-up fs-2 text-warning"></i>
+          <div>
+            <strong class="text-dark d-block">Facilities</strong>
+            <small class="text-muted fw-semibold">{{ warehouseCount }} Active</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div (click)="toggleShortcut('PR')" [class.border-info]="activeShortcut === 'PR'"
+          class="action-card p-3 rounded-3 border d-flex align-items-center gap-3 text-decoration-none shadow-sm hover-elevate transition-all bg-white"
+          style="cursor:pointer">
+          <i class="bi bi-clipboard-check fs-2 text-info"></i>
+          <div>
+            <strong class="text-dark d-block">Requisitions</strong>
+            <small class="text-muted fw-semibold">{{ pendingApprovalsCount }} Pending</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div (click)="toggleShortcut('SUPPLIER')" [class.border-secondary]="activeShortcut === 'SUPPLIER'"
+          class="action-card p-3 rounded-3 border d-flex align-items-center gap-3 text-decoration-none shadow-sm hover-elevate transition-all bg-white"
+          style="cursor:pointer">
+          <i class="bi bi-people-fill fs-2 text-secondary"></i>
+          <div>
+            <strong class="text-dark d-block">Suppliers</strong>
+            <small class="text-muted fw-semibold">{{ supplierCount }} Active</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div (click)="toggleShortcut('INVENTORY')" [class.border-dark]="activeShortcut === 'INVENTORY'"
+          class="action-card p-3 rounded-3 border d-flex align-items-center gap-3 text-decoration-none shadow-sm hover-elevate transition-all bg-white"
+          style="cursor:pointer">
+          <i class="bi bi-box-seam fs-2 text-dark"></i>
+          <div>
+            <strong class="text-dark d-block">Inventory</strong>
+            <small class="text-danger fw-semibold" *ngIf="lowStockItems.length > 0">{{ lowStockItems.length }} Low
+              Stock</small>
+            <small class="text-success fw-semibold" *ngIf="lowStockItems.length === 0">Healthy</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── TABLE TABS NAVIGATION (CARD STYLE) ───────────────── -->
+  <div class="card border-0 shadow-sm p-4 bg-white rounded-4 mb-4">
+    <div class="row g-3" *ngIf="!isLoading">
+
+      <!-- Approvals -->
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="card border rounded-3 p-3 shadow-sm h-100" style="cursor: pointer; transition: all 0.2s;"
+          [ngClass]="activeTableTab === 'APPROVALS' ? 'border-primary bg-primary-subtle' : 'bg-white border-light-subtle hover-elevate'"
+          (click)="activeTableTab = 'APPROVALS'">
+          <div class="d-flex align-items-center">
+            <div class="me-3 fs-3" [ngClass]="activeTableTab === 'APPROVALS' ? 'text-primary' : 'text-danger'">
+              <i class="bi bi-shield-exclamation"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark fs-6 lh-sm mb-1">Quatations Approvals </div>
+              <div class="text-muted small">{{ approvals.length }} Pending</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- POs -->
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="card border rounded-3 p-3 shadow-sm h-100" style="cursor: pointer; transition: all 0.2s;"
+          [ngClass]="activeTableTab === 'PO' ? 'border-primary bg-primary-subtle' : 'bg-white border-light-subtle hover-elevate'"
+          (click)="activeTableTab = 'PO'">
+          <div class="d-flex align-items-center">
+            <div class="me-3 fs-3" [ngClass]="activeTableTab === 'PO' ? 'text-primary' : 'text-primary'">
+              <i class="bi bi-cart-check"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark fs-6 lh-sm mb-1">Purchase Orders</div>
+              <div class="text-muted small">{{ pendingPOs.length }} Awaiting</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRNs -->
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="card border rounded-3 p-3 shadow-sm h-100" style="cursor: pointer; transition: all 0.2s;"
+          [ngClass]="activeTableTab === 'GRN' ? 'border-primary bg-primary-subtle' : 'bg-white border-light-subtle hover-elevate'"
+          (click)="activeTableTab = 'GRN'">
+          <div class="d-flex align-items-center">
+            <div class="me-3 fs-3" [ngClass]="activeTableTab === 'GRN' ? 'text-primary' : 'text-success'">
+              <i class="bi bi-box-arrow-in-down"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark fs-6 lh-sm mb-1">GRNs</div>
+              <div class="text-muted small">{{ grns.length }} Pending</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipments -->
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="card border rounded-3 p-3 shadow-sm h-100" style="cursor: pointer; transition: all 0.2s;"
+          [ngClass]="activeTableTab === 'SHIPMENTS' ? 'border-primary bg-primary-subtle' : 'bg-white border-light-subtle hover-elevate'"
+          (click)="activeTableTab = 'SHIPMENTS'">
+          <div class="d-flex align-items-center">
+            <div class="me-3 fs-3" [ngClass]="activeTableTab === 'SHIPMENTS' ? 'text-primary' : 'text-info'">
+              <i class="bi bi-truck"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark fs-6 lh-sm mb-1">Shipments</div>
+              <div class="text-muted small">{{ activeShipments.length }} Active</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Low Stock -->
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="card border rounded-3 p-3 shadow-sm h-100" style="cursor: pointer; transition: all 0.2s;"
+          [ngClass]="activeTableTab === 'LOW_STOCK' ? 'border-primary bg-primary-subtle' : 'bg-white border-light-subtle hover-elevate'"
+          (click)="activeTableTab = 'LOW_STOCK'">
+          <div class="d-flex align-items-center">
+            <div class="me-3 fs-3" [ngClass]="activeTableTab === 'LOW_STOCK' ? 'text-primary' : 'text-warning'">
+              <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark fs-6 lh-sm mb-1">Low Stock</div>
+              <div class="text-muted small">{{ lowStockItems.length }} Alerts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reports -->
+      <div class="col-xl-2 col-lg-4 col-md-6">
+        <div class="card border rounded-3 p-3 shadow-sm h-100" style="cursor: pointer; transition: all 0.2s;"
+          [ngClass]="activeTableTab === 'REPORTS' ? 'border-primary bg-primary-subtle' : 'bg-white border-light-subtle hover-elevate'"
+          (click)="activeTableTab = 'REPORTS'">
+          <div class="d-flex align-items-center">
+            <div class="me-3 fs-3" [ngClass]="activeTableTab === 'REPORTS' ? 'text-primary' : 'text-primary'">
+              <i class="bi bi-file-earmark-bar-graph"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark fs-6 lh-sm mb-1">Daily Report</div>
+              <div class="text-muted small">{{ dailyReports.length }} Submitted</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ───────────────── PENDING APPROVALS (PR) ───────────────── -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 border-top border-danger border-4"
+    *ngIf="!isLoading && activeTableTab === 'APPROVALS'" style="animation: fadeIn 0.3s ease-in-out;">
+    <div class="card-header bg-white py-3 border-0">
+      <h6 class="mb-0 fw-bold text-dark text-uppercase">
+        <i class="bi bi-shield-exclamation text-danger me-2"></i> Manager Pending Approvals
+      </h6>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-8">
+          <thead class="table-light text-uppercase">
+            <tr>
+              <th class="ps-4">Req Reference</th>
+              <th>Operation Details</th>
+              <th>Requester Name</th>
+              <th>Budget Impact</th>
+              <th class="text-end pe-4">Compliance action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let req of approvals">
+              <td class="ps-4 font-monospace fw-bold text-secondary">#PR-{{ req.id }}</td>
+              <td class="fw-semibold text-dark">{{ req.type }}</td>
+              <td>{{ req.requester }}</td>
+              <td class="font-monospace fw-bold text-success">
+                {{ req.amount > 0 ? '৳' + (req.amount | number) : 'No Financial impact' }}
+              </td>
+              <td class="text-end pe-4">
+                <button class="btn btn-sm btn-outline-success me-1 px-2 py-0.5 rounded-2" (click)="approve(req.id)">
+                  <i class="bi bi-check-lg"></i> Approve
+                </button>
+                <button class="btn btn-sm btn-outline-danger px-2 py-0.5 rounded-2" (click)="reject(req.id)">
+                  <i class="bi bi-x-lg"></i> Reject
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="approvals.length === 0">
+              <td colspan="5" class="text-center py-4 text-muted">
+                <i class="bi bi-check-circle text-success me-1"></i> All compliance approval items cleared.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── MANAGER PENDING PURCHASE ORDERS (PO) ───────────────── -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 border-top border-primary border-4"
+    *ngIf="!isLoading && activeTableTab === 'PO'" style="animation: fadeIn 0.3s ease-in-out;">
+    <div class="card-header bg-white py-3 border-0">
+      <h6 class="mb-0 fw-bold text-dark text-uppercase">
+        <i class="bi bi-cart-check text-primary me-2"></i> Purchase Orders Awaiting Authorization
+      </h6>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-8">
+          <thead class="table-light text-uppercase">
+            <tr>
+              <th class="ps-4">PO Reference</th>
+              <th>Supplier Name</th>
+              <th>Expected Delivery</th>
+              <th>Value ($)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let po of pendingPOs">
+              <td class="ps-4 font-monospace fw-bold text-primary">{{ po.poNumber }}</td>
+              <td class="fw-semibold text-dark">{{ po.supplierName }}</td>
+              <td>{{ po.deliveryDue | date:'mediumDate' }}</td>
+              <td class="font-monospace fw-bold text-success">${{ po.amount | number:'1.2-2' }}</td>
+              <td>
+                <button class="btn btn-sm btn-success fw-semibold px-3 shadow-sm" (click)="approvePO(po.id)">
+                  <i class="bi bi-shield-check"></i> Authorize
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="pendingPOs.length === 0">
+              <td colspan="5" class="text-center py-4 text-muted font-monospace">
+                <i class="bi bi-inboxes d-block fs-4 mb-1 opacity-50"></i> No purchase orders pending authorization.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── GRN RECEIVING / REJECTION ───────────────── -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 border-top border-success border-4"
+    *ngIf="!isLoading && activeTableTab === 'GRN'" style="animation: fadeIn 0.3s ease-in-out;">
+    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <h6 class="mb-0 fw-bold text-dark text-uppercase">
+          <i class="bi bi-truck text-info me-2"></i> Critical Logistics & Shipments
+        </h6>
+        <span class="badge bg-info rounded-pill" *ngIf="activeShipments.length">{{ activeShipments.length }}</span>
+      </div>
+      <div class="input-group" style="width: 250px;">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0 shadow-none fs-7" placeholder="Search shipments..." [(ngModel)]="shipmentSearchTerm" (input)="filterShipments()">
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-8">
+          <thead class="table-light text-uppercase">
+            <tr>
+              <th class="ps-4">GRN Reference</th>
+              <th>Linked PO</th>
+              <th>Warehouse</th>
+              <th>Receiver</th>
+              <th>Received Qty</th>
+              <th>QC Status</th>
+              <th>Current Stage</th>
+              <th class="text-end pe-4">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let g of grns">
+              <td class="ps-4 font-monospace fw-bold text-dark">{{ g.grnNumber }}</td>
+              <td class="font-monospace fw-semibold text-primary">#{{ g.poNumber }}</td>
+              <td class="fw-semibold text-secondary">{{ g.warehouseName }}</td>
+              <td>{{ g.receivedByName }}</td>
+              <td class="font-monospace fw-bold text-dark">{{ g.receivedQuantity }} Units</td>
+              <td>
+                <span *ngIf="g.inspectedByName" class="badge bg-success-subtle text-success">
+                  <i class="bi bi-patch-check-fill me-1"></i>{{ g.inspectedByName }}
+                </span>
+                <span *ngIf="!g.inspectedByName" class="badge bg-warning-subtle text-warning">
+                  <i class="bi bi-hourglass-split me-1"></i>Pending
+                </span>
+              </td>
+              <td>
+                <span class="badge px-2 py-1 text-uppercase border" [ngClass]="{
+                    'bg-light text-dark border-secondary': g.status === 'PENDING',
+                    'bg-warning-subtle text-warning border-warning': g.status === 'PARTIALLY_RECEIVED',
+                    'bg-info-subtle text-info border-info': g.status === 'INSPECTED'
+                  }">
+                  {{ g.status }}
+                </span>
+              </td>
+              <td class="text-end pe-4">
+                <div class="d-flex justify-content-end gap-1">
+                  <button class="btn btn-sm btn-success fw-semibold px-2 py-1 rounded-2"
+                    [disabled]="grnStatusSaving === g.id" (click)="changeGrnStatus(g, 'RECEIVED')">
+                    <span *ngIf="grnStatusSaving === g.id" class="spinner-border spinner-border-sm me-1"></span>
+                    <i *ngIf="grnStatusSaving !== g.id" class="bi bi-check-circle me-1"></i> Receive
+                  </button>
+                  <button class="btn btn-sm btn-danger fw-semibold px-2 py-1 rounded-2"
+                    [disabled]="grnStatusSaving === g.id" (click)="changeGrnStatus(g, 'REJECTED')">
+                    <i class="bi bi-x-circle me-1"></i> Reject
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="grns.length === 0">
+              <td colspan="8" class="text-center py-4 text-muted font-monospace">
+                <i class="bi bi-check-circle text-success me-1"></i> No GRNs awaiting decision.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- ───────────────── CRITICAL LOGISTICS & SHIPMENTS ───────────────── -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 border-top border-info border-4"
+    *ngIf="!isLoading && activeTableTab === 'SHIPMENTS'" style="animation: fadeIn 0.3s ease-in-out;">
+    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <h6 class="mb-0 fw-bold text-dark text-uppercase">
+          <i class="bi bi-truck text-info me-2"></i> Critical Logistics & Shipments
+        </h6>
+        <span class="badge bg-info rounded-pill" *ngIf="activeShipments.length">{{ activeShipments.length }}</span>
+      </div>
+      <div class="input-group" style="width: 250px;">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0 shadow-none fs-7" placeholder="Search shipments..." [(ngModel)]="shipmentSearchTerm" (input)="filterShipments()">
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-8">
+          <thead class="table-light text-uppercase">
+            <tr>
+              <th class="ps-4">Shipment Ref</th>
+              <th>Customer / Receiver</th>
+              <th>Destination</th>
+              <th>Vehicle / Driver</th>
+              <th>Est. Delivery</th>
+              <th class="text-end pe-4">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of filteredShipments">
+              <td class="ps-4 font-monospace fw-bold text-dark">#{{ s.id }}</td>
+              <td class="fw-semibold text-secondary">{{ s.supplierName || s.receiverName || 'N/A' }}</td>
+              <td>{{ s.sendByAddress || s.destination || s.origin }}</td>
+              <td>
+                <div class="small fw-bold text-dark">{{ s.vehicleNumber || 'N/A' }}</div>
+                <div class="small text-muted">{{ s.captainRegistrationNumber || s.driverName || 'N/A' }}</div>
+              </td>
+              <td>{{ (s.estimatedDelivery | date:'short') || 'Not Set' }}</td>
+              <td class="text-end pe-4">
+                <span class="badge px-2 py-1 text-uppercase border" [ngClass]="{
+                    'bg-warning-subtle text-warning border-warning': s.status === 'PENDING' || s.status === 'DISPATCHING',
+                    'bg-primary-subtle text-primary border-primary': s.status === 'IN_TRANSIT',
+                    'bg-danger-subtle text-danger border-danger': s.status === 'DELAYED'
+                  }">
+                  {{ s.status || 'ACTIVE' }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="filteredShipments.length === 0">
+              <td colspan="6" class="text-center py-4 text-muted font-monospace">
+                <i class="bi bi-truck d-block fs-4 mb-1 opacity-50"></i> No active or delayed shipments.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── LOW STOCK ALERTS ───────────────── -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 border-top border-danger border-4"
+    *ngIf="!isLoading && activeTableTab === 'LOW_STOCK'" style="animation: fadeIn 0.3s ease-in-out;">
+    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <h6 class="mb-0 fw-bold text-dark text-uppercase">
+          <i class="bi bi-truck text-info me-2"></i> Critical Logistics & Shipments
+        </h6>
+        <span class="badge bg-info rounded-pill" *ngIf="activeShipments.length">{{ activeShipments.length }}</span>
+      </div>
+      <div class="input-group" style="width: 250px;">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0 shadow-none fs-7" placeholder="Search shipments..." [(ngModel)]="shipmentSearchTerm" (input)="filterShipments()">
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-8">
+          <thead class="table-light text-uppercase">
+            <tr>
+              <th class="ps-4">Product ID</th>
+              <th>Product Name</th>
+              <th>Warehouse</th>
+              <th>Condition</th>
+              <th class="text-end pe-4">Available Qty</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of lowStockItems">
+              <td class="ps-4 font-monospace fw-bold text-dark">#PRD-{{ item.productId }}</td>
+              <td class="fw-semibold text-secondary">{{ item.productName || 'Unknown Product' }}</td>
+              <td>{{ item.warehouseName || 'Main Hub' }}</td>
+              <td>
+                <span class="badge bg-light text-dark border">{{ item.condition || 'NEW' }}</span>
+              </td>
+              <td class="text-end pe-4 font-monospace fw-bold text-danger">
+                {{ item.availableQuantity }} Unit(s)
+              </td>
+            </tr>
+            <tr *ngIf="lowStockItems.length === 0">
+              <td colspan="5" class="text-center py-4 text-muted font-monospace">
+                <i class="bi bi-check-circle text-success me-1"></i> Inventory levels are healthy.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── OPERATIONAL DAILY REPORTS ───────────────── -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 border-top border-secondary border-4"
+    *ngIf="!isLoading && activeTableTab === 'REPORTS'" style="animation: fadeIn 0.3s ease-in-out;">
+    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <h6 class="mb-0 fw-bold text-dark text-uppercase">
+          <i class="bi bi-truck text-info me-2"></i> Critical Logistics & Shipments
+        </h6>
+        <span class="badge bg-info rounded-pill" *ngIf="activeShipments.length">{{ activeShipments.length }}</span>
+      </div>
+      <div class="input-group" style="width: 250px;">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0 shadow-none fs-7" placeholder="Search shipments..." [(ngModel)]="shipmentSearchTerm" (input)="filterShipments()">
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-8">
+          <thead class="table-light text-uppercase">
+            <tr>
+              <th class="ps-4">Report Date</th>
+              <th>Report Ref</th>
+              <th>Warehouse</th>
+              <th>Tasks Done</th>
+              <th>Issues Logged</th>
+              <th>Status</th>
+              <th class="text-end pe-4">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rep of dailyReports">
+              <td class="ps-4 font-monospace fw-bold text-dark">{{ rep.reportDate | date:'mediumDate' }}</td>
+              <td class="fw-semibold text-secondary">#REP-{{ rep.id }}</td>
+              <td>{{ rep.warehouseId || 'N/A' }}</td>
+              <td class="font-monospace fw-bold text-success">{{ rep.totalTasksDone }}</td>
+              <td class="font-monospace fw-bold text-danger">{{ rep.issuesLogged }}</td>
+              <td>
+                <span class="badge px-2 py-1 text-uppercase border" [ngClass]="{
+                    'bg-light text-dark border-secondary': rep.reportStatus === 'DRAFT',
+                    'bg-warning-subtle text-warning border-warning': rep.reportStatus === 'SUBMITTED',
+                    'bg-success-subtle text-success border-success': rep.reportStatus === 'APPROVED'
+                  }">
+                  {{ rep.reportStatus }}
+                </span>
+              </td>
+              <td class="text-end pe-4">
+                <button *ngIf="rep.reportStatus !== 'APPROVED'"
+                  class="btn btn-sm btn-outline-success px-2 py-0.5 rounded-2" (click)="approveReport(rep.id)">
+                  <i class="bi bi-check-circle"></i> Approve
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="dailyReports.length === 0">
+              <td colspan="7" class="text-center py-4 text-muted font-monospace">
+                <i class="bi bi-file-earmark-x d-block fs-4 mb-1 opacity-50"></i> No daily reports available.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ───────────────── DYNAMIC MODAL DETAIL VIEWER ───────────────── -->
+  <div class="modal-backdrop fade show" *ngIf="activeShortcut" style="z-index: 1040; backdrop-filter: blur(2px);"
+    (click)="toggleShortcut(activeShortcut)"></div>
+
+  <div class="modal fade show d-block" tabindex="-1" *ngIf="activeShortcut" style="z-index: 1050;" aria-modal="true"
+    role="dialog">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 12px;">
+
+        <div class="modal-header border-bottom-0 pb-2 px-4 pt-4">
+          <h6 class="modal-title fw-bold text-dark text-uppercase d-flex align-items-center">
+            <i class="bi me-2 fs-5" [ngClass]="{
+                'bi-file-earmark-bar-graph': activeShortcut === 'REPORT',
+                'bi-shield-check': activeShortcut === 'AUDIT',
+                'bi-building-up': activeShortcut === 'WAREHOUSE',
+                'bi-cart3': activeShortcut === 'PR',
+                'bi-people-fill': activeShortcut === 'SUPPLIER',
+                'bi-box-seam': activeShortcut === 'INVENTORY'
+              }"></i>
+            <span *ngIf="activeShortcut === 'REPORT'">Daily Reports</span>
+            <span *ngIf="activeShortcut === 'AUDIT'">Audit Logs</span>
+            <span *ngIf="activeShortcut === 'WAREHOUSE'">Warehouse Directory</span>
+            <span *ngIf="activeShortcut === 'PR'">Purchase Requisitions</span>
+            <span *ngIf="activeShortcut === 'SUPPLIER'">Supplier Network</span>
+            <span *ngIf="activeShortcut === 'INVENTORY'">Inventory Master</span>
+          </h6>
+          <button type="button" class="btn-close" (click)="toggleShortcut(activeShortcut)" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body pt-0 px-4">
+          <!-- Filter Bar -->
+          <div class="row g-3 align-items-center mb-3 pb-3 border-bottom">
+            <div [ngClass]="(activeShortcut === 'PR' || activeShortcut === 'REPORT') ? 'col-md-5' : 'col-md-6'">
+              <div class="input-group input-group-sm bg-light rounded" style="border: 1px solid #dee2e6;">
+                <span class="input-group-text bg-transparent border-0 text-muted px-3"><i
+                    class="bi bi-search"></i></span>
+                <input type="text" class="form-control bg-transparent border-0 shadow-none ps-0" placeholder="Search..."
+                  [(ngModel)]="searchQuery" (ngModelChange)="filterTable()">
+              </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-center gap-2"
+              *ngIf="activeShortcut === 'PR' || activeShortcut === 'REPORT'">
+              <label class="form-label mb-0 small text-dark fw-semibold" style="font-size: 11px;">Month:</label>
+              <select class="form-select form-select-sm text-muted bg-light" style="border-radius: 4px;"
+                [value]="monthQuery" (change)="monthQuery = $any($event.target).value">
+                <option selected>All Months</option>
+                <option>January</option>
+                <option>February</option>
+                <option>March</option>
+                <option>April</option>
+                <option>May</option>
+                <option>June</option>
+                <option>July</option>
+                <option>August</option>
+                <option>September</option>
+                <option>October</option>
+                <option>November</option>
+                <option>December</option>
+              </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-center gap-2"
+              *ngIf="activeShortcut === 'PR' || activeShortcut === 'REPORT'">
+              <label class="form-label mb-0 small text-dark fw-semibold" style="font-size: 11px;">Date:</label>
+              <input type="date" class="form-control form-control-sm text-muted bg-light" [value]="dateQuery"
+                (change)="dateQuery = $any($event.target).value">
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <!-- PR TABLE -->
+            <table class="table table-hover align-middle mb-0" *ngIf="activeShortcut === 'PR'">
+              <thead>
+                <tr style="font-size: 11px; text-transform: uppercase;">
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">PR Number</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Requester</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Total Amount</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Status</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Expected Date</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Date</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 13px;">
+                <tr *ngFor="let row of filteredShortcutData" [ngClass]="{'bg-light': false}">
+                  <td class="fw-bold text-primary">PR-{{ row.id }}</td>
+                  <td>
+                    <div class="fw-semibold text-dark">{{ row.requestedByName || row.requestedBy }}</div>
+                    <div class="text-muted" style="font-size: 11px;">{{ row.requestedBy || 'N/A' }}</div>
+                  </td>
+                  <td class="text-dark fw-semibold">৳{{ (row.totalAmount || 0) | number:'1.2-2' }}</td>
+                  <td>
+                    <span class="badge rounded-pill px-3 py-1" style="font-size: 10px;" [ngClass]="{
+                        'bg-success-subtle text-success': row.approvalStatus==='APPROVED',
+                        'bg-warning-subtle text-warning': row.approvalStatus==='PENDING',
+                        'bg-danger-subtle text-danger': row.approvalStatus==='REJECTED'
+                      }">
+                      {{ row.approvalStatus || 'RECEIVED' }}
+                    </span>
+                  </td>
+                  <td class="text-muted">{{ row.requiredByDate | date:'dd MMM yyyy' }}</td>
+                  <td class="text-muted">{{ (row.createdAt || row.requiredByDate) | date:'dd MMM yyyy' }}</td>
+                </tr>
+                <tr *ngIf="filteredShortcutData.length === 0">
+                  <td colspan="6" class="text-center py-5 text-muted">No records found matching your criteria.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- DAILY REPORTS TABLE -->
+            <table class="table table-hover align-middle mb-0" *ngIf="activeShortcut === 'REPORT'">
+              <thead>
+                <tr style="font-size: 11px; text-transform: uppercase;">
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Ref No</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Warehouse</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Tasks Done</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Issues</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Status</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Date</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 13px;">
+                <tr *ngFor="let row of filteredShortcutData">
+                  <td class="fw-bold text-primary">REP-{{ row.id }}</td>
+                  <td class="fw-semibold text-dark">{{ row.warehouseId || 'N/A' }}</td>
+                  <td class="text-dark">{{ row.totalTasksDone }}</td>
+                  <td class="text-dark">{{ row.issuesLogged }}</td>
+                  <td>
+                    <span class="badge rounded-pill px-3 py-1 bg-secondary-subtle text-secondary"
+                      style="font-size: 10px;">{{ row.reportStatus }}</span>
+                  </td>
+                  <td class="text-muted">{{ row.reportDate | date:'dd MMM yyyy' }}</td>
+                </tr>
+                <tr *ngIf="filteredShortcutData.length === 0">
+                  <td colspan="6" class="text-center py-5 text-muted">No records found.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- AUDIT LOGS TABLE -->
+            <table class="table table-hover align-middle mb-0" *ngIf="activeShortcut === 'AUDIT'">
+              <thead>
+                <tr style="font-size: 11px; text-transform: uppercase;">
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Module</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Action</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold w-50">Description</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Timestamp</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 13px;">
+                <tr *ngFor="let row of filteredShortcutData">
+                  <td class="fw-semibold text-dark">{{ row.module }}</td>
+                  <td><span class="badge rounded-pill px-3 py-1 border text-secondary" style="font-size: 10px;">{{
+                      row.action }}</span></td>
+                  <td class="text-muted">{{ row.description }}</td>
+                  <td class="text-muted">{{ row.timestamp | date:'dd MMM yyyy, h:mm a' }}</td>
+                </tr>
+                <tr *ngIf="filteredShortcutData.length === 0">
+                  <td colspan="4" class="text-center py-5 text-muted">No records found.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- WAREHOUSE TABLE -->
+            <table class="table table-hover align-middle mb-0" *ngIf="activeShortcut === 'WAREHOUSE'">
+              <thead>
+                <tr style="font-size: 11px; text-transform: uppercase;">
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Name</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Location</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Capacity</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Status</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 13px;">
+                <tr *ngFor="let row of filteredShortcutData">
+                  <td class="fw-bold text-primary">{{ row.name }}</td>
+                  <td class="text-muted">{{ row.location }}</td>
+                  <td class="text-dark">{{ row.capacity }} Units</td>
+                  <td><span class="badge rounded-pill px-3 py-1 bg-success-subtle text-success"
+                      style="font-size: 10px;">ACTIVE</span></td>
+                </tr>
+                <tr *ngIf="filteredShortcutData.length === 0">
+                  <td colspan="4" class="text-center py-5 text-muted">No records found.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- SUPPLIER TABLE -->
+            <table class="table table-hover align-middle mb-0" *ngIf="activeShortcut === 'SUPPLIER'">
+              <thead>
+                <tr style="font-size: 11px; text-transform: uppercase;">
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Supplier</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Contact</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Email</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Phone</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 13px;">
+                <tr *ngFor="let row of filteredShortcutData">
+                  <td class="fw-bold text-primary">{{ row.name }}</td>
+                  <td class="text-dark">{{ row.contactPerson }}</td>
+                  <td class="text-muted">{{ row.email }}</td>
+                  <td class="text-muted">{{ row.phone }}</td>
+                </tr>
+                <tr *ngIf="filteredShortcutData.length === 0">
+                  <td colspan="4" class="text-center py-5 text-muted">No records found.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- INVENTORY TABLE -->
+            <table class="table table-hover align-middle mb-0" *ngIf="activeShortcut === 'INVENTORY'">
+              <thead>
+                <tr style="font-size: 11px; text-transform: uppercase;">
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Product Code</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Product Name</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Warehouse</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Available</th>
+                  <th class="border-bottom-0 pb-2 text-dark fw-bold">Status</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 13px;">
+                <tr *ngFor="let row of filteredShortcutData">
+                  <td class="fw-bold text-primary">{{ row.productCode }}</td>
+                  <td class="text-dark fw-semibold">{{ row.productName }}</td>
+                  <td class="text-muted">{{ row.warehouseName }}</td>
+                  <td class="text-dark fw-bold">{{ row.availableQuantity }}</td>
+                  <td>
+                    <span class="badge rounded-pill px-3 py-1" style="font-size: 10px;"
+                      [ngClass]="{'bg-danger-subtle text-danger': row.stockStatus === 'LOW_STOCK', 'bg-success-subtle text-success': row.stockStatus === 'IN_STOCK'}">
+                      {{ row.stockStatus }}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngIf="filteredShortcutData.length === 0">
+                  <td colspan="5" class="text-center py-5 text-muted">No records found.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="modal-footer border-top-0 px-4 pb-4 pt-2 justify-content-end">
+          <button type="button" class="btn btn-secondary px-4 shadow-sm" style="border-radius: 8px; font-size: 14px;"
+            (click)="toggleShortcut(activeShortcut)">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── CHARTS GRID ───────────────── -->
+  <div class="row g-4 mb-4" *ngIf="!isLoading">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="fw-bold text-dark mb-0">
+            <i class="bi bi-cash-stack text-primary me-2"></i> Revenue & Spend Analytics
+          </h6>
+          <div class="d-flex gap-3 small">
+            <span><span class="d-inline-block rounded-circle me-1"
+                style="width: 10px; height: 10px; background: #4f63f0"></span>Revenue</span>
+            <span><span class="d-inline-block rounded-circle me-1"
+                style="width: 10px; height: 10px; background: #f97066"></span>Expenses</span>
+          </div>
+        </div>
+        <svg *ngIf="chartMonths.length" viewBox="0 0 520 200" width="100%" height="180">
+          <line *ngFor="let y of [30, 80, 130, 170]" x1="40" [attr.y1]="y" x2="500" [attr.y2]="y" stroke="#f3f3f3"
+            stroke-width="1"></line>
+          <line x1="40" y1="170" x2="500" y2="170" stroke="#ddd" stroke-width="1.5"></line>
+
+          <!-- Revenue line -->
+          <polyline *ngIf="chartRevenue.length"
+            [attr.points]="chartRevenue.map((v, i) => 60 + i * 80 + ',' + getChartY(v)).join(' ')" fill="none"
+            stroke="#4f63f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+          <circle *ngFor="let v of chartRevenue; let i = index" [attr.cx]="60 + i * 80" [attr.cy]="getChartY(v)" r="4"
+            fill="#4f63f0"></circle>
+
+          <!-- Expenses line -->
+          <polyline *ngIf="chartExpenses.length"
+            [attr.points]="chartExpenses.map((v, i) => 60 + i * 80 + ',' + getChartY(v)).join(' ')" fill="none"
+            stroke="#f97066" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 3">
+          </polyline>
+          <circle *ngFor="let v of chartExpenses; let i = index" [attr.cx]="60 + i * 80" [attr.cy]="getChartY(v)" r="4"
+            fill="#f97066"></circle>
+
+          <!-- Labels -->
+          <text *ngFor="let m of chartMonths; let i = index" [attr.x]="60 + i * 80" y="192" font-size="10.5" fill="#999"
+            text-anchor="middle">{{ m }}</text>
+        </svg>
+        <div *ngIf="!chartMonths.length" class="text-center text-muted py-5">
+          <i class="bi bi-bar-chart fs-1 d-block mb-2 opacity-25"></i>
+          <small>No chart data available</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <h6 class="fw-bold text-dark mb-3">
+          <i class="bi bi-stack text-success me-2"></i> Department Performance
+        </h6>
+        <div class="d-flex flex-column gap-3">
+          <div *ngFor="let dept of deptPerformance">
+            <div class="d-flex justify-content-between small fw-bold mb-1">
+              <span class="text-dark">{{ dept.name }}</span>
+              <span class="text-muted">{{ dept.score }}%</span>
+            </div>
+            <div class="progress" style="height: 8px">
+              <div class="progress-bar bg-{{ dept.color }}" role="progressbar" [style.width.%]="dept.score"></div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 pt-3 border-top">
+          <div class="row text-center">
+            <div class="col">
+              <div class="fw-bold text-dark fs-5 font-monospace">
+                {{ totalRevenue > 0 ? '৳' + formatNumber(totalRevenue) : '৳0' }}
+              </div>
+              <div class="small text-muted">Revenue</div>
+            </div>
+            <div class="col">
+              <div class="fw-bold text-danger fs-5 font-monospace">
+                {{ totalExpenses > 0 ? '৳' + formatNumber(totalExpenses) : '৳0' }}
+              </div>
+              <div class="small text-muted">Expenses</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── NOTIFICATIONS & ACTIVITY ───────────────── -->
+  <div class="row g-4 mb-4" *ngIf="!isLoading">
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm bg-white rounded-4 h-100">
+        <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <h6 class="mb-0 fw-bold text-dark text-uppercase">
+          <i class="bi bi-truck text-info me-2"></i> Critical Logistics & Shipments
+        </h6>
+        <span class="badge bg-info rounded-pill" *ngIf="activeShipments.length">{{ activeShipments.length }}</span>
+      </div>
+      <div class="input-group" style="width: 250px;">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0 shadow-none fs-7" placeholder="Search shipments..." [(ngModel)]="shipmentSearchTerm" (input)="filterShipments()">
+      </div>
+    </div>
+    <div class="card-body p-0">
+          <div *ngIf="notifications.length === 0" class="text-center py-4 text-muted">
+            <i class="bi bi-bell-slash fs-3 d-block mb-2 opacity-25"></i>
+            <small>No recent notifications</small>
+          </div>
+          <div *ngFor="let notif of notifications; let last = last"
+            class="notif-item px-4 py-3 d-flex align-items-start gap-3" [class.border-bottom]="!last">
+            <div class="notif-icon rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+              [ngClass]="getNotificationColorClass(notif)">
+              <i class="bi" [ngClass]="getNotificationIcon(notif)"></i>
+            </div>
+            <div class="flex-grow-1 min-width-0">
+              <div class="fw-semibold text-dark small">{{ notif.title }}</div>
+              <div class="text-muted small text-truncate">{{ notif.message }}</div>
+              <div class="text-muted mt-1" style="font-size: 0.7rem">
+                {{ getTimeAgo(notif.createdAt) }}
+              </div>
+            </div>
+            <span *ngIf="!notif.isRead" class="badge bg-primary rounded-circle p-1 mt-1"
+              style="width: 8px; height: 8px"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm bg-white rounded-4 h-100">
+        <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <h6 class="mb-0 fw-bold text-dark text-uppercase">
+          <i class="bi bi-truck text-info me-2"></i> Critical Logistics & Shipments
+        </h6>
+        <span class="badge bg-info rounded-pill" *ngIf="activeShipments.length">{{ activeShipments.length }}</span>
+      </div>
+      <div class="input-group" style="width: 250px;">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0 shadow-none fs-7" placeholder="Search shipments..." [(ngModel)]="shipmentSearchTerm" (input)="filterShipments()">
+      </div>
+    </div>
+    <div class="card-body p-0">
+          <div *ngIf="activities.length === 0" class="text-center py-4 text-muted">
+            <i class="bi bi-clock-history fs-3 d-block mb-2 opacity-25"></i>
+            <small>No recent activity</small>
+          </div>
+          <div *ngFor="let act of activities; let last = last"
+            class="activity-item px-4 py-3 d-flex align-items-start gap-3" [class.border-bottom]="!last">
+            <div class="activity-icon rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+              [ngClass]="getActionColorClass(act.action, act.module)">
+              <i class="bi" [ngClass]="getActionIcon(act.action)"></i>
+            </div>
+            <div class="flex-grow-1 min-width-0">
+              <div class="small">
+                <span class="fw-semibold text-dark">{{ act.action }}</span>
+                <span class="text-muted mx-1">on</span>
+                <span class="fw-semibold text-primary">{{ act.module }}</span>
+              </div>
+              <div class="text-muted small text-truncate">
+                {{ act.description || 'Reference #' + act.referenceId }}
+              </div>
+              <div class="d-flex align-items-center gap-2 mt-1">
+                <span class="badge rounded-pill" [ngClass]="{
+                    'bg-success-subtle text-success': act.actionStatus === 'SUCCESS',
+                    'bg-danger-subtle text-danger': act.actionStatus === 'FAILED'
+                  }" style="font-size: 0.65rem">{{ act.actionStatus }}</span>
+                <span class="text-muted" style="font-size: 0.7rem">{{ getTimeAgo(act.performedAt) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ───────────────── SUMMARY ROW ───────────────── -->
+  <div class="row g-3 mb-4" *ngIf="!isLoading">
+    <div class="col-md-2">
+      <div class="card border-0 shadow-sm rounded-3 p-3 text-center h-100 summary-card"
+        style="background-color: #727cf5; color: white;">
+        <i class="bi bi-currency-dollar fs-3 mb-2 opacity-75"></i>
+        <div class="fw-bold fs-4 font-monospace mb-1">
+          {{ totalRevenue > 0 ? '৳' + formatNumber(totalRevenue) : '৳0' }}
+        </div>
+        <div class="small">Total Revenue</div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card border-0 shadow-sm rounded-3 p-3 text-center h-100 summary-card"
+        style="background-color: #fa5c7c; color: white;">
+        <i class="bi bi-wallet2 fs-3 mb-2 opacity-75"></i>
+        <div class="fw-bold fs-4 font-monospace mb-1">
+          {{ totalExpenses > 0 ? '৳' + formatNumber(totalExpenses) : '৳0' }}
+        </div>
+        <div class="small">Total Spend</div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card border-0 shadow-sm rounded-3 p-3 text-center h-100 summary-card"
+        style="background-color: #0acf97; color: white;">
+        <i class="bi bi-building fs-3 mb-2 opacity-75"></i>
+        <div class="fw-bold fs-4 font-monospace mb-1">{{ warehouseCount }}</div>
+        <div class="small">Warehouses</div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card border-0 shadow-sm rounded-3 p-3 text-center h-100 summary-card"
+        style="background-color: #3b82f6; color: white;">
+        <i class="bi bi-shield-check fs-3 mb-2 opacity-75"></i>
+        <div class="fw-bold fs-4 font-monospace mb-1">{{ pendingApprovalsCount }}</div>
+        <div class="small">Pending Auth</div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card border-0 shadow-sm rounded-3 p-3 text-center h-100 summary-card"
+        style="background-color: #212529; color: white;">
+        <i class="bi bi-truck fs-3 mb-2 opacity-75"></i>
+        <div class="fw-bold fs-4 font-monospace mb-1">{{ activeShipments.length }}</div>
+        <div class="small">Live Transit</div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card border-0 shadow-sm rounded-3 p-3 text-center h-100 summary-card"
+        style="background-color: #dc3545; color: white;">
+        <i class="bi bi-bug fs-3 mb-2 opacity-75"></i>
+        <div class="fw-bold fs-4 font-monospace mb-1">{{ failedQCCount }}</div>
+        <div class="small">Failed QC</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────────── SETTINGS PANEL ───────────────── -->
+<app-dashboard-settings [isOpen]="showSettings" (close)="showSettings = false"></app-dashboard-settings>
+

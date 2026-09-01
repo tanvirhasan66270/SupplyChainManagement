@@ -1,0 +1,157 @@
+<div class="container-fluid py-4 px-4 bg-light min-vh-100">
+
+  <!-- Head Banner Section -->
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1"><i class="bi bi-shield-lock-fill text-primary me-2"></i>SCM Security Audit Trail</h4>
+      <p class="text-muted mb-0 small">Real-time immutable tracking ledger of ecosystem data movements, module operations, and access stamps.</p>
+    </div>
+    <button class="btn btn-outline-secondary btn-sm fw-bold" (click)="resetFilters(true)">
+      <i class="bi bi-arrow-clockwise me-1"></i> Refresh Logs
+    </button>
+  </div>
+
+  <!-- Advanced Filtering System Control Hub -->
+  <div class="card shadow-sm border-0 mb-4 rounded-3">
+    <div class="card-body bg-white py-3">
+      <div class="row g-3 align-items-end fs-7.5">
+        
+        <div class="col-md-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Filter by Module</label>
+          <select class="form-select fs-7" [(ngModel)]="filterModule" (change)="onModuleFilter()">
+            <option value="">-- All Modules --</option>
+            <option value="CUSTOMER_ORDER">📦 CUSTOMER_ORDER (Purchase Order)</option>
+            <option value="DAILY_REPORT">📦 DAILY_REPORT (Daily Report)</option>
+            <option value="GOODS_RECEIVED_NOTE">📄 GOODS_RECEIVED_NOTE (Goods Received Note)</option>
+            <option value="QUALITY_CONTROL">🔍 QUALITY_CONTROL (Quality Control)</option>
+            <option value="LETTER_OF_CREDIT">💼 LETTER_OF_CREDIT (Letter of Credit)</option>
+            <option value="SHIPMENT_LOGISTICS">🚛 SHIPMENT_LOGISTICS (Shipment Logistics)</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Search Personnel ID</label>
+          <div class="input-group">
+            <input type="text" class="form-control fs-7" [(ngModel)]="searchUserId" placeholder="Input User ID (e.g., USR-401)">
+            <button class="btn btn-danger text-white px-3 fs-7" type="button" (click)="onUserIdSearch()">
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Execution Status</label>
+          <select class="form-select fs-7" [(ngModel)]="filterStatus" (change)="onStatusFilter()">
+            <option value="">-- All Statuses --</option>
+            <option value="SUCCESS">🟢 SUCCESS STATE</option>
+            <option value="FAILED">🔴 CRITICAL FAILED</option>
+          </select>
+        </div>
+
+        <div class="col-md-2 text-end">
+          <button class="btn btn-secondary w-100 fs-7 py-2" (click)="resetFilters(true)">Clear Filters</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Audit Grid Table -->
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-7.5">
+          <thead class="table-dark text-uppercase fs-8 fw-bold">
+            <tr>
+              <th class="ps-4 py-3">Timestamp Tracking</th>
+              <th>Operator Info</th>
+              <th>Action Flag</th>
+              <th>Ecosystem Module</th>
+              <th>Reference Context</th>
+              <th>Status</th>
+              <th class="text-center pe-4">Payload</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (log of logs; track log.id) {
+              <tr [class.failed-log-row]="log.actionStatus === 'FAILED'">
+                <td class="ps-4 font-monospace text-secondary fs-8">
+                  {{ log.performedAt | date:'yyyy-MM-dd HH:mm:ss' }}
+                </td>
+                <td>
+                  <div class="fw-bold text-dark">{{ log.userId }}</div>
+                  <small class="text-muted text-lowercase fs-8">{{ log.userEmail }}</small>
+                </td>
+                <td>
+                  <span class="badge px-2.5 py-1 fs-9 font-monospace"
+                    [ngClass]="{
+                      'bg-primary-subtle text-primary border border-primary-subtle': log.action === 'CREATE',
+                      'bg-warning-subtle text-warning border border-warning-subtle': log.action === 'UPDATE',
+                      'bg-danger-subtle text-danger border border-danger-subtle': log.action === 'DELETE',
+                      'bg-info-subtle text-info border border-info-subtle': log.action === 'LOGIN'
+                    }">
+                    {{ log.action }}
+                  </span>
+                </td>
+                <td><span class="fw-bold text-indigo font-monospace">{{ log.module }}</span></td>
+                <td><small class="badge bg-light text-dark font-monospace border">Ref: {{ log.referenceId }}</small></td>
+                <td>
+                  <span class="d-inline-flex align-items-center gap-1 fw-bold fs-8" 
+                        [ngClass]="log.actionStatus === 'SUCCESS' ? 'text-success' : 'text-danger'">
+                    <span class="indicator-dot" [ngClass]="log.actionStatus === 'SUCCESS' ? 'bg-success' : 'bg-danger'"></span>
+                    {{ log.actionStatus }}
+                  </span>
+                </td>
+                <td class="text-center pe-4">
+                  <button class="btn btn-sm btn-light border btn-action-view shadow-xs" (click)="viewDetails(log)">
+                    <i class="bi bi-eye-fill"></i> Inspect
+                  </button>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="7" class="text-center py-5 text-muted font-monospace fs-8">
+                  <i class="bi bi-shield-slash fs-1 d-block mb-2 text-secondary"></i>No system footprint matches cached ledger index.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Slide Detail Inspection Drawer -->
+  <div class="custom-drawer shadow-lg" [class.open]="selectedLog">
+    @if (selectedLog) {
+      <div class="drawer-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0 font-monospace"><i class="bi bi-terminal me-2 text-danger"></i>Payload Analysis Log #{{selectedLog.id}}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeDetails()"></button>
+      </div>
+
+      <div class="drawer-body p-4 bg-white font-monospace overflow-y-auto" style="height: calc(100vh - 85px);">
+        
+        <div class="meta-block mb-4 p-3 bg-light rounded border">
+          <p class="mb-1 text-secondary fs-8"><b>Network IP:</b> {{ selectedLog.ipAddress }}</p>
+          <p class="mb-0 text-secondary fs-8"><b>Operation:</b> {{ selectedLog.description }}</p>
+        </div>
+
+        <!-- Delta Data Value State Compare Diff Boxes -->
+        <div class="mb-3">
+          <label class="form-label text-uppercase fw-bold text-danger fs-8">Pre-State Manifest (Old Value)</label>
+          <pre class="json-block p-3 rounded bg-dark text-light-green fs-8 border">{{ selectedLog.oldValue ? selectedLog.oldValue : 'NULL / INITIALIZING NODE STATE' }}</pre>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label text-uppercase fw-bold text-success fs-8">Post-State Manifest (New Value)</label>
+          <pre class="json-block p-3 rounded bg-dark text-cyan fs-8 border">{{ selectedLog.newValue ? selectedLog.newValue : 'NULL / DELETION MATRIX TERMINATED' }}</pre>
+        </div>
+
+        <button class="btn btn-secondary w-100 py-2 fs-7 fw-bold" (click)="closeDetails()">Terminate Inspection</button>
+      </div>
+    }
+  </div>
+
+  @if (selectedLog) { <div class="drawer-backdrop" (click)="closeDetails()"></div> }
+</div>

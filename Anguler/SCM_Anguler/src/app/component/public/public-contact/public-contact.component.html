@@ -1,0 +1,133 @@
+<div class="public-contact">
+
+  <!-- CONTACT HERO -->
+  <section class="contact-hero text-white py-5">
+    <div class="container py-5">
+      <div class="text-center">
+        <span class="badge bg-white/10 text-white text-uppercase px-3 py-1.5 fw-bold mb-3 small border border-white/20 rounded-pill">
+          <i class="bi bi-envelope me-1"></i> Get In Touch
+        </span>
+        <h1 class="display-4 fw-black text-white mb-3">Contact Global SCM Pro</h1>
+        <p class="lead text-white-50 col-lg-7 mx-auto">Have a question about our logistics solutions? Our team of supply chain experts is ready to help.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT CONTENT -->
+  <section class="py-5 bg-white">
+    <div class="container py-4">
+      <div class="row g-5">
+        <!-- Contact Form -->
+        <div class="col-lg-7">
+          <div class="card border-0 shadow-sm p-4 rounded-4">
+            <h4 class="fw-bold text-dark mb-4"><i class="bi bi-chat-dots text-primary me-2"></i> Send Us a Message</h4>
+
+            @if (formSubmitted) {
+              <div class="alert alert-success d-flex align-items-center gap-2 py-3">
+                <i class="bi bi-check-circle-fill fs-4 text-success"></i>
+                <div>
+                  <strong>Message Sent Successfully!</strong>
+                  <p class="mb-0 small">Our customer service team will get back to you within 24 hours.</p>
+                </div>
+              </div>
+            }
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-secondary">Full Name *</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-primary"></i></span>
+                  <input type="text" class="form-control border-start-0 bg-light" placeholder="John Doe" [(ngModel)]="feedback.name">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-secondary">Email Address *</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-primary"></i></span>
+                  <input type="email" class="form-control border-start-0 bg-light" placeholder="john@example.com" [(ngModel)]="feedback.email">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-secondary">Phone Number</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0"><i class="bi bi-telephone text-primary"></i></span>
+                  <input type="tel" class="form-control border-start-0 bg-light" placeholder="+880 1XXXXXXXXX" [(ngModel)]="feedback.phone">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-secondary">Inquiry Type</label>
+                <select class="form-select bg-light" [(ngModel)]="feedback.subject">
+                  <option value="">-- Select Category --</option>
+                  <option value="GENERAL">General Inquiry</option>
+                  <option value="QUOTATION">Request Quotation</option>
+                  <option value="PARTNERSHIP">Partnership Opportunity</option>
+                  <option value="SUPPORT">Technical Support</option>
+                  <option value="CAREERS">Career Opportunities</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold text-secondary">Detailed Message *</label>
+                <textarea class="form-control bg-light" rows="5" placeholder="Tell us about your logistics requirements, cargo details, or how we can assist you..." [(ngModel)]="feedback.message"></textarea>
+              </div>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between align-items-center">
+              <small class="text-muted"><i class="bi bi-shield-check me-1 text-success"></i> Your information is secure and encrypted.</small>
+              <button class="btn btn-primary px-5 py-2 fw-bold rounded-pill" (click)="submitForm()">
+                <i class="bi bi-send me-2"></i> Send Message
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt-fill text-primary me-2"></i> Global Offices</h5>
+
+            <div class="office-item p-3 bg-light rounded-3 mb-3 border-start border-3 border-primary">
+              <h6 class="fw-bold text-dark mb-1"><i class="bi bi-building me-1 text-primary"></i> Dhaka HQ</h6>
+              <p class="text-secondary small mb-1">123 SCM Tower, Gulshan-2, Dhaka 1212, Bangladesh</p>
+              <p class="text-secondary small mb-0 font-monospace"><i class="bi bi-telephone me-1"></i> +880 9612 88990</p>
+            </div>
+
+            <div class="office-item p-3 bg-light rounded-3 mb-3 border-start border-3 border-success">
+              <h6 class="fw-bold text-dark mb-1"><i class="bi bi-building me-1 text-success"></i> Singapore Hub</h6>
+              <p class="text-secondary small mb-1">88 Trade Street, Singapore 048616</p>
+              <p class="text-secondary small mb-0 font-monospace"><i class="bi bi-telephone me-1"></i> +65 6712 9011</p>
+            </div>
+
+            <div class="office-item p-3 bg-light rounded-3 mb-3 border-start border-3 border-warning">
+              <h6 class="fw-bold text-dark mb-1"><i class="bi bi-building me-1 text-warning"></i> Rotterdam Office</h6>
+              <p class="text-secondary small mb-1">45 Harbor Road, 3011 AA Rotterdam, Netherlands</p>
+              <p class="text-secondary small mb-0 font-monospace"><i class="bi bi-telephone me-1"></i> +31 10 234 5678</p>
+            </div>
+
+            <div class="office-item p-3 bg-light rounded-3 border-start border-3 border-danger">
+              <h6 class="fw-bold text-dark mb-1"><i class="bi bi-building me-1 text-danger"></i> New York Office</h6>
+              <p class="text-secondary small mb-1">789 Commerce Ave, New York, NY 10001, USA</p>
+              <p class="text-secondary small mb-0 font-monospace"><i class="bi bi-telephone me-1"></i> +1 (212) 555-0199</p>
+            </div>
+          </div>
+
+          <div class="card border-0 shadow-sm p-4 rounded-4">
+            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-clock-fill text-success me-2"></i> Support Hours</h5>
+            <div class="d-flex justify-content-between py-2 border-bottom">
+              <span class="text-secondary small">Monday - Friday</span>
+              <span class="fw-bold text-dark small">9:00 AM - 6:00 PM (GMT+6)</span>
+            </div>
+            <div class="d-flex justify-content-between py-2 border-bottom">
+              <span class="text-secondary small">Saturday</span>
+              <span class="fw-bold text-dark small">10:00 AM - 2:00 PM (GMT+6)</span>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+              <span class="text-secondary small">Emergency Hotline</span>
+              <span class="fw-bold text-danger small font-monospace">24/7 Available</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,103 @@
+<div class="public-network">
+
+  <!-- NETWORK HERO -->
+  <section class="network-hero text-white py-5">
+    <div class="container py-5">
+      <div class="text-center mb-5">
+        <span class="badge bg-white/10 text-white text-uppercase px-3 py-1.5 fw-bold mb-3 small border border-white/20 rounded-pill">
+          <i class="bi bi-globe2 me-1"></i> Global Coverage
+        </span>
+        <h1 class="display-4 fw-black text-white mb-3">Our Worldwide SCM Network</h1>
+        <p class="lead text-white-50 col-lg-7 mx-auto">Strategically positioned hubs across 6 continents, connecting 150+ ports and airports for seamless global trade.</p>
+      </div>
+
+      <div class="row g-3 justify-content-center">
+        <div class="col-auto" *ngFor="let stat of heroStats">
+          <div class="d-flex align-items-center gap-2 px-4 py-2 bg-white/10 rounded-pill border border-white/10">
+            <i class="bi" [ngClass]="stat.icon" [style.color]="stat.color"></i>
+            <span class="text-white fw-bold">{{ stat.value }}</span>
+            <span class="text-white-50 small">{{ stat.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGIONAL HUBS -->
+  <section class="py-5 bg-white">
+    <div class="container py-4">
+      <div class="text-center mb-5">
+        <span class="badge bg-primary-subtle text-primary text-uppercase px-3 py-1.5 fw-bold mb-2 small">Regional Presence</span>
+        <h2 class="fw-black text-dark display-6">Hubs Across Every Continent</h2>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4" *ngFor="let hub of hubs">
+          <div class="card border-0 shadow-sm rounded-4 h-100 hub-card overflow-hidden">
+            <div class="card-header border-0 py-3 px-4" [ngClass]="hub.headerBg">
+              <div class="d-flex align-items-center gap-3">
+                <span class="fs-2">{{ hub.emoji }}</span>
+                <div>
+                  <h5 class="fw-bold text-dark mb-0">{{ hub.region }}</h5>
+                  <small class="text-secondary">{{ hub.countries }} Countries</small>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-4">
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="badge bg-light text-dark border px-2 py-1 small" *ngFor="let port of hub.majorPorts">
+                  <i class="bi bi-geo-alt text-primary me-1"></i>{{ port }}
+                </span>
+              </div>
+              <p class="text-secondary small mb-0">{{ hub.desc }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COVERAGE MAP SECTION -->
+  <section class="py-5 bg-light">
+    <div class="container py-4">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <span class="badge bg-success-subtle text-success text-uppercase px-3 py-1.5 fw-bold mb-3 small">Infrastructure</span>
+          <h2 class="fw-black text-dark display-6 mb-4">Built for Global Scale</h2>
+          <p class="text-secondary mb-4">Our infrastructure spans across 35+ countries with strategically positioned warehouses, customs clearance centers, and logistics hubs.</p>
+
+          <div class="row g-3">
+            <div class="col-6" *ngFor="let infra of infrastructure">
+              <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-3 shadow-sm">
+                <i class="bi" [ngClass]="infra.icon" [style.color]="infra.color" style="font-size: 1.5rem;"></i>
+                <div>
+                  <h6 class="fw-bold text-dark mb-0">{{ infra.value }}</h6>
+                  <small class="text-secondary">{{ infra.label }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="network-visual p-5 rounded-4 text-center">
+            <i class="bi bi-globe-americas text-primary" style="font-size: 8rem; opacity: 0.2;"></i>
+            <h3 class="fw-black text-dark mt-3">35+ Countries</h3>
+            <p class="text-secondary">Continuously expanding our global footprint</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-5 bg-dark text-white">
+    <div class="container py-4 text-center">
+      <h2 class="display-6 fw-black mb-3">Access Our Global Network</h2>
+      <p class="text-white-50 col-lg-6 mx-auto mb-4">Join 2,000+ businesses leveraging our worldwide infrastructure for seamless trade operations.</p>
+      <a routerLink="/join-us" class="btn btn-lg btn-warning px-5 py-3 fw-bold rounded-pill">
+        <i class="bi bi-person-plus me-2"></i> Create Free Account
+      </a>
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,33 @@
+/* Admin Dashboard - Red Theme */
+.welcome-card {
+  background: linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%);
+  border: 1px solid #fecaca;
+}
+
+.kpi-card::before {
+  background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+.kpi-card:hover::before {
+  opacity: 1;
+}
+
+.module-card:hover {
+  border-color: #fca5a5;
+}
+
+.action-card:hover {
+  border-color: #ef4444;
+}
+
+.activity-summary-card:hover {
+  border-color: #fecaca;
+}
+
+.user-row:hover {
+  background-color: #fef2f2;
+}
+
+.activity-row:hover {
+  background-color: #fef2f2;
+}

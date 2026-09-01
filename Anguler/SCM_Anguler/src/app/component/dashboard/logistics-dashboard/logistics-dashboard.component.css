@@ -1,0 +1,185 @@
+.logistics-dashboard {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.fs-7 { font-size: 0.85rem; }
+.fs-8 { font-size: 0.75rem; }
+
+.bg-indigo { background-color: #4f46e5 !important; }
+.text-indigo { color: #4f46e5 !important; }
+.bg-indigo-subtle { background-color: #e0e7ff !important; }
+
+/* Timeline Styles */
+.timeline-container {
+  padding-left: 0.5rem;
+}
+.timeline-item {
+  min-height: 40px;
+}
+.timeline-dot {
+  position: relative;
+  z-index: 2;
+}
+
+/* Donut Chart Styles */
+.donut-chart {
+  transform: rotate(-90deg);
+}
+.donut-segment {
+  transition: stroke-dashoffset 0.5s ease-in-out;
+}
+
+/* Custom Table Styles */
+.table th {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-bottom-width: 1px;
+}
+.table td {
+  padding: 1rem 0.5rem;
+}
+.table-hover tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Card Enhancements */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.08)!important;
+}
+
+/* SVG Line Chart animation */
+svg path {
+  animation: drawLine 1.5s ease-out forwards;
+}
+
+@keyframes drawLine {
+  from { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+  to { stroke-dasharray: 1000; stroke-dashoffset: 0; }
+}
+
+/* Progress bar thickness */
+.progress {
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* ── Quick Navigation Buttons ── */
+.logi-quick-btn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #374151;
+  border-radius: 10px !important;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.55rem 1.1rem !important;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+.logi-quick-btn i {
+  color: #4b5563;
+  font-size: 1.05rem;
+  transition: color 0.18s ease;
+}
+.logi-quick-btn:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+.logi-quick-btn:hover i {
+  color: #2563eb;
+}
+
+/* Featured / Outlined state (like Goods Received Note in screenshot) */
+.logi-quick-btn--highlight {
+  background: #eff6ff;
+  border: 1.5px solid #3b82f6;
+  color: #1d4ed8;
+}
+.logi-quick-btn--highlight i {
+  color: #2563eb;
+}
+
+/* Active solid pill state (like Delivery Trip in screenshot) */
+.logi-quick-btn--active {
+  background: #5046e6 !important;
+  border-color: #5046e6 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(80, 70, 230, 0.35);
+}
+.logi-quick-btn--active i {
+  color: #ffffff !important;
+}
+.logi-quick-btn--active:hover {
+  background: #4338ca !important;
+  border-color: #4338ca !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 18px rgba(80, 70, 230, 0.45);
+}
+
+/* ── Modal Design matching screenshot ── */
+.custom-modal-header {
+  background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%);
+  color: #ffffff;
+  padding: 1.25rem 1.5rem;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+.custom-modal-icon {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-form-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.35rem;
+  display: block;
+}
+.custom-form-control {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  font-size: 0.875rem !important;
+  padding: 0.6rem 0.85rem !important;
+  color: #1e293b !important;
+}
+.custom-form-control:focus {
+  border-color: #4338ca !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.12) !important;
+}
+.btn-modal-cancel {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+  border-radius: 50px;
+  padding: 0.55rem 1.4rem;
+  border: none;
+  transition: all 0.18s ease;
+}
+.btn-modal-cancel:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+.btn-modal-submit {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 50px;
+  padding: 0.55rem 1.6rem;
+  border: none;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  transition: all 0.18s ease;
+}
+.btn-modal-submit:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+}
+

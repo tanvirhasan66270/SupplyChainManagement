@@ -1,0 +1,98 @@
+/* Chat Workspace Styles */
+
+.chat-workspace {
+  height: calc(100vh - 120px);
+  min-height: 500px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Contact List Area */
+.contact-list-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.contact-list-scroll::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+
+.contact-item {
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.contact-item:hover {
+  background-color: #f1f5f9;
+}
+
+.contact-item.active {
+  background-color: #2563eb !important;
+}
+
+.contact-item.active .contact-name {
+  color: #ffffff !important;
+}
+
+/* Chat Messages history area */
+.chat-messages-area {
+  scroll-behavior: smooth;
+}
+
+.chat-messages-area::-webkit-scrollbar {
+  width: 5px;
+}
+
+.chat-messages-area::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+
+/* Chat Bubbles custom rounded corners */
+.rounded-bottom-start-0 {
+  border-bottom-left-radius: 0 !important;
+}
+
+.rounded-bottom-end-0 {
+  border-bottom-right-radius: 0 !important;
+}
+
+.chat-bubble-footer {
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+/* Fonts and Helper classes */
+.fs-7\.5 {
+  font-size: 0.825rem;
+}
+
+.fs-8 {
+  font-size: 0.75rem;
+}
+
+.fs-9 {
+  font-size: 0.65rem;
+}
+
+.uppercase-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Empty chat illustration styling */
+.illustration-circle {
+  animation: float-slow 3s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}

@@ -1,0 +1,608 @@
+/* =====================================================
+   Login Page - Enterprise Split Layout
+   ===================================================== */
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100vh;
+}
+
+.login-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* =====================================================
+   Left Panel - Branding
+   ===================================================== */
+
+.login-branding {
+  flex: 0 0 45%;
+  background: linear-gradient(
+    135deg,
+    var(--primary-700) 0%,
+    var(--primary-500) 50%,
+    var(--primary-400) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-branding::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.login-branding::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.branding-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 400px;
+}
+
+.brand-logo {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 2rem;
+  color: white;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeIn 0.6s ease-out;
+}
+
+.brand-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  animation: slideUp 0.6s ease-out 0.1s both;
+}
+
+.brand-title span {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+}
+
+.brand-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 400;
+  margin-bottom: 2.5rem;
+  animation: slideUp 0.6s ease-out 0.2s both;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  text-align: left;
+  animation: slideUp 0.6s ease-out 0.3s both;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.feature-item i {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.branding-footer {
+  position: absolute;
+  bottom: 2rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 1;
+}
+
+.branding-footer p {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+}
+
+/* =====================================================
+   Right Panel - Login Form
+   ===================================================== */
+
+.login-form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-bg);
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 400px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* =====================================================
+   Mobile Logo (hidden on desktop)
+   ===================================================== */
+
+.mobile-logo {
+  display: none;
+}
+
+/* =====================================================
+   Form Header
+   ===================================================== */
+
+.form-header {
+  margin-bottom: 2rem;
+}
+
+.form-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.375rem;
+}
+
+.form-header p {
+  font-size: 0.9375rem;
+  color: var(--gray-500);
+}
+
+/* =====================================================
+   Error Alert
+   ===================================================== */
+
+.error-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--danger-50);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--danger-600);
+}
+
+.error-alert i:first-child {
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.error-alert span {
+  flex: 1;
+  font-weight: 500;
+}
+
+.error-close {
+  background: none;
+  border: none;
+  color: var(--danger-500);
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.error-close:hover {
+  opacity: 1;
+}
+
+/* =====================================================
+   Form Group
+   ===================================================== */
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 0.375rem;
+}
+
+.form-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.375rem;
+}
+
+.form-label-row .form-label {
+  margin-bottom: 0;
+}
+
+.forgot-link {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--primary-600);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.forgot-link:hover {
+  color: var(--primary-700);
+  text-decoration: underline;
+}
+
+/* =====================================================
+   Input Wrapper
+   ===================================================== */
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  overflow: hidden;
+}
+
+.input-wrapper:focus-within {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.input-wrapper.input-error {
+  border-color: var(--danger-500);
+}
+
+.input-wrapper.input-error:focus-within {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.input-wrapper i {
+  padding-left: 0.875rem;
+  color: var(--gray-400);
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.input-wrapper:focus-within > i:first-child {
+  color: var(--primary-500);
+}
+
+.input-wrapper.input-error:focus-within > i:first-child {
+  color: var(--danger-500);
+}
+
+.form-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0.75rem 0.875rem;
+  font-size: 0.9375rem;
+  font-family: var(--font-family);
+  color: var(--gray-800);
+  background: transparent;
+  min-width: 0;
+}
+
+.form-input::placeholder {
+  color: var(--gray-400);
+}
+
+.toggle-password {
+  background: none;
+  border: none;
+  padding: 0 0.875rem;
+  color: var(--gray-400);
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  transition: color var(--transition-fast);
+}
+
+.toggle-password:hover {
+  color: var(--gray-600);
+}
+
+/* =====================================================
+   Field Error
+   ===================================================== */
+
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--danger-600);
+  font-weight: 500;
+  animation: slideUp 0.2s ease-out;
+}
+
+.field-error i {
+  font-size: 0.75rem;
+}
+
+/* =====================================================
+   Form Options (Remember Me)
+   ===================================================== */
+
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-wrapper input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--gray-300);
+  border-radius: 4px;
+  cursor: pointer;
+  accent-color: var(--primary-600);
+}
+
+.checkbox-label {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+/* =====================================================
+   Submit Button
+   ===================================================== */
+
+.submit-btn {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary-600);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: var(--primary-700);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+  transform: translateY(-1px);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+}
+
+.submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.submit-btn.loading {
+  pointer-events: none;
+}
+
+.btn-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =====================================================
+   Form Footer - Demo Credentials
+   ===================================================== */
+
+.form-footer {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.form-footer p {
+  font-size: 0.8125rem;
+  color: var(--gray-500);
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.demo-accounts {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.demo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: var(--font-family);
+  color: var(--gray-600);
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.demo-btn:hover {
+  background: var(--primary-50);
+  border-color: var(--primary-300);
+  color: var(--primary-700);
+  box-shadow: var(--shadow-sm);
+}
+
+.demo-btn i {
+  font-size: 0.875rem;
+}
+
+/* =====================================================
+   Responsive Design
+   ===================================================== */
+
+@media (max-width: 1024px) {
+  .login-branding {
+    flex: 0 0 40%;
+    padding: 2rem;
+  }
+
+  .brand-title {
+    font-size: 2rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+  }
+
+  .feature-item {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-wrapper {
+    flex-direction: column;
+  }
+
+  .login-branding {
+    display: none;
+  }
+
+  .mobile-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-600);
+  }
+
+  .mobile-logo i {
+    font-size: 1.5rem;
+    color: var(--primary-600);
+  }
+
+  .mobile-logo span span {
+    color: var(--gray-400);
+    font-weight: 300;
+  }
+
+  .login-form-panel {
+    flex: 1;
+    padding: 1.5rem;
+  }
+
+  .form-container {
+    max-width: 100%;
+  }
+
+  .form-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .demo-accounts {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .demo-btn {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form-panel {
+    padding: 1.25rem;
+  }
+
+  .form-header h2 {
+    font-size: 1.375rem;
+  }
+
+  .error-alert {
+    padding: 0.75rem;
+    font-size: 0.8125rem;
+  }
+}

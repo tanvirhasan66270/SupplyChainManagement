@@ -1,0 +1,241 @@
+/* Premium Typography & Base */
+.procurement-dashboard {
+  font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #1e293b;
+}
+
+/* Premium Shadows and Card Styling */
+.card, .action-btn {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.02) !important;
+  border-radius: 1rem !important;
+}
+
+.card:hover {
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.08), 0 10px 15px -5px rgba(0, 0, 0, 0.03) !important;
+  transform: translateY(-3px);
+}
+
+/* Quick Action Buttons */
+.action-btn {
+  border: 1px solid #f1f5f9;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.action-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 100%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.action-btn:hover {
+  border-color: #e2e8f0;
+  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-4px);
+}
+.action-btn:hover::after {
+  opacity: 1;
+}
+
+.action-btn i {
+  transition: transform 0.3s ease;
+}
+.action-btn:hover i {
+  transform: scale(1.15);
+}
+
+/* Welcome Header */
+.welcome-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  box-shadow: inset 0 2px 4px 0 rgba(255,255,255,0.8);
+}
+
+/* Top KPI Cards specific borders */
+.border-teal { border-left-color: #0d9488 !important; }
+.border-info { border-left-color: #0ea5e9 !important; }
+.border-warning { border-left-color: #f59e0b !important; }
+.border-success { border-left-color: #10b981 !important; }
+
+/* Table styling and hover effects */
+.table {
+  color: #334155;
+}
+.table-hover tbody tr {
+  transition: background-color 0.2s ease;
+}
+.table-hover tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+.table th {
+  color: #64748b;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Badges */
+.badge {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 0.4em 0.8em;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* Text improvements */
+h6, h3, .fw-bold {
+  letter-spacing: -0.01em;
+}
+
+.text-muted, .text-secondary {
+  color: #64748b !important;
+}
+
+/* Micro-animations */
+.kpi-icon-wrap {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card:hover .kpi-icon-wrap, .action-btn:hover .kpi-icon-wrap {
+  transform: rotate(5deg) scale(1.08);
+}
+
+/* Donut text fallback */
+svg text {
+  font-family: inherit;
+}
+
+/* Gradient card fixes */
+.card[style*="linear-gradient"] {
+  border: none !important;
+  box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.3) !important;
+}
+.card[style*="linear-gradient"]:hover {
+  box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4) !important;
+}
+
+/* Vertical Stepper styles */
+.po-stepper {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.po-stepper::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 0.95rem;
+  width: 2px;
+  background-color: #e2e8f0;
+  z-index: 1;
+}
+
+.stepper-step {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.stepper-step:last-child {
+  margin-bottom: 0;
+}
+
+.stepper-step .step-icon {
+  position: absolute;
+  left: -2.5rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: #f8fafc;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.stepper-step .step-icon i {
+  font-size: 0.9rem;
+}
+
+.stepper-step.active .step-icon {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+}
+
+.stepper-step.active .step-title {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.stepper-step .step-title {
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 0.15rem;
+  transition: color 0.3s ease;
+}
+
+.stepper-step .step-desc {
+  font-size: 0.75rem;
+}
+
+/* PO Suggestions Dropdown */
+.po-suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  max-height: 220px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  margin-top: 4px;
+}
+
+.po-suggestion-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid #f1f5f9;
+  text-align: left;
+}
+
+.po-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.po-suggestion-item:hover {
+  background-color: #f8fafc;
+}
+
+/* Cancelled step styling */
+.stepper-step.cancelled .step-icon {
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+  color: #842029;
+}
+
+.stepper-step.cancelled.active .step-icon {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.15);
+}
+
+.stepper-step.cancelled .step-title {
+  color: #842029;
+  font-weight: 600;
+}

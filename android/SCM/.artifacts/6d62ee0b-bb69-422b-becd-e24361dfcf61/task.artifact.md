@@ -1,0 +1,3 @@
+- [x] Refine `activity_billing_page.xml` header layout
+- [x] Update `BillingPage.java` inset handling and profile loading
+- [x] Build and verify

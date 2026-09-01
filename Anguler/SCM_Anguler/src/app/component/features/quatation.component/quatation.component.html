@@ -1,0 +1,449 @@
+<div class="container-fluid py-4 px-4 text-dark" *ngIf="!isEmbedded">
+
+  <div class="d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-3 mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1">Supplier Quotation Matrix</h4>
+      <p class="text-muted mb-0 small">Log supplier bids, trace PR reference nodes, and analyze procurement price layouts.</p>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+      <button *ngIf="canUploadQuotation()" class="btn btn-primary px-4 py-2 fw-bold shadow-sm d-flex align-items-center"
+        (click)="openDrawer()">
+        <i class="bi bi-file-earmark-arrow-up-fill me-2"></i>Upload Supplier Quotation
+      </button>
+    </div>
+  </div>
+  
+  <div class="row g-3 mb-4 align-items-center">
+    <div class="col-md-4">
+      <div class="input-group shadow-sm">
+        <span class="input-group-text bg-white"><i class="bi bi-search text-secondary"></i></span>
+        <input type="text" class="form-control" placeholder="Search QTN No..." [(ngModel)]="searchQtn" (input)="applyFilters()">
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="input-group shadow-sm">
+        <span class="input-group-text bg-white"><i class="bi bi-person text-secondary"></i></span>
+        <input type="text" class="form-control" placeholder="Search Supplier Name..." [(ngModel)]="searchSupplierName" (input)="applyFilters()">
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <select class="form-select shadow-sm" [(ngModel)]="searchState" (change)="applyFilters()">
+        <option value="">All Auditing States</option>
+        <option value="PENDING">PENDING</option>
+        <option value="UNDER_REVIEW">UNDER_REVIEW</option>
+        <option value="APPROVED">APPROVED</option>
+        <option value="REJECTED">REJECTED</option>
+        <option value="EXPIRED">EXPIRED</option>
+      </select>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+  <div class="alert alert-danger shadow-sm border-2 mb-4 fs-7" role="alert">
+    <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>Core Fault:</strong> {{ errorMessage }}
+  </div>
+  }
+
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-7">
+          <thead class="table-light text-uppercase fs-8">
+            <tr>
+              <th class="ps-4">Quotation No</th>
+              <th>Enclosed File</th>
+              <th>Supplier / Product</th>
+              <th>Unit Bid Price</th>
+              <th>Qty Required</th>
+              <th>Aggregate Price</th>
+              <th>Auditing State</th>
+              <th class="text-end px-4" width="160">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (q of filteredQuotations; track q.id) {
+            <tr>
+              <td class="ps-4">
+                <span class="badge bg-dark font-monospace tracking-wide">{{ q.quotationNumber || 'QTN-'+q.id }}</span>
+                <small class="d-block text-muted font-monospace mt-1">
+                  <i class="bi bi-link-45deg"></i>PR Node: #{{ q.purchaseRequisitionId }}
+                </small>
+              </td>
+              <td>
+                <img *ngIf="q.attachmentUrl" [src]="getImageUrl(q.attachmentUrl)" alt="Quotation Image"
+                  class="rounded border shadow-sm" width="50" height="50" style="object-fit: cover;" />
+                <span *ngIf="!q.attachmentUrl" class="text-muted small italic">No Enclosed Image</span>
+              </td>
+              <td>
+                <div class="fw-bold text-dark">{{ q.productName || 'No Linked Products' }}</div>
+                <div class="text-secondary small">
+                  <i class="bi bi-building me-1"></i>{{ q.supplierName || getSupplierNameById(q.supplierId) }}
+                </div>
+              </td>
+              <td class="font-monospace fw-bold text-secondary">${{ q.unitPrice | number:'1.2-2' }}</td>
+              <td class="font-monospace text-dark">{{ q.quantity }} Pcs</td>
+              <td class="font-monospace fw-bold text-success">${{ q.totalPrice | number:'1.2-2' }}</td>
+              <td>
+                <select *ngIf="canUpdateStatus()" class="form-select form-select-sm border-0 bg-light fw-bold"
+                  [(ngModel)]="q.status" (change)="updateStatus(q)">
+                  <option value="PENDING">PENDING</option>
+                  <option value="UNDER_REVIEW">UNDER_REVIEW</option>
+                  <option value="APPROVED">APPROVED</option>
+                  <option value="REJECTED">REJECTED</option>
+                  <option value="EXPIRED">EXPIRED</option>
+                </select>
+
+                <span *ngIf="!canUpdateStatus()" class="badge px-2.5 py-1.5 fs-8 text-uppercase border" [ngClass]="{
+                  'bg-success-subtle text-success border-success': q.status === 'APPROVED',
+                  'bg-warning-subtle text-warning border-warning': q.status === 'PENDING' || q.status === 'UNDER_REVIEW',
+                  'bg-danger-subtle text-danger border-danger': q.status === 'REJECTED' || q.status === 'EXPIRED'
+                }">
+                  {{ q.status }}
+                </span>
+              </td>
+
+              <td class="text-end px-4">
+                <div class="d-flex justify-content-end gap-2">
+                  <!-- PDF Preview Modal Button -->
+                  <button class="btn btn-icon btn-light text-primary" title="Preview Quotation PDF" (click)="openPdfModal(q)">
+                    <i class="bi bi-file-earmark-pdf-fill"></i>
+                  </button>
+
+                  <button class="btn btn-icon btn-light text-warning" title="Edit Properties" (click)="edit(q)" 
+        *ngIf="userRole === 'ADMIN' || 
+               (userRole === 'SUPPLIER' && q.supplierId === currentSupplierId && q.status !== 'APPROVED' && q.status !== 'UNDER_REVIEW')">
+    <i class="bi bi-pencil-square"></i>
+</button>
+
+                  <button class="btn btn-icon btn-light text-danger" title="Purge Token Index" (click)="delete(q.id)"
+                    *ngIf="userRole === 'ADMIN'">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            }
+            @empty {
+            <tr>
+              <td colspan="8" class="text-center py-5 text-muted font-monospace fs-8">
+                <i class="bi bi-folder-x fs-2 d-block mb-2 text-secondary"></i>No quotations match your criteria.
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-drawer shadow" [class.show]="isDrawerOpen">
+    <div class="drawer-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
+      <h5 class="fw-bold mb-0">{{ isEdit ? 'Mutate Quotation Properties' : 'Register Supplier Quotation' }}</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4" style="overflow-y: auto; height: calc(100vh - 110px);">
+      <ng-container *ngTemplateOutlet="quotationFormTemplate"></ng-container>
+    </div>
+  </div>
+
+  @if (isDrawerOpen) {
+  <div class="drawer-backdrop" (click)="closeDrawer()"></div>
+  }
+
+ <!--  PDF Preview Modal  -->
+<div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);" *ngIf="isPdfModalOpen">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content shadow-lg border-0 rounded-4">
+      
+      <div class="modal-header bg-dark text-white px-4 py-3">
+        <h5 class="modal-title fw-bold">
+          <i class="bi bi-file-earmark-text-fill me-2 text-info"></i> Quotation Document Preview
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closePdfModal()"></button>
+      </div>
+
+      <div class="modal-body bg-light p-4 d-flex justify-content-center">
+        <div #pdfPreviewContainer class="bg-white p-5 shadow-sm rounded-3 border" style="width: 100%; max-width: 700px; font-family: Arial, sans-serif; color: #000;">
+          
+          <!--  SCM Enterprise Exact Logo Header with Supplier Name -->
+          <div class="text-center mb-4 pb-3 border-bottom">
+            <h1 class="fw-bold mb-0" style="letter-spacing: 3px; font-size: 38px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+              <span style="color: #0b2545;">S</span><span style="color: #0b2545;">C</span><span style="color: #38b000;">M</span>
+            </h1>
+            <h5 class="fw-bold text-dark mt-1 mb-2" style="letter-spacing: 4px; font-size: 14px;">
+              ENTERPRISE
+            </h5>
+            
+            <div class="d-flex justify-content-center align-items-center gap-3 mt-2 text-uppercase" style="font-size: 11px; font-weight: 700; color: #0b2545;">
+              <span>
+                <i class="bi bi-link-45deg text-primary fs-6 me-1 align-middle"></i> CONNECT
+              </span>
+              <span class="text-muted">|</span>
+              <span>
+                <i class="bi bi-gear-fill text-success fs-6 me-1 align-middle"></i> OPTIMIZE
+              </span>
+              <span class="text-muted">|</span>
+              <span>
+                <i class="bi bi-truck text-primary fs-6 me-1 align-middle"></i> DELIVER
+              </span>
+            </div>
+
+            <!--  Supplier Name Display Bar -->
+            <div class="mt-3 pt-2">
+              <span class="badge bg-light text-dark border px-3 py-2 fw-bold fs-7 font-monospace">
+                <i class="bi bi-building me-1 text-secondary"></i> Supplier: {{ selectedQuotationForPdf?.supplierName || 'N/A' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="text-center mb-4">
+            <h3 class="fw-bold text-dark mb-1">SUPPLIER QUOTATION INVOICE</h3>
+            <p class="text-muted small"><b>Quotation Reference:</b> {{ selectedQuotationForPdf?.quotationNumber || 'QTN-' + selectedQuotationForPdf?.id }}</p>
+          </div>
+          <hr class="mb-4">
+          
+          <table class="table table-bordered align-middle fs-7 mb-4">
+            <tbody>
+              <tr>
+                <td class="fw-bold bg-light" style="width: 35%;">Quotation Number</td>
+                <td><span class="badge bg-dark font-monospace">{{ selectedQuotationForPdf?.quotationNumber || 'QTN-' + selectedQuotationForPdf?.id }}</span></td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Supplier Name</td>
+                <td>{{ selectedQuotationForPdf?.supplierName || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Supplier Email</td>
+                <td>{{ selectedQuotationForPdf?.supplierEmail || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Product ID & Name</td>
+                <td>#{{ selectedQuotationForPdf?.productIds }} - {{ selectedQuotationForPdf?.productName || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Product Description</td>
+                <td>{{ selectedQuotationForPdf?.productDescription || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Purchase Requisition ID</td>
+                <td>#{{ selectedQuotationForPdf?.purchaseRequisitionId }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Unit Bid Price</td>
+                <td>${{ selectedQuotationForPdf?.unitPrice | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Quantity Required</td>
+                <td>{{ selectedQuotationForPdf?.quantity }} Pcs</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Aggregate Price (Total)</td>
+                <td class="text-success fw-bold">${{ selectedQuotationForPdf?.totalPrice | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Lead Time</td>
+                <td>{{ selectedQuotationForPdf?.leadTimeDays }} Days</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Delivery Time</td>
+                <td>{{ selectedQuotationForPdf?.deliveryTime || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Valid Until</td>
+                <td>{{ selectedQuotationForPdf?.validUntil | date:'mediumDate' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Warranty Matrix</td>
+                <td>{{ selectedQuotationForPdf?.warranty || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Additional Notes</td>
+                <td>{{ selectedQuotationForPdf?.notes || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Attachment Status</td>
+                <td>{{ selectedQuotationForPdf?.attachmentUrl ? 'Attached & Verified' : 'Not Attached' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Received At</td>
+                <td>{{ selectedQuotationForPdf?.receivedAt | date:'medium' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Auditing State</td>
+                <td><span class="badge bg-secondary">{{ selectedQuotationForPdf?.status }}</span></td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Created At</td>
+                <td>{{ selectedQuotationForPdf?.createdAt | date:'medium' }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!--  Employee & Authorized Signature Section  -->
+          <div class="row pt-5 border-top text-center" style="display: flex; justify-content: space-between; margin-top: 90px !important; padding-top: 30px !important;">
+            <div style="width: 40%; display: inline-block;">
+              <div style="border-top: 1px solid #000; margin-bottom: 5px; width: 80%; margin-left: auto; margin-right: auto;"></div>
+              <p class="fw-bold mb-0" style="font-size: 12px;">Employee Signature</p>
+              <p class="text-muted small mb-0" style="font-size: 10px;">(Verified & Processed)</p>
+            </div>
+            <div style="width: 40%; display: inline-block;">
+              <div style="border-top: 1px solid #000; margin-bottom: 5px; width: 80%; margin-left: auto; margin-right: auto;"></div>
+              <p class="fw-bold mb-0" style="font-size: 12px;">Authorized Signature</p>
+              <p class="text-muted small mb-0" style="font-size: 10px;">(Management / Admin)</p>
+            </div>
+          </div>
+
+          <div class="text-center mt-4 pt-3 text-muted" style="font-size: 11px;">
+            <p class="mb-0">This is a system-generated secure Supplier Quotation document.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer bg-white px-4 py-3 border-top">
+        <button type="button" class="btn btn-outline-secondary px-4 fw-bold" (click)="closePdfModal()">Close</button>
+        <button type="button" class="btn btn-success px-4 fw-bold d-flex align-items-center gap-2" (click)="downloadPdfFromModal()">
+          <i class="bi bi-download"></i> Download PDF
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="isPdfModalOpen"></div>
+</div>
+<ng-template #quotationFormTemplate>
+<form #qForm="ngForm" (ngSubmit)="qForm.valid && save()">
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Linked Purchase Requisition Vector</label>
+          <select class="form-select fs-7" [(ngModel)]="quotation.purchaseRequisitionId" (ngModelChange)="onRequisitionSelect($event)" name="purchaseRequisitionId"
+            #prRef="ngModel" required [disabled]="isEdit" [class.is-invalid]="prRef.value === 0 && qForm.submitted">
+            <option [value]="0">-- Select Linked Requisition Node --</option>
+            @for (pr of requisitions; track pr.id) {
+            <option [value]="pr.id">PR #{{ pr.id }} (Required Date: {{ pr.requiredByDate }})</option>
+            }
+          </select>
+          <div class="invalid-feedback small fw-bold" *ngIf="prRef.value === 0 && qForm.submitted">Purchase Requisition link is mandatory!</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Target Vendor Node</label>
+          <select class="form-select fs-7 bg-light fw-bold" [(ngModel)]="quotation.supplierId" name="supplierId"
+            #supRef="ngModel" required [disabled]="isEdit || activeRole === 'SUPPLIER'" [class.is-invalid]="supRef.value === 0 && qForm.submitted">
+            <option [value]="0"></option>
+            @if (activeRole === 'SUPPLIER') {
+              <option [value]="currentSupplierId" selected>{{ currentSupplierName }}</option>
+            } @else {
+              @for (s of suppliers; track s.id) {
+              <option [value]="s.id">{{ s.name }} ({{ s.companyName || 'Corporate Entity' }})</option>
+              }
+            }
+          </select>
+          <div class="invalid-feedback small fw-bold" *ngIf="supRef.value === 0 && qForm.submitted">Supplier selection is mandatory!</div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Unit Bid Cost ($)</label>
+            <input type="number" class="form-control fs-7 font-monospace fw-bold" [(ngModel)]="quotation.unitPrice"
+              name="unitPrice" min="0" placeholder="0.00" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Supply Volume (Qty)</label>
+            <input type="number" class="form-control fs-7 font-monospace fw-bold"
+              [class.is-invalid]="!isQuantityValid()" [(ngModel)]="quotation.quantity" name="quantity" min="1" required>
+            <div class="invalid-feedback d-block small fw-bold" *ngIf="!isQuantityValid()">
+              Quantity limit exceeded! Max limit is: {{ getLinkedRequisitionQty() }}.
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Lead Time (Days)</label>
+            <input type="number" class="form-control fs-7 font-monospace" [(ngModel)]="quotation.leadTimeDays"
+              name="leadTimeDays" min="1" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Bidding Strategy Stage</label>
+            <select class="form-select fs-7" [(ngModel)]="quotation.status" name="status" required [disabled]="activeRole === 'SUPPLIER'">
+              <option value="PENDING">PENDING</option>
+              <option value="UNDER_REVIEW">UNDER_REVIEW</option>
+              <option value="APPROVED">APPROVED</option>
+              <option value="REJECTED">REJECTED</option>
+              <option value="EXPIRED">EXPIRED</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Requisition Received Date</label>
+            <input type="date" class="form-control fs-7 font-monospace" [(ngModel)]="quotation.receivedAt" name="receivedAt" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Estimated Delivery Date</label>
+            <input type="date" class="form-control fs-7 font-monospace" [(ngModel)]="quotation.deliveryTime" name="deliveryTime" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Warranty Coverage Matrix</label>
+          <input type="text" class="form-control fs-7" [(ngModel)]="quotation.warranty" name="warranty" placeholder="e.g. 3 Years">
+        </div>
+
+        <div class="mb-3" *ngIf="!isEdit">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Supplier Attachment Document Envelope</label>
+          <input type="file" class="form-control fs-7" (change)="onFileChange($event)" accept="image/*,.pdf">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Product Nomenclature Specifications</label>
+          <textarea class="form-control fs-7" rows="2" [(ngModel)]="quotation.productDescription" name="productDescription"></textarea>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Sourcing Operations Notes</label>
+          <textarea class="form-control fs-7" rows="2" [(ngModel)]="quotation.notes" name="notes"></textarea>
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 pt-2 border-top">
+          <button class="btn btn-success flex-grow-1 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-bold fs-7 text-uppercase"
+            type="submit" [disabled]="!isQuantityValid() || qForm.invalid">
+            <i class="bi bi-cloud-arrow-up-fill"></i> {{ isEdit ? 'Commit Bid Mutations' : 'Publish Quotation Envelope' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3 fs-7 text-uppercase" (click)="reset()">Clear</button>
+        </div>
+      </form>
+</ng-template>
+
+<!-- MODAL: ADD QUOTATION (LC STYLE) -->
+<div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px); z-index: 1055;" *ngIf="isEmbedded">
+  <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 850px;">
+    <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
+      <div class="modal-header px-4 py-3.5 border-0 d-flex justify-content-between align-items-center text-white" style="background: linear-gradient(135deg, #312e81 0%, #4338ca 60%, #6366f1 100%);">
+        <div class="d-flex align-items-center gap-3">
+          <div class="p-2.5 rounded-3 bg-white bg-opacity-20 backdrop-blur shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+            <i class="bi bi-file-earmark-arrow-up fs-4 text-white"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bold mb-0 text-white" style="letter-spacing: -0.01em;">Submit Quotation Bid</h5>
+            <p class="text-white-50 small mb-0 fs-8">Provide pricing and timeline for corporate purchase requisitions</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+      </div>
+      <div class="modal-body p-4 bg-light custom-scroll overflow-auto" style="max-height: 580px;">
+         <ng-container *ngTemplateOutlet="quotationFormTemplate"></ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,452 @@
+<div class="container-fluid py-4 px-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1"><i class="bi bi-receipt-cutoff text-primary me-2"></i>Commercial Invoice Ledger</h4>
+      <p class="text-muted mb-0 small">Audit system financial transactions: automate tax calculations, control discount parameters, track payment dues, and monitor auto-email statuses.</p>
+    </div>
+   @if (userRole !== 'CUSTOMER'  && userRole !== 'SALES_OFFICER') {
+  <button class="btn btn-primary px-4 py-2 fw-bold shadow-sm" (click)="openDrawer()">
+    <i class="bi bi-file-earmark-plus me-2"></i>Generate Invoice Node
+  </button>
+}
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger shadow-sm border-2 mb-4 fs-7" role="alert">
+      <strong><i class="bi bi-shield-exclamation me-2"></i>Invoice Processing Blocked:</strong> {{ errorMessage }}
+    </div>
+  }
+
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-7">
+          <thead class="table-light text-uppercase fs-8 fw-bold text-secondary">
+            <tr>
+              <th class="ps-4">Invoice Ident</th>
+              <th>Customer Recipient</th>
+              <th>Order ID</th>
+              <th>Financial Total</th>
+              <th>Paid Amt</th>
+              <th>Due Amt</th>
+              <th>Payment Status</th>
+              <th>Invoice Matrix</th>
+              <th class="text-end px-4" width="140">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (inv of invoices; track inv.id) {
+              <tr>
+                <td class="ps-4">
+                  <div class="fw-bold text-dark">{{ inv.invoiceNumber || 'DRAFT_GEN_ID' }}</div>
+                  <small class="text-muted font-monospace fs-8">ID: {{ inv.id }}</small>
+                </td>
+                <td>
+                  <div class="fw-bold text-dark">{{ inv.issuedToName }}</div>
+                  <small class="text-muted fs-8 font-sans">{{ inv.customerEmail }}</small>
+                </td>
+                <td><span class="badge bg-secondary font-monospace">ORD-#{{ inv.customerOrderId }}</span></td>
+                <td><b class="text-dark font-monospace">{{ inv.totalAmount | number:'1.2-2' }} {{ inv.currency }}</b></td>
+                <td><span class="text-success font-monospace fw-semibold">{{ inv.paidAmount | number:'1.2-2' }}</span></td>
+                <td>
+                  <span class="font-monospace fw-bold" [class.text-danger]="inv.dueAmount > 0" [class.text-success]="inv.dueAmount <= 0">
+                    {{ inv.dueAmount | number:'1.2-2' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge px-2.5 py-1.5 fs-8 text-uppercase border"
+                    [ngClass]="{
+                      'bg-success-subtle text-success border-success': inv.paymentStatus === 'PAID',
+                      'bg-warning-subtle text-warning border-warning': inv.paymentStatus === 'PARTIALLY_PAID',
+                      'bg-danger-subtle text-danger border-danger': inv.paymentStatus === 'UNPAID',
+                      'bg-info-subtle text-info border-info': inv.paymentStatus === 'REFUNDED'
+                    }">
+                    {{ inv.paymentStatus }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge px-2.5 py-1.5 fs-8 text-uppercase text-white rounded-pill"
+                    [ngClass]="{
+                      'bg-success': inv.invoiceStatus === 'ISSUED',
+                      'bg-dark': inv.invoiceStatus === 'DRAFT',
+                      'bg-danger': inv.invoiceStatus === 'CANCELLED'
+                    }">
+                    {{ inv.invoiceStatus }}
+                  </span>
+                </td>
+                <td class="text-end px-4">
+                  <div class="d-flex justify-content-end gap-2">
+                    <button class="btn btn-icon btn-light text-success" title="Preview & Download PDF" (click)="openPdfModal(inv)">
+                      <i class="bi bi-file-earmark-pdf-fill"></i>
+                    </button>
+                   @if (userRole !== 'CUSTOMER' && userRole !== 'SALES_OFFICER') {
+                      <button class="btn btn-icon btn-light text-warning" title="Edit Parameters" (click)="edit(inv)">
+                        <i class="bi bi-pencil-fill"></i>
+                      </button>
+                      <button class="btn btn-icon btn-light text-danger" title="Purge Record" (click)="deleteInvoice(inv.id)">
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="9" class="text-center py-5 text-muted font-monospace fs-8">
+                  <i class="bi bi-file-earmark-break fs-1 d-block mb-2 text-secondary"></i>No commercial billing vectors generated within this scope.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-backdrop" [class.show]="isDrawerOpen" (click)="closeDrawer()"></div>
+
+  <div class="custom-drawer shadow" [class.open]="isDrawerOpen">
+    <div class="drawer-header bg-indigo text-white p-4 d-flex justify-content-between align-items-center">
+      <h5 class="fw-bold mb-0">{{ isEdit ? 'Modify Invoice Configurations' : 'Initiate Invoice Ledger' }}</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4" style="overflow-y: auto; flex: 1; max-height: calc(90vh - 140px);">
+      <form #invForm="ngForm" (ngSubmit)="invForm.valid && submitInvoice()">
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Link Customer Order Vector</label>
+          <select class="form-select fs-7" 
+            #customerOrderId="ngModel"
+            [(ngModel)]="formModel.customerOrderId"
+            (ngModelChange)="onCustomerOrderChange($event)" 
+            name="customerOrderId" 
+            required 
+            [disabled]="isEdit"
+            [class.is-invalid]="customerOrderId.invalid && customerOrderId.touched">
+            <option [value]="null">-- Select Verified Customer Order --</option>
+            @for (o of orders; track o.id) {
+              <option [value]="o.id">Order #{{ o.id }} (Customer Ref: {{ o.customerName || o.customer?.name || 'Walk-in' }}) - ৳{{ (o.totalAmount || o.itemSubtotal || 0) | number:'1.2-2' }}</option>
+            }
+          </select>
+          @if (customerOrderId.invalid && customerOrderId.touched) {
+            <div class="invalid-feedback d-block">
+              <i class="bi bi-exclamation-circle me-1"></i>Customer Order selection is required
+            </div>
+          }
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Financial Subtotal</label>
+            <input type="number" 
+              class="form-control fs-7 font-monospace fw-bold" 
+              #subtotal="ngModel"
+              [(ngModel)]="formModel.subtotal"
+              (ngModelChange)="onSubtotalChange()" 
+              name="subtotal" 
+              min="0" 
+              required
+              [class.is-invalid]="subtotal.invalid && subtotal.touched">
+            @if (subtotal.invalid && subtotal.touched) {
+              <div class="invalid-feedback d-block">
+                <i class="bi bi-exclamation-circle me-1"></i>Subtotal is required
+              </div>
+            }
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Tax Rate Multiplier</label>
+            <select class="form-select fs-7 font-monospace" [(ngModel)]="formModel.taxRate" name="taxRate">
+              <option [value]="0.0">0% (Zero Rated)</option>
+              <option [value]="0.05">5% (Standard SCM Tariffs)</option>
+              <option [value]="0.15">15% (Standard Corporate VAT)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Discount Pct (%)</label>
+            <input type="number" 
+              class="form-control fs-7 font-monospace" 
+              [(ngModel)]="formModel.discountPercentage" 
+              (ngModelChange)="onDiscountPctChange()"
+              name="discountPercentage" 
+              min="0" 
+              max="100">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Discount Flat Amt</label>
+            <input type="number" 
+              class="form-control fs-7 font-monospace" 
+              [(ngModel)]="formModel.discountAmount" 
+              (ngModelChange)="onDiscountFlatChange()"
+              name="discountAmount" 
+              min="0">
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Logistics / Shipping Fees</label>
+            <input type="number" class="form-control fs-7 font-monospace text-primary fw-bold" [(ngModel)]="formModel.shippingFees" name="shippingFees" min="0">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Paid Account Balance</label>
+            <input type="number" class="form-control fs-7 font-monospace text-success fw-bold" [(ngModel)]="formModel.paidAmount" name="paidAmount" min="0">
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Payment Instrument</label>
+            <select class="form-select fs-7" [(ngModel)]="formModel.paymentMethod" name="paymentMethod">
+              <option value="CASH">CASH</option>
+              <option value="BANK">BANK/CHECK/LC</option>
+              <option value="BKASH">BKASH MFS GATEWAY</option>
+              <option value="NAGAD">NAGAD ROUTING</option>
+              <option value="ROCKET">ROCKET VALUE</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Txn Reference String</label>
+            <input type="text" class="form-control fs-7 font-monospace" [(ngModel)]="formModel.transactionReference" name="transactionReference" placeholder="e.g., CHK-99210, MFS-TxnID">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Invoice Pipeline Status</label>
+          <select class="form-select fs-7 fw-bold" 
+            #invoiceStatus="ngModel"
+            [(ngModel)]="formModel.invoiceStatus" 
+            name="invoiceStatus" 
+            required
+            [class.is-invalid]="invoiceStatus.invalid && invoiceStatus.touched">
+            <option value="DRAFT" class="text-dark">📁 DRAFT MODE (Under Review)</option>
+            <option value="ISSUED" class="text-success">🚀 ISSUED MODE (Commit & Dispatch Email)</option>
+            <option value="CANCELLED" class="text-danger">❌ CANCELLED MODE (Revoke Ledger)</option>
+          </select>
+          @if (invoiceStatus.invalid && invoiceStatus.touched) {
+            <div class="invalid-feedback d-block">
+              <i class="bi bi-exclamation-circle me-1"></i>Invoice status is required
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Target Delivery Target Boundary</label>
+          <input type="date" class="form-control fs-7 font-monospace" [(ngModel)]="formModel.deliveryDate" name="deliveryDate">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Consignment Shipping Address</label>
+          <textarea class="form-control fs-7" 
+            #deliveryAddress="ngModel"
+            [(ngModel)]="formModel.deliveryAddress" 
+            name="deliveryAddress" 
+            rows="2" 
+            placeholder="Input physical destination drop coordinates..." 
+            required
+            [class.is-invalid]="deliveryAddress.invalid && deliveryAddress.touched"></textarea>
+          @if (deliveryAddress.invalid && deliveryAddress.touched) {
+            <div class="invalid-feedback d-block">
+              <i class="bi bi-exclamation-circle me-1"></i>Delivery address is required
+            </div>
+          }
+        </div>
+
+        @if (formModel.invoiceStatus === 'CANCELLED') {
+          <div class="mb-3 bg-danger-subtle p-2 border border-danger rounded animate-fade-in">
+            <label class="form-label fw-bold text-danger text-uppercase fs-8">Audit Interruption/Cancellation Reason</label>
+            <input type="text" 
+              class="form-control fs-7 bg-white text-danger border-danger"
+              #cancelledReason="ngModel"
+              [(ngModel)]="formModel.cancelledReason" 
+              name="cancelledReason" 
+              required 
+              placeholder="State core trigger for transaction revocation..."
+              [class.is-invalid]="cancelledReason.invalid && cancelledReason.touched">
+            @if (cancelledReason.invalid && cancelledReason.touched) {
+              <div class="invalid-feedback d-block">
+                <i class="bi bi-exclamation-circle me-1"></i>Cancellation reason is required
+              </div>
+            }
+          </div>
+        }
+
+        <div class="mb-4">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Internal Accounting Notes</label>
+          <textarea class="form-control fs-7" [(ngModel)]="formModel.notes" name="notes" rows="2" placeholder="Log terms, bank details or instructions..."></textarea>
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 pt-2 border-top">
+          <button class="btn btn-indigo text-white flex-grow-1 py-2.5 fw-bold fs-7 text-uppercase" type="submit">
+            <i class="bi bi-shield-lock-fill me-1"></i> {{ isEdit ? 'Push Matrix Patch' : 'Execute Asset Genesis' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3 fs-7 text-uppercase" (click)="resetForm()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PDF Preview Modal (প্রফেশনাল লুক এবং টেবিলের ভেতর ডেট অন্তর্ভুক্ত) -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);" *ngIf="isPdfModalOpen">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+        
+        <div class="modal-header bg-dark text-white px-4 py-3">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-file-earmark-text-fill me-2 text-info"></i> Commercial Invoice Document Preview
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closePdfModal()"></button>
+        </div>
+
+        <div class="modal-body bg-light p-4 d-flex justify-content-center">
+          <div #pdfPreviewContainer class="bg-white p-5 shadow-sm rounded-3 border" style="width: 100%; max-width: 700px; font-family: Arial, sans-serif; color: #000;">
+            
+            <div class="text-center mb-4 pb-3 border-bottom">
+              <h1 class="fw-bold mb-0" style="letter-spacing: 3px; font-size: 36px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                <span style="color: #0b2545;">S</span><span style="color: #0b2545;">C</span><span style="color: #38b000;">M</span>
+              </h1>
+              <h5 class="fw-bold text-dark mt-1 mb-2" style="letter-spacing: 4px; font-size: 13px;">
+                ENTERPRISE BILLING NODE
+              </h5>
+              <div class="d-flex justify-content-center align-items-center gap-3 mt-2 text-uppercase" style="font-size: 11px; font-weight: 700; color: #0b2545;">
+                <span><i class="bi bi-link-45deg text-primary fs-6 me-1 align-middle"></i> CONNECT</span>
+                <span class="text-muted">|</span>
+                <span><i class="bi bi-gear-fill text-success fs-6 me-1 align-middle"></i> OPTIMIZE</span>
+                <span class="text-muted">|</span>
+                <span><i class="bi bi-truck text-primary fs-6 me-1 align-middle"></i> DELIVER</span>
+              </div>
+            </div>
+
+            <div class="text-center mb-4">
+              <h3 class="fw-bold text-dark mb-1" style="letter-spacing: 1px;">COMMERCIAL INVOICE</h3>
+              <p class="text-muted small mb-0"><b>Invoice Code:</b> {{ selectedInvoiceForPdf?.invoiceNumber || 'DRAFT_GEN_ID' }} | <b>Order ID:</b> #{{ selectedInvoiceForPdf?.customerOrderId || 'N/A' }}</p>
+            </div>
+
+            <div class="row g-3 mb-4 fs-7 bg-light p-3 rounded border border-secondary-subtle">
+              <div class="col-7">
+                <span class="text-uppercase font-monospace text-secondary fs-8 d-block fw-bold mb-1">Issued To Recipient</span>
+                <strong class="text-dark fs-6">{{ selectedInvoiceForPdf?.issuedToName }}</strong>
+                <div class="text-muted text-truncate">{{ selectedInvoiceForPdf?.customerEmail }}</div>
+                <div class="text-muted mt-1 small"><i class="bi bi-geo-alt text-danger"></i> {{ selectedInvoiceForPdf?.deliveryAddress }}</div>
+              </div>
+              <div class="col-5 text-end border-start">
+                <span class="text-uppercase font-monospace text-secondary fs-8 d-block fw-bold mb-1">System Audit Matrix</span>
+                <div class="small text-muted">Created: {{ selectedInvoiceForPdf?.createdAt | date:'yyyy-MM-dd HH:mm' }}</div>
+                <div class="mt-2">Matrix Status: <span class="badge bg-dark text-uppercase px-2 py-1">{{ selectedInvoiceForPdf?.invoiceStatus }}</span></div>
+              </div>
+            </div>
+            
+          <table class="table table-bordered align-middle fs-7 mb-4">
+            <tbody>
+              <tr>
+                <td class="fw-bold bg-light" style="width: 42%;">Delivery Date</td>
+                <td class="font-monospace fw-semibold text-dark">{{ selectedInvoiceForPdf?.deliveryDate || 'Not Scheduled' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Issued At Timestamp</td>
+                <td class="font-monospace text-success fw-semibold">{{ selectedInvoiceForPdf?.issuedAt ? (selectedInvoiceForPdf?.issuedAt | date:'yyyy-MM-dd HH:mm') : 'Draft / Not Issued' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Sales Officer ID</td>
+                <td class="font-monospace">#{{ selectedInvoiceForPdf?.salesOfficerId || 'N/A' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Subtotal Volume Matrix</td>
+                <td class="font-monospace">{{ selectedInvoiceForPdf?.subtotal | number:'1.2-2' }} {{ selectedInvoiceForPdf?.currency }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Tax Rate & Amount (+)</td>
+                <td class="font-monospace text-secondary">{{ (selectedInvoiceForPdf?.taxRate || 0) * 100 }}% (Amt: {{ selectedInvoiceForPdf?.taxAmount | number:'1.2-2' }})</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Logistics Shipping Fee (+)</td>
+                <td class="font-monospace text-secondary">{{ selectedInvoiceForPdf?.shippingFees | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Discount Margin ({{ selectedInvoiceForPdf?.discountPercentage || 0 }}%) (-)</td>
+                <td class="font-monospace text-danger">{{ selectedInvoiceForPdf?.discountAmount | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Grand Total Financials</td>
+                <td class="font-monospace fw-bold text-primary fs-6">{{ selectedInvoiceForPdf?.totalAmount | number:'1.2-2' }} {{ selectedInvoiceForPdf?.currency }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Paid Ledger Balance</td>
+                <td class="font-monospace text-success fw-semibold">{{ selectedInvoiceForPdf?.paidAmount | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td class="fw-bold bg-light">Outstanding Due Net</td>
+                <td class="font-monospace fw-bold text-danger">{{ selectedInvoiceForPdf?.dueAmount | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                  <td class="fw-bold bg-light">Payment Matrix & Method</td>
+                  <td>
+                    <span class="badge bg-secondary text-uppercase me-2">{{ selectedInvoiceForPdf?.paymentStatus }}</span>
+                    <span class="fw-semibold">Instrument: {{ selectedInvoiceForPdf?.paymentMethod || 'N/A' }}</span>
+                    @if (selectedInvoiceForPdf?.transactionReference) {
+                      <div class="small font-monospace text-muted mt-1">Txn Ref: {{ selectedInvoiceForPdf?.transactionReference }}</div>
+                    }
+                  </td>
+                </tr>
+                @if (selectedInvoiceForPdf?.cancelledReason) {
+                  <tr>
+                    <td class="fw-bold bg-danger-subtle text-danger">Cancellation Reason</td>
+                    <td class="text-danger fw-semibold">{{ selectedInvoiceForPdf?.cancelledReason }}</td>
+                  </tr>
+                }
+            </tbody>
+          </table>
+
+            @if (selectedInvoiceForPdf?.notes) {
+              <div class="alert alert-warning py-2 px-3 border-start border-warning border-3 fs-8 mb-4">
+                <b>Terms & Accounting Notes:</b> {{ selectedInvoiceForPdf?.notes }}
+              </div>
+            }
+
+            <div class="row pt-5 border-top text-center" style="display: flex; justify-content: space-between; margin-top: 80px !important; padding-top: 25px !important;">
+              <div style="width: 30%; display: inline-block;">
+                <div style="border-top: 1px solid #000; margin-bottom: 5px; width: 90%; margin-left: auto; margin-right: auto;"></div>
+                <p class="fw-bold mb-0" style="font-size: 11px;">Customer Signature</p>
+                <p class="text-muted small mb-0" style="font-size: 9px;">(Received & Acknowledged)</p>
+              </div>
+              <div style="width: 30%; display: inline-block;">
+                <div style="border-top: 1px solid #000; margin-bottom: 5px; width: 90%; margin-left: auto; margin-right: auto;"></div>
+                <p class="fw-bold mb-0" style="font-size: 11px;">Commercial Officer</p>
+                <p class="text-muted small mb-0" style="font-size: 9px;">(Prepared & Verified)</p>
+              </div>
+              <div style="width: 30%; display: inline-block;">
+                <div style="border-top: 1px solid #000; margin-bottom: 5px; width: 90%; margin-left: auto; margin-right: auto;"></div>
+                <p class="fw-bold mb-0" style="font-size: 11px;">Manager Signature</p>
+                <p class="text-muted small mb-0" style="font-size: 9px;">(Authorized & Approved)</p>
+              </div>
+            </div>
+
+            <div class="text-center mt-4 pt-3 text-muted" style="font-size: 10px;">
+              <p class="mb-0">This is a system-generated secure Commercial Invoice financial ledger document.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer bg-white px-4 py-3 border-top">
+          <button type="button" class="btn btn-outline-secondary px-4 fw-bold" (click)="closePdfModal()">Close</button>
+          <button type="button" class="btn btn-success px-4 fw-bold d-flex align-items-center gap-2" (click)="downloadPdfFromModal()">
+            <i class="bi bi-download"></i> Download PDF
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop fade show" *ngIf="isPdfModalOpen"></div>
+
+  @if (isDrawerOpen) {
+    <div class="drawer-backdrop" (click)="closeDrawer()"></div>
+  }
+
+</div>

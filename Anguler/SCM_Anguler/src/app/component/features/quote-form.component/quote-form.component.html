@@ -1,0 +1,104 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      
+      <!-- Success Alert -->
+      <div *ngIf="isSuccess" class="alert alert-success alert-dismissible fade show shadow-sm border-start border-success border-4" role="alert">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-check-circle-fill me-3 fs-4"></i>
+          <div>
+            <strong class="d-block mb-1">Transmission Successful!</strong> 
+            Your request has been securely registered in the SCM Global Hub. A Commercial Officer will analyze your payload shortly.
+          </div>
+        </div>
+        <button type="button" class="btn-close" (click)="isSuccess = false"></button>
+      </div>
+      
+      <!-- Error Alert -->
+      <div *ngIf="isError" class="alert alert-danger alert-dismissible fade show shadow-sm border-start border-danger border-4" role="alert">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
+          <div>
+            <strong class="d-block mb-1">Submission Failed</strong> 
+            {{ errorMessage }}
+          </div>
+        </div>
+        <button type="button" class="btn-close" (click)="isError = false"></button>
+      </div>
+
+      <!-- Main Form Card -->
+      <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
+        <div class="card-header bg-dark text-white text-center py-4">
+          <h3 class="fw-bold mb-1"><i class="bi bi-globe-asia-australia me-2 text-primary"></i>SCM Public Gateway</h3>
+          <p class="text-muted small mb-0">Request a Commercial Quote or Establish Corporate Partnership Nodes</p>
+        </div>
+        
+        <div class="card-body p-4 bg-light">
+          <form [formGroup]="quoteForm" (ngSubmit)="onSubmit()">
+            
+            <!-- Partnership Node -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold text-secondary small text-uppercase">Partnership Node</label>
+              <select class="form-select" formControlName="requestType" [ngClass]="{'is-invalid': isFieldInvalid('requestType')}">
+                <option value="">-- Select Profile Mode --</option>
+                <option value="BUYER">Direct Importer / Buyer</option>
+                <option value="SUPPLIER">Global Exporter / Supplier</option>
+                <option value="LOGISTICS">Freight Forwarding Partner</option>
+              </select>
+              <div class="invalid-feedback">Please select a valid partnership node context.</div>
+            </div>
+
+            <!-- Corporate Name -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold text-secondary small text-uppercase">Corporate Registered Name</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white text-muted"><i class="bi bi-building"></i></span>
+                <input type="text" class="form-control" placeholder="e.g., Global Trade Corp" formControlName="companyName" [ngClass]="{'is-invalid': isFieldInvalid('companyName')}">
+                <div class="invalid-feedback">Corporate registered name is mandatory.</div>
+              </div>
+            </div>
+
+            <!-- Contact Person -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold text-secondary small text-uppercase">Point of Contact Person</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white text-muted"><i class="bi bi-person-badge"></i></span>
+                <input type="text" class="form-control" placeholder="John Doe" formControlName="contactName" [ngClass]="{'is-invalid': isFieldInvalid('contactName')}">
+                <div class="invalid-feedback">Contact person identification is required.</div>
+              </div>
+            </div>
+
+            <!-- Contact Vectors -->
+            <div class="row g-3 mb-3">
+              <div class="col-sm-6">
+                <label class="form-label fw-semibold text-secondary small text-uppercase">Corporate Email</label>
+                <input type="email" class="form-control" placeholder="trade@company.com" formControlName="email" [ngClass]="{'is-invalid': isFieldInvalid('email')}">
+                <div class="invalid-feedback">Provide a valid corporate email structure.</div>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label fw-semibold text-secondary small text-uppercase">Phone Vector</label>
+                <input type="text" class="form-control" placeholder="+88017XXXXXXXX" formControlName="phone" [ngClass]="{'is-invalid': isFieldInvalid('phone')}">
+                <div class="invalid-feedback">Valid phone digit matrix required.</div>
+              </div>
+            </div>
+
+            <!-- Product/Scope Details -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold text-secondary small text-uppercase">Cargo Details & Partnership Scope</label>
+              <textarea class="form-control" rows="4" placeholder="Detail your cargo metrics, expected Incoterms (FOB, CIF), port preferences, or operational inquiries..." formControlName="productDetails" [ngClass]="{'is-invalid': isFieldInvalid('productDetails')}"></textarea>
+              <div class="invalid-feedback">Please provide detailed scope descriptions (min 10 chars).</div>
+            </div>
+
+            <!-- Action Button -->
+            <button class="btn btn-primary w-100 py-2.5 fw-bold text-uppercase shadow-sm d-flex align-items-center justify-content-center gap-2" type="submit" [disabled]="isSubmitting">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <i *ngIf="!isSubmitting" class="bi bi-send-check-fill"></i>
+              {{ isSubmitting ? 'Transmitting Data...' : 'Transmit Partnership Payload' }}
+            </button>
+            
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

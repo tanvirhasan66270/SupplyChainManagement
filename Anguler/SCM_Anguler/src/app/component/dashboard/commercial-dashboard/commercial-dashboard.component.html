@@ -1,0 +1,1440 @@
+<div class="commercial-dashboard px-3 px-md-4 py-4">
+  
+  <!-- ───────────────── TOP BAR / WELCOME BANNER ───────────────── -->
+  <div class="dashboard-header bg-white p-4 rounded-4 shadow-sm border mb-4 d-flex justify-content-between align-items-center">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h2 class="fw-bold text-dark fs-4 mb-0">Welcome back, <span class="text-primary">{{ userName }}</span> <span class="fs-4">👋</span></h2>
+      </div>
+      <p class="text-muted fs-8 mb-0 d-flex align-items-center gap-2">
+        <span class="text-dark fw-bold">Commercial Officer</span> &bull; Financial metrics & commercial insights.
+        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 fs-9"><span class="pulse-dot-green me-1"></span> Live</span>
+      </p>
+    </div>
+    <div class="header-actions d-flex gap-2">
+      <button class="btn btn-outline-secondary btn-sm px-3 fw-semibold rounded-3 d-flex align-items-center gap-1" (click)="toggleSettings()" title="Dashboard Settings"><i class="bi bi-gear"></i> <span class="d-none d-sm-inline">Settings</span></button>
+      <button class="btn btn-outline-danger btn-sm px-3 fw-semibold rounded-3 d-flex align-items-center gap-1" (click)="logout()"><i class="bi bi-box-arrow-right"></i> Log Out</button>
+    </div>
+  </div>
+
+  <!-- Settings Drawer View -->
+  @if (showSettings) {
+    <app-dashboard-settings (closeSettings)="closeSettings()"></app-dashboard-settings>
+  }
+
+  <!-- ───────────────── KPI STATS GRID ───────────────── -->
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3 mb-4">
+    <div class="col" *ngFor="let kpi of kpis">
+      <div class="card kpi-card border-0 shadow-sm p-3.5 rounded-4 bg-white border-start border-4 border-{{ kpi.color }} h-100">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <div class="text-uppercase fw-bold mb-1" style="font-size: 0.68rem; letter-spacing: 0.06em; color: #64748b;">
+              {{ kpi.label }}
+            </div>
+            <div class="fs-3 fw-bold text-dark font-monospace mb-0" style="letter-spacing: -0.02em;">
+              {{ kpi.value }}
+            </div>
+          </div>
+          <div class="kpi-icon-wrap bg-{{ kpi.color }}-subtle text-{{ kpi.color }}">
+            <i class="bi {{ kpi.icon }} fs-4"></i>
+          </div>
+        </div>
+        <div class="pt-2 border-top border-light d-flex justify-content-between align-items-center">
+          <span class="text-muted font-monospace" style="font-size: 0.72rem;">Updated: {{ today | date: 'shortTime' }}</span>
+          <span class="badge bg-light text-secondary border font-monospace" style="font-size: 0.68rem;">LIVE LEDGER</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── QUICK ACTIONS GRID ───────────────── -->
+  <div class="card border-0 shadow-sm p-4 bg-white rounded-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+        <i class="bi bi-lightning-charge-fill text-warning"></i> Commercial Quick Actions & Tools
+      </h6>
+      <span class="badge bg-indigo-subtle text-indigo px-3 py-1 rounded-pill font-monospace" style="font-size: 0.7rem;">6 OPERATIONAL NODES</span>
+    </div>
+    
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-3">
+      
+      <!-- Add New LC -->
+      <div class="col">
+        <div (click)="openAddLcModal()" class="quick-action-card p-3.5 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center border-indigo" style="border-color: #818cf8 !important; background-color: #f5f3ff; cursor: pointer;">
+          <div class="action-icon-wrapper rounded-circle d-flex align-items-center justify-content-center mb-2 text-white bg-indigo shadow-xs" style="width: 50px; height: 50px; background-color: #4f46e5 !important;">
+            <i class="bi bi-plus-circle-fill fs-4 text-white"></i>
+          </div>
+          <strong class="text-indigo d-block fs-7.5 mb-0.5" style="color: #4338ca !important;">Add New LC</strong>
+          <small class="text-muted fs-8">Issue new credit</small>
+        </div>
+      </div>
+
+      <!-- Letter of Credit Registry -->
+      <div class="col">
+        <div (click)="openLcRegistryModal()" class="quick-action-card p-3.5 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center" style="cursor: pointer;">
+          <div class="action-icon-wrapper rounded-circle d-flex align-items-center justify-content-center mb-2 text-indigo bg-indigo bg-opacity-10" style="width: 50px; height: 50px; background-color: rgba(99, 102, 241, 0.12) !important;">
+            <i class="bi bi-bank fs-4 text-indigo" style="color: #4f46e5 !important;"></i>
+          </div>
+          <strong class="text-dark d-block fs-7.5 mb-0.5">LC Registry</strong>
+          <small class="text-muted fs-8">Audit LCs</small>
+        </div>
+      </div>
+
+      <!-- Customer Orders -->
+      <div class="col">
+        <div (click)="openCustomerOrdersModal()" class="quick-action-card p-3.5 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center" style="cursor: pointer;">
+          <div class="action-icon-wrapper rounded-circle d-flex align-items-center justify-content-center mb-2 text-danger bg-danger bg-opacity-10" style="width: 50px; height: 50px;">
+            <i class="bi bi-bag-check-fill fs-4 text-danger"></i>
+          </div>
+          <strong class="text-dark d-block fs-7.5 mb-0.5">Customer Orders</strong>
+          <small class="text-muted fs-8">View & audit orders</small>
+        </div>
+      </div>
+
+      <!-- Commercial Invoice Search -->
+      <div class="col">
+        <div (click)="openInvoiceModal()" class="quick-action-card p-3.5 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center" style="cursor: pointer;">
+          <div class="action-icon-wrapper rounded-circle d-flex align-items-center justify-content-center mb-2 text-primary bg-primary bg-opacity-10" style="width: 50px; height: 50px;">
+            <i class="bi bi-file-earmark-text-fill fs-4 text-primary"></i>
+          </div>
+          <strong class="text-dark d-block fs-7.5 mb-0.5">Commercial Invoice</strong>
+          <small class="text-muted fs-8">Audit billing & search</small>
+        </div>
+      </div>
+
+      <!-- Shipping & Consignments -->
+      <div class="col">
+        <div (click)="openShippingModal()" class="quick-action-card p-3.5 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center" style="cursor: pointer;">
+          <div class="action-icon-wrapper rounded-circle d-flex align-items-center justify-content-center mb-2 text-success bg-success bg-opacity-10" style="width: 50px; height: 50px;">
+            <i class="bi bi-truck-flatbed fs-4 text-success"></i>
+          </div>
+          <strong class="text-dark d-block fs-7.5 mb-0.5">Shipping & Cargo</strong>
+          <small class="text-muted fs-8">Track consignments</small>
+        </div>
+      </div>
+
+      <!-- Accept Customer Payment -->
+      <div class="col">
+        <div (click)="openPaymentModal()" class="quick-action-card p-3.5 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center" style="cursor: pointer;">
+          <div class="action-icon-wrapper rounded-circle d-flex align-items-center justify-content-center mb-2 text-info bg-info bg-opacity-10" style="width: 50px; height: 50px;">
+            <i class="bi bi-check-circle-fill fs-4 text-info"></i>
+          </div>
+          <strong class="text-dark d-block fs-7.5 mb-0.5">Customer Payment</strong>
+          <small class="text-muted fs-8">Verify payment proof</small>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ───────────────── LC REGISTRY & SHIPPING DOCUMENTS ───────────────── -->
+  <div class="row g-4 mb-4">
+    
+    <!-- Active Letters of Credit Registry (Left Column) -->
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom gap-2">
+          <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-card-checklist text-indigo" style="color: #4f46e5 !important;"></i> Active Letters of Credit (LC) Registry
+          </h6>
+          
+          <div class="d-flex align-items-center gap-2">
+            <!-- Filter Search Box -->
+            <div class="input-group input-group-sm" style="max-width: 220px;">
+              <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control bg-light border-start-0 fs-8 font-monospace" [(ngModel)]="lcSearchTerm" placeholder="Filter LCs..." />
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive rounded-3 border overflow-hidden">
+          <table class="table table-custom table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th>LC Reference</th>
+                <th>Issuing Bank</th>
+                <th class="text-end">Contract Value</th>
+                <th class="text-center">Mode</th>
+                <th class="text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (lc of lcs; track lc.id || $index) {
+                @if (!lcSearchTerm || lc.lcNumber.toLowerCase().includes(lcSearchTerm.toLowerCase()) || (lc.issuingBankName && lc.issuingBankName.toLowerCase().includes(lcSearchTerm.toLowerCase()))) {
+                  <tr>
+                    <td class="font-monospace fw-bold text-primary">{{ lc.lcNumber }}</td>
+                    <td class="fw-semibold text-dark">{{ lc.issuingBankName || 'N/A' }}</td>
+                    <td class="font-monospace fw-bold text-success text-end">{{ lc.currency === 'USD' ? '$' : '৳' }}{{ lc.amount | number }}</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary-subtle text-secondary font-monospace border px-2.5 py-1">
+                        {{ lc.shipmentIncoTerms || 'Import' }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span class="badge rounded-pill px-3 py-1.5 fw-semibold" [ngClass]="getLCStatusClass(lc.lcStatus)">
+                        {{ lc.lcStatus }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              }
+              <tr *ngIf="lcs.length === 0">
+                <td colspan="5" class="text-center text-muted py-5">
+                  <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary"></i>
+                  <span class="font-monospace fs-8">No active letters of credit found in database registry.</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Shipping Documents Manifest Vault (Right Column) -->
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-file-earmark-arrow-up-fill text-primary"></i> Shipping Documents Manifest
+          </h6>
+          <span class="badge bg-primary-subtle text-primary font-monospace" style="font-size: 0.7rem;">VAULT FILE REPOSITORY</span>
+        </div>
+
+        <div class="d-flex flex-column gap-2.5 custom-scroll overflow-auto" style="max-height: 380px;">
+          <div *ngFor="let doc of documents" class="doc-item p-3 rounded-3 bg-light d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+              <div class="p-2.5 rounded-3 bg-white border text-primary shadow-xs">
+                <i class="bi" [ngClass]="doc.type === 'Letter of Credit' ? 'bi-bank text-indigo' : 'bi-truck text-success'"></i>
+              </div>
+              <div>
+                <strong class="text-dark small d-block mb-0.5">{{ doc.name }}</strong>
+                <small class="text-muted font-monospace" style="font-size: 0.72rem;">
+                  <i class="bi bi-calendar3 me-1"></i> Date: {{ doc.date }}
+                </small>
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="badge rounded-pill mb-1.5 d-block" [ngClass]="doc.status === 'Approved' ? 'bg-success-subtle text-success border border-success' : 'bg-warning-subtle text-warning border border-warning'">
+                {{ doc.status }}
+              </span>
+              <a *ngIf="doc.url" [href]="doc.url" target="_blank" class="btn btn-sm btn-link text-primary p-0 text-decoration-none fw-bold fs-8">
+                View Vault <i class="bi bi-box-arrow-up-right ms-0.5"></i>
+              </a>
+            </div>
+          </div>
+
+          <div *ngIf="documents.length === 0" class="text-center text-muted py-5">
+            <i class="bi bi-folder2-open fs-3 d-block mb-2 text-secondary"></i>
+            <span class="font-monospace fs-8">No shipping vault documents indexed.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───────────────── ROW 4: COMMERCIAL INVOICES & SHIPPING CONSIGNMENTS CARDS ───────────────── -->
+  <div class="row g-4 mb-4">
+    
+    <!-- CARD for Button 3: Commercial Invoice -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-file-earmark-text-fill text-primary"></i> Commercial Invoices Ledger
+          </h6>
+          <button type="button" (click)="openInvoiceModal()" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold fs-8">
+            View All Invoices <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+        </div>
+
+        <div class="table-responsive rounded-3 border bg-light">
+          <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+            <thead class="table-light text-uppercase text-secondary fw-bold border-bottom" style="font-size: 0.7rem; letter-spacing: 0.05em;">
+              <tr>
+                <th class="ps-3 py-2.5">Invoice Code</th>
+                <th class="py-2.5">Billed Customer</th>
+                <th class="py-2.5">Total Amount</th>
+                <th class="pe-3 text-end py-2.5">Payment Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let inv of invoices">
+                <td class="ps-3 font-monospace text-primary fw-bold">{{ inv.invoiceNumber }}</td>
+                <td class="fw-semibold text-dark">{{ inv.issuedToName }}</td>
+                <td class="font-monospace text-success fw-bold">৳{{ inv.totalAmount | number:'1.2-2' }}</td>
+                <td class="pe-3 text-end">
+                  <span class="badge rounded-pill px-2.5 py-1 font-monospace fs-8" [ngClass]="{
+                    'bg-success-subtle text-success border border-success': inv.paymentStatus === 'PAID',
+                    'bg-warning-subtle text-warning border border-warning': inv.paymentStatus === 'PARTIALLY_PAID',
+                    'bg-danger-subtle text-danger border border-danger': inv.paymentStatus === 'UNPAID' || !inv.paymentStatus
+                  }">
+                    {{ inv.paymentStatus || 'UNPAID' }}
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="invoices.length === 0">
+                <td colspan="4" class="text-center py-4 text-muted">
+                  <i class="bi bi-receipt fs-3 d-block mb-1 text-secondary opacity-50"></i>
+                  <span class="font-monospace fs-8">No commercial invoices generated.</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD for Button 4: Shipping & Cargo -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-truck-flatbed text-success"></i> Cargo & Shipping Consignments
+          </h6>
+          <button type="button" (click)="openShippingModal()" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-bold fs-8">
+            Track Consignments <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+        </div>
+
+        <div class="table-responsive rounded-3 border bg-light">
+          <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+            <thead class="table-light text-uppercase text-secondary fw-bold border-bottom" style="font-size: 0.7rem; letter-spacing: 0.05em;">
+              <tr>
+                <th class="ps-3 py-2.5">Consignment Code</th>
+                <th class="py-2.5">Supplier</th>
+                <th class="py-2.5">Route</th>
+                <th class="pe-3 text-end py-2.5">Freight Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let shp of dashboardShipments">
+                <td class="ps-3 font-monospace text-success fw-bold">{{ shp.shipmentNumber }}</td>
+                <td class="fw-semibold text-dark">{{ shp.supplierName || 'Commercial Partner' }}</td>
+                <td class="fs-8 text-secondary">{{ shp.origin || 'N/A' }} <i class="bi bi-arrow-right text-muted mx-1"></i> {{ shp.sendByAddress || 'N/A' }}</td>
+                <td class="pe-3 text-end font-monospace fw-bold text-primary">৳{{ (shp.transportCost || 0) | number:'1.2-2' }}</td>
+              </tr>
+              <tr *ngIf="dashboardShipments.length === 0">
+                <td colspan="4" class="text-center py-4 text-muted">
+                  <i class="bi bi-box-seam fs-3 d-block mb-1 text-secondary opacity-50"></i>
+                  <span class="font-monospace fs-8">No active shipping consignments.</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───────────────── ROW 5: CUSTOMER PAYMENTS & PO LINE ITEMS CARDS ───────────────── -->
+  <div class="row g-4 mb-4">
+    
+    <!-- CARD for Button 5: Customer Payment -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-shield-check text-info"></i> Customer Payment Proof Verification
+          </h6>
+          <button type="button" (click)="openPaymentModal()" class="btn btn-sm btn-outline-info rounded-pill px-3 py-1 fw-bold fs-8">
+            Audit Payment Queue <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+        </div>
+
+        <div class="table-responsive rounded-3 border bg-light">
+          <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+            <thead class="table-light text-uppercase text-secondary fw-bold border-bottom" style="font-size: 0.7rem; letter-spacing: 0.05em;">
+              <tr>
+                <th class="ps-3 py-2.5">Order Ref #</th>
+                <th class="py-2.5">Payment Method</th>
+                <th class="py-2.5">Paid Amount</th>
+                <th class="pe-3 text-end py-2.5">Verification</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of pendingPayments">
+                <td class="ps-3 font-monospace fw-bold text-dark">#{{ p.customerOrderId }}</td>
+                <td><span class="badge bg-secondary-subtle text-dark border px-2 py-0.5 font-monospace fs-8">{{ p.paymentMethod }}</span></td>
+                <td class="font-monospace fw-bold text-success">৳{{ p.paidAmount | number:'1.2-2' }}</td>
+                <td class="pe-3 text-end">
+                  <button type="button" (click)="openPaymentModal()" class="btn btn-sm btn-info text-white rounded-pill px-2.5 py-0.5 fs-8 fw-bold">
+                    Verify
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="pendingPayments.length === 0">
+                <td colspan="4" class="text-center py-4 text-muted">
+                  <i class="bi bi-check-circle-fill text-success fs-3 d-block mb-1 opacity-75"></i>
+                  <span class="font-monospace fs-8 text-dark fw-bold d-block">All Clear!</span>
+                  <span class="fs-8 text-muted">No pending payment verification requests in queue.</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD for Button 6: Line Items -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-text-indent-left text-warning"></i> Purchase Order Line Items Matrix
+          </h6>
+          <button type="button" (click)="openLineItemsModal()" class="btn btn-sm btn-outline-warning rounded-pill px-3 py-1 fw-bold fs-8">
+            Manage Line Items <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+        </div>
+
+        <div class="table-responsive rounded-3 border bg-light">
+          <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+            <thead class="table-light text-uppercase text-secondary fw-bold border-bottom" style="font-size: 0.7rem; letter-spacing: 0.05em;">
+              <tr>
+                <th class="ps-3 py-2.5">PO Ref</th>
+                <th class="py-2.5">Product Specification</th>
+                <th class="py-2.5">Unit Price</th>
+                <th class="pe-3 text-end py-2.5">Stage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of dashboardLineItems">
+                <td class="ps-3 font-monospace text-indigo fw-bold" style="color: #4f46e5 !important;">#{{ item.poNumber || item.id }}</td>
+                <td class="fw-semibold text-dark">{{ item.productName || item.productCode || 'N/A' }}</td>
+                <td class="font-monospace text-success fw-bold">৳{{ item.unitPrice | number:'1.2-2' }}</td>
+                <td class="pe-3 text-end">
+                  <span class="badge bg-success-subtle text-success border border-success rounded-pill px-2.5 py-0.5 font-monospace fs-8">
+                    {{ item.status || 'ALLOCATED' }}
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="dashboardLineItems.length === 0">
+                <td colspan="4" class="text-center py-4 text-muted">
+                  <i class="bi bi-check-circle-fill text-success fs-3 d-block mb-1 opacity-75"></i>
+                  <span class="font-monospace fs-8 text-dark fw-bold d-block">All Clear!</span>
+                  <span class="fs-8 text-muted">No discrete inventory line distributions allocated.</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───────────────── ROW 6: COMMERCIAL PARAMETERS & ANALYTICS CARDS ───────────────── -->
+  <div class="row g-4 mb-4">
+    
+    <!-- Parameter Card 1: Currency & Capital Quotas -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <h6 class="fw-bold text-dark mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+          <i class="bi bi-pie-chart-fill text-primary"></i> LC Financial Quota Parameters
+        </h6>
+        
+        <div class="mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="text-secondary fs-8 fw-bold">BDT Local Currency Quota</span>
+            <span class="font-monospace fw-bold text-primary fs-8">৳{{ totalLCValueBDT | number:'1.0-0' }}</span>
+          </div>
+          <div class="progress rounded-pill" style="height: 8px;">
+            <div class="progress-bar bg-primary" role="progressbar" style="width: 75%;"></div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="text-secondary fs-8 fw-bold">USD Foreign Exchange Quota</span>
+            <span class="font-monospace fw-bold text-info fs-8">${{ totalLCValueUSD | number:'1.2-2' }}</span>
+          </div>
+          <div class="progress rounded-pill" style="height: 8px;">
+            <div class="progress-bar bg-info" role="progressbar" style="width: 45%;"></div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-light rounded-3 border d-flex justify-content-between align-items-center mt-2">
+          <span class="text-muted fs-8 font-monospace">Combined Capital Volume:</span>
+          <strong class="font-monospace text-dark fs-7.5">৳{{ totalLCValue | number:'1.0-0' }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parameter Card 2: Document Vault Health & Compliance -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <h6 class="fw-bold text-dark mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+          <i class="bi bi-shield-check text-success"></i> Document Vault Compliance
+        </h6>
+
+        <div class="d-flex align-items-center justify-content-between p-3 bg-success bg-opacity-10 rounded-3 mb-3 border border-success border-opacity-25">
+          <div>
+            <span class="text-uppercase fs-8 text-success fw-bold d-block">Vault Health Score</span>
+            <h3 class="font-monospace fw-bold text-success mb-0">98.4%</h3>
+          </div>
+          <i class="bi bi-file-earmark-check-fill fs-1 text-success opacity-75"></i>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center text-muted fs-8 border-bottom pb-2 mb-2">
+          <span>Approved Manifest Sets:</span>
+          <strong class="font-monospace text-dark">{{ approvedDocs }} Sets</strong>
+        </div>
+        <div class="d-flex justify-content-between align-items-center text-muted fs-8">
+          <span>Pending Customs Clearances:</span>
+          <strong class="font-monospace text-warning">{{ pendingCustoms }} Consignments</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parameter Card 3: Freight Logistics Transport Vectors -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <h6 class="fw-bold text-dark mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+          <i class="bi bi-diagram-3-fill text-warning"></i> Shipment Vector Parameters
+        </h6>
+
+        <div class="d-flex flex-column gap-2">
+          <div class="d-flex align-items-center justify-content-between p-2.5 bg-light rounded-3 border">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-water text-primary fs-5"></i>
+              <span class="fs-8 text-dark fw-semibold">Ocean Vessel Sea Freight</span>
+            </div>
+            <span class="badge bg-primary-subtle text-primary font-monospace fw-bold">65% Quota</span>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between p-2.5 bg-light rounded-3 border">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-airplane-fill text-info fs-5"></i>
+              <span class="fs-8 text-dark fw-semibold">International Air Express</span>
+            </div>
+            <span class="badge bg-info-subtle text-info font-monospace fw-bold">25% Quota</span>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between p-2.5 bg-light rounded-3 border">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-truck text-success fs-5"></i>
+              <span class="fs-8 text-dark fw-semibold">Local Road Transport</span>
+            </div>
+            <span class="badge bg-success-subtle text-success font-monospace fw-bold">10% Quota</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───────────────── ROW 4: ENTERPRISE FINANCIAL BANKS & TARIFF CLEARANCE CARDS ───────────────── -->
+  <div class="row g-4 mb-4">
+    
+    <!-- CARD 1: LC Issuing Bank Terminals & SWIFT Quotas (col-lg-7) -->
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-bank2 text-primary"></i> SWIFT Banking Terminals & LC Quotas
+          </h6>
+          <a routerLink="/lcbank" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold fs-8">
+            Manage Banks <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+
+        <div class="table-responsive rounded-3 border bg-light">
+          <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+            <thead class="table-light text-uppercase text-secondary fw-bold border-bottom" style="font-size: 0.7rem; letter-spacing: 0.05em;">
+              <tr>
+                <th class="ps-3 py-2.5">Bank Terminal Name</th>
+                <th class="py-2.5">SWIFT Code</th>
+                <th class="py-2.5">Branch Location</th>
+                <th class="pe-3 text-end py-2.5">Routing Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let bank of dashboardBanks">
+                <td class="ps-3 fw-bold text-dark">
+                  <i class="bi bi-building me-1.5 text-primary"></i> {{ bank.name }}
+                </td>
+                <td class="font-monospace text-indigo fw-bold" style="color: #4f46e5 !important;">{{ bank.swiftCode }}</td>
+                <td class="text-secondary fs-8">{{ bank.branchName }}</td>
+                <td class="pe-3 text-end">
+                  <span class="badge bg-success-subtle text-success border border-success rounded-pill px-2.5 py-1 font-monospace fs-8">
+                    <i class="bi bi-check-circle-fill me-1"></i> VERIFIED
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="dashboardBanks.length === 0">
+                <td colspan="4" class="text-center py-4 text-muted">
+                  <i class="bi bi-bank fs-3 d-block mb-1 text-secondary opacity-50"></i>
+                  <span class="font-monospace fs-8">No LC issuing bank terminals registered.</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 2: Import Trade Vectors & Tariff Clearance Matrix (col-lg-5) -->
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-globe-americas text-success"></i> Import Tariff & Customs Matrix
+          </h6>
+          <span class="badge bg-success-subtle text-success border border-success font-monospace" style="font-size: 0.65rem;">PORT CLEARANCE</span>
+        </div>
+
+        <div class="d-flex flex-column gap-2.5">
+          <!-- Vector 1 -->
+          <div class="p-3 border rounded-3 bg-light d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+              <div class="p-2 rounded-circle bg-white border shadow-xs fs-5">🇨🇳</div>
+              <div>
+                <strong class="d-block text-dark fs-8">China (Guangzhou Port)</strong>
+                <small class="text-muted font-monospace fs-8">Sea Freight Container • HS 8471</small>
+              </div>
+            </div>
+            <span class="badge bg-success-subtle text-success border border-success rounded-pill px-2.5 py-1 font-monospace fs-8">
+              CLEARED
+            </span>
+          </div>
+
+          <!-- Vector 2 -->
+          <div class="p-3 border rounded-3 bg-light d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+              <div class="p-2 rounded-circle bg-white border shadow-xs fs-5">🇸🇬</div>
+              <div>
+                <strong class="d-block text-dark fs-8">Singapore (Jurong Hub)</strong>
+                <small class="text-muted font-monospace fs-8">Air Cargo Express • HS 8504</small>
+              </div>
+            </div>
+            <span class="badge bg-success-subtle text-success border border-success rounded-pill px-2.5 py-1 font-monospace fs-8">
+              CLEARED
+            </span>
+          </div>
+
+          <!-- Vector 3 -->
+          <div class="p-3 border rounded-3 bg-light d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+              <div class="p-2 rounded-circle bg-white border shadow-xs fs-5">🇩🇪</div>
+              <div>
+                <strong class="d-block text-dark fs-8">Germany (Hamburg Port)</strong>
+                <small class="text-muted font-monospace fs-8">Heavy Cargo • HS 8413</small>
+              </div>
+            </div>
+            <span class="badge bg-warning-subtle text-warning border border-warning rounded-pill px-2.5 py-1 font-monospace fs-8">
+              INSPECTION
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <div class="card border-0 shadow-sm p-4 bg-white rounded-4 mb-4" *ngIf="notifications.length > 0">
+    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+      <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+        <i class="bi bi-bell-fill text-warning"></i> Commercial Notifications & System Updates
+      </h6>
+      <span class="badge bg-warning-subtle text-warning font-monospace" style="font-size: 0.7rem;">LIVE AUDIT LOGS</span>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+      <div class="col" *ngFor="let notif of notifications">
+        <div class="p-3 border rounded-3 bg-light d-flex align-items-start gap-3 h-100">
+          <div class="p-2 rounded-circle bg-white border shadow-xs text-primary">
+            <i class="bi {{ getNotifIcon(notif.type) }} fs-5"></i>
+          </div>
+          <div class="flex-grow-1">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <strong class="text-dark small">{{ notif.title }}</strong>
+              <small class="text-muted font-monospace" style="font-size: 0.7rem;">{{ notif.createdAt | date: 'shortTime' }}</small>
+            </div>
+            <p class="text-secondary mb-0 fs-8">{{ notif.message }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── MODAL: ACCEPT & VERIFY PAYMENTS ───────────────── -->
+  <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isPaymentModalOpen">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        
+        <div class="modal-header bg-primary text-white px-4 py-3.5 border-0 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);">
+          <div class="d-flex align-items-center gap-3">
+            <div class="p-2 rounded-3 bg-white bg-opacity-20 backdrop-blur">
+              <i class="bi bi-shield-check fs-4 text-white"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0">Accept & Verify Customer Payments</h5>
+              <p class="text-white-50 small mb-0 fs-8">Audit pending payment proof screenshots and verify accounts</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" (click)="closePaymentModal()"></button>
+        </div>
+
+        <div class="modal-body p-4 bg-light custom-scroll overflow-auto" style="max-height: 520px;">
+          
+          <div *ngIf="paymentStatusMessage" class="alert alert-info border-0 shadow-sm rounded-3 d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-info-circle-fill"></i>
+            <span>{{ paymentStatusMessage }}</span>
+          </div>
+
+          <div *ngIf="pendingPayments.length === 0" class="text-center text-muted py-5 bg-white rounded-4 border">
+            <i class="bi bi-check-circle-fill text-success fs-1 mb-2 d-block"></i>
+            <h6 class="fw-bold text-dark mb-1">All Clear!</h6>
+            <p class="small mb-0 font-monospace">No pending payment verification requests in the queue.</p>
+          </div>
+
+          <div class="d-flex flex-column gap-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3.5 bg-white" *ngFor="let payment of pendingPayments">
+              <div class="row align-items-center g-3">
+                <div class="col-md-7">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="badge bg-warning-subtle text-warning border border-warning font-monospace px-2.5 py-1">
+                      <i class="bi bi-hourglass-split me-1"></i> {{ payment.issueStatus }}
+                    </span>
+                    <span class="fw-bold text-success fs-5 font-monospace">৳{{ payment.paidAmount | number:'1.2-2' }}</span>
+                  </div>
+                  <h6 class="fw-bold text-dark mb-1">Customer Order Reference #{{ payment.customerOrderId }}</h6>
+                  <div class="text-muted small mb-1">
+                    <i class="bi bi-wallet2 me-1 text-primary"></i><strong>Payment Method:</strong> {{ payment.paymentMethod }}
+                  </div>
+                  <div class="text-muted small mb-1">
+                    <i class="bi bi-person-badge me-1 text-primary"></i><strong>Customer Account:</strong> {{ payment.customerAccountNumber || 'N/A' }}
+                  </div>
+                  <div class="text-muted small">
+                    <i class="bi bi-calendar-event me-1 text-primary"></i><strong>Submitted Date:</strong> {{ payment.createdAt | date:'medium' }}
+                  </div>
+                </div>
+
+                <div class="col-md-5">
+                  <div class="text-center bg-light border p-2 rounded-3 mb-2" *ngIf="payment.paymentCheckImage">
+                    <img [src]="imgUrl + payment.paymentCheckImage" alt="Payment Proof" class="img-fluid rounded shadow-xs" style="max-height: 110px; object-fit: contain;">
+                  </div>
+                  <div class="text-center bg-light border p-3 rounded-3 mb-2 text-muted small" *ngIf="!payment.paymentCheckImage">
+                    <i class="bi bi-image-alt fs-3 d-block text-secondary"></i> No Proof Image Uploaded
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-success flex-grow-1 fw-bold py-2 rounded-3 d-flex align-items-center justify-content-center gap-1" (click)="updatePaymentStatus(payment.id, 'CONFIRMED_BY_OFFICER')">
+                      <i class="bi bi-check-circle-fill me-1"></i> Confirm
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger flex-grow-1 fw-bold py-2 rounded-3 d-flex align-items-center justify-content-center gap-1" (click)="updatePaymentStatus(payment.id, 'FAILED_OR_REJECTED')">
+                      <i class="bi bi-x-circle me-1"></i> Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer bg-white px-4 py-3 border-top justify-content-end">
+          <button type="button" class="btn px-4 py-2.5 fw-bold rounded-pill shadow-xs" style="background-color: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 0.85rem;" (click)="closePaymentModal()">Close Panel</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── MODAL: COMMERCIAL INVOICE MASTER REGISTRY ───────────────── -->
+  <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isInvoiceModalOpen">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1140px;">
+      <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
+        
+        <!-- Header -->
+        <div class="modal-header px-4 py-3.5 border-0 d-flex justify-content-between align-items-center text-white" style="background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 60%, #3b82f6 100%);">
+          <div class="d-flex align-items-center gap-3">
+            <div class="p-2.5 rounded-3 bg-white bg-opacity-20 backdrop-blur shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+              <i class="bi bi-file-earmark-text-fill fs-4 text-white"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0 text-white" style="letter-spacing: -0.01em;">Commercial Invoices Master Registry</h5>
+              <p class="text-white-50 small mb-0 fs-8">Audit commercial billing settlements, customer ledger & payment statements</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" (click)="closeInvoiceModal()"></button>
+        </div>
+
+        <!-- Filter Search Bar -->
+        <div class="bg-light px-4 py-3 border-bottom d-flex justify-content-between align-items-center gap-3 flex-wrap">
+          <div class="input-group input-group-sm shadow-xs rounded-pill overflow-hidden border bg-white" style="max-width: 380px;">
+            <span class="input-group-text bg-white border-0 text-muted ps-3"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-0 py-2 fs-7 font-monospace" [(ngModel)]="invoiceMasterSearchTerm" placeholder="Filter by Invoice Code, Customer Name or Status..." />
+          </div>
+          <div class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill font-monospace fs-7 fw-bold">
+            Total Invoices: {{ filteredMasterInvoices.length }}
+          </div>
+        </div>
+
+        <!-- Master Table Body -->
+        <div class="modal-body p-0 overflow-auto custom-scroll" style="max-height: 520px;">
+          
+          <div *ngIf="invoiceMasterLoading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading Invoices...</span>
+            </div>
+            <p class="small text-muted font-monospace mt-2">Retrieving commercial invoice ledger...</p>
+          </div>
+
+          <div class="table-responsive" *ngIf="!invoiceMasterLoading">
+            <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+              <thead class="table-light text-uppercase text-secondary fw-bold border-bottom" style="font-size: 0.72rem; letter-spacing: 0.05em; position: sticky; top: 0; z-index: 10;">
+                <tr>
+                  <th class="ps-4 py-3">SL #</th>
+                  <th class="py-3">Invoice Code</th>
+                  <th class="py-3">Customer Name</th>
+                  <th class="py-3">Contact Email</th>
+                  <th class="py-3">Issued Date</th>
+                  <th class="py-3">Grand Total</th>
+                  <th class="py-3">Paid Amount</th>
+                  <th class="py-3">Due Balance</th>
+                  <th class="py-3 text-center">Payment Status</th>
+                  <th class="pe-4 text-end py-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr *ngFor="let inv of filteredMasterInvoices; let i = index" class="hover-bg-light">
+                  <td class="ps-4 font-monospace text-muted fw-bold">{{ i + 1 }}</td>
+                  <td>
+                    <strong class="font-monospace text-primary d-block">{{ inv.invoiceNumber || 'INV-' + inv.id }}</strong>
+                    <small class="text-muted fs-8 font-monospace">Order #{{ inv.customerOrderId || 'N/A' }}</small>
+                  </td>
+                  <td><span class="fw-semibold text-dark">{{ inv.issuedToName || 'N/A' }}</span></td>
+                  <td><span class="font-monospace text-secondary fs-8">{{ inv.customerEmail || 'N/A' }}</span></td>
+                  <td><span class="font-monospace text-secondary fs-8"><i class="bi bi-calendar-check text-primary me-1"></i>{{ (inv.issuedAt || inv.createdAt) | date:'mediumDate' }}</span></td>
+                  <td><strong class="font-monospace text-primary fs-7">৳{{ (inv.totalAmount || 0) | number:'1.2-2' }}</strong></td>
+                  <td><strong class="font-monospace text-success fs-7">৳{{ (inv.paidAmount || 0) | number:'1.2-2' }}</strong></td>
+                  <td><strong class="font-monospace text-danger fs-7">৳{{ (inv.dueAmount || 0) | number:'1.2-2' }}</strong></td>
+                  <td class="text-center">
+                    <span class="badge rounded-pill px-3 py-1.5 font-monospace fw-bold shadow-xs" [ngClass]="{
+                      'bg-success-subtle text-success border border-success': inv.paymentStatus === 'PAID',
+                      'bg-warning-subtle text-warning border border-warning': inv.paymentStatus === 'PARTIALLY_PAID',
+                      'bg-danger-subtle text-danger border border-danger': inv.paymentStatus === 'UNPAID' || !inv.paymentStatus
+                    }">
+                      {{ inv.paymentStatus || 'UNPAID' }}
+                    </span>
+                  </td>
+                  <td class="pe-4 text-end">
+                    <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold fs-8" (click)="downloadInvoiceWord(inv)">
+                      <i class="bi bi-file-earmark-word-fill me-1"></i> Word (.doc)
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="filteredMasterInvoices.length === 0">
+                  <td colspan="10" class="text-center py-5 text-muted">
+                    <i class="bi bi-receipt fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                    <strong class="d-block text-dark mb-1">No Invoice Records Found</strong>
+                    <small>No commercial invoices match search query "{{ invoiceMasterSearchTerm }}".</small>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer bg-white px-4 py-3 border-top justify-content-between">
+          <small class="text-muted font-monospace fs-8">Showing {{ filteredMasterInvoices.length }} of {{ invoicesList.length }} registered invoice ledgers</small>
+          <button type="button" class="btn px-4 py-2.5 fw-bold rounded-pill shadow-xs" style="background-color: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 0.85rem;" (click)="closeInvoiceModal()">Close Panel</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── MODAL: SHIPPING & CARGO MASTER REGISTRY ───────────────── -->
+  <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isShippingModalOpen">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1140px;">
+      <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
+        
+        <!-- Header -->
+        <div class="modal-header px-4 py-3.5 border-0 d-flex justify-content-between align-items-center text-white" style="background: linear-gradient(135deg, #059669 0%, #10b981 60%, #34d399 100%);">
+          <div class="d-flex align-items-center gap-3">
+            <div class="p-2.5 rounded-3 bg-white bg-opacity-20 backdrop-blur shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+              <i class="bi bi-truck-flatbed fs-4 text-white"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0 text-white" style="letter-spacing: -0.01em;">Shipping & Cargo Master Registry</h5>
+              <p class="text-white-50 small mb-0 fs-8">Audit commercial freight routes, vessel registrations & cargo consignments</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" (click)="closeShippingModal()"></button>
+        </div>
+
+        <!-- Filter Search Bar -->
+        <div class="bg-light px-4 py-3 border-bottom d-flex justify-content-between align-items-center gap-3 flex-wrap">
+          <div class="input-group input-group-sm shadow-xs rounded-pill overflow-hidden border bg-white" style="max-width: 380px;">
+            <span class="input-group-text bg-white border-0 text-muted ps-3"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-0 py-2 fs-7 font-monospace" [(ngModel)]="shipmentMasterSearchTerm" placeholder="Filter by Code, Supplier, Vessel or Route..." />
+          </div>
+          <div class="badge bg-success-subtle text-success px-3 py-2 rounded-pill font-monospace fs-7 fw-bold">
+            Total Consignments: {{ filteredMasterShipments.length }}
+          </div>
+        </div>
+
+        <!-- Master Table Body -->
+        <div class="modal-body p-0 overflow-auto custom-scroll" style="max-height: 520px;">
+          
+          <div *ngIf="shipmentMasterLoading" class="text-center py-5">
+            <div class="spinner-border text-success" role="status">
+              <span class="visually-hidden">Loading Cargo Consignments...</span>
+            </div>
+            <p class="small text-muted font-monospace mt-2">Locating shipping consignment records...</p>
+          </div>
+
+          <div class="table-responsive" *ngIf="!shipmentMasterLoading">
+            <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+              <thead class="table-light text-uppercase text-secondary fw-bold border-bottom" style="font-size: 0.72rem; letter-spacing: 0.05em; position: sticky; top: 0; z-index: 10;">
+                <tr>
+                  <th class="ps-4 py-3">SL #</th>
+                  <th class="py-3">Shipment Code</th>
+                  <th class="py-3">PO Ref ID</th>
+                  <th class="py-3">Supplier Partner</th>
+                  <th class="py-3">Vehicle / Vessel No</th>
+                  <th class="py-3">Origin Location</th>
+                  <th class="py-3">Destination</th>
+                  <th class="py-3">Estimated Arrival</th>
+                  <th class="py-3">Freight Cost</th>
+                  <th class="pe-4 text-center py-3">Consignment Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr *ngFor="let shp of filteredMasterShipments; let i = index" class="hover-bg-light">
+                  <td class="ps-4 font-monospace text-muted fw-bold">{{ i + 1 }}</td>
+                  <td>
+                    <strong class="font-monospace text-success d-block">{{ shp.shipmentNumber }}</strong>
+                  </td>
+                  <td><span class="font-monospace text-secondary fs-8 fw-bold">#{{ shp.poId || 'N/A' }}</span></td>
+                  <td><span class="fw-semibold text-dark">{{ shp.supplierName || 'Commercial Partner' }}</span></td>
+                  <td><span class="font-monospace text-dark fw-bold"><i class="bi bi-truck me-1 text-primary"></i>{{ shp.vehicleNumber || 'N/A' }}</span></td>
+                  <td><span class="text-dark fs-8"><i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ shp.origin || 'N/A' }}</span></td>
+                  <td><span class="text-dark fs-8"><i class="bi bi-building me-1 text-success"></i>{{ shp.sendByAddress || 'N/A' }}</span></td>
+                  <td><span class="font-monospace text-secondary fs-8"><i class="bi bi-calendar3 me-1 text-primary"></i>{{ shp.estimatedDelivery || 'N/A' }}</span></td>
+                  <td><strong class="font-monospace text-success fs-7">৳{{ (shp.transportCost || 0) | number:'1.2-2' }}</strong></td>
+                  <td class="pe-4 text-center">
+                    <span class="badge bg-success-subtle text-success border border-success rounded-pill px-3 py-1.5 font-monospace fw-bold shadow-xs">
+                      <i class="bi bi-check-circle-fill me-1"></i> ACTIVE
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngIf="filteredMasterShipments.length === 0">
+                  <td colspan="10" class="text-center py-5 text-muted">
+                    <i class="bi bi-truck-flatbed fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                    <strong class="d-block text-dark mb-1">No Consignments Found</strong>
+                    <small>No shipping records match search query "{{ shipmentMasterSearchTerm }}".</small>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer bg-white px-4 py-3 border-top justify-content-between">
+          <small class="text-muted font-monospace fs-8">Showing {{ filteredMasterShipments.length }} of {{ shipmentsMasterList.length }} active shipping consignments</small>
+          <button type="button" class="btn px-4 py-2.5 fw-bold rounded-pill shadow-xs" style="background-color: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 0.85rem;" (click)="closeShippingModal()">Close Panel</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── MODAL: ISSUE NEW LETTER OF CREDIT (LC) (FIRST MODERN DESIGN) ───────────────── -->
+  <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isAddLcModalOpen">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 850px;">
+      <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
+        
+        <!-- Header -->
+        <div class="modal-header px-4 py-3.5 border-0 d-flex justify-content-between align-items-center text-white" style="background: linear-gradient(135deg, #312e81 0%, #4338ca 60%, #6366f1 100%);">
+          <div class="d-flex align-items-center gap-3">
+            <div class="p-2.5 rounded-3 bg-white bg-opacity-20 backdrop-blur shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+              <i class="bi bi-bank2 fs-4 text-white"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0 text-white" style="letter-spacing: -0.01em;">Issue New Letter of Credit (LC)</h5>
+              <p class="text-white-50 small mb-0 fs-8">Register commercial import/export financial backing node</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" (click)="closeAddLcModal()"></button>
+        </div>
+
+        <!-- Form Body -->
+        <div class="modal-body p-4 bg-light custom-scroll overflow-auto" style="max-height: 580px;">
+          
+          <div *ngIf="lcFormSuccessMessage" class="alert alert-success border-0 shadow-sm rounded-3 d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-check-circle-fill fs-5"></i>
+            <strong class="font-monospace">{{ lcFormSuccessMessage }}</strong>
+          </div>
+
+          <div *ngIf="lcFormErrorMessage" class="alert alert-danger border-0 shadow-sm rounded-3 d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+            <span>{{ lcFormErrorMessage }}</span>
+          </div>
+
+          <form (ngSubmit)="submitNewLc()" #lcForm="ngForm">
+            <div class="row g-3">
+              
+              <!-- Issuing Bank -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">
+                  Issuing Bank <span class="text-danger">*</span>
+                </label>
+                <select class="form-select bg-white fs-7 py-2.5 rounded-3 border" [(ngModel)]="newLc.issuingBankId" name="issuingBankId" required>
+                  <option [value]="0" disabled selected>-- Select Issuing Bank --</option>
+                  <option *ngFor="let bank of lcBanks" [value]="bank.id">
+                    {{ bank.bankName }} (SWIFT: {{ bank.swiftCode || 'N/A' }})
+                  </option>
+                </select>
+              </div>
+
+              <!-- Supplier -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">
+                  Supplier Beneficiary <span class="text-danger">*</span>
+                </label>
+                <select class="form-select bg-white fs-7 py-2.5 rounded-3 border" [(ngModel)]="newLc.supplierId" name="supplierId" required>
+                  <option [value]="0" disabled selected>-- Select Supplier --</option>
+                  <option *ngFor="let s of lcSuppliers" [value]="s.id">
+                    {{ s.name || s.companyName }} ({{ s.email || 'N/A' }})
+                  </option>
+                </select>
+              </div>
+
+              <!-- Purchase Order Ref -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">
+                  Purchase Order (PO) <span class="text-danger">*</span>
+                </label>
+                <select class="form-select bg-white fs-7 py-2.5 rounded-3 border" [(ngModel)]="newLc.purchaseOrderId" name="purchaseOrderId" required>
+                  <option [value]="0" disabled selected>-- Select Purchase Order --</option>
+                  <option *ngFor="let po of lcPurchaseOrders" [value]="po.id">
+                    PO #{{ po.poNumber || po.id }} - ৳{{ po.totalAmount | number }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- IncoTerms -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">Shipment IncoTerms</label>
+                <select class="form-select bg-white fs-7 py-2.5 rounded-3 border" [(ngModel)]="newLc.shipmentIncoTerms" name="shipmentIncoTerms">
+                  <option value="FOB">FOB - Free on Board</option>
+                  <option value="CIF">CIF - Cost, Insurance & Freight</option>
+                  <option value="CFR">CFR - Cost & Freight</option>
+                  <option value="EXW">EXW - Ex Works</option>
+                  <option value="DDP">DDP - Delivered Duty Paid</option>
+                </select>
+              </div>
+
+              <!-- Contract Amount -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">
+                  Contract Amount <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light text-dark fw-bold font-monospace px-3">{{ newLc.currency === 'USD' ? '$' : '৳' }}</span>
+                  <input type="number" class="form-control font-monospace fs-7 py-2.5" [(ngModel)]="newLc.amount" name="amount" placeholder="e.g. 50000" required />
+                </div>
+              </div>
+
+              <!-- Settlement Currency -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">Settlement Currency</label>
+                <select class="form-select bg-white fs-7 py-2.5 rounded-3 border" [(ngModel)]="newLc.currency" name="currency">
+                  <option value="USD">USD ($ - US Dollar)</option>
+                  <option value="BDT">BDT (৳ - Bangladeshi Taka)</option>
+                  <option value="EUR">EUR (€ - Euro)</option>
+                  <option value="GBP">GBP (£ - British Pound)</option>
+                </select>
+              </div>
+
+              <!-- Port of Loading & Port of Discharge -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">Port of Loading</label>
+                <input type="text" class="form-control fs-7 py-2.5" [(ngModel)]="newLc.portOfLoading" name="portOfLoading" placeholder="e.g. Shanghai Port, China" />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">Port of Discharge</label>
+                <input type="text" class="form-control fs-7 py-2.5" [(ngModel)]="newLc.portOfDischarge" name="portOfDischarge" placeholder="e.g. Chattogram Port, Bangladesh" />
+              </div>
+
+              <!-- Latest Shipment Date & Expiry Date -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">Latest Shipment Date</label>
+                <input type="date" class="form-control font-monospace fs-7 py-2.5" [(ngModel)]="newLc.latestShipmentDate" name="latestShipmentDate" />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">LC Expiry Date</label>
+                <input type="date" class="form-control font-monospace fs-7 py-2.5" [(ngModel)]="newLc.expiryDate" name="expiryDate" />
+              </div>
+
+              <!-- LC Status -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">LC Initial Status</label>
+                <select class="form-select bg-white fs-7 py-2.5 rounded-3 border" [(ngModel)]="newLc.lcStatus" name="lcStatus">
+                  <option value="DRAFT">DRAFT - Pending Final Bank Audit</option>
+                  <option value="OPENED">OPENED - Active Financial Backing</option>
+                  <option value="AMENDED">AMENDED - Revisions Applied</option>
+                  <option value="EXPIRED">EXPIRED - Validity Period Passed</option>
+                  <option value="CANCELLED">CANCELLED - Terminated Operation</option>
+                </select>
+              </div>
+
+              <!-- Document Vault Attachment -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-dark fs-8 mb-1">Document Vault File (PDF/Image)</label>
+                <input type="file" class="form-control fs-7 py-2.5" (change)="onLcFileSelected($event)" accept="image/*,application/pdf" />
+              </div>
+
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+              <button type="button" class="btn px-4 py-2.5 fw-bold rounded-pill shadow-xs" style="background-color: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 0.85rem;" (click)="closeAddLcModal()">Cancel</button>
+              <button type="submit" class="btn px-5 py-2.5 fw-bold text-white rounded-pill shadow-sm d-inline-flex align-items-center gap-2" [disabled]="lcFormLoading" style="background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%); border: 0;">
+                <span *ngIf="lcFormLoading" class="spinner-border spinner-border-sm" role="status"></span>
+                <i *ngIf="!lcFormLoading" class="bi bi-check-circle-fill"></i>
+                <span>{{ lcFormLoading ? 'Issuing LC...' : 'Submit & Issue LC' }}</span>
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── MODAL: LC REGISTRY MASTER VIEW CARD ───────────────── -->
+  <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isLcRegistryModalOpen">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1140px;">
+      <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
+        
+        <!-- Header -->
+        <div class="modal-header px-4 py-3.5 border-0 d-flex justify-content-between align-items-center text-white" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);">
+          <div class="d-flex align-items-center gap-3">
+            <div class="p-2.5 rounded-3 bg-white bg-opacity-20 backdrop-blur shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+              <i class="bi bi-bank fs-4 text-white"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0 text-white" style="letter-spacing: -0.01em;">Active Letters of Credit (LC) Master Registry</h5>
+              <p class="text-white-50 small mb-0 fs-8">Real-time commercial trade credit backing database</p>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-sm btn-light text-primary fw-bold rounded-pill px-3 shadow-xs d-flex align-items-center gap-1.5" (click)="closeLcRegistryModal(); openAddLcModal();">
+              <i class="bi bi-plus-circle-fill"></i> Add New LC
+            </button>
+            <button type="button" class="btn-close btn-close-white" (click)="closeLcRegistryModal()"></button>
+          </div>
+        </div>
+
+        <!-- Filter Search Bar -->
+        <div class="bg-light px-4 py-3 border-bottom d-flex justify-content-between align-items-center gap-3 flex-wrap">
+          <div class="input-group input-group-sm shadow-xs rounded-pill overflow-hidden border bg-white" style="max-width: 380px;">
+            <span class="input-group-text bg-white border-0 text-muted ps-3"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-0 py-2 fs-7 font-monospace" [(ngModel)]="lcRegistrySearchTerm" placeholder="Filter by LC Ref, Bank, Supplier or Status..." />
+          </div>
+          <div class="badge bg-indigo-subtle text-indigo px-3 py-2 rounded-pill font-monospace fs-7 fw-bold" style="color: #4338ca !important; background-color: #e0e7ff !important;">
+            Total Active LCs: {{ filteredRegistryLCs.length }}
+          </div>
+        </div>
+
+        <!-- Table View Body -->
+        <div class="modal-body p-0 overflow-auto custom-scroll" style="max-height: 520px;">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+              <thead class="table-light text-uppercase text-secondary fw-bold border-bottom" style="font-size: 0.72rem; letter-spacing: 0.05em; sticky-top: 0; position: sticky; top: 0; z-index: 10;">
+                <tr>
+                  <th class="ps-4 py-3">SL #</th>
+                  <th class="py-3">LC Reference Code</th>
+                  <th class="py-3">Issuing Bank Terminal</th>
+                  <th class="py-3">Supplier Beneficiary</th>
+                  <th class="py-3">Contract Value</th>
+                  <th class="py-3">IncoTerms</th>
+                  <th class="py-3">Expiry Deadline</th>
+                  <th class="pe-4 text-center py-3">Audit State</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr *ngFor="let lc of filteredRegistryLCs; let i = index" class="hover-bg-light">
+                  <td class="ps-4 font-monospace text-muted fw-bold">{{ i + 1 }}</td>
+                  <td>
+                    <strong class="font-monospace text-indigo d-block" style="color: #4f46e5 !important;">{{ lc.lcNumber }}</strong>
+                    <small class="text-muted fs-8">PO Ref: #{{ lc.purchaseOrderId || 'N/A' }}</small>
+                  </td>
+                  <td>
+                    <span class="fw-semibold text-dark">{{ lc.issuingBankName || 'N/A' }}</span>
+                  </td>
+                  <td>
+                    <span class="text-dark">{{ lc.supplierName || 'N/A' }}</span>
+                  </td>
+                  <td>
+                    <strong class="font-monospace text-dark fs-7">
+                      {{ lc.currency === 'USD' ? '$' : '৳' }}{{ lc.amount | number:'1.2-2' }}
+                    </strong>
+                    <span class="badge bg-light text-muted ms-1 fs-8.5 font-monospace">{{ lc.currency || 'BDT' }}</span>
+                  </td>
+                  <td>
+                    <span class="badge bg-secondary-subtle text-secondary font-monospace rounded-2 px-2 py-1">{{ lc.shipmentIncoTerms || 'FOB' }}</span>
+                  </td>
+                  <td>
+                    <span class="font-monospace text-secondary fs-8"><i class="bi bi-calendar3 me-1 text-primary"></i> {{ lc.expiryDate || 'N/A' }}</span>
+                  </td>
+                  <td class="pe-4 text-center">
+                    <span class="badge rounded-pill px-3 py-1.5 font-monospace fw-bold shadow-xs" [ngClass]="{
+                      'bg-success-subtle text-success border border-success': lc.lcStatus === 'OPENED' || lc.lcStatus === 'ISSUED',
+                      'bg-warning-subtle text-warning border border-warning': lc.lcStatus === 'DRAFT' || lc.lcStatus === 'PENDING',
+                      'bg-info-subtle text-info border border-info': lc.lcStatus === 'AMENDED',
+                      'bg-danger-subtle text-danger border border-danger': lc.lcStatus === 'EXPIRED' || lc.lcStatus === 'CANCELLED'
+                    }">
+                      {{ lc.lcStatus || 'DRAFT' }}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngIf="filteredRegistryLCs.length === 0">
+                  <td colspan="8" class="text-center py-5 text-muted">
+                    <i class="bi bi-folder-x fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                    <strong class="d-block text-dark mb-1">No LC Records Found</strong>
+                    <small>No Letters of Credit match search query "{{ lcRegistrySearchTerm }}".</small>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer bg-white px-4 py-3 border-top justify-content-between">
+          <small class="text-muted font-monospace fs-8">Showing {{ filteredRegistryLCs.length }} of {{ lcs.length }} registered financial backing nodes</small>
+          <button type="button" class="btn px-4 py-2.5 fw-bold rounded-pill shadow-xs" style="background-color: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 0.85rem;" (click)="closeLcRegistryModal()">Close Panel</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── MODAL: PO LINE ITEMS & MANIFEST AUDIT (MATCH SCREENSHOT) ───────────────── -->
+  <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isLineItemsModalOpen">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 920px;">
+      <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
+        
+        <!-- Header -->
+        <div class="modal-header px-4 py-3.5 border-0 d-flex justify-content-between align-items-center text-white" style="background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 60%, #3b82f6 100%);">
+          <div class="d-flex align-items-center gap-3">
+            <div class="p-2.5 rounded-3 bg-white bg-opacity-20 backdrop-blur shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+              <i class="bi bi-text-indent-left fs-4 text-white"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0 text-white" style="letter-spacing: -0.01em;">Purchase Order Line Items</h5>
+              <p class="text-white-50 small mb-0 fs-8">Manage explicit inventory item distributions, control cargo tracking, and lock stock quotas.</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" (click)="closeLineItemsModal()"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body p-4 bg-light custom-scroll overflow-auto" style="max-height: 540px;">
+          
+          <div class="card border-0 shadow-sm rounded-4 p-4 text-center bg-white my-2" *ngIf="lineItemsList.length === 0 && !lineItemsLoading">
+            <div class="d-flex flex-column align-items-center justify-content-center py-4">
+              <div class="p-3 rounded-circle bg-success bg-opacity-10 text-success mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                <i class="bi bi-check-lg fs-2"></i>
+              </div>
+              <h5 class="fw-bold text-dark mb-1">All Clear!</h5>
+              <p class="text-muted small mb-0 font-monospace">No discrete inventory line distributions allocated in the queue.</p>
+            </div>
+          </div>
+
+          <div *ngIf="lineItemsLoading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading Line Items...</span>
+            </div>
+            <p class="small text-muted font-monospace mt-2">Retrieving purchase order line distributions...</p>
+          </div>
+
+          <div class="table-responsive rounded-3 border bg-white shadow-xs" *ngIf="lineItemsList.length > 0 && !lineItemsLoading">
+            <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+              <thead class="table-light text-uppercase text-secondary fw-bold border-bottom" style="font-size: 0.72rem; letter-spacing: 0.05em;">
+                <tr>
+                  <th class="ps-4 py-3">PO MATRIX NUMBER</th>
+                  <th class="py-3">PRODUCT SPECIFICATION</th>
+                  <th class="py-3">PRICE PLAN</th>
+                  <th class="py-3">SHIPMENT VECTOR</th>
+                  <th class="py-3">TRACKING REFERENCE</th>
+                  <th class="py-3">ITEM STAGE</th>
+                  <th class="pe-4 text-end py-3">ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr *ngFor="let item of lineItemsList">
+                  <td class="ps-4 font-monospace fw-bold text-indigo" style="color: #4f46e5 !important;">#{{ item.poNumber || item.id }}</td>
+                  <td class="fw-semibold text-dark">{{ item.productName || item.productCode || 'N/A' }}</td>
+                  <td class="font-monospace fw-bold text-success">৳{{ (item.unitPrice || 0) | number:'1.2-2' }}</td>
+                  <td>{{ item.shipmentMethod || 'Standard Sea Cargo' }}</td>
+                  <td class="font-monospace text-muted">{{ item.trackingNumber || 'N/A' }}</td>
+                  <td>
+                    <span class="badge bg-success-subtle text-success border border-success rounded-pill px-3 py-1 font-monospace">
+                      {{ item.status || 'ALLOCATED' }}
+                    </span>
+                  </td>
+                  <td class="pe-4 text-end">
+                    <a [routerLink]="['/poline-item']" (click)="closeLineItemsModal()" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold fs-8">
+                      Manage <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer bg-white px-4 py-3 border-top justify-content-between">
+          <a [routerLink]="['/poline-item']" (click)="closeLineItemsModal()" class="btn btn-sm text-primary fw-bold p-0 text-decoration-none d-flex align-items-center gap-1.5">
+            <i class="bi bi-box-arrow-up-right"></i> Open Full PO Line Items Registry
+          </a>
+          <button type="button" class="btn px-4 py-2.5 fw-bold rounded-pill shadow-xs" style="background-color: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 0.85rem;" (click)="closeLineItemsModal()">Close Panel</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── MODAL: CUSTOMER ORDERS MASTER REGISTRY ───────────────── -->
+  <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isCustomerOrderModalOpen">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1140px;">
+      <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
+        
+        <!-- Header -->
+        <div class="modal-header px-4 py-3.5 border-0 d-flex justify-content-between align-items-center text-white" style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 60%, #f87171 100%);">
+          <div class="d-flex align-items-center gap-3">
+            <div class="p-2.5 rounded-3 bg-white bg-opacity-20 backdrop-blur shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+              <i class="bi bi-bag-check-fill fs-4 text-white"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold mb-0 text-white" style="letter-spacing: -0.01em;">Customer Purchase Orders Registry</h5>
+              <p class="text-white-50 small mb-0 fs-8">View all customer orders, payment status, settlement totals & delivery lifecycle</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" (click)="closeCustomerOrdersModal()"></button>
+        </div>
+
+        <!-- Filter Search Bar -->
+        <div class="bg-light px-4 py-3 border-bottom d-flex justify-content-between align-items-center gap-3 flex-wrap">
+          <div class="input-group input-group-sm shadow-xs rounded-pill overflow-hidden border bg-white" style="max-width: 380px;">
+            <span class="input-group-text bg-white border-0 text-muted ps-3"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-0 py-2 fs-7 font-monospace" [(ngModel)]="customerOrderMasterSearchTerm" placeholder="Filter by Order #, Customer Name, Email, Status..." />
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <a [routerLink]="['/order']" (click)="closeCustomerOrdersModal()" class="btn btn-sm btn-primary rounded-pill px-3 py-1.5 fw-bold fs-8">
+              <i class="bi bi-box-arrow-up-right me-1"></i> Full Orders Page
+            </a>
+            <div class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill font-monospace fs-7 fw-bold">
+              Total Orders: {{ filteredMasterCustomerOrders.length }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Master Table Body -->
+        <div class="modal-body p-0 overflow-auto custom-scroll" style="max-height: 520px;">
+          
+          <div *ngIf="customerOrderMasterLoading" class="text-center py-5">
+            <div class="spinner-border text-danger" role="status">
+              <span class="visually-hidden">Loading orders...</span>
+            </div>
+            <p class="text-muted font-monospace fs-8 mt-2">Fetching live customer purchase orders...</p>
+          </div>
+
+          <div *ngIf="!customerOrderMasterLoading && filteredMasterCustomerOrders.length === 0" class="text-center py-5 text-muted">
+            <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary opacity-50"></i>
+            <h6 class="fw-bold text-dark">No customer orders matched query parameters.</h6>
+          </div>
+
+          <div *ngIf="!customerOrderMasterLoading && filteredMasterCustomerOrders.length > 0" class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="font-size: 0.85rem;">
+              <thead class="table-light text-uppercase text-secondary fw-bold border-bottom" style="font-size: 0.72rem; letter-spacing: 0.05em;">
+                <tr>
+                  <th class="ps-4 py-3">Order Number</th>
+                  <th class="py-3">Customer Details</th>
+                  <th class="py-3">Total Amount</th>
+                  <th class="py-3">Payment Strategy</th>
+                  <th class="py-3">Payment Status</th>
+                  <th class="py-3">Lifecycle State</th>
+                  <th class="pe-4 text-end py-3">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let o of filteredMasterCustomerOrders">
+                  <td class="ps-4 font-monospace text-danger fw-bold">
+                    {{ o.orderNumber }}
+                    <span class="d-block text-muted font-monospace fs-8 fw-normal">Priority: {{ o.priority || 'NORMAL' }}</span>
+                  </td>
+                  <td>
+                    <strong class="d-block text-dark mb-0.5">{{ o.customerName }}</strong>
+                    <small class="text-secondary font-monospace d-block fs-8"><i class="bi bi-envelope me-1"></i>{{ o.customerEmail }}</small>
+                    <small class="text-muted font-monospace d-block fs-8" *ngIf="o.deliveryPhone"><i class="bi bi-telephone me-1"></i>{{ o.deliveryPhone }}</small>
+                  </td>
+                  <td class="font-monospace text-success fw-bold fs-7">
+                    ৳{{ o.totalAmount | number:'1.2-2' }}
+                    <small class="d-block text-danger font-monospace fs-8" *ngIf="o.dueAmount && +o.dueAmount > 0">
+                      Due: ৳{{ o.dueAmount | number:'1.2-2' }}
+                    </small>
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark border px-2.5 py-1 font-monospace fs-8">
+                      {{ o.paymentMethod || 'CASH' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge rounded-pill px-2.5 py-1 font-monospace fs-8" [ngClass]="{
+                      'bg-success-subtle text-success border border-success': o.paymentStatus === 'PAID',
+                      'bg-warning-subtle text-warning border border-warning': o.paymentStatus === 'PARTIALLY_PAID',
+                      'bg-danger-subtle text-danger border border-danger': o.paymentStatus === 'UNPAID' || !o.paymentStatus
+                    }">
+                      {{ o.paymentStatus || 'UNPAID' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge rounded-pill bg-primary px-2.5 py-1 fs-8 text-uppercase">
+                      {{ o.status }}
+                    </span>
+                  </td>
+                  <td class="pe-4 text-end">
+                    <a [routerLink]="['/order']" (click)="closeCustomerOrdersModal()" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold fs-8">
+                      Manage <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer bg-white px-4 py-3 border-top justify-content-between">
+          <a [routerLink]="['/order']" (click)="closeCustomerOrdersModal()" class="btn btn-sm text-danger fw-bold p-0 text-decoration-none d-flex align-items-center gap-1.5">
+            <i class="bi bi-box-arrow-up-right"></i> Open Customer Orders Full Module
+          </a>
+          <button type="button" class="btn px-4 py-2.5 fw-bold rounded-pill shadow-xs" style="background-color: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 0.85rem;" (click)="closeCustomerOrdersModal()">Close Panel</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>

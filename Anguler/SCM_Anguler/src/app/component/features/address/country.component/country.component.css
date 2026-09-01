@@ -1,0 +1,62 @@
+/* --- SLIDE DRAWER CONTAINER (RIGHT SIDE) --- */
+.slide-drawer {
+  position: fixed;
+  top: 0;
+  right: -420px; /* বন্ধ থাকলে ডান দিকে স্ক্রিনের বাইরে থাকবে */
+  width: 400px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+  z-index: 1060;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-drawer.show {
+  right: 0; /* ওপেন বা একটিভ হলে ডান প্রান্তের সাথে লেগে যাবে */
+}
+
+/* --- BACKDROP EFFECT --- */
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+}
+
+/* --- MODERN DETAIL COMPONENTS --- */
+.avatar-sm {
+  width: 38px;
+  height: 38px;
+  font-size: 14px;
+}
+
+.bg-primary-subtle { background-color: #e0eaff !important; }
+.bg-success-subtle { background-color: #d1e7dd !important; }
+.bg-danger-subtle { background-color: #f8d7da !important; }
+
+.fs-7 { font-size: 0.825rem; }
+.tracking-wider { letter-spacing: 0.05em; }
+.pointer { cursor: pointer; }
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+.btn-icon:hover { background-color: #eaedf2 !important; }
+
+.input-group :focus {
+  box-shadow: none !important;
+  border-color: #86b7fe !important;
+}

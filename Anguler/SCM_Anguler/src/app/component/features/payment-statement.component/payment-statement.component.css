@@ -1,0 +1,132 @@
+.container-fluid {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table th {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 14px 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.table td {
+  padding: 14px 12px;
+  color: #1e293b;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+  background-color: #f1f5f9 !important;
+  transform: translateY(-1px);
+}
+
+/* --- 🌟 বড় সাইজ এবং গাঢ় কালারফুল রাউন্ড হেডার যুক্ত সেন্ট্রাল ড্রয়ার --- */
+.custom-drawer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 950px;           /* ফর্মের চওড়া বড় করা হলো */
+  max-width: 95vw;        /* রেস্পন্সিভ রাখার জন্য */
+  height: 90vh;           /* উচ্চতা বড় করা হলো */
+  max-height: 95vh;
+  background-color: #ffffff;
+  z-index: 1050;
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.25);
+  border-radius: 16px;    /* চারপাশের কর্নার রাউন্ড করার জন্য */
+  overflow: hidden;       /* ভেতরের হেডার যাতে বর্ডার ক্রস না করে */
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.custom-drawer.open {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --- 🌟 ড্রয়ারের ভেতরের বডি অংশ (스크োল করার জন্য) --- */
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  background-color: #ffffff;
+}
+
+/* --- 🌟 গাঢ় (Dark) গ্রেডিয়েন্ট হেডার ডিজাইন --- */
+.reg-modal-header, .drawer-header {
+  background: linear-gradient(135deg, #312e81 0%, #4338ca 100%); /* গাঢ় ডার্ক ইনডিগো টোন */
+  color: #ffffff;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reg-modal-header h5, .drawer-header h5 {
+  color: #ffffff !important;
+  font-weight: 700;
+  margin: 0;
+}
+
+.reg-modal-header small, .drawer-header small {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.reg-modal-header .btn-close, .drawer-header .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+.reg-modal-header .btn-close:hover, .drawer-header .btn-close:hover {
+  opacity: 1;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(2px);
+  z-index: 1040;
+}
+
+.fs-7 {
+  font-size: 0.825rem !important;
+}
+
+.fs-8 {
+  font-size: 0.75rem !important;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #38b000;
+  box-shadow: 0 0 0 3px rgba(56, 176, 0, 0.15);
+}

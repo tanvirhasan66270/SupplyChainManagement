@@ -1,0 +1,209 @@
+<div class="container-fluid py-4 px-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1"><i class="bi bi-arrow-left-right text-primary me-2"></i>Stock Movement Ledger</h4>
+      <p class="text-muted mb-0 small">Track physical inventory flows: inward receipts, outward dispatches, internal inter-warehouse transfers, and adjustments.</p>
+    </div>
+    <button class="btn btn-primary px-4 py-2 fw-bold shadow-sm text-white fs-7" (click)="openDrawer()">
+      <i class="bi bi-journal-plus me-2"></i>Log Stock Movement
+    </button>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger shadow-sm border-2 mb-4 fs-7" role="alert">
+      <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>Operation Interrupted:</strong> {{ errorMessage }}
+    </div>
+  }
+
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-7">
+          <thead class="table-light text-uppercase fs-8 fw-bold text-secondary">
+            <tr>
+              <th class="ps-4">Log ID</th>
+              <th>Material Product</th>
+              <th>Transaction Type</th>
+              <th>Source / Origin</th>
+              <th>Target Destination</th>
+              <th>Volume / Qty</th>
+              <th>Reference Trigger</th>
+              <th>Logged By</th>
+              <th class="text-end px-4" width="80">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (log of movements; track log.id) {
+              <tr>
+                <td class="ps-4"><span class="badge bg-secondary font-monospace">LOG-{{ log.id }}</span></td>
+                <td>
+                  <div class="fw-bold text-dark">{{ log.productName }}</div>
+                  <small class="text-muted font-monospace fs-8">Product ID: {{ log.productId }}</small>
+                </td>
+                <td>
+                  <span class="badge px-2.5 py-1.5 fs-8 text-uppercase border"
+                    [ngClass]="{
+                      'bg-success-subtle text-success border-success': log.movementType === 'INWARD',
+                      'bg-danger-subtle text-danger border-danger': log.movementType === 'OUTWARD',
+                      'bg-info-subtle text-info border-info': log.movementType === 'TRANSFER',
+                      'bg-warning-subtle text-warning border-warning': log.movementType === 'ADJUSTMENT'
+                    }">
+                    {{ log.movementType }}
+                  </span>
+                </td>
+                <td>
+                  <div class="fw-semibold text-secondary">
+                    <i class="bi bi-building me-1"></i>
+                    @if (log.movementType === 'TRANSFER') {
+                      {{ log.sourceWarehouseName }}
+                    } @else if (log.movementType === 'OUTWARD' || log.movementType === 'ADJUSTMENT') {
+                      {{ log.warehouseName }}
+                    } @else {
+                      External Vendor / Supply Chain
+                    }
+                  </div>
+                </td>
+                <td>
+                  <div class="fw-semibold text-dark">
+                    <i class="bi bi-building-fill text-primary me-1"></i>
+                    @if (log.movementType === 'OUTWARD') {
+                      External Customer
+                    } @else {
+                      {{ log.warehouseName }}
+                    }
+                  </div>
+                </td>
+                <td><b class="text-indigo font-monospace fs-6">{{ log.quantity }}</b></td>
+                <td>
+                  <div class="font-monospace text-dark fw-bold">{{ log.referenceId }}</div>
+                  <small class="text-muted d-block font-monospace fs-8 mt-0.5">{{ log.movedAt | date:'yyyy-MM-dd HH:mm' }}</small>
+                </td>
+                <td>
+                  <div class="fw-bold text-dark">{{ log.performedByName }}</div>
+                  @if (log.remarks) {
+                    <small class="text-muted text-truncate d-block fs-8" style="max-width: 150px;" [title]="log.remarks">Rem: {{ log.remarks }}</small>
+                  }
+                </td>
+                <td class="text-end px-4">
+                  <button class="btn btn-icon btn-light text-danger" title="Purge Record" (click)="deleteLog(log.id)">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="9" class="text-center py-5 text-muted font-monospace fs-8">
+                  <i class="bi bi-clipboard-x fs-1 d-block mb-2 text-secondary"></i>No inventory ledger records localized in current SCM lifecycle.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-drawer shadow" [class.open]="isDrawerOpen">
+    <div class="drawer-header bg-primary text-white p-4 d-flex justify-content-between align-items-center">
+      <h5 class="fw-bold mb-0"><i class="bi bi-box-seam-fill me-2"></i>Log Stock Transaction</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4" style="overflow-y: auto; height: calc(100vh - 110px);">
+      <form #movementForm="ngForm" (ngSubmit)="movementForm.valid && submitMovement()">
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Operation Process Type</label>
+          <select class="form-select fs-7" [(ngModel)]="formModel.movementType" name="movementType" (change)="onMovementTypeChange()" required>
+            <option value="INWARD">📥 INWARD (Vendor Receipt/GRN)</option>
+            <option value="OUTWARD">📤 OUTWARD (Customer Dispatch/Sales)</option>
+            <option value="TRANSFER">🔄 TRANSFER (Inter-Warehouse Shift)</option>
+            <option value="ADJUSTMENT">⚙️ ADJUSTMENT (Audit / Damage Balancing)</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Select Product Material</label>
+          <select class="form-select fs-7" [(ngModel)]="formModel.productId" name="productId" (change)="onProductChange()" required>
+            <option [value]="0">-- Choose SCM Catalog Product --</option>
+            @for (p of availableProductsForMovement; track p.id) {
+              <option [value]="p.id">{{ p.name }} (Code: {{ p.productCode }})</option>
+            }
+          </select>
+        </div>
+
+        <!-- স্টক পরিমাণের ফিল্ডটি এখন প্রোডাক্ট সিলেকশনের ঠিক নিচে স্থায়ীভাবে শো করবে -->
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Available Stock Quantity</label>
+          <input type="text" class="form-control fs-7 bg-light fw-bold text-success font-monospace" [value]="getSelectedProductStock()" readonly placeholder="Select a product to view available stock...">
+        </div>
+
+        @if (formModel.movementType === 'TRANSFER') {
+          <div class="mb-3 bg-info-subtle p-3 rounded border border-info-subtle">
+            <label class="form-label fw-bold text-info-emphasis text-uppercase fs-8">Source Warehouse Node (From)</label>
+            <select class="form-select fs-7" [(ngModel)]="formModel.sourceWarehouseId" name="sourceWarehouseId" required>
+              <option [value]="null">-- Choose Origin Facility --</option>
+              @for (w of warehouses; track w.id) {
+                <option [value]="w.id">{{ w.name }}</option>
+              }
+            </select>
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">
+            @if (formModel.movementType === 'OUTWARD') {
+              External Destination
+            } @else if (formModel.movementType === 'TRANSFER') {
+              Destination Warehouse Node (To)
+            } @else {
+              Target Warehouse Node
+            }
+          </label>
+          
+          @if (formModel.movementType === 'TRANSFER' || formModel.movementType === 'INWARD' || formModel.movementType === 'ADJUSTMENT') {
+            <select class="form-select fs-7" [(ngModel)]="formModel.warehouseId" name="warehouseId" required>
+              <option [value]="0">-- Choose Destination Facility --</option>
+              @for (w of warehouses; track w.id) {
+                <option [value]="w.id">{{ w.name }}</option>
+              }
+            </select>
+          } @else {
+            <input type="text" class="form-control fs-7 bg-light fw-bold text-dark" [value]="getTargetWarehouseName()" readonly placeholder="Auto-filled from inventory stock...">
+            <input type="hidden" [(ngModel)]="formModel.warehouseId" name="warehouseId" required>
+          }
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Movement Quantity</label>
+            <input type="number" class="form-control fs-7 font-monospace fw-bold" [(ngModel)]="formModel.quantity" name="quantity" min="1" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Reference Identifier</label>
+            <input type="text" class="form-control fs-7 font-monospace" [(ngModel)]="formModel.referenceId" name="referenceId" placeholder="e.g., GRN-994, INV-12" required>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">System Audit Remarks</label>
+          <textarea class="form-control fs-7" [(ngModel)]="formModel.remarks" name="remarks" rows="3" placeholder="Log cause of movement or operation variables..."></textarea>
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 pt-3 border-top">
+          <button class="btn btn-primary text-white flex-grow-1 py-2.5 fw-bold text-uppercase fs-7" type="submit">
+            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Log Transaction
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3 text-uppercase fs-7" (click)="resetForm()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  @if (isDrawerOpen) {
+    <div class="drawer-backdrop" (click)="closeDrawer()"></div>
+  }
+
+</div>

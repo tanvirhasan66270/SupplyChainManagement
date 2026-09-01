@@ -1,0 +1,274 @@
+@if (isOpen) {
+  <div class="settings-backdrop" (click)="closePanel()">
+    <div class="settings-panel" (click)="$event.stopPropagation()">
+      <!-- Header -->
+      <div class="settings-header">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-gear-wide-connected fs-5"></i>
+          <h5 class="mb-0 fw-bold">Dashboard Settings</h5>
+        </div>
+        <button class="btn-close-panel" (click)="closePanel()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="settings-tabs">
+        <button
+          class="tab-btn"
+          [class.active]="activeTab === 'profile'"
+          (click)="setTab('profile')"
+        >
+          <i class="bi bi-person"></i> Profile
+        </button>
+        <button
+          class="tab-btn"
+          [class.active]="activeTab === 'account'"
+          (click)="setTab('account')"
+        >
+          <i class="bi bi-shield-lock"></i> Account
+        </button>
+        <button
+          class="tab-btn"
+          [class.active]="activeTab === 'dashboard'"
+          (click)="setTab('dashboard')"
+        >
+          <i class="bi bi-speedometer2"></i> Dashboard
+        </button>
+        <button
+          class="tab-btn"
+          [class.active]="activeTab === 'notifications'"
+          (click)="setTab('notifications')"
+        >
+          <i class="bi bi-bell"></i> Notifications
+          @if (unreadCount > 0) {
+            <span class="tab-badge">{{ unreadCount }}</span>
+          }
+        </button>
+      
+      </div>
+
+      <!-- Content -->
+      <div class="settings-body">
+        <!-- Profile Tab -->
+        @if (activeTab === 'profile') {
+          <div class="settings-section">
+            <div class="profile-card">
+              <div class="profile-avatar-large">
+                <span class="avatar-text">{{ getInitials() }}</span>
+                <button class="avatar-upload-btn"><i class="bi bi-camera"></i></button>
+              </div>
+              <div class="profile-info">
+                <h6 class="fw-bold mb-0">{{ user?.name }}</h6>
+                <small class="text-muted">{{ getRoleDisplayName(user?.role || '') }}</small>
+                <div class="text-muted small mt-1">{{ user?.email }}</div>
+              </div>
+            </div>
+
+            <!--  সম্পূর্ণ রিড-অনলি লেআউট, কোনো এডিটেবল কন্ডিশন ও ইনপুট ফিল্ড এখানে নেই -->
+            <div class="detail-list">
+              <div class="detail-item">
+                <span class="detail-label">Full Name</span>
+                <span class="detail-value">{{ user?.name }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Email</span>
+                <span class="detail-value">{{ user?.email }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Phone</span>
+                <span class="detail-value">{{ user?.phone || 'Not set' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Role</span>
+                <span class="detail-value badge-role">{{ getRoleDisplayName(user?.role || '') }}</span>
+              </div>
+            </div>
+            
+            <!-- 🚀 এডিট প্রোফাইল বাটন যা ডাইনামিক রাউটিং ইভেন্ট এমিট করবে -->
+            <button class="settings-btn primary w-100" (click)="triggerEditProfileRouting()">
+              <i class="bi bi-pencil-square"></i> Edit Profile
+            </button>
+          </div>
+        }
+
+        <!-- Account Tab -->
+        @if (activeTab === 'account') {
+          <div class="settings-section">
+            <h6 class="section-title">Security Settings</h6>
+
+            <div class="setting-item">
+              <div class="setting-info">
+                <i class="bi bi-lock text-primary"></i>
+                <div>
+                  <div class="fw-semibold">Change Password</div>
+                  <small class="text-muted">Update your account password</small>
+                </div>
+              </div>
+              <button
+                class="settings-btn outline"
+                (click)="changePasswordMode = !changePasswordMode"
+              >
+                {{ changePasswordMode ? 'Cancel' : 'Change' }}
+              </button>
+            </div>
+
+            @if (changePasswordMode) {
+              <form class="password-form" autocomplete="off" (submit)="changePassword(); $event.preventDefault()">
+                <div class="form-group">
+                  <label>Current Password</label>
+                  <input type="password" class="form-control" [(ngModel)]="currentPassword" name="currentPwd" autocomplete="new-password" [class.is-invalid]="currentPasswordError" />
+                  @if (currentPasswordError) {
+                    <div class="text-danger small mt-1">{{ currentPasswordError }}</div>
+                  }
+                </div>
+                <div class="form-group">
+                  <label>New Password</label>
+                  <input type="password" class="form-control" [(ngModel)]="newPassword" name="newPwd" autocomplete="new-password" />
+                </div>
+                <div class="form-group">
+                  <label>Confirm Password</label>
+                  <input type="password" class="form-control" [(ngModel)]="confirmPassword" name="confirmPwd" autocomplete="new-password" />
+                </div>
+                <button type="submit" class="settings-btn primary">
+                  Update Password
+                </button>
+              </form>
+            }
+
+            <div class="setting-item">
+              <div class="setting-info">
+                <i class="bi bi-envelope text-success"></i>
+                <div>
+                  <div class="fw-semibold">Email Address</div>
+                  <small class="text-muted">{{ user?.email }}</small>
+                </div>
+              </div>
+           </div>           
+          </div>
+        }
+
+        <!-- Dashboard Tab -->
+        @if (activeTab === 'dashboard') {
+          <div class="settings-section">
+            <h6 class="section-title">Appearance</h6>
+
+            <div class="setting-item">
+              <div class="setting-info">
+                <i class="bi bi-moon-stars text-indigo"></i>
+                <div>
+                  <div class="fw-semibold">Dark Mode</div>
+                  <small class="text-muted">Toggle dark/light theme</small>
+                </div>
+              </div>
+              <div class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="darkMode"
+                  [checked]="isDarkMode"
+                  (change)="toggleTheme()"
+                />
+                <label for="darkMode"></label>
+              </div>
+            </div>
+
+
+          </div>
+        }
+
+        <!-- Notifications Tab -->
+        @if (activeTab === 'notifications') {
+          <div class="settings-section">
+            <h6 class="section-title">Notification Preferences</h6>
+
+            <div class="setting-item">
+              <div class="setting-info">
+                <i class="bi bi-bell text-primary"></i>
+                <div>
+                  <div class="fw-semibold">Push Notifications</div>
+                  <small class="text-muted">Receive real-time alerts</small>
+                </div>
+              </div>
+              <div class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="pushNotif"
+                  [(ngModel)]="notificationsEnabled"
+                  (change)="onSettingsChange()"
+                />
+                <label for="pushNotif"></label>
+              </div>
+            </div>
+
+            <div class="setting-item">
+              <div class="setting-info">
+                <i class="bi bi-envelope text-success"></i>
+                <div>
+                  <div class="fw-semibold">Email Notifications</div>
+                  <small class="text-muted">Get notified via email</small>
+                </div>
+              </div>
+              <div class="toggle-switch">
+                <input
+                  type="checkbox"
+                  id="emailNotif"
+                  [(ngModel)]="emailNotifications"
+                  (change)="onSettingsChange()"
+                />
+                <label for="emailNotif"></label>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+            <h6 class="section-title">Recent Notifications</h6>
+
+            @if (unreadCount > 0) {
+              <button class="settings-btn outline small mb-3" (click)="markAllAsRead()">
+                <i class="bi bi-check-all"></i> Mark all as read
+              </button>
+            }
+
+            <div class="notification-list">
+              @for (notif of notifications; track notif.id) {
+                <div
+                  class="notification-item"
+                  [class.unread]="!notif.isRead"
+                  (click)="markAsRead(notif.id!)"
+                >
+                  <div class="notif-icon">
+                    <i
+                      class="bi"
+                      [ngClass]="{
+                        'bi-truck text-primary': notif.type === 'SHIPMENT',
+                        'bi-exclamation-triangle text-warning': notif.type === 'TRIP_ALERT',
+                        'bi-check-circle text-success': notif.type === 'REPORT_APPROVED',
+                        'bi-bell text-secondary':
+                          notif.type !== 'SHIPMENT' &&
+                          notif.type !== 'TRIP_ALERT' &&
+                          notif.type !== 'REPORT_APPROVED',
+                      }"
+                    ></i>
+                  </div>
+                  <div class="notif-content">
+                    <div class="fw-semibold small">{{ notif.title }}</div>
+                    <small class="text-muted d-block">{{ notif.message }}</small>
+                    <small class="text-muted">{{ notif.createdAt | date: 'short' }}</small>
+                  </div>
+                  @if (!notif.isRead) {
+                    <span class="unread-dot"></span>
+                  }
+                </div>
+              } @empty {
+                <div class="text-center py-4 text-muted">
+                  <i class="bi bi-bell-slash fs-3 d-block mb-2"></i>
+                  <small>No notifications</small>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+      </div>
+    </div>
+  </div>
+}

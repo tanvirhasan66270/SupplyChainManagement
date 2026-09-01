@@ -1,0 +1,362 @@
+<div class="container-fluid py-4 px-4 text-dark">
+
+  <div class="d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-3 mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1">Purchase Requisition Pipeline</h4>
+      <p class="text-muted mb-0 small">Audit centralized item supply requests and trigger supplier contract dispatches.</p>
+    </div>
+    
+   <div class="col-md-6 text-md-end">
+      @if (userRole !== 'SUPPLIER' && userRole !== 'MANAGER') {
+        <button class="btn btn-primary px-4 py-2 shadow-sm fw-semibold fs-7" (click)="openDrawer()">
+          <i class="bi bi-file-earmark-plus me-1"></i> Add Requisition
+        </button>
+      }
+    </div>
+  </div>
+  <div class="row g-3 mb-4 align-items-center">
+<!--  PR Reference ID -->
+    <div class="col-md-6">
+      <div class="input-group shadow-sm">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-secondary"></i></span>
+        <input type="text" class="form-control border-start-0 fs-7" 
+               placeholder="Search Reference No..." 
+               [(ngModel)]="searchId" 
+               (input)="applyDoubleSearch()">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="input-group shadow-sm">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-exclamation-diamond text-secondary"></i></span>
+        <select class="form-select border-start-0 fs-7 text-secondary" 
+                [(ngModel)]="searchUrgency" 
+                (change)="applyDoubleSearch()">
+          <option value="">All Urgency Levels</option>
+          <option value="LOW">LOW</option>
+          <option value="MEDIUM">MEDIUM</option>
+          <option value="HIGH">HIGH</option>
+          <option value="CRITICAL">CRITICAL</option>
+        </select>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <!-- Global Exception/Error Logger Alerts -->
+  @if (errorMessage) {
+    <div class="alert alert-danger shadow-sm border-2 mb-4 fs-7" role="alert">
+      <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>Core Fault:</strong> {{ errorMessage }}
+    </div>
+  }
+
+  <!-- (filteredRequisitions)-->
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-7.5">
+          <thead class="table-light text-uppercase fs-8">
+            <tr>
+              <th class="ps-4">Req Reference</th>
+              <th>Product Specifications</th>
+              <th>Target Suppliers</th>
+              <th>Required Volume</th>
+              <th>Priority Strategy</th>
+              <th>Workflow Stage</th>
+              <th class="text-end px-4" width="260">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of filteredRequisitions; track r.id) {
+              <tr [class.table-success]="r.approvalStatus === 'APPROVED'" [class.table-danger]="r.approvalStatus === 'REJECTED'">
+                <td class="ps-4 font-monospace fw-bold text-dark">#PRQ-{{ r.id }}</td>
+                <td>
+                  <div class="d-flex flex-wrap gap-1" style="max-width: 240px;">
+                    @for (pName of r.productNames; track $index) {
+                      <span class="badge bg-light text-dark border">{{ pName }}</span>
+                    }
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex flex-wrap gap-1" style="max-width: 200px;">
+                    @for (sName of r.supplierNames; track $index) {
+                      <span class="badge bg-secondary-subtle text-secondary fs-8">{{ sName }}</span>
+                    }
+                  </div>
+                </td>
+                <td class="font-monospace fw-bold text-primary">{{ r.quantityRequired }} Units</td>
+                <td>
+                  <span class="badge px-2 py-0.5 text-uppercase fs-8"
+                    [ngClass]="{
+                      'bg-secondary': r.urgencyLevel === 'LOW', 
+                      'bg-success': r.urgencyLevel === 'MEDIUM', 
+                      'bg-warning text-dark': r.urgencyLevel === 'HIGH', 
+                      'bg-danger': r.urgencyLevel === 'CRITICAL'
+                    }">
+                    {{ r.urgencyLevel }}
+                  </span>
+                  <small class="d-block text-muted font-monospace mt-1"><i class="bi bi-clock me-0.5"></i>{{ r.requiredByDate | date:'mediumDate' }}</small>
+                </td>
+                <td>
+                  <span class="badge px-2.5 py-1.5 fs-8 text-uppercase border"
+                    [ngClass]="{
+                      'bg-success-subtle text-success border-success': r.approvalStatus === 'APPROVED', 
+                      'bg-warning-subtle text-warning border-warning': r.approvalStatus === 'PENDING', 
+                      'bg-danger-subtle text-danger border-danger': r.approvalStatus === 'REJECTED', 
+                      'bg-dark-subtle text-dark border-dark': r.approvalStatus === 'CANCELLED'
+                    }">
+                    {{ r.approvalStatus || 'PENDING' }}
+                  </span>
+                  <small class="d-block text-muted text-truncate mt-1" style="max-width: 110px;" *ngIf="r.approvedByName">By: {{ r.approvedByName }}</small>
+                </td>
+
+                <td class="text-end px-4">
+                  <div class="d-flex justify-content-end gap-1.5">
+                    @if (userRole !== 'SUPPLIER') {
+                      <ng-container *ngIf="(userRole === 'MANAGER' || userRole === 'ADMIN') && r.approvalStatus === 'PENDING'">
+                        <button class="btn btn-xs btn-success fw-bold px-2.5 py-1 text-uppercase fs-8 shadow-sm" (click)="authorizeApproval(r.id)">Approve</button>
+                        <button class="btn btn-xs btn-danger fw-bold px-2.5 py-1 text-uppercase fs-8 shadow-sm" (click)="authorizeRejection(r.id, 'REJECT')">Reject</button>
+                        <button class="btn btn-xs btn-outline-secondary fw-bold px-2.5 py-1 text-uppercase fs-8" (click)="authorizeRejection(r.id, 'CANCEL')">Cancel</button>
+                      </ng-container>
+                    }
+                    <button class="btn btn-icon btn-light text-primary" title="View PDF Document" (click)="openPdfModal(r)">
+                      <i class="bi bi-file-earmark-pdf-fill"></i>
+                    </button>
+                    @if (userRole !== 'SUPPLIER') {
+                      <button class="btn btn-icon btn-light text-warning" title="Modify Context" (click)="edit(r)" [disabled]="r.approvalStatus !== 'PENDING'">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="7" class="text-center py-5 text-muted font-monospace fs-8">
+                  <i class="bi bi-folder-x fs-2 d-block mb-2 text-secondary"></i>No matching purchase requisitions compiled inside cluster registry.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sliding Input Drawer Framework -->
+  @if (userRole !== 'SUPPLIER') {
+    <div class="slide-drawer shadow" [class.show]="isDrawerOpen">
+      <div class="drawer-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0">{{ isEdit ? 'Mutate Document Node' : 'Compile Procurement Slip' }}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+      </div>
+
+      <div class="drawer-body p-4" style="overflow-y: auto; height: calc(100vh - 110px);">
+        <form #reqForm="ngForm" (ngSubmit)="reqForm.valid && save()">
+          
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Product Specification Vector</label>
+            <div class="row g-2">
+              <div class="col-md-6">
+                <select class="form-select fs-7" [(ngModel)]="selectedProductInput" name="prodSelect" (change)="onProductSelect($event)">
+                  <option [ngValue]="null">-- Select Product or Requirement --</option>
+                  <optgroup label="Registered Products">
+                    @for (p of products; track p.id) {
+                      <option value="PROD_{{p.id}}" [disabled]="isProductSelected(p.id)">{{ p.name }}</option>
+                    }
+                  </optgroup>
+                  <optgroup label="Customer/Product Requirements">
+                    @for (r of requirements; track r.id) {
+                      <option value="REQ_{{r.id}}" [disabled]="isRequirementSelected(r.id)">[Req] {{ r.productName }}</option>
+                    }
+                  </optgroup>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <div class="p-2 border rounded bg-light d-flex flex-wrap gap-1.5 align-content-start font-monospace fs-8 overflow-auto" style="min-height: 38px;">
+                  @for (pId of requisition.productIds; track pId) {
+                    <span class="badge bg-dark text-white d-flex align-items-center gap-1 py-1 px-2 rounded-2">
+                      {{ getProductById(pId)?.name }}
+                      <i class="bi bi-x-circle text-warning cursor-pointer fs-8" (click)="removeProduct(pId)"></i>
+                    </span>
+                  }
+                  @for (rId of selectedRequirementIds; track rId) {
+                    <span class="badge bg-info text-dark d-flex align-items-center gap-1 py-1 px-2 rounded-2">
+                      [Req] {{ getRequirementById(rId)?.productName }}
+                      <i class="bi bi-x-circle text-danger cursor-pointer fs-8" (click)="removeRequirement(rId)"></i>
+                    </span>
+                  }
+                  @if (requisition.productIds.length === 0 && selectedRequirementIds.length === 0) {
+                    <span class="text-muted fs-8 py-0.5 px-1">Selected item chips stack here...</span>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Target Preferred Supplier Routing Nodes</label>
+            <div class="row g-2">
+              <div class="col-md-6">
+                <select class="form-select fs-7" [(ngModel)]="selectedSupplierInput" name="supSelect" (change)="onSupplierSelect($event)">
+                  <option [ngValue]="null">-- Select Supplier to Add --</option>
+                  @for (s of suppliers; track s.id) {
+                    <option [value]="s.id" [disabled]="isSupplierSelected(s.id)">{{ s.name }}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-md-6">
+                <div class="p-2 border rounded bg-light d-flex flex-wrap gap-1.5 align-content-start font-monospace fs-8 overflow-auto" style="height: 38px;">
+                  @for (sId of requisition.supplierIds; track sId) {
+                    <span class="badge bg-secondary text-white d-flex align-items-center gap-1 py-1 px-2 rounded-2">
+                      {{ getSupplierById(sId)?.name }}
+                      <i class="bi bi-x-circle text-warning cursor-pointer fs-8" (click)="removeSupplier(sId)"></i>
+                    </span>
+                  }
+                  @if (requisition.supplierIds.length === 0) {
+                    <span class="text-muted fs-8 py-0.5 px-1">Selected vendor chips stack here...</span>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-uppercase text-secondary">Required Consignment Units</label>
+              <input type="number" class="form-control fs-7 font-monospace fw-bold" [(ngModel)]="requisition.quantityRequired" name="quantityRequired" min="1" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-uppercase text-secondary">Urgency Stratum Level</label>
+              <select class="form-select fs-7" [(ngModel)]="requisition.urgencyLevel" name="urgencyLevel" required>
+                <option value="LOW">LOW Urgency Strategy</option>
+                <option value="MEDIUM">MEDIUM Pipeline</option>
+                <option value="HIGH">HIGH Accelerated Strategy</option>
+                <option value="CRITICAL">CRITICAL Mission Vector</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-uppercase text-secondary">Target Required Date Deadline</label>
+              <input type="date" class="form-control fs-7 font-monospace" [class.is-invalid]="dateRef.invalid && reqForm.submitted" [(ngModel)]="requisition.requiredByDate" name="requiredByDate" #dateRef="ngModel" required>
+              <div class="invalid-feedback small fw-bold" *ngIf="dateRef.invalid && reqForm.submitted">Timeline configuration is mandatory!</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-uppercase text-secondary">Currency Settlement</label>
+              <input type="text" class="form-control fs-7 bg-light text-muted font-monospace fw-bold" [value]="requisition.currency + ' ($) Fixed Gateway Node'" disabled>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Special Requisition Directives & Remarks</label>
+            <textarea class="form-control fs-7 auto-grow" rows="2" 
+                      placeholder="Input logistics reasonings context..." 
+                      [(ngModel)]="requisition.remarks" name="remarks"
+                      (input)="autoGrowTextarea($event)"
+                      style="resize: none; overflow: hidden; min-height: 58px; transition: height 0.1s ease-out;"></textarea>
+          </div>
+
+          <div class="drawer-footer d-flex gap-2 pt-2 border-top">
+            <button class="btn btn-success flex-grow-1 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-semibold fs-7 text-uppercase" type="submit">
+              <i class="bi bi-cloud-arrow-up-fill"></i> {{ isEdit ? 'Commit Metadata Mutations' : 'Dispatch Requisition Node' }}
+            </button>
+            <button type="button" class="btn btn-outline-secondary px-3 fs-7 text-uppercase" (click)="reset()">Clear</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    @if (isDrawerOpen) {
+      <div class="drawer-backdrop" (click)="closeDrawer()"></div>
+    }
+  }
+
+  <!-- PDF Preview Modal -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);" *ngIf="isPdfModalOpen">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+        <div class="modal-header bg-dark text-white px-4 py-3">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-file-earmark-pdf-fill me-2 text-danger"></i> Purchase Requisition Document
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closePdfModal()"></button>
+        </div>
+        <div class="modal-body bg-light p-4 d-flex justify-content-center">
+          <div #pdfPreviewContainer class="bg-white p-5 shadow-sm rounded-3 border" style="width: 100%; max-width: 680px; font-family: Arial, sans-serif; color: #000;">
+            <div class="text-center mb-4 pb-3 border-bottom">
+              <h2 class="fw-bold mb-0" style="letter-spacing: 2px; color: #0b2545;">SCMPRO PROCUREMENT</h2>
+              <p class="text-muted small mb-0">Official Purchase Requisition Contract</p>
+            </div>
+            
+            <div class="row mb-4">
+              <div class="col-6">
+                <h6 class="text-muted small fw-bold text-uppercase mb-1">Requisition Info</h6>
+                <p class="mb-1 font-monospace"><strong>Ref No:</strong> #PRQ-{{ selectedReqForPdf?.id }}</p>
+                <p class="mb-1 font-monospace"><strong>Date:</strong> {{ selectedReqForPdf?.requiredByDate | date:'mediumDate' }}</p>
+                <p class="mb-0 font-monospace"><strong>Urgency:</strong> {{ selectedReqForPdf?.urgencyLevel }}</p>
+              </div>
+              <div class="col-6 text-end">
+                <h6 class="text-muted small fw-bold text-uppercase mb-1">Status</h6>
+                <p class="mb-1 font-monospace">
+                  <span class="badge" [ngClass]="selectedReqForPdf?.approvalStatus === 'APPROVED' ? 'bg-success' : (selectedReqForPdf?.approvalStatus === 'PENDING' ? 'bg-warning text-dark' : 'bg-danger')">
+                    {{ selectedReqForPdf?.approvalStatus || 'PENDING' }}
+                  </span>
+                </p>
+                <p class="mb-0 font-monospace" *ngIf="selectedReqForPdf?.approvedByName"><strong>Auth By:</strong> {{ selectedReqForPdf?.approvedByName }}</p>
+              </div>
+            </div>
+
+            <h6 class="fw-bold bg-light p-2 border rounded-top mb-0">Target Suppliers</h6>
+            <div class="border border-top-0 rounded-bottom p-3 mb-4 font-monospace fs-8">
+              @for (sName of selectedReqForPdf?.supplierNames; track $index) {
+                <span class="d-inline-block me-3 mb-1"><i class="bi bi-building me-1 text-primary"></i> {{ sName }}</span>
+              }
+            </div>
+
+            <h6 class="fw-bold bg-light p-2 border rounded-top mb-0">Product Specifications</h6>
+            <table class="table table-bordered mb-4 fs-8">
+              <thead class="table-light">
+                <tr>
+                  <th width="70%">Product Item</th>
+                  <th width="30%" class="text-center">Required Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (pName of selectedReqForPdf?.productNames; track $index) {
+                  <tr>
+                    <td>{{ pName }}</td>
+                    <td class="text-center fw-bold">{{ selectedReqForPdf?.quantityRequired }} Units</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+
+            <div class="mb-4">
+              <h6 class="fw-bold bg-light p-2 border rounded-top mb-0">Remarks / Directives</h6>
+              <div class="border border-top-0 rounded-bottom p-3 fs-8 text-muted">
+                {{ selectedReqForPdf?.remarks || 'No specific directives provided.' }}
+              </div>
+            </div>
+
+            <div class="text-center mt-5 pt-3 border-top text-muted" style="font-size: 10px;">
+              <p class="mb-0">This document is system-generated via the SCMPro Supply Chain Platform.</p>
+              <p class="mb-0">Electronically validated. No physical signature required.</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer bg-white px-4 py-3 border-top">
+          <button type="button" class="btn btn-outline-secondary px-4 fw-bold" (click)="closePdfModal()">Close</button>
+          <button type="button" class="btn btn-danger px-4 fw-bold d-flex align-items-center gap-2" (click)="downloadPdfFromModal()">
+            <i class="bi bi-download"></i> Download PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="isPdfModalOpen"></div>
+
+</div>

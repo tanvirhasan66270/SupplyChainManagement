@@ -1,0 +1,141 @@
+<div class="public-about">
+
+  <!-- ABOUT HERO -->
+  <section class="about-hero text-white py-5">
+    <div class="container py-5">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+          <span class="badge bg-white/10 text-white text-uppercase px-3 py-1.5 fw-bold mb-3 small border border-white/20 rounded-pill">
+            <i class="bi bi-building me-1"></i> About Us
+          </span>
+          <h1 class="display-4 fw-black text-white mb-3">Building the Backbone of Global Trade</h1>
+          <p class="lead text-white-50 mb-0">We are on a mission to make international supply chains transparent, efficient, and accessible for businesses of every size.</p>
+        </div>
+        <div class="col-lg-5">
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="card glass-card border-white/10 p-4 rounded-4 text-center">
+                <h3 class="fw-black text-white mb-0 font-monospace">2018</h3>
+                <small class="text-white-50">Founded</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card glass-card border-white/10 p-4 rounded-4 text-center">
+                <h3 class="fw-black text-white mb-0 font-monospace">500+</h3>
+                <small class="text-white-50">Team Members</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card glass-card border-white/10 p-4 rounded-4 text-center">
+                <h3 class="fw-black text-white mb-0 font-monospace">35+</h3>
+                <small class="text-white-50">Countries</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card glass-card border-white/10 p-4 rounded-4 text-center">
+                <h3 class="fw-black text-white mb-0 font-monospace">৳4.8B</h3>
+                <small class="text-white-50">Trade Managed</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION & VISION -->
+  <section class="py-5 bg-white">
+    <div class="container py-4">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-6">
+          <span class="badge bg-primary-subtle text-primary text-uppercase px-3 py-1 fw-bold mb-3 small">Our Mission</span>
+          <h2 class="fw-black text-dark display-6 mb-3">Simplifying Global Trade for Everyone</h2>
+          <p class="text-secondary mb-4">
+            We streamline international trade by combining multi-device tracking, automated customs clearance, and strategic sourcing in one unified platform. Our dedication to sustainable shipping networks and warehouse hubs connects ports across the globe.
+          </p>
+          <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-4">
+            <div class="flex-shrink-0">
+              <div class="rounded-circle bg-success d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                <i class="bi bi-shield-check text-white fs-4"></i>
+              </div>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-1">Verified Compliance</h6>
+              <p class="text-secondary small mb-0">Authorized customs protocols conforming to international shipping regulations and Incoterms guides.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <span class="badge bg-warning-subtle text-warning text-uppercase px-3 py-1 fw-bold mb-3 small">Our Vision</span>
+          <h2 class="fw-black text-dark display-6 mb-3">A World Without Supply Chain Friction</h2>
+          <p class="text-secondary mb-4">
+            We envision a future where every business — from small manufacturers to multinational enterprises — can access world-class logistics infrastructure, real-time visibility, and compliance automation without barriers.
+          </p>
+          <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-4">
+            <div class="flex-shrink-0">
+              <div class="rounded-circle bg-warning d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                <i class="bi bi-eye text-white fs-4"></i>
+              </div>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-1">Full Transparency</h6>
+              <p class="text-secondary small mb-0">Real-time tracking, automated alerts, and end-to-end visibility for every shipment in your supply chain.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE VALUES -->
+  <section class="py-5 bg-light">
+    <div class="container py-4">
+      <div class="text-center mb-5">
+        <span class="badge bg-primary-subtle text-primary text-uppercase px-3 py-1.5 fw-bold mb-2 small">Our Principles</span>
+        <h2 class="fw-black text-dark display-6">Core Values That Drive Us</h2>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4" *ngFor="let val of coreValues">
+          <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100 value-card">
+            <div class="value-icon mb-3" [ngClass]="val.iconBg">
+              <i class="bi" [ngClass]="val.icon" [style.color]="val.color"></i>
+            </div>
+            <h5 class="fw-bold text-dark mb-2">{{ val.title }}</h5>
+            <p class="text-secondary small mb-0">{{ val.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="py-5 bg-white">
+    <div class="container py-4">
+      <div class="text-center mb-5">
+        <span class="badge bg-success-subtle text-success text-uppercase px-3 py-1.5 fw-bold mb-2 small">Our Journey</span>
+        <h2 class="fw-black text-dark display-6">Milestones & Achievements</h2>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-3" *ngFor="let milestone of milestones">
+          <div class="text-center p-4">
+            <div class="milestone-year fw-black font-monospace mb-2" [style.color]="milestone.color">{{ milestone.year }}</div>
+            <h6 class="fw-bold text-dark">{{ milestone.title }}</h6>
+            <p class="text-secondary small mb-0">{{ milestone.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-5 bg-dark text-white">
+    <div class="container py-4 text-center">
+      <h2 class="display-6 fw-black mb-3">Join Our Growing Network</h2>
+      <p class="text-white-50 col-lg-6 mx-auto mb-4">Become part of a global ecosystem of businesses transforming their supply chain operations.</p>
+      <a routerLink="/join-us" class="btn btn-lg btn-warning px-5 py-3 fw-bold rounded-pill">
+        <i class="bi bi-person-plus me-2"></i> Create Free Account
+      </a>
+    </div>
+  </section>
+
+</div>

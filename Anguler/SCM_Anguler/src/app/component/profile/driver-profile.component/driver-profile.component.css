@@ -1,0 +1,29 @@
+/* Scoped Utilities */
+.tracking-wide {
+  letter-spacing: 0.1em;
+}
+
+.fs-7 {
+  font-size: 0.9rem;
+}
+
+.fs-7\.5 {
+  font-size: 0.85rem;
+}
+
+.fs-8 {
+  font-size: 0.75rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.animate-fade {
+  transition: all 0.3s ease;
+}
+
+.animate-fade:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}

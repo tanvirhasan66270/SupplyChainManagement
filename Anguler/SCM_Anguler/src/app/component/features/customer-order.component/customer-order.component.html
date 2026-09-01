@@ -1,0 +1,697 @@
+<div class="container-fluid py-4">
+
+  <div
+    class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1">Customer Purchase Ledger</h4>
+      <p class="text-muted mb-0 small">Enforce transactional price tracking rules and sync delivery workflows.</p>
+    </div>
+    @if (userRole === 'CUSTOMER' || userRole === 'ADMIN') {
+    <button class="btn btn-primary px-4 py-2 fw-bold shadow-sm" (click)="openDrawer()">
+      <i class="bi bi-plus-circle me-2"></i>Create New Order
+    </button>
+    }
+  </div>
+
+  @if (errorMessage) {
+  <div class="alert alert-danger alert-dismissible fade show shadow-sm border-2 mb-4 fs-7" role="alert">
+    <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>Validation Exception:</strong> {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="errorMessage = null" aria-label="Close"></button>
+  </div>
+  }
+
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light text-uppercase fs-8 tracking-wider">
+            <tr>
+              <th class="ps-4">Order Number</th>
+              <th>Customer Cluster Details</th>
+              <th>Total Amount</th>
+              <th>Payment Engine</th>
+              <th>Settlement State</th>
+              <th>Order Lifecycle</th>
+              <th class="text-end px-4" width="200">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (o of filteredOrders; track o.id) {
+            <tr>
+              <td class="ps-4">
+                <span class="badge bg-dark font-monospace tracking-wide fs-7.5">{{ o.orderNumber }}</span>
+                <span class="d-block mt-1 font-sans fs-8 fw-bold" [ngClass]="{
+                      'text-secondary': o.priority === 'LOW',
+                      'text-success': o.priority === 'NORMAL',
+                      'text-warning': o.priority === 'HIGH',
+                      'text-danger fw-bolder': o.priority === 'URGENT'
+                    }">⚡ {{ o.priority || 'NORMAL' }}</span>
+              </td>
+              <td>
+                <div class="fw-bold text-dark mb-0.5">{{ o.customerName }}</div>
+                <div class="text-secondary small font-monospace"><i class="bi bi-envelope-at me-1"></i>{{
+                  o.customerEmail }}</div>
+              </td>
+              <td><strong class="text-success font-monospace fs-6">৳{{ o.totalAmount | number:'1.2-2' }}</strong></td>
+              <td><span class="badge bg-light text-dark border px-2 py-1 text-uppercase fw-semibold">{{ o.paymentMethod
+                  || 'CASH' }}</span></td>
+              <td>
+                <span class="badge px-2.5 py-1.5 fs-8 text-uppercase fw-bold" [ngClass]="{
+                      'bg-success-subtle text-success border border-success': o.paymentStatus === 'PAID',
+                      'bg-warning-subtle text-warning border border-warning': o.paymentStatus === 'PARTIALLY_PAID',
+                      'bg-danger-subtle text-danger border border-danger': o.paymentStatus === 'UNPAID' || !o.paymentStatus
+                    }">
+                  {{ o.paymentStatus || 'UNPAID' }}
+                </span>
+                @if (o.dueAmount && +o.dueAmount > 0) {
+                <small class="d-block text-danger font-monospace mt-1">Due: ৳{{ o.dueAmount | number:'1.2-2' }}</small>
+                }
+              </td>
+              <td>
+                <span class="badge rounded-pill bg-primary px-2.5 py-1.2 fs-8 text-uppercase tracking-normal">{{
+                  o.status }}</span>
+                <small class="d-block text-muted font-monospace fs-8 mt-1" *ngIf="o.estimatedDelivery"><i
+                    class="bi bi-calendar3 me-1"></i>{{ o.estimatedDelivery | date:'mediumDate' }}</small>
+              </td>
+              <td class="text-end px-4">
+                <div class="d-flex justify-content-end gap-1">
+                  <button class="btn btn-icon btn-light text-danger border-0" title="View Order PDF"
+                    (click)="openPdfModal(o)">
+                    <i class="bi bi-file-earmark-pdf-fill"></i>
+                  </button>
+
+                  @if (userRole !== 'CUSTOMER' && userRole !== 'LOGISTICS_OFFICER') {
+                  <!-- Status Update Icon Button -->
+                  <button class="btn btn-icon btn-light text-success border-0 shadow-sm" title="Update Lifecycle Status"
+                    (click)="openStatusModal(o)">
+                    <i class="bi bi-shield-check fs-6"></i>
+                  </button>
+
+                  @if (userRole === 'ADMIN' || userRole === 'CUSTOMER') {
+                  <button class="btn btn-icon btn-light text-warning border-0" title="Modify Context" (click)="edit(o)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-icon btn-light text-danger border-0" title="Purge Record"
+                    (click)="delete(o.id)">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                  }
+                  }
+                </div>
+              </td>
+            </tr>
+            }
+            @empty {
+            <tr>
+              <td colspan="7" class="text-center py-5 text-muted">
+                <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>No active logistics cluster instances
+                resolved in node cache.
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF Preview Modal Window -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);"
+    *ngIf="isPdfModalOpen">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+
+        <div class="modal-header bg-dark text-white px-4 py-3">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-file-earmark-text-fill me-2 text-info"></i> Customer Purchase Order Document Preview
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closePdfModal()"></button>
+        </div>
+
+        <div class="modal-body bg-light p-4 d-flex justify-content-center">
+          <div #orderPdfContainer class="bg-white p-5 shadow-sm rounded-3 border"
+            style="width: 794px; font-family: Arial, sans-serif; color: #000; line-height: 1.6;">
+
+            <div class="text-center mb-4 pb-3 border-bottom">
+              <h1 class="fw-bold mb-0"
+                style="letter-spacing: 3px; font-size: 36px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                <span style="color: #0b2545;">S</span><span style="color: #0b2545;">C</span><span
+                  style="color: #38b000;">M</span>
+              </h1>
+              <h5 class="fw-bold text-dark mt-1 mb-2" style="letter-spacing: 4px; font-size: 13px;">
+                ENTERPRISE LOGISTICS NODE
+              </h5>
+              <div class="d-flex justify-content-center align-items-center gap-3 mt-2 text-uppercase"
+                style="font-size: 11px; font-weight: 700; color: #0b2545;">
+                <span><i class="bi bi-link-45deg text-primary fs-6 me-1 align-middle"></i> CONNECT</span>
+                <span class="text-muted">|</span>
+                <span><i class="bi bi-gear-fill text-success fs-6 me-1 align-middle"></i> OPTIMIZE</span>
+                <span class="text-muted">|</span>
+                <span><i class="bi bi-truck text-primary fs-6 me-1 align-middle"></i> DELIVER</span>
+              </div>
+            </div>
+
+            <div class="text-center mb-4">
+              <h3 class="fw-bold text-dark mb-1" style="letter-spacing: 1px;">CUSTOMER PURCHASE ORDER</h3>
+              <p class="text-muted small mb-0"><b>Order Number:</b> {{ selectedOrderForPdf?.orderNumber }} | <b>Order ID
+                  Node:</b> #{{ selectedOrderForPdf?.id }}</p>
+            </div>
+
+            <div class="row g-3 mb-4 fs-7 bg-light p-3 rounded border border-secondary-subtle">
+              <div class="col-7">
+                <span class="text-uppercase font-monospace text-secondary fs-8 d-block fw-bold mb-1">Issued To
+                  Recipient</span>
+                <strong class="text-dark fs-6">{{ selectedOrderForPdf?.customerName }}</strong>
+                <div class="text-muted text-truncate">{{ selectedOrderForPdf?.customerEmail }}</div>
+                <div class="text-muted mt-1 small"><i class="bi bi-telephone text-primary"></i> {{
+                  selectedOrderForPdf?.deliveryPhone }}</div>
+                <div class="text-muted mt-1 small"><i class="bi bi-geo-alt text-danger"></i> {{
+                  selectedOrderForPdf?.deliveryAddress }}</div>
+              </div>
+              <div class="col-5 text-end border-start">
+                <span class="text-uppercase font-monospace text-secondary fs-8 d-block fw-bold mb-1">System Audit
+                  Matrix</span>
+                <div class="small text-muted">Created: {{ selectedOrderForPdf?.createdAt | date:'yyyy-MM-dd HH:mm' }}
+                </div>
+                <div class="small text-muted mt-1">Est. Delivery: <b class="text-primary">{{
+                    selectedOrderForPdf?.estimatedDelivery || 'N/A' }}</b></div>
+                <div class="mt-2">Lifecycle: <span class="badge bg-primary text-uppercase px-2 py-1">{{
+                    selectedOrderForPdf?.status }}</span></div>
+              </div>
+            </div>
+
+            <h6 class="fw-bold text-dark mt-4 mb-3 uppercase fs-8 border-bottom pb-2">Product Specification Allocations
+              (Line Items)</h6>
+            <table class="table table-bordered align-middle fs-8 mb-4">
+              <thead class="table-light text-uppercase">
+                <tr>
+                  <th class="py-2.5">#</th>
+                  <th class="py-2.5">Product Details</th>
+                  <th class="text-center py-2.5">Qty</th>
+                  <th class="text-end py-2.5">Unit Price</th>
+                  <th class="text-end py-2.5">Line Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of selectedOrderForPdf?.lineItems; track item.id; let idx = $index) {
+                <tr>
+                  <td class="font-monospace py-2.5">{{ idx + 1 }}</td>
+                  <td class="py-2.5">
+                    <div class="fw-bold text-dark">{{ item.productName }}</div>
+                    <small class="text-muted font-monospace">Code: {{ item.productCode }} | Wt: {{ item.itemWeightTotal
+                      }}kg</small>
+                    @if (item.remarks) {
+                    <div class="text-info small fst-italic mt-1">Note: {{ item.remarks }}</div>
+                    }
+                  </td>
+                  <td class="text-center font-monospace fw-bold py-2.5">{{ item.quantity }}</td>
+                  <td class="text-end font-monospace py-2.5">৳{{ item.unitPrice | number:'1.2-2' }}</td>
+                  <td class="text-end font-monospace fw-bold text-success py-2.5">৳{{ item.lineTotal | number:'1.2-2' }}
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+
+            <!-- পেমেন্ট ও সামারি সেকশন -->
+            <div class="row fs-8 mb-4 pt-2">
+              <div class="col-6">
+                <p class="mb-2">Priority: <b class="text-uppercase text-danger">{{ selectedOrderForPdf?.priority }}</b>
+                </p>
+                <p class="mb-2">Service Strategy: <b class="text-uppercase text-info">{{
+                    selectedOrderForPdf?.serviceType }}</b></p>
+                <p class="mb-2">Payment Method: <b class="text-uppercase">{{ selectedOrderForPdf?.paymentMethod }}</b>
+                </p>
+
+                @if (selectedOrderForPdf?.paymentMethod === 'BANK') {
+                <div class="p-2 mb-2 bg-light border rounded font-monospace" style="font-size: 10px;">
+                  <b class="text-primary d-block mb-1">Company Bank Details:</b>
+                  <div>Bank: City Bank PLC</div>
+                  <div>A/C: 120-3341-98234101</div>
+                </div>
+                } @else if (['BKASH', 'NAGAD', 'ROCKET'].includes(selectedOrderForPdf?.paymentMethod || '')) {
+                <div class="p-2 mb-2 bg-light border rounded font-monospace" style="font-size: 10px;">
+                  <b class="text-danger d-block mb-1">Company {{ selectedOrderForPdf?.paymentMethod }} Merchant:</b>
+                  <div>A/C: 01712-345678 (Personal/Merchant)</div>
+                </div>
+                }
+
+                <p class="mb-2">Payment Status: <b class="text-uppercase text-success">{{
+                    selectedOrderForPdf?.paymentStatus }}</b></p>
+                <p class="mb-2">Currency: <b>{{ selectedOrderForPdf?.currency }}</b></p>
+                @if (selectedOrderForPdf?.remarks) {
+                <p class="mb-2">Remarks: <i>{{ selectedOrderForPdf?.remarks }}</i></p>
+                }
+              </div>
+              <div class="col-6">
+                <table class="table table-sm table-borderless mb-0 text-end font-monospace">
+                  <tr>
+                    <td class="text-muted py-1.5">Item Subtotal:</td>
+                    <td class="fw-bold py-1.5">৳{{ selectedOrderForPdf?.itemSubtotal | number:'1.2-2' }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted py-1.5">Total Weight:</td>
+                    <td class="py-1.5">{{ selectedOrderForPdf?.weight || 0 }} KG</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted py-1.5">Delivery Charge:</td>
+                    <td class="py-1.5">৳{{ selectedOrderForPdf?.deliveryCharge | number:'1.2-2' }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted py-1.5">Paid Amount (COD):</td>
+                    <td class="text-success py-1.5">৳{{ selectedOrderForPdf?.paidAmount | number:'1.2-2' }}</td>
+                  </tr>
+                  @if (selectedOrderForPdf?.dueAmount && +selectedOrderForPdf!.dueAmount > 0) {
+                  <tr>
+                    <td class="text-danger fw-bold py-1.5">Due Amount:</td>
+                    <td class="text-danger fw-bold py-1.5">৳{{ selectedOrderForPdf?.dueAmount | number:'1.2-2' }}</td>
+                  </tr>
+                  }
+                  <tr class="border-top">
+                    <td class="fw-bold text-dark fs-7 pt-2">Total Amount:</td>
+                    <td class="fw-bold text-success fs-7 pt-2">৳{{ selectedOrderForPdf?.totalAmount | number:'1.2-2' }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <div class="row pt-5 border-top text-center"
+              style="display: flex; justify-content: space-between; margin-top: 50px !important; padding-top: 25px !important;">
+              <div style="width: 30%; display: inline-block;">
+                <div
+                  style="border-top: 1px solid #000; margin-bottom: 5px; width: 90%; margin-left: auto; margin-right: auto;">
+                </div>
+                <p class="fw-bold mb-0" style="font-size: 11px;">Customer Signature</p>
+                <p class="text-muted small mb-0" style="font-size: 9px;">(Received & Acknowledged)</p>
+              </div>
+              <div style="width: 30%; display: inline-block;">
+                <div
+                  style="border-top: 1px solid #000; margin-bottom: 5px; width: 90%; margin-left: auto; margin-right: auto;">
+                </div>
+                <p class="fw-bold mb-0" style="font-size: 11px;">Logistics Officer</p>
+                <p class="text-muted small mb-0" style="font-size: 9px;">(Prepared & Verified)</p>
+              </div>
+              <div style="width: 30%; display: inline-block;">
+                <div
+                  style="border-top: 1px solid #000; margin-bottom: 5px; width: 90%; margin-left: auto; margin-right: auto;">
+                </div>
+                <p class="fw-bold mb-0" style="font-size: 11px;">Manager Signature</p>
+                <p class="text-muted small mb-0" style="font-size: 9px;">(Authorized & Approved)</p>
+              </div>
+            </div>
+
+            <div class="text-center mt-5 pt-3 border-top text-muted" style="font-size: 10px;">
+              <p class="mb-0">This is a system-generated secure electronic order confirmation and invoice manifest from
+                SCMPro Ecosystem.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer bg-white px-4 py-3 border-top">
+          <button type="button" class="btn btn-outline-secondary px-4 fw-bold" (click)="closePdfModal()">Close</button>
+          <button type="button" class="btn btn-danger px-4 fw-bold d-flex align-items-center gap-2"
+            (click)="downloadOrderPdf()">
+            <i class="bi bi-download"></i> Download PDF
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="isPdfModalOpen"></div>
+
+  <!-- Status Update Modal Window -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);"
+    *ngIf="isStatusModalOpen">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+
+        <div class="modal-header bg-dark text-white px-4 py-3">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-gear-wide-connected me-2 text-primary"></i> Update Order Lifecycle Status
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeStatusModal()"></button>
+        </div>
+
+        <div class="modal-body p-4 bg-light">
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Target Order Reference</label>
+            <div class="font-monospace fw-bold text-dark fs-6">{{ selectedOrderForStatus?.orderNumber }}</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Select New Lifecycle State</label>
+            <select class="form-select fw-bold text-primary" [(ngModel)]="newOrderStatus">
+              @for (st of availableStatuses; track st) {
+              <option [value]="st">{{ st }}</option>
+              }
+            </select>
+            <small class="text-muted d-block mt-1">This will instantly modify the pipeline tracking stage for
+              logistics.</small>
+          </div>
+        </div>
+
+        <div class="modal-footer bg-white px-4 py-3 border-top">
+          <button type="button" class="btn btn-outline-secondary px-4 fw-bold rounded-pill"
+            (click)="closeStatusModal()">Cancel</button>
+          <button type="button" class="btn btn-primary px-4 fw-bold rounded-pill d-flex align-items-center gap-2"
+            (click)="updateOrderStatus()">
+            <i class="bi bi-check2-circle"></i> Save Status
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="isStatusModalOpen"></div>
+
+  <!-- Drawer Form -->
+  <div class="custom-drawer shadow" [class.open]="isDrawerOpen">
+    <div
+      class="drawer-header d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-dark text-white">
+      <h5 class="fw-bold mb-0">
+        {{ isEdit ? 'Modify Order Instance' : 'Dispatch New Purchase Order' }}
+      </h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body px-4 py-3" style="overflow-y: auto; height: calc(100vh - 110px);">
+      <form #orderForm="ngForm" (ngSubmit)="orderForm.valid && save()">
+
+        <!-- Target Customer Profile -->
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Target Customer Profile</label>
+
+          @if (userRole === 'CUSTOMER') {
+          <input type="text" class="form-control fs-7 bg-light fw-bold text-dark"
+            [value]="loggedInCustomerName || 'Loading profile...'" disabled>
+          } @else {
+          <select class="form-select fs-7" [class.is-invalid]="custRef.value === '0' && orderForm.submitted"
+            [(ngModel)]="order.customerId" name="customerId" #custRef="ngModel" required [disabled]="isEdit">
+            <option value="0">-- Select Customer Context --</option>
+            @for (c of customers; track c.id) {
+            <option [value]="c.id">{{ c.name }} ({{ c.email }})</option>
+            }
+          </select>
+          @if (custRef.value === '0' && orderForm.submitted) {
+          <div class="invalid-feedback small fw-bold">
+            Binding an active customer ledger account is required!
+          </div>
+          }
+          }
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Delivery Phone Channel</label>
+            <input type="text" class="form-control fs-7 font-monospace"
+              [class.is-invalid]="phoneRef.invalid && (phoneRef.touched || orderForm.submitted)"
+              [(ngModel)]="order.deliveryPhone" name="deliveryPhone" #phoneRef="ngModel" placeholder="01XXXXXXXXX"
+              required minlength="11">
+            @if (phoneRef.invalid && (phoneRef.touched || orderForm.submitted)) {
+            <div class="invalid-feedback small fw-bold">
+              Valid 11-digit destination dial vector is mandatory!
+            </div>
+            }
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Estimated Delivery Roadmap</label>
+            <input type="text" class="form-control fs-7 bg-light text-muted fw-bold"
+              [value]="isEdit ? order.estimatedDelivery : 'Auto-Fixed by Priority Rule'" disabled>
+
+            <div class="mt-1 fs-8 fw-semibold">
+              @if (order.priority === 'LOW') {
+              <span class="text-secondary"><i class="bi bi-calendar-check me-1"></i> Fixed 120 Days (1% Discount)</span>
+              } @else if (order.priority === 'HIGH') {
+              <span class="text-warning"><i class="bi bi-lightning-charge-fill me-1"></i> Fixed 50 Days (+7%
+                Premium)</span>
+              } @else if (order.priority === 'URGENT') {
+              <span class="text-danger"><i class="bi bi-exclamation-circle-fill me-1"></i> Fixed 30 Days (+10%
+                Premium)</span>
+              } @else {
+              <span class="text-success"><i class="bi bi-calendar3 me-1"></i> Fixed 90 Days (Standard Timeline)</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Delivery Address Destination</label>
+          <textarea class="form-control fs-7" rows="2" [class.is-invalid]="addrRef.invalid && orderForm.submitted"
+            [(ngModel)]="order.deliveryAddress" name="deliveryAddress" #addrRef="ngModel"
+            placeholder="Full physical shipping street layout..." required></textarea>
+          @if (addrRef.invalid && orderForm.submitted) {
+          <div class="invalid-feedback small fw-bold">Destination string token line cannot be empty!</div>
+          }
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Service Strategy Matrix</label>
+            <select class="form-select fs-7" [(ngModel)]="order.serviceType" name="serviceType" required>
+              <option value="STANDARD">STANDARD Logistics Delivery</option>
+              <option value="EXPRESS">EXPRESS Bullet Velocity</option>
+              <option value="OVERNIGHT">OVERNIGHT Cargo</option>
+              <option value="SAME_DAY">SAMEDAY Hub Token</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Order Priority Matrix</label>
+            <select class="form-select fs-7 fw-bold border-info" [(ngModel)]="order.priority" name="priority" required>
+              <option value="LOW">LOW Priority (120 Days / 1% Disc.)</option>
+              <option value="NORMAL">NORMAL Priority (90 Days Standard)</option>
+              <option value="HIGH">HIGH Priority (50 Days / +7% Cost)</option>
+              <option value="URGENT">URGENT Priority (30 Days / +10% Cost)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-12">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Payment Strategy Router</label>
+            <select class="form-select fs-7" [(ngModel)]="order.paymentMethod" name="paymentMethod" required>
+              <option value="CASH">CASH On Delivery</option>
+              <option value="BANK">BANK Transfer Swift Service</option>
+              <option value="BKASH">BKASH Mobile Wallet</option>
+              <option value="NAGAD">NAGAD Fast Engine</option>
+              <option value="ROCKET">ROCKET DBBL Node</option>
+            </select>
+          </div>
+        </div>
+
+
+
+        @if (order.paymentMethod === 'BANK') {
+        <div class="alert alert-info border border-primary bg-white shadow-sm py-2.5 mb-3">
+          <h6 class="fw-bold text-primary mb-2 small text-uppercase"><i class="bi bi-bank me-2"></i>Secure Bank Gateway
+            Information</h6>
+
+          <div class="mb-2 p-2 bg-light rounded border border-info-subtle fs-8 font-monospace text-dark">
+            <div class="fw-bold mb-1"><i class="bi bi-info-circle-fill text-primary me-1"></i> Pay using this company
+              account:</div>
+            <div><b>Bank Name:</b> City Bank PLC (Corporate Branch)</div>
+            <div><b>Company A/C:</b> <span class="text-primary fw-bold">120-3341-98234101</span></div>
+            <div class="text-danger mt-2 fw-bold" style="font-size: 0.75rem;"><i
+                class="bi bi-exclamation-triangle-fill me-1"></i>Note: Payment must be completed within 7 days,
+              otherwise the order will be cancelled.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="small fw-semibold text-secondary mb-1">Customer Settlement Bank Account Index (Customer Bank
+              account)</label>
+            <input type="text" class="form-control form-control-sm font-monospace fs-7"
+              [(ngModel)]="order.customerAccountNumber" placeholder="e.g. 10214300982341"
+              name="customerAccountNumberBank">
+          </div>
+
+          <div class="form-group mt-3 pt-3 border-top border-primary-subtle">
+            <label class="small fw-semibold text-secondary mb-1"><i class="bi bi-image me-1"></i>Payment Proof / Add
+              Image </label>
+            <input type="file" class="form-control form-control-sm fs-7" accept="image/*"
+              (change)="onImageSelected($event)">
+            <div *ngIf="imagePreview" class="mt-2 text-center">
+              <img [src]="imagePreview" alt="Preview" class="img-fluid rounded border shadow-sm"
+                style="max-height: 150px;">
+            </div>
+          </div>
+        </div>
+        }
+
+        @if (['BKASH', 'NAGAD', 'ROCKET'].includes(order.paymentMethod)) {
+        <div class="alert alert-danger border border-danger bg-white shadow-sm py-2.5 mb-3">
+          <h6 class="fw-bold text-danger mb-2 small text-uppercase"><i class="bi bi-phone-vibrate me-2"></i>MFS Wallet
+            Engine Verification</h6>
+
+          <div class="mb-2 p-2 bg-light rounded border border-danger-subtle fs-8 font-monospace text-dark">
+            <div class="fw-bold mb-1"><i class="bi bi-info-circle-fill text-danger me-1"></i> Send money to this company
+              number:</div>
+            <div><b>{{ order.paymentMethod }} Merchant/Personal:</b> <span
+                class="text-danger fw-bold">01712-345678</span> (Send Money / Cash In)</div>
+            <div class="text-danger mt-2 fw-bold" style="font-size: 0.75rem;"><i
+                class="bi bi-exclamation-triangle-fill me-1"></i>Note: Payment must be completed within 7 days,
+              otherwise the order will be cancelled.</div>
+          </div>
+
+          <div class="form-group mb-2">
+            <label class="small fw-semibold text-secondary mb-1">Authorized Gateway Wallet Number (Customer
+              Account)</label>
+            <input type="text" class="form-control form-control-sm font-monospace fs-7"
+              [(ngModel)]="order.customerAccountNumber" name="customerAccountNumberMfs" placeholder="01XXXXXXXXX">
+          </div>
+
+          <div class="form-group mt-3 pt-3 border-top border-danger-subtle">
+            <label class="small fw-semibold text-secondary mb-1"><i class="bi bi-image me-1"></i>Payment Proof /
+              Screenshot (Optional)</label>
+            <input type="file" class="form-control form-control-sm fs-7" accept="image/*"
+              (change)="onImageSelected($event)">
+            <div *ngIf="imagePreview" class="mt-2 text-center">
+              <img [src]="imagePreview" alt="Preview" class="img-fluid rounded border shadow-sm"
+                style="max-height: 150px;">
+            </div>
+          </div>
+        </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Initial Payment Context / COD Amount
+            Allocation</label>
+          <input type="number" class="form-control fs-7 font-monospace fw-bold text-success"
+            [(ngModel)]="order.codAmount" name="codAmount" min="0" placeholder="0.00" required>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Special Delivery Remarks</label>
+          <input type="text" class="form-control fs-7" [(ngModel)]="order.remarks" name="remarks"
+            placeholder="Drop parcel at reception, fragile, etc.">
+        </div>
+
+        <hr class="my-3 text-muted" />
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="fw-bold text-dark mb-0 small text-uppercase">
+            <i class="bi bi-box-seam me-2 text-primary"></i>Product Specification Allocations
+          </h6>
+          <a routerLink="/product"
+            class="btn btn-sm btn-outline-primary py-0 px-2 fs-8 fw-semibold text-decoration-none">
+            <i class="bi bi-search me-1"></i> Browse Marketplace
+          </a>
+        </div>
+
+        <div class="bg-light p-2.5 rounded mb-3 border border-secondary-subtle">
+          <div class="row g-2 align-items-end">
+            <div class="col-md-5">
+              <label class="fs-8 text-muted fw-bold text-uppercase mb-1">Inventory Product (Searchable)</label>
+
+              <input class="form-control form-control-sm fs-7.5" list="orderProductList" [(ngModel)]="currentProduct"
+                placeholder="Type to search product..." name="productSearchInput">
+
+              <datalist id="orderProductList">
+                @for (p of products; track p.id) {
+                <option [value]="p.name + ' (৳' + p.sellingPrice + ')'"></option>
+                }
+              </datalist>
+
+            </div>
+            <div class="col-md-2">
+              <label class="fs-8 text-muted fw-bold text-uppercase mb-1">Qty</label>
+              <input type="number" class="form-control form-control-sm font-monospace text-center fs-7.5"
+                [(ngModel)]="currentQuantity" name="locItemQty" placeholder="Qty" min="1" />
+            </div>
+            <div class="col-md-3">
+              <label class="fs-8 text-muted fw-bold text-uppercase mb-1">Notes</label>
+              <input type="text" class="form-control form-control-sm fs-7.5" [(ngModel)]="currentRemarks"
+                name="locItemRem" placeholder="Item Notes" />
+            </div>
+            <div class="col-md-2">
+              <button type="button" class="btn btn-sm btn-dark w-100 fw-bold py-1.8 fs-7.5"
+                (click)="addItem()">Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card bg-white mb-4 shadow-inner border">
+          <div class="card-header bg-light py-2 px-3 fw-bold fs-8 text-secondary uppercase">
+            Attached Products List ({{ order.items.length }})
+          </div>
+          <ul class="list-group list-group-flush fs-7.5">
+            @for (item of order.items; track $index; let idx = $index) {
+            <li class="list-group-item d-flex justify-content-between align-items-center py-2.5 border-bottom">
+              <div>
+                <span class="fw-bold text-dark d-block mb-0.5">
+                  <i class="bi bi-box-seam text-primary me-1"></i> {{ getProductName(item.productId) }}
+                </span>
+                <div class="small text-muted font-monospace">
+                  Quantity: <b class="text-primary fs-7">{{ item.quantity }} units</b>
+                  @if (item.remarks) {
+                  <span class="ms-2 text-info bg-info-subtle px-1 rounded border border-info-subtle">💬 {{ item.remarks
+                    }}</span>
+                  }
+                </div>
+              </div>
+              <button type="button" class="btn btn-sm text-danger border-0 p-1" title="Remove Item"
+                (click)="removeItem(idx)">
+                <i class="bi bi-x-circle-fill fs-5"></i>
+              </button>
+            </li>
+            }
+            @if (order.items.length === 0) {
+            <li class="list-group-item text-center text-muted py-3 small font-monospace fs-8 border-dashed">
+              No product components attached to this envelope matrix yet.
+            </li>
+            }
+          </ul>
+        </div>
+
+        <!-- Live Financial Calculation Summary Card -->
+        <div class="card bg-light border p-3 mb-4 rounded-3 font-monospace">
+          <h6 class="fw-bold text-dark small text-uppercase mb-2 pb-1 border-bottom">
+            <i class="bi bi-calculator me-1 text-primary"></i> Order Financial Summary
+          </h6>
+          <div class="d-flex justify-content-between small mb-1">
+            <span class="text-muted">Item Subtotal:</span>
+            <span class="fw-bold">৳{{ calculateItemSubtotal() | number:'1.2-2' }}</span>
+          </div>
+          <div class="d-flex justify-content-between small mb-1">
+            <span class="text-muted">Total Weight:</span>
+            <span>{{ calculateTotalWeight() | number:'1.1-1' }} KG</span>
+          </div>
+          <div class="d-flex justify-content-between small mb-1">
+            <span class="text-muted">Delivery Charge:</span>
+            <span class="fw-bold text-info">৳{{ calculateDeliveryCharge() | number:'1.2-2' }}</span>
+          </div>
+          <div class="d-flex justify-content-between small mb-1">
+            <span class="text-muted">Paid Amount (COD):</span>
+            <span class="fw-bold text-success">৳{{ (order.codAmount || 0) | number:'1.2-2' }}</span>
+          </div>
+          <div class="d-flex justify-content-between small mb-2 text-danger">
+            <span>Due Amount:</span>
+            <span class="fw-bold">৳{{ calculateDueAmount() | number:'1.2-2' }}</span>
+          </div>
+          <div class="d-flex justify-content-between fs-7 pt-2 border-top text-dark fw-bold">
+            <span>Total Amount:</span>
+            <span class="text-success fs-6">৳{{ calculateTotalAmount() | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 pt-2">
+          <button
+            class="btn btn-success flex-grow-1 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-semibold fs-7"
+            type="submit">
+            <i class="bi bi-cloud-arrow-up-fill"></i> {{ isEdit ? 'Commit Metadata Mutations' : 'Dispatch Consignment
+            Node' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3 fs-7" (click)="reset()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  @if (isDrawerOpen) {
+  <div class="drawer-backdrop" (click)="closeDrawer()"></div>
+  }
+
+</div>

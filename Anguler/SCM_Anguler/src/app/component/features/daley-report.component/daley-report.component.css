@@ -1,0 +1,201 @@
+.custom-drawer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 950px;           /* 🌟 চওড়া বাড়িয়ে 950px করা হলো */
+  max-width: 98vw;        /* স্ক্রিনের সাথে সামঞ্জস্য রাখতে */
+  height: 90vh;           /* 🌟 উচ্চতা বাড়িয়ে স্ক্রিনের প্রায় পুরোটা (90vh) করা হলো */
+  max-height: 95vh;
+  background-color: #ffffff;
+  z-index: 1050;
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.25);
+  border-radius: 16px;    /* চারপাশের কর্নার রাউন্ড করার জন্য */
+  overflow: hidden;       /* ভেতরের হেডার বা কন্টেন্ট যাতে বাইরে না যায় */
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.custom-drawer.open {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --- 🌟 কালারফুল এবং রাউন্ড হেডার ডিজাইন --- */
+.reg-modal-header, .drawer-header {
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+  color: #ffffff;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reg-modal-header h5, .reg-modal-header h6, .drawer-header h5 {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.reg-modal-header small, .drawer-header small {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.reg-modal-header-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.2rem;
+  margin-right: 12px;
+}
+
+.reg-modal-header .btn-close, .drawer-header .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+.reg-modal-header .btn-close:hover, .drawer-header .btn-close:hover {
+  opacity: 1;
+}
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  background-color: #fcfcfd;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(2px);
+  z-index: 1040;
+}
+
+.container-fluid {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+.bg-white {
+  background-color: #ffffff !important;
+}
+.btn-primary {
+  background-color: #4f63f0 !important;
+  border-color: #4f63f0 !important;
+}
+.text-primary {
+  color: #4f63f0 !important;
+}
+.border-start.border-primary {
+  border-color: #4f63f0 !important;
+}
+.bg-primary {
+  background-color: #4f63f0 !important;
+}
+
+.table th {
+  padding: 14px 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+.table td {
+  padding: 12px 12px;
+  border-bottom: 1px solid #edf2f7;
+}
+.locked-row {
+  background-color: #fafbfc !important;
+  opacity: 0.95;
+}
+
+.thumbnail-wrapper {
+  width: 50px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+}
+.thumbnail-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.thumbnail-wrapper:hover {
+  transform: scale(1.1);
+  z-index: 5;
+}
+.zoom-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-size: 10px;
+}
+.thumbnail-wrapper:hover .zoom-icon {
+  opacity: 1;
+}
+
+.btn-action-edit {
+  color: #ffb020;
+  background-color: #fff9ec;
+  border: 1px solid #ffeacc;
+}
+.btn-action-edit:hover {
+  color: #ffffff;
+  background-color: #ffb020;
+}
+.btn-action-delete {
+  color: #df4759;
+  background-color: #fdebee;
+  border: 1px solid #fcced3;
+}
+.btn-action-delete:hover {
+  color: #ffffff;
+  background-color: #df4759;
+}
+
+.fs-7 {
+  font-size: 13px !important;
+}
+.fs-8 {
+  font-size: 11px !important;
+}
+.fs-9 {
+  font-size: 10px !important;
+}
+
+.animated {
+  animation-duration: 0.25s;
+  animation-fill-mode: both;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fadeIn {
+  animation-name: fadeIn;
+}

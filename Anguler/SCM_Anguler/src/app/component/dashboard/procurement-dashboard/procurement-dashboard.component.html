@@ -1,0 +1,1769 @@
+<div class="procurement-dashboard px-3 py-4">
+  <!-- ───────────────── TOP BAR ───────────────── -->
+  <div class="dashboard-header bg-white p-4 rounded-4 shadow-sm border mb-4 d-flex justify-content-between align-items-center">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h2 class="fw-bold text-dark fs-4 mb-0">Welcome back, <span class="text-primary">{{ userName }}</span> <span class="fs-4">👋</span></h2>
+      </div>
+      <p class="text-muted fs-8 mb-0 d-flex align-items-center gap-2">
+        <span class="text-dark fw-bold">Procurement Officer</span> &bull; Purchase, quotations & supplier management.
+        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 fs-9"><span class="pulse-dot-green me-1"></span> Live</span>
+      </p>
+    </div>
+    <div class="header-actions d-flex gap-2">
+      <button class="btn btn-outline-secondary btn-sm px-3 fw-semibold rounded-3 d-flex align-items-center gap-1" (click)="showSettings = !showSettings" title="Settings"><i class="bi bi-gear"></i></button>
+      <button class="btn btn-outline-danger btn-sm px-3 fw-semibold rounded-3 d-flex align-items-center gap-1" (click)="logout()"><i class="bi bi-box-arrow-right"></i> Log Out</button>
+    </div>
+  </div>
+
+  <!-- ───────────────── KPI GRID ───────────────── -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3 mb-4">
+    <div class="col" *ngFor="let kpi of kpis">
+      <div
+        class="card border-0 shadow-sm p-3.5 rounded-4 bg-white border-start border-5 border-{{
+          kpi.color
+        }} h-100"
+      >
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div class="text-secondary small text-uppercase fw-bold mb-2">{{ kpi.label }}</div>
+            <div class="fs-3 fw-bold text-dark mb-1">{{ kpi.value }}</div>
+          </div>
+          <div class="kpi-icon-wrap bg-{{ kpi.color }}-subtle">
+            <i class="bi {{ kpi.icon }} text-{{ kpi.color }}"></i>
+          </div>
+        </div>
+        <div class="small">
+          <span [class]="kpi.trendDir === 'up' ? 'text-success fw-bold' : 'text-danger fw-bold'">
+            <i
+              class="bi"
+              [ngClass]="kpi.trendDir === 'up' ? 'bi-arrow-up-right' : 'bi-arrow-down-right'"
+            ></i>
+            {{ kpi.trendDir === 'up' ? '+' : '-' }}{{ kpi.trend }}%
+          </span>
+          <span class="text-muted small ms-1">vs last period</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── SECONDARY KPI ROW ───────────────── -->
+  <div class="row g-3 mb-4">
+    <!-- 1: Total Spend -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 bg-white card-hover-effect">
+        <div class="card-body p-3 d-flex flex-column justify-content-center">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="kpi-icon-wrap bg-success-subtle rounded-4 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 46px; height: 46px;">
+              <i class="bi bi-currency-dollar text-success fs-5"></i>
+            </div>
+            <div class="text-truncate">
+              <div class="text-secondary small text-uppercase fw-bold mb-1 text-truncate" style="font-size: 0.65rem; letter-spacing: 0.2px;">Total Spend</div>
+              <div class="fs-5 fw-bold text-dark lh-1 text-truncate">{{ formatCurrency(totalSpend) }}</div>
+            </div>
+          </div>
+          <div class="small fw-semibold text-success d-flex align-items-center mt-auto" style="font-size: 0.7rem;">
+            <i class="bi bi-arrow-up-short"></i> 8% <span class="text-muted fw-normal ms-1 text-truncate">vs last</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 2: Pending POs -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 bg-white card-hover-effect">
+        <div class="card-body p-3 d-flex flex-column justify-content-center">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="kpi-icon-wrap rounded-4 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 46px; height: 46px; background-color: #fff3cd;">
+              <i class="bi bi-hourglass-split text-warning fs-5" style="color: #ffc107 !important;"></i>
+            </div>
+            <div class="text-truncate">
+              <div class="text-secondary small text-uppercase fw-bold mb-1 text-truncate" style="font-size: 0.65rem; letter-spacing: 0.2px;">Pending POs</div>
+              <div class="fs-5 fw-bold text-dark lh-1 text-truncate">{{ pendingPOs }}</div>
+            </div>
+          </div>
+          <a (click)="openViewAllModal('Pending Purchase Orders', 'pending-pos', allPendingPOsData)" class="small fw-semibold text-primary text-decoration-none mt-auto" style="font-size: 0.75rem; cursor: pointer;">View all</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 3: Approved POs -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 bg-white card-hover-effect">
+        <div class="card-body p-3 d-flex flex-column justify-content-center">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="kpi-icon-wrap bg-success-subtle rounded-4 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 46px; height: 46px;">
+              <i class="bi bi-shield-check text-success fs-5"></i>
+            </div>
+            <div class="text-truncate">
+              <div class="text-secondary small text-uppercase fw-bold mb-1 text-truncate" style="font-size: 0.65rem; letter-spacing: 0.2px;">Approved POs</div>
+              <div class="fs-5 fw-bold text-dark lh-1 text-truncate">{{ approvedPOs }}</div>
+            </div>
+          </div>
+          <a (click)="openViewAllModal('Approved Purchase Orders', 'approved-pos', allApprovedPOsData)" class="small fw-semibold text-primary text-decoration-none mt-auto" style="font-size: 0.75rem; cursor: pointer;">View all</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 4: Suppliers Active -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 bg-white card-hover-effect">
+        <div class="card-body p-3 d-flex flex-column justify-content-center">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="kpi-icon-wrap rounded-4 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 46px; height: 46px; background-color: #e0f2fe;">
+              <i class="bi bi-people text-primary fs-5" style="color: #0284c7 !important;"></i>
+            </div>
+            <div class="text-truncate">
+              <div class="text-secondary small text-uppercase fw-bold mb-1 text-truncate" style="font-size: 0.65rem; letter-spacing: 0.2px;">Suppliers</div>
+              <div class="fs-5 fw-bold text-dark lh-1 text-truncate">{{ activeSuppliers }}</div>
+            </div>
+          </div>
+          <a (click)="openViewAllModal('Active Suppliers', 'active-suppliers', allActiveSuppliersData)" class="small fw-semibold text-primary text-decoration-none mt-auto" style="font-size: 0.75rem; cursor: pointer;">View all</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5: Total PRs -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 bg-white card-hover-effect">
+        <div class="card-body p-3 d-flex flex-column justify-content-center">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="kpi-icon-wrap rounded-4 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 46px; height: 46px; background-color: #f3e8ff;">
+              <i class="bi bi-file-earmark-text text-primary fs-5" style="color: #a855f7 !important;"></i>
+            </div>
+            <div class="text-truncate">
+              <div class="text-secondary small text-uppercase fw-bold mb-1 text-truncate" style="font-size: 0.65rem; letter-spacing: 0.2px;">Total PRs</div>
+              <div class="fs-5 fw-bold text-dark lh-1 text-truncate">{{ totalPRs }}</div>
+            </div>
+          </div>
+          <a (click)="openViewAllModal('Purchase Requisitions', 'total-prs', allTotalPRsData)" class="small fw-semibold text-primary text-decoration-none mt-auto" style="font-size: 0.75rem; cursor: pointer;">View all</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6: Active RFQs -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 bg-white card-hover-effect">
+        <div class="card-body p-3 d-flex flex-column justify-content-center">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <div class="kpi-icon-wrap bg-info-subtle rounded-4 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 46px; height: 46px;">
+              <i class="bi bi-chat-quote text-info fs-5"></i>
+            </div>
+            <div class="text-truncate">
+              <div class="text-secondary small text-uppercase fw-bold mb-1 text-truncate" style="font-size: 0.65rem; letter-spacing: 0.2px;">Active RFQs</div>
+              <div class="fs-5 fw-bold text-dark lh-1 text-truncate">{{ totalRFQs }}</div>
+            </div>
+          </div>
+          <a (click)="openViewAllModal('Active RFQs', 'active-rfqs', allActiveRFQsData)" class="small fw-semibold text-primary text-decoration-none mt-auto" style="font-size: 0.75rem; cursor: pointer;">View all</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ───────────────── QUICK ACTIONS ───────────────── -->
+  <div class="row g-2 mb-4">
+    <div class="col-md-4 col-lg-2">
+      <a
+        (click)="openPrModal()" style="cursor:pointer;"
+        class="action-btn text-center p-3 rounded-4 bg-white d-block text-decoration-none h-100"
+      >
+        <i class="bi bi-file-earmark-plus fs-3 text-teal mb-2 d-block"></i>
+        <strong class="text-dark d-block text-truncate" style="font-size: 0.85rem;">Create Requisition</strong>
+        <small class="text-muted d-block text-truncate mt-1" style="font-size: 0.7rem;">Launch sourcing</small>
+      </a>
+    </div>
+    <div class="col-md-4 col-lg-2">
+      <a
+        (click)="openPoModal()" style="cursor:pointer;"
+        class="action-btn text-center p-3 rounded-4 bg-white d-block text-decoration-none h-100"
+      >
+        <i class="bi bi-cart-plus fs-3 text-primary mb-2 d-block"></i>
+        <strong class="text-dark d-block text-truncate" style="font-size: 0.85rem;">Purchase Order</strong>
+        <small class="text-muted d-block text-truncate mt-1" style="font-size: 0.7rem;">Dispatch to vendor</small>
+      </a>
+    </div>
+    <div class="col-md-4 col-lg-2">
+      <a
+        (click)="openDirectoryModal('quotations')" style="cursor:pointer; transition: all 0.3s ease; border-radius: 16px;"
+        [style.border]="activeDirectoryModal === 'quotations' ? '2.5px solid #dfa526' : '2.5px solid transparent'"
+        [style.boxShadow]="activeDirectoryModal === 'quotations' ? '0 10px 25px -5px rgba(223, 165, 38, 0.25)' : 'none'"
+        [class.bg-warning-subtle]="activeDirectoryModal === 'quotations'"
+        class="action-btn text-center p-3 bg-white d-block text-decoration-none h-100"
+      >
+        <i class="bi bi-file-richtext fs-3 text-warning mb-2 d-block"></i>
+        <strong class="text-dark d-block text-truncate" style="font-size: 0.85rem;">Award Quotations</strong>
+        <small class="text-muted d-block text-truncate mt-1" style="font-size: 0.7rem;">Approve rates</small>
+      </a>
+    </div>
+    <div class="col-md-4 col-lg-2">
+      <a
+        (click)="openDirectoryModal('suppliers')" style="cursor:pointer; transition: all 0.3s ease; border-radius: 16px;"
+        [style.border]="activeDirectoryModal === 'suppliers' ? '2.5px solid #ef4444' : '2.5px solid transparent'"
+        [style.boxShadow]="activeDirectoryModal === 'suppliers' ? '0 10px 25px -5px rgba(239, 68, 68, 0.25)' : 'none'"
+        [class.bg-danger-subtle]="activeDirectoryModal === 'suppliers'"
+        class="action-btn text-center p-3 bg-white d-block text-decoration-none h-100"
+      >
+        <i class="bi bi-people fs-3 text-danger mb-2 d-block"></i>
+        <strong class="text-dark d-block text-truncate" style="font-size: 0.85rem;">Manage Suppliers</strong>
+        <small class="text-muted d-block text-truncate mt-1" style="font-size: 0.7rem;">Onboard vendors</small>
+      </a>
+    </div>
+    <div class="col-md-4 col-lg-2">
+      <a
+        (click)="openDirectoryModal('invoices')" style="cursor:pointer; transition: all 0.3s ease; border-radius: 16px;"
+        [style.border]="activeDirectoryModal === 'invoices' ? '2.5px solid #06b6d4' : '2.5px solid transparent'"
+        [style.boxShadow]="activeDirectoryModal === 'invoices' ? '0 10px 25px -5px rgba(6, 182, 212, 0.25)' : 'none'"
+        [class.bg-info-subtle]="activeDirectoryModal === 'invoices'"
+        class="action-btn text-center p-3 bg-white d-block text-decoration-none h-100"
+      >
+        <i class="bi bi-receipt fs-3 text-info mb-2 d-block"></i>
+        <strong class="text-dark d-block text-truncate" style="font-size: 0.85rem;">Process Invoices</strong>
+        <small class="text-muted d-block text-truncate mt-1" style="font-size: 0.7rem;">Clear payments</small>
+      </a>
+    </div>
+    <div class="col-md-4 col-lg-2">
+      <a
+        (click)="openDirectoryModal('inventory')" style="cursor:pointer; transition: all 0.3s ease; border-radius: 16px;"
+        [style.border]="activeDirectoryModal === 'inventory' ? '2.5px solid #10b981' : '2.5px solid transparent'"
+        [style.boxShadow]="activeDirectoryModal === 'inventory' ? '0 10px 25px -5px rgba(16, 183, 129, 0.25)' : 'none'"
+        [class.bg-success-subtle]="activeDirectoryModal === 'inventory'"
+        class="action-btn text-center p-3 bg-white d-block text-decoration-none h-100"
+      >
+        <i class="bi bi-boxes fs-3 text-success mb-2 d-block"></i>
+        <strong class="text-dark d-block text-truncate" style="font-size: 0.85rem;">Inventory Status</strong>
+        <small class="text-muted d-block text-truncate mt-1" style="font-size: 0.7rem;">Track stock</small>
+      </a>
+    </div>
+  </div>
+
+  <!-- ───────────────── RFQ, PO & SHIPMENT LOG TABS ───────────────── -->
+  <div class="row g-3 mb-4 row-cols-1 row-cols-md-3 row-cols-lg-6">
+    <!-- Button 1: RFQ Log -->
+    <div class="col">
+      <div class="card border rounded-3 p-3 shadow-sm h-100 position-relative" style="cursor: pointer; transition: all 0.2s;"
+           [ngClass]="activeRfqTab === 'RFQ' ? 'border-primary bg-primary-subtle' : 'bg-white border-light-subtle hover-elevate'"
+           (click)="selectTab('RFQ')">
+        <div class="d-flex align-items-center">
+          <div class="me-3 fs-3 text-warning">
+            <i class="bi bi-clock-history"></i>
+          </div>
+          <div>
+            <div class="fw-bold text-dark fs-6 lh-sm mb-1">RFQ Log</div>
+            <div class="text-muted small">{{ displayRfqs.length }} Pending</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button 2: Approved Purchase Orders -->
+    <div class="col">
+      <div class="card border rounded-3 p-3 shadow-sm h-100 position-relative" style="cursor: pointer; transition: all 0.2s;"
+           [ngClass]="activeRfqTab === 'APPROVED' ? 'border-success bg-success-subtle' : 'bg-white border-light-subtle hover-elevate'"
+           (click)="selectTab('APPROVED')">
+        <div class="d-flex align-items-center">
+          <div class="me-3 fs-3 text-success">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <div>
+            <div class="fw-bold text-dark fs-6 lh-sm mb-1">Approved Purchase Order</div>
+            <div class="text-muted small">{{ approvedRfqs.length }} Approved</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button 3: Rejected Purchase Orders -->
+    <div class="col">
+      <div class="card border rounded-3 p-3 shadow-sm h-100 position-relative" style="cursor: pointer; transition: all 0.2s;"
+           [ngClass]="activeRfqTab === 'REJECTED' ? 'border-danger bg-danger-subtle' : 'bg-white border-light-subtle hover-elevate'"
+           (click)="selectTab('REJECTED')">
+        <div class="d-flex align-items-center">
+          <div class="me-3 fs-3 text-danger">
+            <i class="bi bi-x-circle-fill"></i>
+          </div>
+          <div>
+            <div class="fw-bold text-dark fs-6 lh-sm mb-1">Rejected Purchase Order</div>
+            <div class="text-muted small">{{ rejectedRfqs.length }} Rejected</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button 4: Cargo Shipment Log -->
+    <div class="col">
+      <div class="card border rounded-3 p-3 shadow-sm h-100 position-relative" style="cursor: pointer; transition: all 0.2s;"
+           [ngClass]="activeRfqTab === 'SHIPMENT' ? 'border-info bg-info-subtle' : 'bg-white border-light-subtle hover-elevate'"
+           (click)="selectTab('SHIPMENT')">
+        <div class="d-flex align-items-center">
+          <div class="me-3 fs-3 text-info">
+            <i class="bi bi-truck"></i>
+          </div>
+          <div>
+            <div class="fw-bold text-dark fs-6 lh-sm mb-1">Cargo Shipment Log</div>
+            <div class="text-muted small">{{ shipments.length }} Shipments</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button 5: Track Purchase Order -->
+    <div class="col">
+      <div class="card border rounded-3 p-3 shadow-sm h-100 position-relative" style="cursor: pointer; transition: all 0.2s;"
+           [ngClass]="isTrackingModalOpen ? 'border-primary bg-primary-subtle' : 'bg-white border-light-subtle hover-elevate'"
+           (click)="openTrackingModal()">
+        <div class="d-flex align-items-center">
+          <div class="me-3 fs-3 text-primary">
+            <i class="bi bi-geo-alt-fill"></i>
+          </div>
+          <div>
+            <div class="fw-bold text-dark fs-6 lh-sm mb-1">Track Purchase Order</div>
+            <div class="text-muted small">Search & Track Status</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button 6: PO Line Item -->
+    <div class="col">
+      <div class="card border rounded-3 p-3 shadow-sm h-100 position-relative" style="cursor: pointer; transition: all 0.2s;"
+           [ngClass]="activeRfqTab === 'PO_LINE_ITEM' ? 'border-primary bg-primary-subtle' : 'bg-white border-light-subtle hover-elevate'"
+           (click)="selectTab('PO_LINE_ITEM')">
+        <div class="d-flex align-items-center">
+          <div class="me-3 fs-3 text-secondary">
+            <i class="bi bi-list-columns-reverse"></i>
+          </div>
+          <div>
+            <div class="fw-bold text-dark fs-6 lh-sm mb-1">PO Line Item</div>
+            <div class="text-muted small">{{ pendingPoLineItemsCount }} Pending</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4" *ngIf="activeRfqTab === 'PO_LINE_ITEM' || (activeRfqTab === 'ALL' && showPoLineItemTable)">
+      <app-poline-item [isEmbedded]="false"></app-poline-item>
+  </div>
+
+  <!-- ───────────────── RFQ TRACTION LOG ───────────────── -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4" *ngIf="activeRfqTab === 'RFQ' || activeRfqTab === 'ALL'">
+    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <h6 class="mb-0 fw-bold text-dark text-uppercase">
+        <i class="bi bi-clock-history text-teal me-2"></i> SCM Request For Quotations (RFQ) Log
+      </h6>
+      <div class="d-flex gap-2 align-items-center">
+        <div class="input-group input-group-sm" style="width: 250px;">
+          <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control border-start-0 ps-0" placeholder="Search RFQs..." [(ngModel)]="rfqSearchText">
+        </div>
+        <input type="date" class="form-control form-control-sm text-secondary" [(ngModel)]="rfqSearchDate">
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div *ngIf="displayRfqs.length === 0 && !loading" class="text-center text-muted py-5">
+        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+        <small>No RFQs found</small>
+      </div>
+      <div class="table-responsive" *ngIf="displayRfqs.length > 0">
+        <table class="table table-hover align-middle mb-0 fs-8">
+          <thead class="table-light text-uppercase">
+            <tr>
+              <th class="ps-4">RFQ Ref ID</th>
+              <th>Component Specification</th>
+              <th>Quantity</th>
+              <th>Preferred Vendor Target</th>
+              <th>RFQ Lifecycle State</th>
+              <th class="text-center" *ngIf="userRole === 'PROCUREMENT' || userRole === 'ADMIN'">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rfq of displayRfqs">
+              <td class="ps-4 fw-bold text-primary">{{ rfq.id }}</td>
+              <td class="fw-semibold text-dark">{{ rfq.item }}</td>
+              <td class="">{{ rfq.qty }} Units</td>
+              <td>{{ rfq.supplier }}</td>
+              <td>
+                <span
+                  class="badge text-uppercase"
+                  [ngClass]="{
+                    'bg-success': rfq.status === 'Awarded' || rfq.status === 'APPROVED',
+                    'bg-primary': rfq.status === 'Active' || rfq.status === 'ACTIVE',
+                    'bg-secondary': rfq.status === 'Draft' || rfq.status === 'DRAFT',
+                    'bg-warning': rfq.status === 'PENDING',
+                    'bg-info': rfq.status === 'SENT',
+                  }"
+                >
+                  {{ rfq.status }}
+                </span>
+              </td>
+              <td class="text-center" *ngIf="userRole === 'PROCUREMENT' || userRole === 'ADMIN'">
+                <div class="d-flex justify-content-center gap-2" *ngIf="rfq.status !== 'APPROVED' && rfq.status !== 'REJECTED'">
+                  <button class="btn btn-sm btn-success fw-semibold px-3" 
+                    (click)="updateQuotationStatus(rfq.id, 'APPROVED')" style="border-radius: 6px;">
+                    Approve
+                  </button>
+                  <button class="btn btn-sm btn-danger fw-semibold px-3" 
+                    (click)="updateQuotationStatus(rfq.id, 'REJECTED')" style="border-radius: 6px;">
+                    Reject
+                  </button>
+                </div>
+                <div *ngIf="rfq.status === 'APPROVED' || rfq.status === 'REJECTED'">
+                  <span class="text-muted small fw-semibold"><i class="bi bi-lock-fill"></i> Locked</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── APPROVED PURCHASE ORDER LOG ───────────────── -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 border-top border-success border-4" *ngIf="activeRfqTab === 'APPROVED' || activeRfqTab === 'ALL'">
+    <div class="card-header bg-white py-3 border-0">
+      <h6 class="mb-0 fw-bold text-success text-uppercase">
+        <i class="bi bi-check-circle-fill text-success me-2"></i> Approved Purchase Order Log
+      </h6>
+    </div>
+    <div class="card-body p-0">
+      <div *ngIf="approvedRfqs.length === 0 && !loading" class="text-center text-muted py-4">
+        <i class="bi bi-inbox fs-2 d-block mb-1"></i>
+        <small>No Approved Purchase Orders found</small>
+      </div>
+      <div class="table-responsive" *ngIf="approvedRfqs.length > 0">
+        <table class="table table-hover align-middle mb-0 fs-8">
+          <thead class="table-light text-uppercase">
+            <tr>
+              <th class="ps-4">RFQ Ref ID</th>
+              <th>Component Specification</th>
+              <th>Quantity</th>
+              <th>Preferred Vendor Target</th>
+              <th>RFQ Lifecycle State</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rfq of approvedRfqs">
+              <td class="ps-4 fw-bold text-primary">{{ rfq.id }}</td>
+              <td class="fw-semibold text-dark">{{ rfq.item }}</td>
+              <td>{{ rfq.qty }} Units</td>
+              <td>{{ rfq.supplier }}</td>
+              <td>
+                <span class="badge bg-success text-uppercase">APPROVED</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── REJECTED PURCHASE ORDER LOG ───────────────── -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 border-top border-danger border-4" *ngIf="activeRfqTab === 'REJECTED' || activeRfqTab === 'ALL'">
+    <div class="card-header bg-white py-3 border-0">
+      <h6 class="mb-0 fw-bold text-danger text-uppercase">
+        <i class="bi bi-x-circle-fill text-danger me-2"></i> Rejected Purchase Order Log
+      </h6>
+    </div>
+    <div class="card-body p-0">
+      <div *ngIf="rejectedRfqs.length === 0 && !loading" class="text-center text-muted py-4">
+        <i class="bi bi-inbox fs-2 d-block mb-1"></i>
+        <small>No Rejected Purchase Orders found</small>
+      </div>
+      <div class="table-responsive" *ngIf="rejectedRfqs.length > 0">
+        <table class="table table-hover align-middle mb-0 fs-8">
+          <thead class="table-light text-uppercase">
+            <tr>
+              <th class="ps-4">RFQ Ref ID</th>
+              <th>Component Specification</th>
+              <th>Quantity</th>
+              <th>Preferred Vendor Target</th>
+              <th>RFQ Lifecycle State</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rfq of rejectedRfqs">
+              <td class="ps-4 fw-bold text-primary">{{ rfq.id }}</td>
+              <td class="fw-semibold text-dark">{{ rfq.item }}</td>
+              <td>{{ rfq.qty }} Units</td>
+              <td>{{ rfq.supplier }}</td>
+              <td>
+                <span class="badge bg-danger text-uppercase">REJECTED</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── CARGO SHIPMENT LOG ───────────────── -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4" *ngIf="activeRfqTab === 'SHIPMENT' || activeRfqTab === 'ALL'">
+    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <h6 class="mb-0 fw-bold text-dark text-uppercase">
+        <i class="bi bi-truck text-info me-2"></i> Cargo Shipment Log
+      </h6>
+      <div class="d-flex gap-2 align-items-center">
+        <div class="input-group input-group-sm" style="width: 250px;">
+          <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control border-start-0 ps-0" placeholder="Search Shipments..." [(ngModel)]="rfqSearchText">
+        </div>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div *ngIf="displayShipments.length === 0 && !loading" class="text-center text-muted py-5">
+        <i class="bi bi-truck-flatbed fs-1 d-block mb-2 text-secondary"></i>
+        <small>No shipments found</small>
+      </div>
+      <div class="table-responsive" *ngIf="displayShipments.length > 0">
+        <table class="table table-hover align-middle mb-0 fs-8">
+          <thead class="table-light text-uppercase">
+            <tr>
+              <th class="ps-4">Shipment No</th>
+              <th>Linked PO Ref</th>
+              <th>Supplier / Origin</th>
+              <th>Vehicle & Captain</th>
+              <th>Transport Cost</th>
+              <th>Est Delivery</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of displayShipments; track s.id) {
+            <tr>
+              <td class="ps-4">
+                <span class="badge bg-dark font-monospace tracking-wide">{{ s.shipmentNumber }}</span>
+              </td>
+              <td>
+                <div class="fw-bold text-dark">PO Ref #{{ s.poId }}</div>
+              </td>
+              <td>
+                <div class="fw-bold text-secondary">{{ s.supplierName || 'N/A' }}</div>
+                <div class="text-muted small"><i class="bi bi-geo-alt me-1"></i>{{ s.origin || 'N/A' }}</div>
+              </td>
+              <td>
+                <div class="text-dark font-monospace fw-semibold">{{ s.vehicleNumber || 'N/A' }}</div>
+                <div class="text-secondary small">Reg: {{ s.captainRegistrationNumber || 'N/A' }}</div>
+              </td>
+              <td class="font-monospace fw-bold text-primary">${{ s.transportCost | number:'1.2-2' }}</td>
+              <td class="font-monospace text-danger fw-semibold"><i class="bi bi-calendar-check me-1"></i>{{ s.estimatedDelivery | date:'mediumDate' }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── MIDDLE LAYOUT: SHORTAGE ALERTS & COST ───────────────── -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-5">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h6 class="fw-bold text-dark mb-0 fs-6">
+            <i class="bi bi-exclamation-triangle text-danger me-2"></i> Inventory Critical Shortages
+          </h6>
+          <a href="javascript:void(0)" (click)="openViewAllModal('Inventory Shortages', 'shortages', shortages)" class="small fw-bold text-primary text-decoration-none" style="font-size: 0.75rem;">View All</a>
+        </div>
+        <div *ngIf="shortages.length === 0" class="text-center text-muted py-4">
+          <i class="bi bi-check-circle fs-1 text-success d-block mb-2"></i>
+          <small>No critical shortages detected</small>
+        </div>
+        <div class="table-responsive" *ngIf="shortages.length > 0">
+          <table class="table align-middle mb-0" style="font-size: 0.8rem;">
+            <thead class="table-light">
+              <tr>
+                <th class="py-3 border-0 rounded-start">Item Specification</th>
+                <th class="py-3 border-0">In Stock</th>
+                <th class="py-3 border-0">Threshold</th>
+                <th class="py-3 border-0 rounded-end">Urgency</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let shortageItem of shortages" class="border-bottom">
+                <td class="fw-bold text-dark py-3 border-0">{{ shortageItem.item }}</td>
+                <td class="fw-semibold {{ shortageItem.textClass }} py-3 border-0">{{ shortageItem.stock }}</td>
+                <td class="text-dark fw-semibold py-3 border-0">{{ shortageItem.threshold }}</td>
+                <td class="py-3 border-0">
+                  <span class="badge rounded-pill {{ shortageItem.urgencyClass }} px-3 py-1" style="font-size: 0.7rem;">{{ shortageItem.urgency }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-7">
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100 position-relative" style="z-index: 10;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="fw-bold text-dark mb-0 fs-6">
+            <i class="bi bi-currency-dollar text-success me-2"></i> Procurement Cost Analytics
+          </h6>
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle rounded-pill px-3" type="button" data-bs-toggle="dropdown">
+              {{ selectedDashboardPeriod }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('This Month')">This Month</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('Last Month')">Last Month</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('January')">January</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('February')">February</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('March')">March</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('April')">April</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('May')">May</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('June')">June</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('July')">July</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('August')">August</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('September')">September</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('October')">October</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('November')">November</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('December')">December</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('This Year')">This Year</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('Last Year')">Last Year</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('All Time')">All Time</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="text-center mb-4">
+          <div class="fs-2 fw-bold text-dark lh-1 mb-1">{{ formatCurrency(costTotal) }}</div>
+          <div class="text-secondary small fw-medium">Total Procurement Spend</div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-around mt-4">
+          <div *ngFor="let category of costCategories" class="d-flex flex-column align-items-center">
+            <svg viewBox="0 0 100 55" style="width: 110px; height: 60px; overflow: visible;">
+              <!-- Background Arc -->
+              <path d="M 18.17 50 A 31.83 31.83 0 0 1 81.83 50" fill="none" stroke="#f1f5f9" stroke-width="8" stroke-linecap="round" />
+              <!-- Foreground Arc -->
+              <path d="M 18.17 50 A 31.83 31.83 0 0 1 81.83 50" fill="none" [attr.stroke]="category.color" stroke-width="8" stroke-linecap="round" [attr.stroke-dasharray]="category.pct + ', 100'" />
+              
+              <!-- Value Text inside Gauge -->
+              <text x="50" y="36" text-anchor="middle" class="fw-bold" style="font-size: 14px; fill: #1e293b;">{{ formatCurrency(category.value) }}</text>
+              <text x="50" y="50" text-anchor="middle" class="fw-bold" style="font-size: 11px; fill: #64748b;">{{ category.pct }}%</text>
+            </svg>
+            <div class="mt-2 small fw-bold text-dark" style="font-size: 0.75rem;">{{ category.label }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ 
+
+  <!-- ───────────────── NOTIFICATIONS & SPEND CATEGORY ───────────────── -->
+  <div class="row g-4 mb-4">
+    <!-- Spend by Category -->
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-white position-relative" style="z-index: 10;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h6 class="mb-0 fw-bold text-dark fs-6">Spend by Category</h6>
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle rounded-pill px-3 py-1" type="button" data-bs-toggle="dropdown" style="font-size: 0.8rem;">
+              {{ selectedDashboardPeriod }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('This Month')">This Month</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('Last Month')">Last Month</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('January')">January</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('February')">February</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('March')">March</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('April')">April</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('May')">May</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('June')">June</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('July')">July</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('August')">August</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('September')">September</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('October')">October</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('November')">November</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('December')">December</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('This Year')">This Year</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('Last Year')">Last Year</a></li>
+              <li><a class="dropdown-item" href="javascript:void(0)" (click)="setDashboardPeriod('All Time')">All Time</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="row align-items-center">
+          <div class="col-5 position-relative text-center">
+            <svg width="100%" viewBox="0 0 42 42" style="max-width: 150px; transform: rotate(-90deg);">
+              <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#f1f5f9" stroke-width="5"></circle>
+              <circle *ngFor="let donutSegment of donutSegments" 
+                      cx="21" cy="21" r="15.91549430918954" 
+                      fill="transparent" 
+                      [attr.stroke]="donutSegment.color" 
+                      stroke-width="5" 
+                      [attr.stroke-dasharray]="donutSegment.dasharray" 
+                      [attr.stroke-dashoffset]="donutSegment.dashoffset">
+              </circle>
+            </svg>
+            <div class="position-absolute top-50 start-50 translate-middle text-center w-100">
+              <div class="fw-bold text-dark lh-1" style="font-size: 1.1rem;">{{ formatCurrency(costTotal) }}</div>
+              <div class="text-secondary small fw-medium mt-1" style="font-size: 0.7rem;">Total Spend</div>
+            </div>
+          </div>
+          <div class="col-7">
+            <ul class="list-unstyled mb-0">
+              <li *ngFor="let donutSegment of donutSegments" class="d-flex justify-content-between align-items-center mb-2 pb-1">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="rounded-circle" [style.background-color]="donutSegment.color" style="width: 10px; height: 10px;"></div>
+                  <span class="text-dark fw-semibold" style="font-size: 0.8rem;">{{ donutSegment.label }}</span>
+                </div>
+                <span class="text-secondary fw-bold" style="font-size: 0.8rem;">{{ donutSegment.pct }}%</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Notifications -->
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h6 class="mb-0 fw-bold text-dark fs-6">Recent Notifications</h6>
+          <a href="javascript:void(0)" (click)="openViewAllModal('All Notifications', 'notifications', notifications)" class="small fw-bold text-primary text-decoration-none" style="font-size: 0.8rem;">View All</a>
+        </div>
+        <div class="card-body p-0">
+          <div *ngIf="notifications.length === 0" class="text-center text-muted py-4">
+            <i class="bi bi-bell-slash fs-3 d-block mb-1"></i>
+            <small>No notifications</small>
+          </div>
+          <div class="notification-list" *ngIf="notifications.length > 0">
+            <div class="d-flex align-items-start gap-3 mb-4" *ngFor="let notificationItem of notifications">
+              <div class="kpi-icon-wrap rounded-circle d-flex align-items-center justify-content-center {{ notificationItem.bgClass }}" style="width: 44px; height: 44px; flex-shrink: 0;">
+                <i class="bi {{ notificationItem.icon }} fs-5 {{ notificationItem.textClass }}"></i>
+              </div>
+              <div class="flex-grow-1 pt-1">
+                <div class="fw-bold text-dark mb-1" style="font-size: 0.85rem;">{{ notificationItem.title }}</div>
+                <div class="text-secondary" style="font-size: 0.75rem">{{ notificationItem.message }}</div>
+              </div>
+              <small class="text-secondary fw-semibold pt-1" style="font-size: 0.75rem;">{{ formatTime(notificationItem.createdAt) }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────── NEW CARDS: DEADLINES, SUPPLIERS, INSIGHTS ───────────────── -->
+  <div class="row g-4 mb-4">
+    
+    <!-- Upcoming Deadlines -->
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h6 class="mb-0 fw-bold text-dark fs-6">Upcoming Deadlines</h6>
+          <a href="javascript:void(0)" (click)="openViewAllModal('All Upcoming Deadlines', 'deadlines', upcomingDeadlines)" class="small fw-bold text-primary text-decoration-none" style="font-size: 0.8rem;">View All</a>
+        </div>
+        <ul class="list-unstyled mb-0">
+          <li *ngFor="let item of upcomingDeadlines" class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom border-light">
+            <div class="d-flex align-items-center gap-3">
+              <div class="kpi-icon-wrap rounded-3 d-flex align-items-center justify-content-center bg-primary-subtle" style="width: 44px; height: 44px; flex-shrink: 0;">
+                <i class="bi bi-calendar-check fs-5 text-primary"></i>
+              </div>
+              <div>
+                <div class="fw-bold text-dark mb-1" style="font-size: 0.85rem;">{{ item.title }}</div>
+                <div class="text-secondary" style="font-size: 0.75rem">{{ item.sub }}</div>
+              </div>
+            </div>
+            <div class="text-end">
+              <div class="fw-bold text-danger fs-5 lh-1">{{ item.date }}</div>
+              <div class="text-danger fw-semibold" style="font-size: 0.65rem;">{{ item.monthYear }}</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Top Suppliers by Spend -->
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h6 class="mb-0 fw-bold text-dark fs-6">Top Suppliers by Spend</h6>
+          <a href="javascript:void(0)" (click)="openViewAllModal('Top Suppliers by Spend', 'suppliers', topSuppliers)" class="small fw-bold text-primary text-decoration-none" style="font-size: 0.8rem;">View All</a>
+        </div>
+        <div class="d-flex flex-column gap-3">
+          <div *ngFor="let supplier of topSuppliers">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="fw-bold text-dark" style="font-size: 0.8rem;">{{ supplier.name }}</span>
+              <div class="d-flex gap-2">
+                <span class="fw-bold text-dark" style="font-size: 0.8rem;">{{ formatCurrency(supplier.amount) }}</span>
+                <span class="text-secondary fw-semibold" style="font-size: 0.8rem;">{{ supplier.pct }}%</span>
+              </div>
+            </div>
+            <div class="progress rounded-pill bg-light" style="height: 6px;">
+              <div class="progress-bar rounded-pill" role="progressbar" [style.width.%]="supplier.pct" [style.background-color]="supplier.color"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Insights -->
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-4 text-white" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+        <h6 class="mb-4 fw-bold fs-6">Quick Insights</h6>
+        <div class="d-flex flex-column gap-4 justify-content-center h-100 pb-3">
+          <div *ngFor="let insight of quickInsights" class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+              <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: rgba(255,255,255,0.2);">
+                <i class="bi {{ insight.icon }} fs-6 text-white"></i>
+              </div>
+              <span class="fw-semibold text-white" style="font-size: 0.85rem;">{{ insight.label }}</span>
+            </div>
+            <span class="fw-bold text-white fs-6">{{ insight.value }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- ───────────────── LOADING STATE ───────────────── -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-teal" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-muted mt-2 mb-0">Loading procurement data...</p>
+  </div>
+
+  <!-- ───────────────── SETTINGS PANEL ───────────────── -->
+  <app-dashboard-settings
+    [isOpen]="showSettings"
+    (close)="showSettings = false"
+  ></app-dashboard-settings>
+
+  <!-- ───────────────── VIEW ALL MODAL (CARD VIEW) ───────────────── -->
+  <div class="modal-backdrop fade show" *ngIf="isViewAllModalOpen"></div>
+  <div class="modal fade show d-block" tabindex="-1" *ngIf="isViewAllModalOpen" role="dialog" aria-labelledby="viewAllModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header border-bottom-0 bg-light rounded-top-4 pb-0 pt-4 px-4">
+          <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2" id="viewAllModalLabel">
+            <i class="bi bi-grid-fill text-primary"></i> {{ viewAllModalTitle }}
+          </h5>
+          <button type="button" class="btn-close shadow-none" (click)="closeViewAllModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 bg-light">
+          
+          <div class="row mb-3 g-2">
+            <div class="col-md-8">
+              <div class="input-group shadow-sm">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control border-start-0 ps-0" placeholder="Search..." [(ngModel)]="modalSearchText">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <input type="date" class="form-control shadow-sm" [(ngModel)]="modalSearchDate">
+            </div>
+          </div>
+          
+          <div class="table-responsive">
+            <!-- PENDING POs TABLE -->
+            <ng-container *ngIf="viewAllModalType === 'pending-pos'">
+              <table class="table table-hover align-middle mb-0 bg-white rounded-3 shadow-sm">
+                <thead class="table-light text-secondary">
+                  <tr>
+                    <th class="ps-3 border-0">PO ID</th>
+                    <th class="border-0">Supplier</th>
+                    <th class="border-0">Status</th>
+                    <th class="border-0">Amount</th>
+                    <th class="pe-3 border-0 text-end">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let po of filteredModalData">
+                    <td class="ps-3 fw-bold">#{{ po.id }}</td>
+                    <td>{{ po.supplierName || 'Unknown Supplier' }}</td>
+                    <td><span class="badge rounded-pill bg-warning text-dark">{{ po.status }}</span></td>
+                    <td class="fw-bold">{{ formatCurrency(po.totalAmount) }}</td>
+                    <td class="pe-3 text-end text-muted small">{{ formatTime(po.createdAt) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+
+            <!-- APPROVED POs TABLE -->
+            <ng-container *ngIf="viewAllModalType === 'approved-pos'">
+              <table class="table table-hover align-middle mb-0 bg-white rounded-3 shadow-sm">
+                <thead class="table-light text-secondary">
+                  <tr>
+                    <th class="ps-3 border-0">PO ID</th>
+                    <th class="border-0">Supplier</th>
+                    <th class="border-0">Status</th>
+                    <th class="border-0">Amount</th>
+                    <th class="pe-3 border-0 text-end">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let po of filteredModalData">
+                    <td class="ps-3 fw-bold">#{{ po.id }}</td>
+                    <td>{{ po.supplierName || 'Unknown Supplier' }}</td>
+                    <td><span class="badge rounded-pill bg-success">{{ po.status }}</span></td>
+                    <td class="fw-bold">{{ formatCurrency(po.totalAmount) }}</td>
+                    <td class="pe-3 text-end text-muted small">{{ formatTime(po.createdAt) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+
+            <!-- ACTIVE SUPPLIERS TABLE -->
+            <ng-container *ngIf="viewAllModalType === 'active-suppliers'">
+              <table class="table table-hover align-middle mb-0 bg-white rounded-3 shadow-sm">
+                <thead class="table-light text-secondary">
+                  <tr>
+                    <th class="ps-3 border-0">Supplier</th>
+                    <th class="border-0">Rating</th>
+                    <th class="pe-3 border-0 text-end">Active POs</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let sup of filteredModalData">
+                    <td class="ps-3 fw-bold">{{ sup.name }}</td>
+                    <td><i class="bi bi-star-fill text-warning me-1"></i>{{ sup.rating }}</td>
+                    <td class="pe-3 text-end fw-bold">{{ sup.activePOs }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+
+            <!-- TOTAL PRs TABLE -->
+            <ng-container *ngIf="viewAllModalType === 'total-prs'">
+              <table class="table table-hover align-middle mb-0 bg-white rounded-3 shadow-sm">
+                <thead class="table-light text-secondary">
+                  <tr>
+                    <th class="ps-3 border-0">PR ID</th>
+                    <th class="border-0">Department</th>
+                    <th class="border-0">Status</th>
+                    <th class="pe-3 border-0 text-end">Estimated Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let pr of filteredModalData">
+                    <td class="ps-3 fw-bold">#{{ pr.id }}</td>
+                    <td>{{ pr.department || 'General' }}</td>
+                    <td><span class="badge rounded-pill" [ngClass]="{'bg-success': pr.approvalStatus === 'APPROVED', 'bg-warning text-dark': pr.approvalStatus === 'PENDING'}">{{ pr.approvalStatus }}</span></td>
+                    <td class="pe-3 text-end fw-bold">{{ formatCurrency(pr.totalEstimatedCost) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+
+            <!-- ACTIVE RFQs TABLE -->
+            <ng-container *ngIf="viewAllModalType === 'active-rfqs'">
+              <table class="table table-hover align-middle mb-0 bg-white rounded-3 shadow-sm">
+                <thead class="table-light text-secondary">
+                  <tr>
+                    <th class="ps-3 border-0">RFQ ID</th>
+                    <th class="border-0">Product</th>
+                    <th class="border-0">Supplier</th>
+                    <th class="border-0">Quantity</th>
+                    <th class="pe-3 border-0 text-end">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let rfq of filteredModalData">
+                    <td class="ps-3 fw-bold">#{{ rfq.id || rfq.quotationId }}</td>
+                    <td>{{ rfq.productName || rfq.productDescription || 'N/A' }}</td>
+                    <td>{{ rfq.supplierName || 'Pending' }}</td>
+                    <td>{{ rfq.quantity || 0 }} Units</td>
+                    <td class="pe-3 text-end"><span class="badge rounded-pill bg-info">{{ rfq.status || 'ACTIVE' }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+
+            <!-- NOTIFICATIONS TABLE -->
+            <ng-container *ngIf="viewAllModalType === 'notifications'">
+              <table class="table table-hover align-middle mb-0 bg-white rounded-3 shadow-sm">
+                <thead class="table-light text-secondary">
+                  <tr>
+                    <th class="ps-3 border-0">Title</th>
+                    <th class="border-0">Message</th>
+                    <th class="pe-3 border-0 text-end">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of filteredModalData">
+                    <td class="ps-3 fw-bold">
+                      <i class="bi {{ item.icon }} {{ item.textClass }} me-2"></i> {{ item.title }}
+                    </td>
+                    <td class="text-secondary small">{{ item.message }}</td>
+                    <td class="pe-3 text-end text-muted small">{{ formatTime(item.createdAt) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+
+            <!-- DEADLINES TABLE -->
+            <ng-container *ngIf="viewAllModalType === 'deadlines'">
+              <table class="table table-hover align-middle mb-0 bg-white rounded-3 shadow-sm">
+                <thead class="table-light text-secondary">
+                  <tr>
+                    <th class="ps-3 border-0">Title</th>
+                    <th class="border-0">Description</th>
+                    <th class="pe-3 border-0 text-end">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of filteredModalData">
+                    <td class="ps-3 fw-bold">{{ item.title }}</td>
+                    <td class="text-secondary">{{ item.sub }}</td>
+                    <td class="pe-3 text-end fw-bold text-danger">{{ item.date }} {{ item.monthYear }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+
+            <!-- TOP SUPPLIERS TABLE -->
+            <ng-container *ngIf="viewAllModalType === 'suppliers'">
+              <table class="table table-hover align-middle mb-0 bg-white rounded-3 shadow-sm">
+                <thead class="table-light text-secondary">
+                  <tr>
+                    <th class="ps-3 border-0">Supplier</th>
+                    <th class="border-0">Spend Amount</th>
+                    <th class="pe-3 border-0 text-end">Share %</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of filteredModalData">
+                    <td class="ps-3 fw-bold">
+                      <span class="d-inline-block rounded-circle me-2" [style.background-color]="item.color" style="width: 10px; height: 10px;"></span>
+                      {{ item.name }}
+                    </td>
+                    <td class="fw-bold text-dark">{{ formatCurrency(item.amount) }}</td>
+                    <td class="pe-3 text-end text-secondary fw-semibold">{{ item.pct }}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+</style>
+
+<!--  MODAL: DIRECTORY DETAILS (POPUP OVERLAY) -->
+<div *ngIf="activeDirectoryModal" style="position:fixed;inset:0;z-index:1055;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,0.4);backdrop-filter:blur(4px);">
+  <div style="width:100%;max-width:960px;max-height:85vh;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);background:#fff;animation: zoomIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+    
+    <!-- HEADER -->
+    <div style="padding:24px 32px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <!-- ICON -->
+        <i class="bi" 
+           [class.bi-file-richtext]="activeDirectoryModal === 'quotations'"
+           [class.bi-people]="activeDirectoryModal === 'suppliers'"
+           [class.bi-receipt]="activeDirectoryModal === 'invoices'"
+           [class.bi-boxes]="activeDirectoryModal === 'inventory'" 
+           style="font-size:20px;color:#1e293b;"></i>
+        <!-- TITLE -->
+        <span style="font-size:0.95rem;font-weight:700;color:#1e293b;text-transform:uppercase;letter-spacing:0.04em;">
+          {{ activeDirectoryModal === 'quotations' ? 'QUOTATION DIRECTORY' : 
+             activeDirectoryModal === 'suppliers' ? 'SUPPLIER DIRECTORY' : 
+             activeDirectoryModal === 'invoices' ? 'INVOICE DIRECTORY' : 'WAREHOUSE STOCK DIRECTORY' }}
+        </span>
+      </div>
+      <!-- CLOSE X ICON -->
+      <button (click)="closeDirectoryModal()" style="font-size:20px;color:#94a3b8;cursor:pointer;background:transparent;border:none;outline:none;">&#x2715;</button>
+    </div>
+
+    <!-- SEARCH BAR -->
+    <div style="padding:0 32px 16px;position:relative;flex-shrink:0;">
+      <div style="position:relative;display:flex;align-items:center;">
+        <i class="bi bi-search" style="position:absolute;left:14px;color:#94a3b8;font-size:14px;"></i>
+        <input type="text" 
+               [placeholder]="'Search...'" 
+               [(ngModel)]="directorySearchQuery"
+               style="width:100%;border:1.5px solid #f1f5f9;border-radius:8px;padding:10px 14px 10px 38px;font-size:0.86rem;background:#f8fafc;color:#334155;outline:none;box-sizing:border-box;">
+      </div>
+    </div>
+
+    <!-- TABLE BODY -->
+    <div style="flex:1;overflow-y:auto;padding:0 32px 16px;border-top:1.5px solid #f1f5f9;background:#fff;">
+      
+      <!-- 1. QUOTATION TABLE -->
+      <table *ngIf="activeDirectoryModal === 'quotations'" style="width:100%;border-collapse:collapse;text-align:left;">
+        <thead>
+          <tr style="border-bottom:1.5px solid #f1f5f9;">
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">QUOTATION NO</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">PRODUCT DETAILS</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">SUPPLIER NAME</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;text-align:right;">QUANTITY</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;text-align:right;">TOTAL PRICE</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">STATUS</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;text-align:center;">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="filteredQuotationsList.length === 0">
+            <td colspan="7" style="padding:24px;text-align:center;color:#94a3b8;font-size:0.85rem;">No quotations found.</td>
+          </tr>
+          <tr *ngFor="let q of filteredQuotationsList" style="border-bottom:1.5px solid #f8fafc;transition:background-color 0.2s;">
+            <td style="padding:14px;font-size:0.82rem;font-weight:600;color:#2563eb;">#{{ q.quotationNumber || q.id }}</td>
+            <td style="padding:14px;font-size:0.82rem;color:#334155;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ q.productDescription || 'N/A' }}</td>
+            <td style="padding:14px;font-size:0.82rem;color:#334155;">{{ q.supplierName }}</td>
+            <td style="padding:14px;font-size:0.82rem;color:#334155;text-align:right;font-family:monospace;">{{ q.quantity }}</td>
+            <td style="padding:14px;font-size:0.82rem;font-weight:700;color:#1e1b4b;text-align:right;font-family:monospace;">${{ (q.totalPrice || q.unitPrice * q.quantity) | number:'1.2-2' }}</td>
+            <td style="padding:14px;font-size:0.82rem;">
+              <span style="padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:700;"
+                    [style.background]="q.status === 'APPROVED' ? '#dcfce7' : q.status === 'UNDER_REVIEW' ? '#dbeafe' : q.status === 'PENDING' ? '#fef9c3' : '#fee2e2'"
+                    [style.color]="q.status === 'APPROVED' ? '#15803d' : q.status === 'UNDER_REVIEW' ? '#1d4ed8' : q.status === 'PENDING' ? '#a16207' : '#b91c1c'">
+                {{ q.status }}
+              </span>
+            </td>
+            <td style="padding:14px;text-align:center;">
+              <div style="display:flex;gap:6px;justify-content:center;">
+                <button (click)="updateQuotationStatus(q.id, 'APPROVED')" 
+                        [disabled]="q.status === 'APPROVED'"
+                        style="padding:4px 8px;border-radius:6px;border:1px solid #22c55e;background:#fff;color:#15803d;font-size:0.72rem;font-weight:600;cursor:pointer;">Approve</button>
+                <button (click)="updateQuotationStatus(q.id, 'UNDER_REVIEW')" 
+                        [disabled]="q.status === 'UNDER_REVIEW'"
+                        style="padding:4px 8px;border-radius:6px;border:1px solid #3b82f6;background:#fff;color:#1d4ed8;font-size:0.72rem;font-weight:600;cursor:pointer;">Review</button>
+                <button (click)="updateQuotationStatus(q.id, 'REJECTED')" 
+                        [disabled]="q.status === 'REJECTED' || q.status === 'APPROVED'"
+                        style="padding:4px 8px;border-radius:6px;border:1px solid #ef4444;background:#fff;color:#b91c1c;font-size:0.72rem;font-weight:600;cursor:pointer;">Reject</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 2. SUPPLIER TABLE -->
+      <table *ngIf="activeDirectoryModal === 'suppliers'" style="width:100%;border-collapse:collapse;text-align:left;">
+        <thead>
+          <tr style="border-bottom:1.5px solid #f1f5f9;">
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">NAME</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">EMAIL</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">PHONE</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">LOCATION</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">RATING</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="filteredSuppliersList.length === 0">
+            <td colspan="6" style="padding:24px;text-align:center;color:#94a3b8;font-size:0.85rem;">No suppliers found.</td>
+          </tr>
+          <tr *ngFor="let s of filteredSuppliersList" style="border-bottom:1.5px solid #f8fafc;transition:background-color 0.2s;">
+            <td style="padding:14px;font-size:0.82rem;font-weight:600;color:#2563eb;">{{ s.name }}</td>
+            <td style="padding:14px;font-size:0.82rem;color:#334155;">{{ s.email }}</td>
+            <td style="padding:14px;font-size:0.82rem;color:#334155;font-family:monospace;">{{ s.phone }}</td>
+            <td style="padding:14px;font-size:0.82rem;color:#475569;">{{ s.address || 'house No:112' }}</td>
+            <td style="padding:14px;font-size:0.82rem;color:#334155;">
+              <span style="display:flex;align-items:center;gap:4px;color:#d97706;font-weight:700;">
+                &#9733; {{ s.rating || '4.5' }}
+              </span>
+            </td>
+            <td style="padding:14px;font-size:0.82rem;">
+              <span style="padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:700;background:#dcfce7;color:#15803d;">
+                ACTIVE
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 3. INVOICE TABLE -->
+      <table *ngIf="activeDirectoryModal === 'invoices'" style="width:100%;border-collapse:collapse;text-align:left;">
+        <thead>
+          <tr style="border-bottom:1.5px solid #f1f5f9;">
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">INVOICE NUMBER</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">CLIENT NAME</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">ORDER REF</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;text-align:right;">AMOUNT</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="filteredInvoicesList.length === 0">
+            <td colspan="5" style="padding:24px;text-align:center;color:#94a3b8;font-size:0.85rem;">No invoices found.</td>
+          </tr>
+          <tr *ngFor="let inv of filteredInvoicesList" style="border-bottom:1.5px solid #f8fafc;transition:background-color 0.2s;">
+            <td style="padding:14px;font-size:0.82rem;font-weight:600;color:#2563eb;">{{ inv.invoiceNumber }}</td>
+            <td style="padding:14px;font-size:0.82rem;color:#334155;">{{ inv.issuedToName || 'Walk-in Customer' }}</td>
+            <td style="padding:14px;font-size:0.82rem;color:#334155;"><span style="background:#f1f5f9;padding:2px 8px;border-radius:4px;font-size:0.75rem;">ORD-{{ inv.customerOrderId || 'N/A' }}</span></td>
+            <td style="padding:14px;font-size:0.82rem;font-weight:700;color:#334155;text-align:right;font-family:monospace;">${{ inv.totalAmount | number:'1.2-2' }}</td>
+            <td style="padding:14px;font-size:0.82rem;">
+              <span style="padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:700;"
+                    [style.background]="inv.paymentStatus === 'PAID' ? '#dcfce7' : inv.paymentStatus === 'PARTIALLY_PAID' ? '#fef9c3' : '#fee2e2'"
+                    [style.color]="inv.paymentStatus === 'PAID' ? '#15803d' : inv.paymentStatus === 'PARTIALLY_PAID' ? '#a16207' : '#b91c1c'">
+                {{ inv.paymentStatus }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 4. INVENTORY STOCK TABLE -->
+      <table *ngIf="activeDirectoryModal === 'inventory'" style="width:100%;border-collapse:collapse;text-align:left;">
+        <thead>
+          <tr style="border-bottom:1.5px solid #f1f5f9;">
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">PRODUCT CODE</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">PRODUCT NAME</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">CATEGORY</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;text-align:right;">STOCK LEVEL</th>
+            <th style="padding:12px 14px;font-size:0.72rem;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.04em;background:#fff;position:sticky;top:0;z-index:2;">STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="filteredProductsList.length === 0">
+            <td colspan="5" style="padding:24px;text-align:center;color:#94a3b8;font-size:0.85rem;">No products found.</td>
+          </tr>
+          <tr *ngFor="let p of filteredProductsList" style="border-bottom:1.5px solid #f8fafc;transition:background-color 0.2s;">
+            <td style="padding:14px;font-size:0.82rem;font-weight:600;color:#2563eb;font-family:monospace;">{{ p.productCode }}</td>
+            <td style="padding:14px;font-size:0.82rem;font-weight:600;color:#334155;">{{ p.name }}</td>
+            <td style="padding:14px;font-size:0.82rem;color:#475569;">{{ p.categoryName || 'N/A' }}</td>
+            <td style="padding:14px;font-size:0.82rem;color:#334155;text-align:right;font-family:monospace;font-weight:700;">{{ p.quantity }} {{ p.unit }}</td>
+            <td style="padding:14px;font-size:0.82rem;">
+              <span style="padding:4px 10px;border-radius:12px;font-size:0.7rem;font-weight:700;"
+                    [style.background]="p.quantity === 0 ? '#fee2e2' : (p.quantity <= p.reorderPoint ? '#fef9c3' : '#dcfce7')"
+                    [style.color]="p.quantity === 0 ? '#b91c1c' : (p.quantity <= p.reorderPoint ? '#a16207' : '#15803d')">
+                {{ p.quantity === 0 ? 'OUT OF STOCK' : (p.quantity <= p.reorderPoint ? 'LOW STOCK' : 'ACTIVE') }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div style="padding:16px 32px 24px;display:flex;justify-content:flex-end;border-top:1.5px solid #f1f5f9;background:#fff;flex-shrink:0;">
+      <button (click)="closeDirectoryModal()" style="background:#5c6470;color:#ffffff;padding:10px 24px;border-radius:8px;border:none;font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.05);">Close</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= MODAL: CREATE REQUISITION (LC STYLE) ================= -->
+<div *ngIf="isPrModalOpen" style="position:fixed;inset:0;z-index:1055;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,0.4);backdrop-filter:blur(4px);">
+  <div style="width:100%;max-width:850px;max-height:90vh;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);background:#fff;animation: zoomIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+    
+    <!-- HEADER -->
+    <div style="background:linear-gradient(135deg,#1e1b4b 0%,#312e81 60%,#4f46e5 100%);padding:24px 32px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);backdrop-filter:blur(4px);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <i class="bi bi-file-earmark-plus text-white" style="font-size:20px;"></i>
+        </div>
+        <div>
+          <h5 style="font-size:1.15rem;font-weight:700;color:#ffffff;margin:0;letter-spacing:-0.01em;">Create New Requisition</h5>
+          <p style="font-size:0.76rem;color:rgba(255,255,255,0.75);margin:0;">Launch corporate sourcing request and collect supplier bids</p>
+        </div>
+      </div>
+      <button (click)="closePrModal()" style="font-size:20px;color:rgba(255,255,255,0.8);cursor:pointer;background:transparent;border:none;outline:none;">&#x2715;</button>
+    </div>
+
+    <!-- BODY -->
+    <div style="padding:32px;background:#ffffff;flex:1;overflow-y:auto;box-sizing:border-box;">
+      <form #prForm="ngForm" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px 24px;">
+        
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Requester Name *</label>
+          <input type="text" [value]="userName" disabled style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#f8fafc;color:#64748b;outline:none;box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Settlement Currency</label>
+          <input type="text" value="USD ($) - US Dollar" disabled style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#f8fafc;color:#64748b;outline:none;box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Product Specification Vector *</label>
+          <select (change)="onPrProductSelect($event)" style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#fff;color:#374151;outline:none;box-sizing:border-box;margin-bottom:8px;">
+            <option value="0">-- Select Product to Add --</option>
+            <option *ngFor="let p of prProducts" [value]="p.id">{{ p.name }}</option>
+          </select>
+          <!-- SELECTED PRODUCTS CONTAINER BOX -->
+          <div style="border:1.5px solid #e2e8f0;border-radius:8px;padding:10px;min-height:54px;max-height:100px;overflow-y:auto;background:#f8fafc;display:flex;flex-wrap:wrap;gap:6px;box-sizing:border-box;">
+            <span *ngFor="let p of selectedPrProducts" style="background:#fff;color:#334155;padding:4px 8px;border-radius:6px;font-size:0.75rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;border:1px solid #e2e8f0;">
+              {{ p.name }}
+              <i class="bi bi-x" (click)="removePrProduct(p.id)" style="cursor:pointer;font-size:14px;color:#94a3b8;"></i>
+            </span>
+            <span *ngIf="selectedPrProducts.length === 0" style="color:#94a3b8;font-size:0.76rem;font-style:italic;">No products selected</span>
+          </div>
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Target Suppliers *</label>
+          <select (change)="onPrSupplierSelect($event)" style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#fff;color:#374151;outline:none;box-sizing:border-box;margin-bottom:8px;">
+            <option value="0">-- Select Supplier to Add --</option>
+            <option *ngFor="let s of prSuppliers" [value]="s.id">{{ s.name }}</option>
+          </select>
+          <!-- SELECTED SUPPLIERS CONTAINER BOX -->
+          <div style="border:1.5px solid #e2e8f0;border-radius:8px;padding:10px;min-height:54px;max-height:100px;overflow-y:auto;background:#f8fafc;display:flex;flex-wrap:wrap;gap:6px;box-sizing:border-box;">
+            <span *ngFor="let s of selectedPrSuppliers" style="background:#fff;color:#334155;padding:4px 8px;border-radius:6px;font-size:0.75rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;border:1px solid #e2e8f0;">
+              {{ s.name }}
+              <i class="bi bi-x" (click)="removePrSupplier(s.id)" style="cursor:pointer;font-size:14px;color:#94a3b8;"></i>
+            </span>
+            <span *ngIf="selectedPrSuppliers.length === 0" style="color:#94a3b8;font-size:0.76rem;font-style:italic;">No suppliers selected</span>
+          </div>
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Required Volume *</label>
+          <input type="number" [(ngModel)]="newPr.quantityRequired" name="quantityRequired" min="1" required style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#fff;color:#374151;outline:none;box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Urgency Stratum Level *</label>
+          <select [(ngModel)]="newPr.urgencyLevel" name="urgencyLevel" required style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#fff;color:#374151;outline:none;box-sizing:border-box;">
+            <option value="LOW">LOW Urgency Strategy</option>
+            <option value="MEDIUM">MEDIUM Pipeline</option>
+            <option value="HIGH">HIGH Accelerated Strategy</option>
+            <option value="CRITICAL">CRITICAL Mission Vector</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Timeline Deadline *</label>
+          <input type="date" [(ngModel)]="newPr.requiredByDate" name="requiredByDate" required style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#fff;color:#374151;outline:none;box-sizing:border-box;">
+        </div>
+
+        <div style="grid-column:span 2;">
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Remarks & Logistics Directives</label>
+          <textarea [(ngModel)]="newPr.remarks" name="remarks" rows="3" placeholder="Provide context or guidelines for this requisition..." style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#fff;color:#374151;outline:none;box-sizing:border-box;resize:none;"></textarea>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- ERROR & SUCCESS MESSAGES -->
+    <div style="padding:0 32px;" *ngIf="modalSuccessMsg || modalErrorMsg">
+      <div *ngIf="modalSuccessMsg" style="background:#dcfce7;color:#15803d;padding:10px 16px;border-radius:8px;font-size:0.82rem;font-weight:600;margin-bottom:12px;">{{ modalSuccessMsg }}</div>
+      <div *ngIf="modalErrorMsg" style="background:#fee2e2;color:#b91c1c;padding:10px 16px;border-radius:8px;font-size:0.82rem;font-weight:600;margin-bottom:12px;">{{ modalErrorMsg }}</div>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="padding:16px 32px 24px;display:flex;justify-content:flex-end;gap:12px;background:#fff;flex-shrink:0;">
+      <button (click)="closePrModal()" style="background:#f1f5f9;color:#475569;padding:10px 24px;border-radius:20px;border:none;font-size:0.85rem;font-weight:600;cursor:pointer;">Cancel</button>
+      <button (click)="submitPr()" [disabled]="!prForm.form.valid || newPr.productIds.length === 0" style="background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%);color:#ffffff;padding:10px 28px;border-radius:20px;border:none;font-size:0.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(37,99,235,0.2);">
+        <i class="bi bi-send-check-fill"></i> Raise Requisition
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= MODAL: CREATE PURCHASE ORDER (LC STYLE) ================= -->
+<div *ngIf="isPoModalOpen" style="position:fixed;inset:0;z-index:1055;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,0.4);backdrop-filter:blur(4px);">
+  <div style="width:100%;max-width:850px;max-height:90vh;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);background:#fff;animation: zoomIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+    
+    <!-- HEADER -->
+    <div style="background:linear-gradient(135deg,#1e1b4b 0%,#312e81 60%,#4f46e5 100%);padding:24px 32px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);backdrop-filter:blur(4px);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <i class="bi bi-cart-plus text-white" style="font-size:20px;"></i>
+        </div>
+        <div>
+          <h5 style="font-size:1.15rem;font-weight:700;color:#ffffff;margin:0;letter-spacing:-0.01em;">Create Purchase Order</h5>
+          <p style="font-size:0.76rem;color:rgba(255,255,255,0.75);margin:0;">Dispatch official purchase contracts to approved suppliers</p>
+        </div>
+      </div>
+      <button (click)="closePoModal()" style="font-size:20px;color:rgba(255,255,255,0.8);cursor:pointer;background:transparent;border:none;outline:none;">&#x2715;</button>
+    </div>
+
+    <!-- BODY -->
+    <div style="padding:32px;background:#ffffff;flex:1;overflow-y:auto;box-sizing:border-box;">
+      <form #poForm="ngForm" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px 24px;">
+        
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Select Approved Quotation *</label>
+          <select [(ngModel)]="newPo.quotationId" name="quotationId" required (change)="onQuotationChange($event)" style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#fff;color:#374151;outline:none;box-sizing:border-box;">
+            <option value="0">-- Select Approved Bid --</option>
+            <option *ngFor="let q of approvedQuotations" [value]="q.id">#Q-{{ q.quotationNumber || q.id }} (Requisition: PR-{{q.purchaseRequisitionId}})</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Supplier Beneficiary</label>
+          <input type="text" [value]="newPo.supplierName" disabled style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#f8fafc;color:#64748b;outline:none;box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Supplier Email</label>
+          <input type="text" [value]="newPo.supplierEmail" disabled style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#f8fafc;color:#64748b;outline:none;box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Quantity Ordered</label>
+          <input type="text" [value]="newPo.quantity" disabled style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#f8fafc;color:#64748b;outline:none;box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Settlement Currency</label>
+          <input type="text" [value]="newPo.currency" disabled style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#f8fafc;color:#64748b;outline:none;box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Contract Amount *</label>
+          <div style="position:relative;display:flex;align-items:center;">
+            <span style="position:absolute;left:14px;color:#4b5563;font-weight:700;font-size:0.85rem;">$</span>
+            <input type="text" [value]="newPo.totalAmount | number:'1.2-2'" disabled style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px 10px 30px;font-size:0.85rem;background:#f8fafc;color:#334155;font-weight:700;outline:none;box-sizing:border-box;">
+          </div>
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Expected Delivery Date *</label>
+          <input type="date" [(ngModel)]="newPo.expectedDeliveryDate" name="expectedDeliveryDate" required style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#fff;color:#374151;outline:none;box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="display:block;font-size:0.76rem;font-weight:700;color:#374151;margin-bottom:6px;">Issued By</label>
+          <input type="text" [value]="newPo.issuedByName" disabled style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:0.85rem;background:#f8fafc;color:#64748b;outline:none;box-sizing:border-box;">
+        </div>
+
+      </form>
+    </div>
+
+    <!-- ERROR & SUCCESS MESSAGES -->
+    <div style="padding:0 32px;" *ngIf="modalSuccessMsg || modalErrorMsg">
+      <div *ngIf="modalSuccessMsg" style="background:#dcfce7;color:#15803d;padding:10px 16px;border-radius:8px;font-size:0.82rem;font-weight:600;margin-bottom:12px;">{{ modalSuccessMsg }}</div>
+      <div *ngIf="modalErrorMsg" style="background:#fee2e2;color:#b91c1c;padding:10px 16px;border-radius:8px;font-size:0.82rem;font-weight:600;margin-bottom:12px;">{{ modalErrorMsg }}</div>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="padding:16px 32px 24px;display:flex;justify-content:flex-end;gap:12px;background:#fff;flex-shrink:0;">
+      <button (click)="closePoModal()" style="background:#f1f5f9;color:#475569;padding:10px 24px;border-radius:20px;border:none;font-size:0.85rem;font-weight:600;cursor:pointer;">Cancel</button>
+      <button (click)="submitPo()" [disabled]="!poForm.form.valid || newPo.quotationId === 0" style="background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%);color:#ffffff;padding:10px 28px;border-radius:20px;border:none;font-size:0.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(37,99,235,0.2);">
+        <i class="bi bi-cart-check-fill"></i> Dispatch Order
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= MODAL: TRACK PURCHASE ORDER ================= -->
+<div *ngIf="isTrackingModalOpen" style="position:fixed;inset:0;z-index:1055;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,0.4);backdrop-filter:blur(4px);">
+  <div style="width:100%;max-width:900px;max-height:95vh;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);background:#ffffff;animation: zoomIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
+    
+    <!-- HEADER -->
+    <div style="background:#198754;padding:20px 32px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;background:rgba(255,255,255,0.2);backdrop-filter:blur(4px);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <i class="bi bi-compass text-white" style="font-size:20px;"></i>
+        </div>
+        <div>
+          <h5 style="font-size:1.15rem;font-weight:700;color:#ffffff;margin:0;letter-spacing:-0.01em;">Track Purchase Order</h5>
+          <p style="font-size:0.76rem;color:rgba(255,255,255,0.85);margin:0;">Real-time tracking of procurement stages and delivery logistics</p>
+        </div>
+      </div>
+      <button (click)="closeTrackingModal()" style="font-size:20px;color:rgba(255,255,255,0.8);cursor:pointer;background:transparent;border:none;outline:none;">&#x2715;</button>
+    </div>
+
+    <!-- BODY -->
+    <div style="padding:32px;background:#f8fafc;flex:1;overflow-y:auto;box-sizing:border-box;">
+      <!-- Search input card (matches "Quick Add Payment" style) -->
+      <div class="card border-0 shadow-sm p-4 bg-white rounded-3 mb-4">
+        <div class="row">
+          <div class="col-md-10 mx-auto">
+            <label class="form-label text-uppercase text-secondary fw-bold mb-2" style="font-size: 0.72rem; letter-spacing: 0.5px;">Customer Order Number</label>
+            <div class="input-group border rounded-3 overflow-visible position-relative" style="border-color: #dee2e6 !important;">
+              <span class="input-group-text bg-white border-0 text-muted px-3"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control border-0 ps-0 text-dark fw-semibold py-2.5 shadow-none" 
+                     placeholder="Enter Order Number (e.g., PO-2024-001...)" 
+                     [(ngModel)]="trackingPoNumberSearch" 
+                     (focus)="showPoSuggestions = true"
+                     (blur)="onInputBlur()"
+                     (keyup.enter)="trackPoByNumber(); showPoSuggestions = false">
+              <button class="btn btn-primary px-4 fw-bold border-0" style="background-color: #0d6efd;" type="button" (click)="trackPoByNumber(); showPoSuggestions = false">
+                Find
+              </button>
+
+              <!-- Suggestions Dropdown -->
+              <div class="po-suggestions-dropdown" *ngIf="showPoSuggestions && filteredPoSuggestions.length > 0">
+                @for (po of filteredPoSuggestions; track po.id) {
+                  <div class="po-suggestion-item d-flex justify-content-between align-items-center" (mousedown)="selectPoSuggestion(po)">
+                    <div>
+                      <strong class="text-primary">{{ po.poNumber }}</strong>
+                      <span class="text-muted ms-2 small">({{ po.supplierName || 'N/A' }})</span>
+                    </div>
+                    <span class="badge font-monospace text-uppercase"
+                          [ngClass]="{
+                            'bg-light text-dark': po.status === 'DRAFT',
+                            'bg-primary-subtle text-primary border border-primary': po.status === 'ISSUED',
+                            'bg-warning-subtle text-warning border border-warning': po.status === 'PARTIALLY_RECEIVED',
+                            'bg-success-subtle text-success border border-success': po.status === 'RECEIVED' || po.status === 'APPROVED',
+                            'bg-danger-subtle text-danger border border-danger': po.status === 'CANCELLED'
+                          }" style="font-size: 0.65rem;">
+                      {{ po.status }}
+                    </span>
+                  </div>
+                }
+              </div>
+            </div>
+            <div class="text-muted small mt-2" style="font-size: 0.75rem;">
+              Search by order number to load tracking details.
+            </div>
+            <div *ngIf="trackingSearchError" class="text-danger small mt-2 d-flex align-items-center gap-1" style="font-size: 0.78rem;">
+              <i class="bi bi-exclamation-circle-fill"></i>
+              <span>{{ trackingSearchError }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Placeholder -->
+      <div *ngIf="!trackedPo" class="text-center text-muted py-5">
+        <i class="bi bi-compass fs-1 d-block mb-2 text-secondary"></i>
+        <small>Enter a valid Purchase Order number above and click Find to display detailed status.</small>
+      </div>
+
+      <!-- Result Cards -->
+      <div *ngIf="trackedPo" class="row g-4 animate-fade-in">
+        <!-- PO Status & Stepper (Left) -->
+        <div class="col-lg-7">
+          <div class="card border-0 shadow-sm rounded-3 p-4 bg-white h-100">
+            <div class="d-flex justify-content-between align-items-start mb-4 border-bottom pb-3">
+              <div>
+                <h5 class="fw-bold text-dark mb-1">{{ trackedPo.poNumber }}</h5>
+                <span class="text-muted small">Issued Date: {{ trackedPo.createdAt | date:'mediumDate' }}</span>
+              </div>
+              <span class="badge py-2 px-3 fs-7.5"
+                    [ngClass]="{
+                      'bg-light text-dark': trackedPo.status === 'DRAFT',
+                      'bg-primary-subtle text-primary border border-primary': trackedPo.status === 'ISSUED',
+                      'bg-warning-subtle text-warning border border-warning': trackedPo.status === 'PARTIALLY_RECEIVED',
+                      'bg-success-subtle text-success border border-success': trackedPo.status === 'RECEIVED' || trackedPo.status === 'APPROVED' || trackedPo.status === 'COMPLETE',
+                      'bg-danger-subtle text-danger border border-danger': trackedPo.status === 'CANCELLED'
+                    }">
+                {{ trackedPo.status }}
+              </span>
+            </div>
+
+            <!-- Vertical Status Stepper -->
+            <div class="po-stepper mt-3">
+              <!-- DRAFT -->
+              <div class="stepper-step" [class.active]="true">
+                <div class="step-icon">
+                  <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-title">DRAFT</div>
+                  <div class="step-desc text-muted small">Purchase order created and prepared for review.</div>
+                </div>
+              </div>
+
+              <!-- ISSUED -->
+              <div class="stepper-step" [class.active]="['ISSUED', 'PARTIALLY_RECEIVED', 'RECEIVED', 'COMPLETE', 'APPROVED'].includes(trackedPo.status?.toUpperCase())">
+                <div class="step-icon">
+                  <i class="bi bi-send"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-title">ISSUED</div>
+                  <div class="step-desc text-muted small">Purchase order dispatched to supplier.</div>
+                </div>
+              </div>
+
+              <!-- PARTIALLY_RECEIVED -->
+              <div class="stepper-step" [class.active]="['PARTIALLY_RECEIVED', 'RECEIVED', 'COMPLETE'].includes(trackedPo.status?.toUpperCase())">
+                <div class="step-icon">
+                  <i class="bi bi-hourglass-split"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-title">PARTIALLY RECEIVED</div>
+                  <div class="step-desc text-muted small">Items partially received and logged at warehouse.</div>
+                </div>
+              </div>
+
+              <!-- RECEIVED -->
+              <div class="stepper-step" [class.active]="['RECEIVED', 'COMPLETE'].includes(trackedPo.status?.toUpperCase())">
+                <div class="step-icon">
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-title">RECEIVED</div>
+                  <div class="step-desc text-muted small">All items received at destination warehouse.</div>
+                </div>
+              </div>
+
+              <!-- PROCESS -->
+              <div class="stepper-step" [class.active]="getTrackedPoLineItems().length > 0">
+                <div class="step-icon">
+                  <i class="bi bi-gear-fill"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-title">PROCESS</div>
+                  <div class="step-desc text-muted small">{{ getProcessedUnitsCount() }} Units processed ({{ getPoProgressPercentage() }}%).</div>
+                  <!-- Dynamic Progress Meter -->
+                  <div class="progress mt-1.5" style="height: 4px; width: 140px; background-color: #f1f5f9; border-radius: 4px; overflow: hidden;">
+                    <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="getPoProgressPercentage()" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Shipment -->
+              <div class="stepper-step" [class.active]="!!getTrackedPoShipment()">
+                <div class="step-icon">
+                  <i class="bi bi-truck"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-title">SHIPMENT</div>
+                  <div class="step-desc text-muted small">{{ getShippedUnitsCount() }} Units shipped ({{ getShippedProgressPercentage() }}%).</div>
+                  <!-- Dynamic Progress Meter -->
+                  <div class="progress mt-1.5" style="height: 4px; width: 140px; background-color: #f1f5f9; border-radius: 4px; overflow: hidden;">
+                    <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="getShippedProgressPercentage()" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Complete -->
+              <div class="stepper-step" [class.active]="['COMPLETE', 'RECEIVED'].includes(trackedPo.status?.toUpperCase()) && !!getTrackedPoShipment()">
+                <div class="step-icon">
+                  <i class="bi bi-bookmark-check-fill"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-title">COMPLETE</div>
+                  <div class="step-desc text-muted small">Order completed, verified, and closed.</div>
+                </div>
+              </div>
+
+              <!-- CANCELLED -->
+              <div class="stepper-step" [class.cancelled]="trackedPo.status?.toUpperCase() === 'CANCELLED'" [class.active]="trackedPo.status?.toUpperCase() === 'CANCELLED'" *ngIf="trackedPo.status?.toUpperCase() === 'CANCELLED'">
+                <div class="step-icon">
+                  <i class="bi bi-x-circle-fill"></i>
+                </div>
+                <div class="step-content">
+                  <div class="step-title">CANCELLED</div>
+                  <div class="step-desc text-danger small">Purchase order has been voided/cancelled.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipment / Delivery info (Right) -->
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-sm rounded-3 p-4 bg-white h-100">
+            <h6 class="fw-bold text-dark mb-4 border-bottom pb-3">
+              <i class="bi bi-geo-alt-fill text-info me-2"></i> Purchase Order Tracking
+            </h6>
+
+            <div class="d-flex flex-column gap-3">
+              <!-- Purchase Order Number -->
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-secondary small">Purchase Order Number</span>
+                <span class="badge bg-dark font-monospace px-2.5 py-1.5 fs-7.5">{{ trackedPo.poNumber }}</span>
+              </div>
+
+              <!-- Order Total Volume -->
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-secondary small">Order Total Volume</span>
+                <span class="text-dark fw-bold font-monospace">{{ trackedPo.quantity }} Units</span>
+              </div>
+
+              <!-- Production (Allocated Volume) -->
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-secondary small">Production (Allocated Qty)</span>
+                <span class="text-success fw-bold font-monospace">{{ getTrackedPoAllocatedVolume() }} Units</span>
+              </div>
+
+              <!-- Allocation Progress bar -->
+              <div class="mt-2 border-bottom pb-3">
+                <div class="d-flex justify-content-between small mb-1">
+                  <span class="text-muted">PO Allocation Progress</span>
+                  <span class="fw-bold text-success">{{ getPoProgressPercentage() }}%</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                  <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                       role="progressbar"
+                       [style.width.%]="getPoProgressPercentage()"></div>
+                </div>
+              </div>
+
+              <!-- Product Specifications -->
+              <div>
+                <h6 class="text-uppercase text-secondary fw-bold mb-2.5" style="font-size: 0.72rem; letter-spacing: 0.5px;">Product Specifications</h6>
+                
+                <div *ngIf="getTrackedPoLineItems().length === 0" class="text-center text-muted py-4">
+                  <i class="bi bi-boxes fs-3 d-block mb-2 text-secondary"></i>
+                  <small>No product items allocated to this PO yet.</small>
+                </div>
+
+                <div class="table-responsive" *ngIf="getTrackedPoLineItems().length > 0" style="max-height: 220px; overflow-y: auto;">
+                  <table class="table table-sm table-hover align-middle mb-0" style="font-size: 0.78rem;">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Product</th>
+                        <th class="text-center">Qty</th>
+                        <th class="text-end">Unit Price</th>
+                        <th class="text-end">Total Volume</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (item of getTrackedPoLineItems(); track item.id; let idx = $index) {
+                        <tr>
+                          <td>
+                            <div class="fw-semibold text-dark">{{ item.productName || 'N/A' }}</div>
+                            <div class="text-muted small font-monospace" style="font-size: 0.65rem;">Code: {{ item.productCode || 'N/A' }}</div>
+                          </td>
+                          <td class="text-center font-monospace">{{ item.quantity }}</td>
+                          <td class="text-end font-monospace">${{ item.unitPrice | number:'1.2-2' }}</td>
+                          <td class="text-end font-monospace fw-bold text-primary">{{ getRunningTotalVolume(idx) }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overall Progress Summary Card -->
+      <div *ngIf="trackedPo" class="card border-0 shadow-sm p-4 bg-white rounded-3 mt-4 animate-fade-in">
+        <div class="row align-items-center">
+          <div class="col-md-3 text-center border-end py-2">
+            <div class="text-secondary small text-uppercase fw-bold mb-1" style="letter-spacing: 0.5px;">Overall Tracking Progress</div>
+            <div class="display-6 fw-bold text-primary font-monospace">{{ getOverallTrackingPercentage() }}%</div>
+          </div>
+          <div class="col-md-9 ps-md-4 py-2">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-bold text-dark"><i class="bi bi-activity text-success me-2"></i>Order Fulfillment Status</span>
+              <span class="text-secondary small font-monospace">
+                {{ getActiveStepsCount() }} of 7 Milestones Completed
+              </span>
+            </div>
+            <!-- Overall Progress Bar -->
+            <div class="progress mb-2" style="height: 12px; border-radius: 6px;">
+              <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                   role="progressbar"
+                   [style.width.%]="getOverallTrackingPercentage()"
+                   style="border-radius: 6px;"></div>
+            </div>
+            <div class="text-muted small">
+              Purchase Order is currently in <strong>{{ trackedPo.status }}</strong> state. 
+              Allocated Qty volume is at <strong>{{ getPoProgressPercentage() }}%</strong> ({{ getTrackedPoAllocatedVolume() }} ready of {{ trackedPo.quantity }} Units).
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div style="padding:16px 32px 24px;display:flex;justify-content:flex-end;border-top:1.5px solid #f1f5f9;background:#fff;flex-shrink:0;">
+      <button (click)="closeTrackingModal()" style="background:#5c6470;color:#ffffff;padding:10px 24px;border-radius:8px;border:none;font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.05);">Close</button>
+    </div>
+  </div>
+</div>

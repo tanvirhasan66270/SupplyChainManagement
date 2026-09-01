@@ -1,0 +1,17 @@
+/* Manager Dashboard - Indigo Theme */
+.welcome-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+}
+
+.kpi-card::before {
+  background: linear-gradient(90deg, #6366f1, #818cf8);
+}
+
+.action-card:hover {
+  border-color: #6366f1;
+}
+
+.summary-card:hover {
+  border-color: #c7d2fe;
+}

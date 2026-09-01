@@ -1,0 +1,354 @@
+<nav class="sidebar">
+ <div class="sidebar-brand">
+  <div class="brand-logo-wrapper">
+    <div class="brand-title">
+      <span class="scm-blue">S</span><span class="scm-green">C</span><span class="scm-blue">M</span>
+    </div>
+    <!-- এসসিএম লেখার ঠিক মাঝ বরাবর এবং সুন্দর সাইজের এন্টারপ্রাইজ টেক্সট -->
+    <div class="brand-subtitle">
+      <span class="line"></span>
+      <span class="text">ENTERPRISE</span>
+      <span class="line"></span>
+      
+    </div>
+  </div>
+  
+</div>
+
+  <!-- Navigation -->
+  <div class="sidebar-nav">
+    <!-- Dashboard -->
+    <div class="nav-section">
+      <div class="nav-section-label">Main</div>
+      
+      <!-- Normal Dashboard Link for Non-Admin -->
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" *ngIf="activeRole !== 'ADMIN'">
+        <i class="bi bi-grid-1x2-fill"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <!-- Dashboards Menu for Admin -->
+      <ng-container *ngIf="activeRole === 'ADMIN'">
+        <button type="button" class="nav-item nav-toggle" (click)="toggleDashboardsMenu()">
+          <i class="bi bi-grid-1x2-fill"></i>
+          <span>Dashboards</span>
+          <!-- <i class="bi nav-chevron" [ngClass]="dashboardsOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i> -->
+        </button>
+        <!-- <div class="nav-submenu" *ngIf="dashboardsOpen">
+          <a routerLink="/dashboard/admin" routerLinkActive="active" class="nav-subitem"><i class="bi bi-circle"></i> Admin</a>
+          <a routerLink="/dashboard/manager" routerLinkActive="active" class="nav-subitem"><i class="bi bi-circle"></i> Manager</a>
+          <a routerLink="/dashboard/sales" routerLinkActive="active" class="nav-subitem"><i class="bi bi-circle"></i> Sales</a>
+          <a routerLink="/dashboard/logistics" routerLinkActive="active" class="nav-subitem"><i class="bi bi-circle"></i> Logistics</a>
+          <a routerLink="/dashboard/procurement" routerLinkActive="active" class="nav-subitem"><i class="bi bi-circle"></i> Procurement</a>
+          <a routerLink="/dashboard/commercial" routerLinkActive="active" class="nav-subitem"><i class="bi bi-circle"></i> Commercial</a>
+          <a routerLink="/dashboard/qc-inspector" routerLinkActive="active" class="nav-subitem"><i class="bi bi-circle"></i> QC Inspector</a>
+        </div> -->
+      </ng-container>
+    </div>
+
+    <!-- User Management -->
+    <div class="nav-section" *ngIf="hasAccess(['ADMIN'])">
+      <div class="nav-section-label">User Management</div>
+      <button type="button" class="nav-item nav-toggle" (click)="toggleUsersMenu()">
+        <i class="bi bi-people-fill"></i>
+        <span>Users</span>
+        <i class="bi nav-chevron" [ngClass]="usersOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+      </button>
+
+      <div class="nav-submenu" *ngIf="usersOpen">
+        <a routerLink="/admin" routerLinkActive="active" class="nav-subitem">
+          <i class="bi bi-person"></i> Add Admin
+        </a>
+        <a routerLink="/customer" routerLinkActive="active" class="nav-subitem">
+          <i class="bi bi-person"></i> Add Customer
+        </a>
+        <a routerLink="/manager" routerLinkActive="active" class="nav-subitem">
+          <i class="bi bi-person-badge"></i> Add Manager
+        </a>
+        <a routerLink="/driver" routerLinkActive="active" class="nav-subitem">
+          <i class="bi bi-car-front"></i> Add Driver
+        </a>
+        <a routerLink="/procurement" routerLinkActive="active" class="nav-subitem">
+          <i class="bi bi-cart-check"></i> Add Procurement
+        </a>
+        <a routerLink="/qc-inspector" routerLinkActive="active" class="nav-subitem">
+          <i class="bi bi-clipboard-check"></i> Add QC-Inspector
+        </a>
+        <a routerLink="/logistics-officer" routerLinkActive="active" class="nav-subitem">
+          <i class="bi bi-truck"></i> Add Logistics Officer
+        </a>
+        <a routerLink="/commercial-officer" routerLinkActive="active" class="nav-subitem">
+          <i class="bi bi-briefcase"></i> Commercial Officer
+        </a>
+        <a routerLink="/sales-officer" routerLinkActive="active" class="nav-subitem">
+          <i class="bi bi-cash-stack"></i> Add Sales Officer
+        </a>
+        <a routerLink="/supplier" routerLinkActive="active" class="nav-subitem">
+          <i class="bi bi-truck-flatbed"></i> Add Supplier
+        </a>
+      </div>
+
+      <a routerLink="/country" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-globe"></i>
+        <span>Country</span>
+      </a>
+      <a routerLink="/division" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-map"></i>
+        <span>Division</span>
+      </a>
+      <a routerLink="/district" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-geo-alt"></i>
+        <span>District</span>
+      </a>
+      <a routerLink="/police-station" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-building"></i>
+        <span>Police Station</span>
+      </a>
+    </div>
+
+    <!-- Procurement Section -->
+    <div class="nav-section" *ngIf="hasAccess(['PROCUREMENT', 'MANAGER', 'SUPPLIER', 'LOGISTICS_OFFICER'])">
+      <div class="nav-section-label">Procurement</div>
+      <a routerLink="/purchase-requisition" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['PROCUREMENT', 'MANAGER', 'SUPPLIER'])">
+        <i class="bi bi-file-earmark-text"></i>
+        <span>Purchase Requisition</span>
+      </a>
+     
+      <a routerLink="/purchase-order" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-cart3"></i>
+        <span>Purchase Order</span>
+      </a>
+      <a routerLink="/quotation" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['PROCUREMENT', 'MANAGER', 'SUPPLIER'])">
+        <i class="bi bi-file-richtext"></i>
+        <span>Quotations</span>
+      </a>
+    </div>
+
+     <a routerLink="/product-requirement" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['PROCUREMENT', 'MANAGER', 'LOGISTICS_OFFICER'])">
+        <i class="bi bi-box-seam-fill"></i>
+        <span>Product Requirements</span>
+      </a>
+
+    <!-- Products & Orders -->
+    <div class="nav-section" *ngIf="hasAccess(['ADMIN', 'MANAGER', 'SALES_OFFICER', 'LOGISTICS_OFFICER', 'CUSTOMER', 'COMMERCIAL_OFFICER'])">
+      <div class="nav-section-label">Products & Orders</div>
+      <a routerLink="/category" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['SALES_OFFICER', 'MANAGER'])">
+        <i class="bi bi-tag"></i>
+        <span>Add Category</span>
+      </a>
+      <a routerLink="/product" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['SALES_OFFICER', 'MANAGER', 'CUSTOMER'])">
+        <i class="bi bi-box-seam"></i>
+        <span>Products</span>
+      </a>
+      <a routerLink="/customer-requirements" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['ADMIN', 'MANAGER', 'SALES_OFFICER', 'LOGISTICS_OFFICER'])">
+        <i class="bi bi-person-lines-fill"></i>
+        <span>Customer Requirements</span>
+      </a>
+      <a routerLink="/order" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['ADMIN', 'MANAGER', 'SALES_OFFICER', 'LOGISTICS_OFFICER', 'CUSTOMER', 'COMMERCIAL_OFFICER'])">
+        <i class="bi bi-bag"></i>
+        <span>Customer Orders</span>
+      </a>
+      <a routerLink="/invoice" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['CUSTOMER'])">
+        <i class="bi bi-receipt"></i>
+        <span>Billing</span>
+      </a>
+      <a routerLink="/payment-statement" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['ADMIN', 'MANAGER', 'COMMERCIAL_OFFICER', 'SALES_OFFICER'])">
+        <i class="bi bi-wallet2"></i>
+        <span>Payment Statement</span>
+      </a>
+    </div>
+
+    <!-- Inventory -->
+    <div class="nav-section" *ngIf="hasAccess(['LOGISTICS_OFFICER', 'MANAGER', 'QC_INSPECTOR'])">
+      <div class="nav-section-label">Inventory</div>
+      <a routerLink="/warehouse" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['LOGISTICS_OFFICER', 'MANAGER'])">
+        <i class="bi bi-building"></i>
+        <span>Warehouse</span>
+      </a>
+      <ng-container *ngIf="activeRole !== 'SUPPLIER'">
+        <a routerLink="/inventory" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['LOGISTICS_OFFICER', 'MANAGER'])">
+          <i class="bi bi-stack"></i>
+          <span>Stock</span>
+        </a>
+        <a routerLink="/stock-movement" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['LOGISTICS_OFFICER', 'MANAGER'])">
+          <i class="bi bi-arrow-left-right"></i>
+          <span>Stock Movement</span>
+        </a>
+        <a routerLink="/good-received-note" routerLinkActive="active" class="nav-item">
+          <i class="bi bi-box-arrow-in-down"></i>
+          <span>Goods Received Note</span>
+        </a>
+      </ng-container>
+      
+    </div>
+
+    <!-- Quality Control -->
+    <div class="nav-section" *ngIf="hasAccess(['QC_INSPECTOR', 'MANAGER', 'LOGISTICS_OFFICER'])">
+      <div class="nav-section-label">Quality Control</div>
+      <a routerLink="/qc-inspection" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-clipboard-pulse"></i>
+        <span>Quality Inspections</span>
+      </a>
+    </div>
+
+    <!-- Logistics -->
+    <div class="nav-section" *ngIf="hasAccess(['LOGISTICS_OFFICER', 'DRIVER', 'MANAGER', 'SUPPLIER', 'PROCUREMENT', 'ADMIN', 'COMMERCIAL_OFFICER', 'QC_INSPECTOR'])">
+      <div class="nav-section-label">Logistics</div>
+      <a routerLink="/shipment" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['ADMIN', 'MANAGER', 'LOGISTICS_OFFICER', 'COMMERCIAL_OFFICER', 'SUPPLIER', 'PROCUREMENT', 'QC_INSPECTOR'])">
+        <i class="bi bi-truck"></i>
+        <span>Shipment</span>
+      </a>
+      <ng-container *ngIf="activeRole !== 'SUPPLIER'">
+        <a routerLink="/delivery-trip" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['ADMIN', 'MANAGER', 'LOGISTICS_OFFICER', 'DRIVER'])">
+          <i class="bi bi-signpost"></i>
+          <span>Delivery Trip</span>
+        </a>
+        <a routerLink="/vehicles" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['ADMIN', 'MANAGER', 'LOGISTICS_OFFICER', 'DRIVER'])">
+          <i class="bi bi-truck-front"></i>
+          <span>Vehicles</span>
+        </a>
+      </ng-container>
+      <a routerLink="/poline-item" routerLinkActive="active" class="nav-item d-flex align-items-center justify-content-between" *ngIf="showPoLineItemMenu()">
+        <span class="d-flex align-items-center gap-2">
+          <i class="bi bi-text-indent-left text-teal"></i>
+          <span>PO Line Item</span>
+        </span>
+        <span class="badge bg-success-subtle text-success border border-success px-1.5 py-0.5 rounded" style="font-size: 0.65rem;">Active</span>
+      </a>
+    </div>
+
+    <!-- Commercial -->
+    <div class="nav-section" *ngIf="hasAccess(['COMMERCIAL_OFFICER', 'MANAGER'])">
+      <div class="nav-section-label">Commercial</div>
+      <a routerLink="/letter-of-credit" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-bank"></i>
+        <span>Letter Of Credit</span>
+      </a>
+      <a routerLink="/lcbank" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-bank2"></i>
+        <span>LC Bank</span>
+      </a>
+      <a routerLink="/invoice" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-receipt"></i>
+        <span>Billing</span>
+      </a>
+      <a routerLink="/poline-item" routerLinkActive="active" class="nav-item d-flex align-items-center justify-content-between">
+        <span class="d-flex align-items-center gap-2">
+          <i class="bi bi-text-indent-left text-teal"></i>
+          <span>PO Line Item</span>
+        </span>
+        <span class="badge bg-success-subtle text-success border border-success px-1.5 py-0.5 rounded" style="font-size: 0.65rem;">Active</span>
+      </a>
+    </div>
+
+    <!-- Reports & Logs -->
+    <div class="nav-section" *ngIf="hasAccess(['MANAGER', 'LOGISTICS_OFFICER'])">
+      <div class="nav-section-label">Reports & Logs</div>
+      <a routerLink="/daily-report" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['MANAGER', 'LOGISTICS_OFFICER'])">
+        <i class="bi bi-file-earmark-bar-graph"></i>
+        <span>Daily Report</span>
+      </a>
+      <a routerLink="/activity-log" routerLinkActive="active" class="nav-item" *ngIf="hasAccess(['MANAGER'])">
+        <i class="bi bi-journal-text"></i>
+        <span>Activity Log</span>
+      </a>
+    </div>
+
+    <!-- Communication -->
+    <div class="nav-section" *ngIf="hasAccess(['SUPPLIER', 'MANAGER', 'PROCUREMENT', 'SALES_OFFICER'])">
+      <div class="nav-section-label">Communication</div>
+      <a routerLink="/messages" routerLinkActive="active" class="nav-item">
+        <i class="bi bi-chat-dots"></i>
+        <span>Messages</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer">
+    <div class="sidebar-version">
+      <i class="bi bi-shield-check"></i>
+      <span>v2.6.0</span>
+    </div>
+  </div>
+</nav>
+
+<nav class="sidebar customer-sidebar" *ngIf="activeRole === 'CUSTOMER'">
+ 
+
+  <div class="sidebar-nav py-2">
+    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item rounded-3 mb-1 px-3 py-2.5">
+      <i class="bi bi-grid-fill"></i>
+      <span class="fw-semibold">Dashboard</span>
+    </a>
+    <a routerLink="/order" routerLinkActive="active" class="nav-item rounded-3 mb-1 px-3 py-2.5">
+      <i class="bi bi-bag-check-fill"></i>
+      <span class="fw-semibold">My Orders</span>
+    </a>
+    
+    <a routerLink="/invoice" [queryParams]="{billing: 'true'}" routerLinkActive="active" class="nav-item rounded-3 mb-1 px-3 py-2.5">
+      <i class="bi bi-journal-text"></i>
+      <span class="fw-semibold">Billing Ledger</span>
+    </a>
+    
+        <a routerLink="/product" routerLinkActive="active" class="nav-item rounded-3 mb-1 px-3 py-2.5">
+      <i class="bi bi-heart-fill"></i>
+      <span class="fw-semibold">Wishlist</span>
+    </a>
+    <a routerLink="/messages" routerLinkActive="active" class="nav-item rounded-3 mb-1 px-3 py-2.5">
+      <i class="bi bi-chat-left-dots-fill"></i>
+      <span class="fw-semibold">Support Desk</span>
+    </a>
+   
+  </div>
+
+  <div class="sidebar-help-widget mx-3 my-3 p-3 rounded-4 text-center border-0" style="background-color: #f8fafc; border: 1px solid #f1f5f9 !important;">
+    <div class="text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 44px; height: 44px; background-color: rgba(37, 99, 235, 0.15); color: #2563eb !important;">
+      <i class="bi bi-headset fs-4"></i>
+    </div>
+    <h6 class="fw-bold mb-1 text-dark" style="font-size: 0.8rem;">Need Help?</h6>
+    <p class="text-secondary mb-3" style="font-size: 0.7rem; line-height: 1.3;">Our support team is available 24/7</p>
+    <a routerLink="/messages" class="btn btn-sm btn-primary w-100 fw-bold py-2 rounded-3 fs-8" style="background-color: #2563eb !important; border-color: #2563eb !important;">Contact Support</a>
+  </div>
+</nav>
+
+<!-- DRIVER SIDEBAR -->
+<nav class="sidebar" *ngIf="activeRole === 'DRIVER'" style="background-color: #f8fafc; border-right: 1px solid #f1f5f9;">
+ 
+
+  <div class="sidebar-nav py-3 px-3">
+    <!-- MAIN -->
+    <div class="nav-section mb-4">
+      <div class="nav-section-label text-muted fw-bold mb-2 ps-2" style="font-size: 0.65rem; letter-spacing: 1px;">MAIN</div>
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item rounded-3 mb-1 px-3 py-2.5 d-flex align-items-center gap-3 text-decoration-none" [class.bg-primary]="true" [class.text-white]="true">
+        <i class="bi bi-grid-fill"></i>
+        <span class="fw-semibold">Dashboard</span>
+      </a>
+    </div>
+
+    <!-- LOGISTICS -->
+    <div class="nav-section mb-4">
+      <div class="nav-section-label text-muted fw-bold mb-2 ps-2" style="font-size: 0.65rem; letter-spacing: 1px;">LOGISTICS</div>
+      <a routerLink="/delivery-trip" routerLinkActive="active" class="nav-item rounded-3 mb-1 px-3 py-2.5 d-flex align-items-center gap-3 text-dark text-decoration-none hover-bg-light">
+        <i class="bi bi-truck text-secondary fs-5"></i>
+        <span class="fw-semibold" style="font-size: 0.85rem;">Delivery Trip</span>
+      </a>
+      <a routerLink="/vehicles" routerLinkActive="active" class="nav-item rounded-3 mb-1 px-3 py-2.5 d-flex align-items-center gap-3 text-dark text-decoration-none hover-bg-light">
+        <i class="bi bi-car-front text-secondary fs-5"></i>
+        <span class="fw-semibold" style="font-size: 0.85rem;">Vehicles</span>
+      </a>
+    </div>
+
+    <!-- OPERATIONS -->
+    <div class="nav-section mb-4">
+      <div class="nav-section-label text-muted fw-bold mb-2 ps-2" style="font-size: 0.65rem; letter-spacing: 1px;">OPERATIONS</div>
+      <a routerLink="/messages" routerLinkActive="active" class="nav-item rounded-3 mb-1 px-3 py-2.5 d-flex align-items-center justify-content-between text-dark text-decoration-none hover-bg-light">
+        <div class="d-flex align-items-center gap-3">
+          <i class="bi bi-chat-dots text-secondary fs-5"></i>
+          <span class="fw-semibold" style="font-size: 0.85rem;">Messages</span>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</nav>

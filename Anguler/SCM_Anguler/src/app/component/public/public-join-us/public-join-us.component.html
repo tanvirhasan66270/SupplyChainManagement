@@ -1,0 +1,301 @@
+<div class="public-join-us">
+
+  <!-- JOIN US HERO -->
+  <section class="join-hero text-white py-5">
+    <div class="container py-5">
+      <div class="text-center">
+        <span class="badge bg-white/10 text-white text-uppercase px-3 py-1.5 fw-bold mb-3 small border border-white/20 rounded-pill">
+          <i class="bi bi-person-plus me-1"></i> Join Us
+        </span>
+        <h1 class="display-4 fw-black text-white mb-3">Create Your Free Account</h1>
+        <p class="lead text-white-50 col-lg-6 mx-auto">Start managing your supply chain operations today. Access procurement, freight, customs, and warehouse tools instantly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGISTRATION FORM -->
+  <section class="py-5 bg-white">
+    <div class="container py-4">
+      <div class="row g-5 justify-content-center">
+
+        <!-- Form -->
+        <div class="col-lg-8">
+          <div class="card border-0 shadow-sm p-4 p-md-5 rounded-4">
+
+            @if (registrationSuccess) {
+              <div class="text-center py-4">
+                <div class="success-icon mx-auto mb-3">
+                  <i class="bi bi-check-lg text-white fs-1"></i>
+                </div>
+                <h3 class="fw-bold text-success mb-2">Registration Successful!</h3>
+                <p class="text-secondary mb-4">Your customer account has been created. You can now sign in to access your dashboard.</p>
+                <a routerLink="/login" class="btn btn-primary px-5 py-2 fw-bold rounded-pill">
+                  <i class="bi bi-box-arrow-in-right me-2"></i> Go to Sign In
+                </a>
+              </div>
+            }
+
+            @if (!registrationSuccess) {
+
+              @if (errorMessage) {
+                <div class="alert alert-danger d-flex align-items-center gap-2 py-2">
+                  <i class="bi bi-exclamation-triangle-fill"></i>
+                  <span>{{ errorMessage }}</span>
+                </div>
+              }
+
+              <!-- Step Indicator -->
+              <div class="d-flex align-items-center justify-content-center gap-2 mb-4">
+                <div class="step-dot" [ngClass]="currentStep === 1 ? 'active' : (currentStep > 1 ? 'completed' : '')">
+                  <span>1</span> <small class="ms-1 d-none d-md-inline">Personal</small>
+                </div>
+                <div class="step-line" [ngClass]="currentStep >= 2 ? 'active' : ''"></div>
+                <div class="step-dot" [ngClass]="currentStep === 2 ? 'active' : (currentStep > 2 ? 'completed' : '')">
+                  <span>2</span> <small class="ms-1 d-none d-md-inline">Account</small>
+                </div>
+                <div class="step-line" [ngClass]="currentStep >= 3 ? 'active' : ''"></div>
+                <div class="step-dot" [ngClass]="currentStep === 3 ? 'active' : ''">
+                  <span>3</span> <small class="ms-1 d-none d-md-inline">Geographic</small>
+                </div>
+              </div>
+
+              <!-- ==================== STEP 1: Personal Info ==================== -->
+              @if (currentStep === 1) {
+                <h5 class="fw-bold text-dark mb-4 pb-2 border-bottom">
+                  <i class="bi bi-person-vcard text-primary me-2"></i> Personal Information
+                </h5>
+
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label fw-bold text-secondary small">Full Legal Name *</label>
+                    <input type="text" class="form-control" [class.is-invalid]="nameRef.invalid && nameRef.touched" placeholder="Enter your full legal name" [(ngModel)]="customer.name" name="name" #nameRef="ngModel" required minlength="3">
+                    @if (nameRef.invalid && nameRef.touched) {
+                      <div class="invalid-feedback small">Minimum 3 characters required.</div>
+                    }
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary small">Email Address *</label>
+                    <input type="email" class="form-control" [class.is-invalid]="emailRef.invalid && emailRef.touched" placeholder="you@company.com" [(ngModel)]="customer.email" name="email" #emailRef="ngModel" required email>
+                    @if (emailRef.invalid && emailRef.touched) {
+                      <div class="invalid-feedback small">Valid email is required.</div>
+                    }
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary small">Phone Contact *</label>
+                    <input type="tel" class="form-control" [class.is-invalid]="phoneRef.invalid && phoneRef.touched" placeholder="01XXXXXXXXX" [(ngModel)]="customer.phone" name="phone" #phoneRef="ngModel" required minlength="11">
+                    @if (phoneRef.invalid && phoneRef.touched) {
+                      <div class="invalid-feedback small">Valid 11-digit phone number required.</div>
+                    }
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary small">Password *</label>
+                    <input type="password" class="form-control" [class.is-invalid]="passRef.invalid && passRef.touched" placeholder="Min 6 characters" [(ngModel)]="customer.password" name="password" #passRef="ngModel" required minlength="6">
+                    @if (passRef.invalid && passRef.touched) {
+                      <div class="invalid-feedback small">Minimum 6 characters required.</div>
+                    }
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary small">Confirm Password *</label>
+                    <input type="password" class="form-control" [class.is-invalid]="(confirmPassRef.value !== customer.password) && confirmPassRef.touched" placeholder="Re-enter password" [(ngModel)]="confirmPassword" name="confirmPassword" #confirmPassRef="ngModel" required>
+                    @if ((confirmPassRef.value !== customer.password) && confirmPassRef.touched) {
+                      <div class="invalid-feedback small">Passwords do not match.</div>
+                    }
+                  </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                  <button type="button" class="btn btn-primary px-4 py-2 fw-bold rounded-pill" (click)="nextStep()" [disabled]="nameRef.invalid || emailRef.invalid || phoneRef.invalid || passRef.invalid || confirmPassRef.value !== customer.password">
+                    Next Step <i class="bi bi-arrow-right ms-1"></i>
+                  </button>
+                </div>
+              }
+
+              <!-- ==================== STEP 2: Account Details ==================== -->
+              @if (currentStep === 2) {
+                <h5 class="fw-bold text-dark mb-4 pb-2 border-bottom">
+                  <i class="bi bi-person-lines-fill text-primary me-2"></i> Account Details
+                </h5>
+
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary small">Gender Mapping *</label>
+                    <select class="form-select" [class.is-invalid]="genderRef.invalid && genderRef.touched" [(ngModel)]="customer.gender" name="gender" #genderRef="ngModel" required>
+                      <option value="">-- Choose --</option>
+                      <option value="MALE">Male</option>
+                      <option value="FEMALE">Female</option>
+                      <option value="OTHER">Other</option>
+                    </select>
+                    @if (genderRef.invalid && genderRef.touched) {
+                      <div class="invalid-feedback small">Please select gender.</div>
+                    }
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary small">Date of Birth *</label>
+                    <input type="date" class="form-control" [class.is-invalid]="dobRef.invalid && dobRef.touched" [(ngModel)]="customer.dob" name="dob" #dobRef="ngModel" required>
+                    @if (dobRef.invalid && dobRef.touched) {
+                      <div class="invalid-feedback small">Date of birth is required.</div>
+                    }
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label fw-bold text-secondary small">National ID Number (NID) *</label>
+                    <input type="text" class="form-control" [class.is-invalid]="nidRef.invalid && nidRef.touched" placeholder="199XXXXXXXXXXXXX" [(ngModel)]="customer.nidNumber" name="nidNumber" #nidRef="ngModel" required>
+                    @if (nidRef.invalid && nidRef.touched) {
+                      <div class="invalid-feedback small">NID Number is required.</div>
+                    }
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label fw-bold text-secondary small">Profile Photo</label>
+                    <div class="d-flex align-items-center gap-3">
+                      <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)" #fileInput>
+                      @if (imagePreview) {
+                        <img [src]="imagePreview" class="rounded-circle border" style="width: 56px; height: 56px; object-fit: cover;">
+                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeSelectedFile(fileInput)"><i class="bi bi-x"></i></button>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-between">
+                  <button type="button" class="btn btn-outline-secondary px-4 py-2 fw-bold rounded-pill" (click)="prevStep()">
+                    <i class="bi bi-arrow-left me-1"></i> Back
+                  </button>
+                  <button type="button" class="btn btn-primary px-4 py-2 fw-bold rounded-pill" (click)="nextStep()" [disabled]="genderRef.invalid || dobRef.invalid || nidRef.invalid">
+                    Next Step <i class="bi bi-arrow-right ms-1"></i>
+                  </button>
+                </div>
+              }
+
+              <!-- ==================== STEP 3: Geographic Mapping ==================== -->
+              @if (currentStep === 3) {
+                <h5 class="fw-bold text-dark mb-4 pb-2 border-bottom">
+                  <i class="bi bi-geo-alt text-primary me-2"></i> Geographic Node Mapping
+                </h5>
+
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary small">Country *</label>
+                    <select class="form-select" [(ngModel)]="selectedCountryId" name="country" (change)="onCountryChange()" required>
+                      <option value="">-- Select Country --</option>
+                      <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary small">Division *</label>
+                    <select class="form-select" [(ngModel)]="selectedDivisionId" name="division" (change)="onDivisionChange()" [disabled]="!selectedCountryId" required>
+                      <option value="">-- Select Division --</option>
+                      <option *ngFor="let d of divisions" [value]="d.id">{{ d.name }}</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary small">District *</label>
+                    <select class="form-select" [(ngModel)]="selectedDistrictId" name="district" (change)="onDistrictChange()" [disabled]="!selectedDivisionId" required>
+                      <option value="">-- Select District --</option>
+                      <option *ngFor="let d of districts" [value]="d.id">{{ d.name }}</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary small">Police Station (Thana) *</label>
+                    <select class="form-select" [class.is-invalid]="customer.policeStationId === 0 && isSubmitted" [(ngModel)]="customer.policeStationId" name="policeStation" (change)="onStationChange()" [disabled]="!selectedDistrictId" required>
+                      <option [value]="0">-- Select Station --</option>
+                      <option *ngFor="let ps of policeStations" [value]="ps.id">{{ ps.name }}</option>
+                    </select>
+                    @if (customer.policeStationId === 0 && isSubmitted) {
+                      <div class="invalid-feedback small">Police station is required.</div>
+                    }
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label fw-bold text-secondary small">Street / Area Address *</label>
+                    <input type="text" class="form-control" [class.is-invalid]="streetRef.invalid && streetRef.touched" placeholder="House 12, Road 4, Sector 3" [(ngModel)]="streetAddress" name="streetAddress" #streetRef="ngModel" (input)="generateFullAddress()" required>
+                    @if (streetRef.invalid && streetRef.touched) {
+                      <div class="invalid-feedback small">Street address is required.</div>
+                    }
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label fw-bold text-secondary small">Compiled Node Location String (Auto)</label>
+                    <textarea class="form-control bg-light" rows="2" [value]="customer.address || 'Address will auto compile...'" readonly></textarea>
+                  </div>
+
+                  <div class="col-12 mt-2">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="agreeTermsCheck" [(ngModel)]="agreeTerms" name="agreeTerms">
+                      <label class="form-check-label small text-secondary" for="agreeTermsCheck">
+                        I agree to the <strong class="text-dark">Terms of Service</strong> and <strong class="text-dark">Privacy Policy</strong>.
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-between align-items-center">
+                  <button type="button" class="btn btn-outline-secondary px-4 py-2 fw-bold rounded-pill" (click)="prevStep()">
+                    <i class="bi bi-arrow-left me-1"></i> Back
+                  </button>
+                  <button type="button" class="btn btn-success px-5 py-2 fw-bold rounded-pill" (click)="register()" [disabled]="isSubmitting || customer.policeStationId === 0 || streetRef.invalid">
+                    @if (isSubmitting) {
+                      <span class="spinner-border spinner-border-sm me-2"></span> Creating Account...
+                    } @else {
+                      <i class="bi bi-check-circle me-2"></i> Create Account
+                    }
+                  </button>
+                </div>
+              }
+            }
+          </div>
+        </div>
+
+        <!-- Benefits Sidebar -->
+        <div class="col-lg-4">
+          <div class="card border-0 bg-primary-subtle p-4 rounded-4 mb-4">
+            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-gift text-primary me-2"></i> Free Account Benefits</h5>
+            <ul class="list-unstyled mb-0">
+              <li class="d-flex align-items-start gap-2 mb-3" *ngFor="let benefit of benefits">
+                <i class="bi bi-check-circle-fill text-primary mt-1"></i>
+                <span class="text-secondary small">{{ benefit }}</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-shield-check text-success me-2"></i> Secure & Trusted</h5>
+            <p class="text-secondary small mb-3">Your data is protected with enterprise-grade encryption and strict privacy controls.</p>
+            <div class="d-flex gap-3">
+              <div class="text-center">
+                <i class="bi bi-lock-fill text-primary fs-3"></i>
+                <small class="text-secondary d-block">SSL Encrypted</small>
+              </div>
+              <div class="text-center">
+                <i class="bi bi-shield-fill-check text-success fs-3"></i>
+                <small class="text-secondary d-block">ISO 27001</small>
+              </div>
+              <div class="text-center">
+                <i class="bi bi-patch-check-fill text-warning fs-3"></i>
+                <small class="text-secondary d-block">GDPR Ready</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="card border-0 bg-light p-4 rounded-4">
+            <h6 class="fw-bold text-dark mb-2">Already have an account?</h6>
+            <p class="text-secondary small mb-3">Sign in to access your dashboard and manage your supply chain operations.</p>
+            <a routerLink="/login" class="btn btn-outline-primary w-100 fw-bold rounded-pill">
+              <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>

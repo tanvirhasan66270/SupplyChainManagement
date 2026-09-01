@@ -1,0 +1,423 @@
+<div class="container-fluid py-4 px-4 text-dark">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1"><i class="bi bi-truck text-primary me-2"></i>Fleet Route Deployment Matrix</h4>
+      <p class="text-muted mb-0 small">Control logistics dispatch operations, update route tracking flags, append delivery signatures, and automate captain notifications.</p>
+    </div>
+    <button *ngIf="canViewConsoleActions()" 
+        class="btn btn-primary px-4 py-2 fw-bold shadow-sm text-white fs-7" 
+        (click)="openDrawer()">
+      <i class="bi bi-plus-circle-fill me-2"></i>Dispatch New Route
+    </button>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger shadow-sm border-2 mb-4 fs-7" role="alert">
+      <strong><i class="bi bi-slash-circle-fill me-2"></i>Logistics Interrupted:</strong> {{ errorMessage }}
+    </div>
+  }
+
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-7">
+          <thead class="table-light text-uppercase fs-8 fw-bold text-secondary">
+            <tr>
+              <th class="ps-4">Trip Identifier</th>
+              <th>Consignment Consignee</th>
+              <th>Assigned Captain</th>
+              <th>Fleet Vehicle No</th>
+              <th>Transit Flag</th>
+              <th>Timeline Audit</th>
+              <th>Tracking Docs</th>
+              <th class="text-end px-4" width="180">Console Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (trip of trips; track trip.id) {
+              <tr>
+                <td class="ps-4">
+                  <div class="fw-bold text-dark">TRIP-#{{ trip.id }}</div>
+                  <small class="text-muted font-monospace fs-8">Dispatcher: {{ trip.dispatcherId }}</small>
+                </td>
+                <td>
+                  <div class="fw-bold text-dark">{{ trip.recipientName }}</div>
+                  <small class="text-muted text-truncate d-block" style="max-width: 160px;" [title]="trip.customerAddress">
+                    <i class="bi bi-geo-alt-fill text-danger"></i> {{ trip.customerAddress }}
+                  </small>
+                </td>
+                <td>
+                  <div class="fw-bold text-dark"><i class="bi bi-person-badge-fill text-secondary me-1"></i>{{ trip.driverName }}</div>
+                  <small class="text-muted font-monospace fs-8">{{ trip.driverEmail }}</small>
+                </td>
+                <td><span class="badge bg-light text-dark border border-secondary-subtle font-monospace"><i class="bi bi-car-front-fill me-1"></i>{{ trip.vehiclePlateNumber }}</span></td>
+                <td>
+                  <span class="badge px-2.5 py-1.5 fs-8 text-uppercase"
+                    [ngClass]="{
+                      'bg-dark-subtle text-dark': trip.status === 'PENDING',
+                      'bg-warning-subtle text-warning border border-warning': trip.status === 'IN_TRANSIT',
+                      'bg-success-subtle text-success border border-success': trip.status === 'DELIVERED',
+                      'bg-danger-subtle text-danger border border-danger': trip.status === 'CANCELLED'
+                    }">
+                    {{ trip.status }}
+                  </span>
+                </td>
+                <td>
+                  <div class="fs-8 text-muted">
+                    <span class="d-block"><b>Start:</b> {{ trip.startedAt ? (trip.startedAt | date:'MM-dd HH:mm') : 'Not Triggered' }}</span>
+                    <span class="d-block"><b>End:</b> {{ trip.completedAt ? (trip.completedAt | date:'MM-dd HH:mm') : 'In-flight' }}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex gap-2">
+                    @if (trip.recipientSignature) { <span class="badge bg-info" title="Signature Synced"><i class="bi bi-pen-fill"></i> SIG</span> }
+                    @if (trip.deliveryPhotoUrl) { <span class="badge bg-success" title="Photo Proof Synced"><i class="bi bi-camera-fill"></i> POD</span> }
+                    @if (!trip.recipientSignature && !trip.deliveryPhotoUrl) { <small class="text-muted font-monospace">N/A</small> }
+                  </div>
+                </td>
+                <td class="text-end px-4">
+                  <div class="d-flex justify-content-end gap-1.5">
+                    <button class="btn btn-icon btn-light text-primary" title="Preview Delivery PDF" (click)="openPdfModal(trip)">
+                      <i class="bi bi-file-earmark-pdf-fill"></i>
+                    </button>
+
+                    <button class="btn btn-icon btn-light text-success" *ngIf="canViewStatusActions() && trip.status !== 'DELIVERED'" title="Patch Transit Nodes" (click)="openStatusModal(trip)">
+                      <i class="bi bi-shield-check"></i>
+                    </button>
+                    <button class="btn btn-icon btn-light text-warning" *ngIf="canViewConsoleActions() && trip.status !== 'DELIVERED'" title="Edit Manifest" (click)="edit(trip)">
+                      <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <button class="btn btn-icon btn-light text-danger" *ngIf="canViewConsoleActions()" title="Terminate Pointer" (click)="deleteTrip(trip.id)">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="8" class="text-center py-5 text-muted font-monospace fs-8">
+                  <i class="bi bi-map-fill fs-1 d-block mb-2 text-secondary"></i>No deployment tracking maps localized in datastore cluster.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-drawer shadow" [class.open]="isDrawerOpen">
+    <div class="drawer-header bg-primary text-white p-4 d-flex justify-content-between align-items-center">
+      <h5 class="fw-bold mb-0"><i class="bi bi-compass-fill me-2"></i>{{ isEdit ? 'Modify Transit Settings' : 'Dispatch New Route Node' }}</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4" style="overflow-y: auto; height: calc(100vh - 110px);">
+      <form #tripForm="ngForm" (ngSubmit)="tripForm.valid && submitTrip()">
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Target Customer Account</label>
+          <select class="form-select fs-7" [(ngModel)]="formModel.customerId" name="customerId" required>
+            <option [value]="0">-- Choose Client Nodes --</option>
+            @for (c of customers; track c.id) { <option [value]="c.id">{{ c.name }}</option> }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Select Vehicle Mode</label>
+          <select class="form-select fs-7" [(ngModel)]="selectedVehicleType" name="selectedVehicleType" (change)="onVehicleTypeChange()" required>
+            <option value="">-- Choose Fleet Mode --</option>
+            <option value="TRUCK">🚛 TRUCK DISPATCH</option>
+            <option value="VAN">🚐 VAN INFRASTRUCTURE</option>
+            <option value="BIKE">🏍️ BIKE FAST DELIVERY</option>
+            <option value="AIR">✈️ AIR FREIGHT CORE</option>
+            <option value="RIVER_SHIP">🚢 RIVER SHIFT NETWORK</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Assign Captain & Fleet Asset</label>
+          <select class="form-select fs-7 font-monospace fw-bold" [(ngModel)]="formModel.vehicleId" name="vehicleId" [disabled]="filteredVehicles.length === 0" required>
+            <option [value]="0">
+              {{ filteredVehicles.length === 0 ? '-- Choose Fleet Mode First / No Driver Available --' : '-- Choose Captain (Vehicle Number) --' }}
+            </option>
+            @for (v of filteredVehicles; track v.id) {
+              <option [value]="v.id">
+                👤 {{ v.driverName }} (🚗 {{ v.plateNumber }})
+              </option>
+            }
+          </select>
+          @if (selectedVehicleType && filteredVehicles.length === 0) {
+            <small class="text-danger d-block mt-1 fs-8 font-monospace">
+              <i class="bi bi-exclamation-triangle"></i> Business Notice: No active captain assigned to any {{ selectedVehicleType }} inside fleet database.
+            </small>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Initial Operational State</label>
+          <select class="form-select fs-7 fw-semibold" [(ngModel)]="formModel.status" name="status" [disabled]="!isEdit">
+            <option value="PENDING">📁 PENDING (Manifest Locked)</option>
+            <option value="IN_TRANSIT">🔄 IN_TRANSIT (Dispatched Fleet)</option>
+            <option value="DELIVERED">✅ DELIVERED (Consignment Unloaded)</option>
+            <option value="CANCELLED">❌ CANCELLED (Revoked Manifest)</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Consignment Drop Coordinate Address</label>
+          <textarea class="form-control fs-7" [(ngModel)]="formModel.customerAddress" name="customerAddress" rows="3" placeholder="Input target shipping map coordinates..." required></textarea>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Operational Transit Notes</label>
+          <textarea class="form-control fs-7" [(ngModel)]="formModel.remarks" name="remarks" rows="2" placeholder="Log route delays, damage profiles or general variables..."></textarea>
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 pt-2 border-top">
+          <button class="btn btn-primary text-white flex-grow-1 py-2.5 fw-bold fs-7 text-uppercase" type="submit">
+            <i class="bi bi-cloud-check-fill me-1"></i> {{ isEdit ? 'Update Manifest Matrix' : 'Commit Manifest Deployment' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3 fs-7 text-uppercase" (click)="resetForm()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Status Patch Modal -->
+  @if (isStatusModalOpen) {
+    <div class="modal-overlay d-flex align-items-center justify-content-center">
+      <div class="modal-window bg-white rounded shadow-lg p-4 animate-scale-in">
+        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="bi bi-activity text-success me-1"></i>Patch Route Operations Console</h5>
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Update Status Flag</label>
+          <select class="form-select fs-7 fw-bold" [(ngModel)]="statusUpdateValue">
+            <option value="PENDING">PENDING</option>
+            <option value="IN_TRANSIT">IN_TRANSIT (Trigger Starting Time)</option>
+            <option value="DELIVERED">DELIVERED (Require Signature/POD Image)</option>
+            <option value="CANCELLED">CANCELLED</option>
+          </select>
+        </div>
+
+        @if (statusUpdateValue === 'DELIVERED') {
+          <div class="bg-light p-3 rounded border mb-3 border-secondary-subtle animate-fade-in fs-7">
+            <div class="mb-2">
+              <label class="form-label fw-bold text-dark mb-1">Upload Digital Recipient Signature</label>
+              <input type="file" class="form-control form-control-sm" (change)="onFileChange($event, 'sig')" accept="image/*">
+            </div>
+            <div>
+              <label class="form-label fw-bold text-dark mb-1">Upload Proof of Delivery (POD) Photo</label>
+              <input type="file" class="form-control form-control-sm" (change)="onFileChange($event, 'photo')" accept="image/*">
+            </div>
+          </div>
+        }
+
+        <div class="d-flex gap-2 justify-content-end pt-2 border-top">
+          <button class="btn btn-success text-white px-4 fs-7 fw-bold" (click)="executeStatusPatch()"><i class="bi bi-check-circle-fill me-1"></i>Execute Patch</button>
+          <button class="btn btn-secondary px-4 fs-7" (click)="closeStatusModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Missing Document Upload Modal -->
+  @if (isUploadModalOpen) {
+    <div class="modal-overlay d-flex align-items-center justify-content-center" style="z-index: 1080;">
+      <div class="modal-window bg-white rounded shadow-lg p-4 animate-scale-in" style="width: 400px;">
+        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="bi bi-cloud-arrow-up-fill text-primary me-1"></i>Upload Delivery Docs</h5>
+        
+        <div class="mb-2">
+          <label class="form-label fw-bold text-dark fs-8">Upload Digital Recipient Signature</label>
+          <input type="file" class="form-control form-control-sm fs-7" (change)="onFileChange($event, 'sig')" accept="image/*">
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold text-dark fs-8">Upload Proof of Delivery (POD) Photo</label>
+          <input type="file" class="form-control form-control-sm fs-7" (change)="onFileChange($event, 'photo')" accept="image/*">
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end pt-2 border-top">
+          <button class="btn btn-primary text-white px-3 fs-7 fw-bold" (click)="uploadMissingDocs()"><i class="bi bi-save me-1"></i>Save & Sync</button>
+          <button class="btn btn-secondary px-3 fs-7" (click)="closeUploadModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- PDF Preview Modal -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);" *ngIf="isPdfModalOpen">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+        
+        <div class="modal-header bg-dark text-white px-4 py-3">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-file-earmark-text-fill me-2 text-info"></i> Delivery Trip Manifest Document
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closePdfModal()"></button>
+        </div>
+
+        <div class="modal-body bg-light p-4 d-flex justify-content-center">
+          <div #pdfPreviewContainer class="bg-white p-5 shadow-sm rounded-3 border" style="width: 100%; max-width: 700px; font-family: Arial, sans-serif; color: #000;">
+            
+            <!-- SCM Enterprise Logo Header -->
+            <div class="text-center mb-4 pb-3 border-bottom">
+              <h1 class="fw-bold mb-0" style="letter-spacing: 3px; font-size: 38px;">
+                <span style="color: #0b2545;">S</span><span style="color: #0b2545;">C</span><span style="color: #38b000;">M</span>
+              </h1>
+              <h5 class="fw-bold text-dark mt-1 mb-2" style="letter-spacing: 4px; font-size: 14px;">
+                ENTERPRISE
+              </h5>
+              <div class="d-flex justify-content-center align-items-center gap-3 mt-2 text-uppercase" style="font-size: 11px; font-weight: 700; color: #0b2545;">
+                <span><i class="bi bi-link-45deg text-primary fs-6 me-1 align-middle"></i> CONNECT</span>
+                <span class="text-muted">|</span>
+                <span><i class="bi bi-gear-fill text-success fs-6 me-1 align-middle"></i> OPTIMIZE</span>
+                <span class="text-muted">|</span>
+                <span><i class="bi bi-truck text-primary fs-6 me-1 align-middle"></i> DELIVER</span>
+              </div>
+            </div>
+
+            <div class="text-center mb-4">
+              <h3 class="fw-bold text-dark mb-1">DELIVERY TRIP MANIFEST</h3>
+              <p class="text-muted small"><b>Trip Identifier:</b> TRIP-#{{ selectedTripForPdf?.id }}</p>
+            </div>
+            <hr class="mb-4">
+            
+            <table class="table table-bordered align-middle fs-7 mb-4">
+              <tbody>
+                <tr>
+                  <td class="fw-bold bg-light" style="width: 38%;">Trip ID</td>
+                  <td><span class="badge bg-dark font-monospace">TRIP-#{{ selectedTripForPdf?.id }}</span></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold bg-light">Dispatcher ID</td>
+                  <td>{{ selectedTripForPdf?.dispatcherId }}</td>
+                </tr>
+                <tr>
+                  <td class="fw-bold bg-light">Transit Flag (Status)</td>
+                  <td><span class="badge bg-secondary text-uppercase">{{ selectedTripForPdf?.status }}</span></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold bg-light">Consignee (Customer) Name</td>
+                  <td>{{ selectedTripForPdf?.recipientName || 'N/A' }} (ID: #{{ selectedTripForPdf?.customerId }})</td>
+                </tr>
+                <tr>
+                  <td class="fw-bold bg-light">Customer Delivery Address</td>
+                  <td>{{ selectedTripForPdf?.customerAddress || 'N/A' }}</td>
+                </tr>
+                <tr>
+                  <td class="fw-bold bg-light">Assigned Captain Name</td>
+                  <td>{{ selectedTripForPdf?.driverName || 'N/A' }} (ID: #{{ selectedTripForPdf?.driverId }})</td>
+                </tr>
+                <tr>
+                  <td class="fw-bold bg-light">Captain Contact (Phone & Email)</td>
+                  <td>{{ selectedTripForPdf?.driverPhone || 'N/A' }} | {{ selectedTripForPdf?.driverEmail || 'N/A' }}</td>
+                </tr>
+                <tr>
+                  <td class="fw-bold bg-light">Fleet Vehicle Specifications</td>
+                  <td>
+                    <b>Plate:</b> {{ selectedTripForPdf?.vehiclePlateNumber || 'N/A' }} <br>
+                    @if (selectedTripForPdf?.vehicleModel) {
+                      <small class="text-muted">Model/Specs: {{ selectedTripForPdf!.vehicleModel }}</small>
+                    }
+                  </td>
+                </tr>
+                <tr>
+                  <td class="fw-bold bg-light">Started Timestamp</td>
+                  <td>{{ selectedTripForPdf?.startedAt ? (selectedTripForPdf!.startedAt | date:'medium') : 'Not Triggered' }}</td>
+                </tr>
+                <tr>
+                  <td class="fw-bold bg-light">Completed Timestamp</td>
+                  <td>{{ selectedTripForPdf?.completedAt ? (selectedTripForPdf!.completedAt | date:'medium') : 'In-flight' }}</td>
+                </tr>
+                <tr>
+                  <td class="fw-bold bg-light">Operational Remarks</td>
+                  <td>{{ selectedTripForPdf?.remarks || 'No remarks recorded.' }}</td>
+                </tr>
+                
+                <!-- Digital Recipient Signature -->
+                <tr>
+                  <td class="fw-bold bg-light">Digital Recipient Signature</td>
+                  <td>
+                    @if (selectedTripForPdf?.recipientSignature) {
+                      <div class="text-center">
+                        <img [src]="imageBaseUrl + selectedTripForPdf!.recipientSignature" 
+                             alt="Recipient Signature"
+                             style="max-height: 80px; max-width: 220px; border: 1px solid #ccc; border-radius: 4px; padding: 4px; background: #fafafa;">
+                        <br><small class="text-success fw-bold mt-1 d-block"><i class="bi bi-check-circle-fill"></i> Synced & Attached</small>
+                      </div>
+                    } @else {
+                      <span class="text-muted">Not Provided</span>
+                    }
+                  </td>
+                </tr>
+
+                <!-- Proof of Delivery (POD) Photo -->
+                <tr>
+                  <td class="fw-bold bg-light">Proof of Delivery (POD) Photo</td>
+                  <td>
+                    @if (selectedTripForPdf?.deliveryPhotoUrl) {
+                      <div class="text-center">
+                        <img [src]="imageBaseUrl + selectedTripForPdf!.deliveryPhotoUrl" 
+                             alt="POD Photo"
+                             style="max-height: 80px; max-width: 220px; border: 1px solid #ccc; border-radius: 4px; padding: 4px; background: #fafafa;">
+                        <br><small class="text-success fw-bold mt-1 d-block"><i class="bi bi-check-circle-fill"></i> Synced & Attached</small>
+                      </div>
+                    } @else {
+                      <span class="text-muted">Not Provided</span>
+                    }
+                  </td>
+                </tr>
+
+                @if (userRole !== 'LOGISTICS_OFFICER') {
+                  <tr>
+                    <td class="fw-bold bg-light">Created At</td>
+                    <td>{{ selectedTripForPdf?.createdAt | date:'medium' }}</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold bg-light">Updated At</td>
+                    <td>{{ selectedTripForPdf?.updatedAt | date:'medium' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+
+            <!-- Signature Section -->
+            <div class="row pt-5 border-top text-center" style="display: flex; justify-content: space-between; margin-top: 90px !important; padding-top: 30px !important;">
+              <div style="width: 40%; display: inline-block;">
+                <div style="border-top: 1px solid #000; margin-bottom: 5px; width: 80%; margin-left: auto; margin-right: auto;"></div>
+                <p class="fw-bold mb-0" style="font-size: 12px;">Captain / Driver Signature</p>
+                <p class="text-muted small mb-0" style="font-size: 10px;">(Verified Transit)</p>
+              </div>
+              <div style="width: 40%; display: inline-block;">
+                <div style="border-top: 1px solid #000; margin-bottom: 5px; width: 80%; margin-left: auto; margin-right: auto;"></div>
+                <p class="fw-bold mb-0" style="font-size: 12px;">Authorized Signature</p>
+                <p class="text-muted small mb-0" style="font-size: 10px;">(Logistics Management)</p>
+              </div>
+            </div>
+
+            <div class="text-center mt-4 pt-3 text-muted" style="font-size: 11px;">
+              <p class="mb-0">This is a system-generated secure Fleet Delivery Manifest document.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer bg-white px-4 py-3 border-top">
+          <button type="button" class="btn btn-outline-secondary px-4 fw-bold" (click)="closePdfModal()">Close</button>
+          <button type="button" class="btn btn-success px-4 fw-bold d-flex align-items-center gap-2" (click)="downloadPdfFromModal()">
+            <i class="bi bi-download"></i> Download PDF
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop fade show" *ngIf="isPdfModalOpen"></div>
+
+  @if (isDrawerOpen || isStatusModalOpen || isUploadModalOpen) {
+    <div class="drawer-backdrop" (click)="isDrawerOpen ? closeDrawer() : (isStatusModalOpen ? closeStatusModal() : closeUploadModal())"></div>
+  }
+
+</div>

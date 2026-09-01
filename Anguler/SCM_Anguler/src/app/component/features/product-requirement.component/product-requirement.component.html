@@ -1,0 +1,475 @@
+<div class="container-fluid py-4">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1">Product Requirement Ledger</h4>
+      <p class="text-muted mb-0 small">Track and manage product requirement requests across departments.</p>
+    </div>
+    <div class="d-flex gap-2">
+      @if (canCreate()) {
+      <button class="btn btn-primary px-4 py-2 fw-bold shadow-sm d-flex align-items-center gap-2 rounded-3" (click)="openDrawer()">
+        <i class="bi bi-box-seam-fill"></i>
+        <span>Product Requirement</span>
+      </button>
+      }
+    </div>
+  </div>
+
+  <!-- Error Alert -->
+  @if (errorMessage) {
+  <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
+    <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>Error:</strong> {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="errorMessage = null"></button>
+  </div>
+  }
+
+  <!-- Table Card -->
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light text-uppercase fs-8 tracking-wider">
+            <tr>
+              <th class="ps-4">Reference No</th>
+              <th>Product Name</th>
+              <th>Order No</th>
+              <th>Qty / Unit</th>
+              <th>Urgency</th>
+              <th>Price Range</th>
+              <th>Status</th>
+              <th>Requested By</th>
+              <th>Created At</th>
+              <th class="text-end px-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of requirements; track r.id) {
+            <tr>
+              <td class="ps-4">
+                <span class="badge bg-dark font-monospace fs-8">{{ r.requestReferenceNo }}</span>
+              </td>
+              <td>
+                <div class="fw-bold text-dark">{{ r.productName }}</div>
+                <small class="text-muted">{{ r.description ? r.description.slice(0, 40) : '' }}{{ (r.description && r.description.length > 40) ? '...' : '' }}</small>
+              </td>
+              <td>
+                <span class="badge bg-secondary-subtle text-secondary border font-monospace fs-8">
+                  {{ r.customerOrderNumber || '—' }}
+                </span>
+              </td>
+              <td>
+                <strong class="text-primary font-monospace">{{ r.requestedQuantity }}</strong>
+                <span class="text-muted ms-1 small">{{ r.unit }}</span>
+              </td>
+              <td>
+                <span class="fw-bold fs-8" [ngClass]="getUrgencyClass(r.urgencyLevel)">
+                  ⚡ {{ r.urgencyLevel || 'MEDIUM' }}
+                </span>
+              </td>
+              <td>
+                <span class="font-monospace text-dark small">{{ r.targetPriceRange || '—' }}</span>
+              </td>
+              <td>
+                <span class="badge px-2 py-1 fs-8 text-uppercase fw-bold" [ngClass]="getStatusClass(r.status)">
+                  {{ r.status }}
+                </span>
+              </td>
+              <td>
+                <div class="fw-semibold small text-dark">{{ r.requestedByOfficerName || '—' }}</div>
+              </td>
+              <td>
+                <small class="text-muted font-monospace">
+                  <i class="bi bi-clock me-1"></i>{{ r.createdAt | date:'mediumDate' }}
+                </small>
+              </td>
+              <td class="text-end px-4">
+                <div class="d-flex justify-content-end gap-1">
+
+                  <!-- 📄 PDF — View document -->
+                  <button class="btn btn-icon btn-light text-danger border-0" title="View PDF" (click)="openPdfModal(r)">
+                    <i class="bi bi-file-earmark-pdf-fill fs-6"></i>
+                  </button>
+
+                  <!-- 🛡️ Status Update — ADMIN + PROCUREMENT -->
+                  @if (canUpdateStatus()) {
+                  <button class="btn btn-icon btn-light text-success border-0 shadow-sm" title="Update Status"
+                    (click)="openStatusModal(r)">
+                    <i class="bi bi-shield-check fs-6"></i>
+                  </button>
+                  }
+
+                  <!-- ✏️ Edit — ADMIN সবসময়, LOGISTICS_OFFICER শুধু APPROVED ছাড়া -->
+                  @if (canEdit(r)) {
+                  <button class="btn btn-icon btn-light text-warning border-0" title="Edit" (click)="edit(r)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  }
+
+                  <!-- 🗑️ Delete — শুধু ADMIN -->
+                  @if (canDelete()) {
+                  <button class="btn btn-icon btn-light text-danger border-0" title="Delete" (click)="delete(r.id)">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                  }
+
+                </div>
+              </td>
+            </tr>
+            }
+            @empty {
+            <tr>
+              <td colspan="10" class="text-center py-5 text-muted">
+                <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+                No product requirement records found.
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+        MODAL CARD FORM: RECORD / EDIT PRODUCT REQUIREMENT
+  ════════════════════════════════════════════════════════════════ -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(15, 23, 42, 0.65);" *ngIf="isDrawerOpen">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 rounded-4 shadow-2xl overflow-hidden" style="background: #ffffff;">
+
+        <!-- Dark Gradient Top Header -->
+        <div class="modal-header px-4 py-3 border-0 d-flex justify-content-between align-items-center"
+          style="background: linear-gradient(135deg, #1e1b4b 0%, #2e2870 50%, #3730a3 100%);">
+          <div class="d-flex align-items-center gap-3">
+            <div class="rounded-3 d-flex align-items-center justify-content-center"
+              style="width: 44px; height: 44px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(4px);">
+              <i class="bi bi-arrow-left-right text-white fs-5"></i>
+            </div>
+            <div>
+              <h5 class="modal-title fw-bold text-white mb-0" style="letter-spacing: -0.2px;">
+                {{ isEdit ? 'Update Product Requirement' : 'Record Product Requirement' }}
+              </h5>
+              <small class="text-white-50" style="font-size: 12px;">
+                Log requisition specifications, target quantities, and officer remarks
+              </small>
+            </div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" style="opacity: 0.8;" (click)="closeDrawer()"></button>
+        </div>
+
+        <!-- Form Body -->
+        <div class="modal-body p-4 bg-white" style="max-height: 70vh; overflow-y: auto;">
+          <form #reqForm="ngForm" (ngSubmit)="reqForm.valid && save()" id="productReqForm">
+
+            <div class="row g-3 mb-3">
+              <!-- Product Name -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-secondary">Product Item Name <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-box"></i></span>
+                  <input type="text" class="form-control bg-light border-start-0 fs-7"
+                    [class.is-invalid]="nameRef.invalid && (nameRef.touched || reqForm.submitted)"
+                    [(ngModel)]="form.productName" name="productName" #nameRef="ngModel" required
+                    placeholder="e.g. Industrial Steel Pipe / Raw Cotton">
+                </div>
+                @if (nameRef.invalid && (nameRef.touched || reqForm.submitted)) {
+                <div class="text-danger small fw-bold mt-1">Product name is required!</div>
+                }
+              </div>
+
+              <!-- Customer Order Number -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-secondary">Customer Order Number</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-receipt"></i></span>
+                  <input type="text" class="form-control bg-light border-start-0 fs-7 font-monospace"
+                    [(ngModel)]="form.customerOrderNumber" name="customerOrderNumber"
+                    placeholder="e.g. ORD-1786341321716">
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <!-- Quantity -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-secondary">Movement Quantity <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-123"></i></span>
+                  <input type="number" class="form-control bg-light border-start-0 fs-7 font-monospace fw-bold"
+                    [class.is-invalid]="qtyRef.invalid && (qtyRef.touched || reqForm.submitted)"
+                    [(ngModel)]="form.requestedQuantity" name="requestedQuantity" #qtyRef="ngModel" required min="1"
+                    placeholder="0">
+                </div>
+                @if (qtyRef.invalid && (qtyRef.touched || reqForm.submitted)) {
+                <div class="text-danger small fw-bold mt-1">Quantity must be at least 1!</div>
+                }
+              </div>
+
+              <!-- Unit -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-secondary">Packaging Unit</label>
+                <select class="form-select bg-light fs-7" [(ngModel)]="form.unit" name="unit">
+                  @for (u of units; track u) { <option [value]="u">{{ u }}</option> }
+                </select>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <!-- Urgency Level -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-secondary">Urgency Priority Level</label>
+                <select class="form-select bg-light fs-7 fw-bold" [(ngModel)]="form.urgencyLevel" name="urgencyLevel">
+                  @for (u of urgencyLevels; track u) { <option [value]="u">⚡ {{ u }}</option> }
+                </select>
+              </div>
+
+              <!-- Target Price Range -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold small text-secondary">Target Price Range</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-tag"></i></span>
+                  <input type="text" class="form-control bg-light border-start-0 fs-7 font-monospace"
+                    [(ngModel)]="form.targetPriceRange" name="targetPriceRange"
+                    placeholder="e.g. ৳500 - ৳800 per unit">
+                </div>
+              </div>
+            </div>
+
+            <!-- Officer Name (Single field kept for requesting officer display) -->
+            <div class="mb-3">
+              <label class="form-label fw-bold small text-secondary">
+                Requesting Officer Name <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-1" style="font-size: 10px;">Auto-filled</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-person-fill"></i></span>
+                <input type="text" class="form-control bg-light border-start-0 fs-7 fw-bold text-dark"
+                  [(ngModel)]="form.requestedByOfficerName" name="requestedByOfficerName"
+                  readonly placeholder="Auto-filled from login session">
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+              <label class="form-label fw-bold small text-secondary">Product Specification & Details</label>
+              <textarea class="form-control bg-light fs-7" rows="2"
+                [(ngModel)]="form.description" name="description"
+                placeholder="Product technical specifications, grade, measurements, brand requirements..."></textarea>
+            </div>
+
+            <!-- Remarks & Audit Notes -->
+            <div class="mb-2">
+              <label class="form-label fw-bold small text-secondary">Remarks & Audit Notes</label>
+              <textarea class="form-control bg-light fs-7" rows="2"
+                [(ngModel)]="form.procurementRemarks" name="procurementRemarks"
+                placeholder="Cause of requirement or procurement notes..."></textarea>
+            </div>
+
+            @if (errorMessage) {
+            <div class="alert alert-danger py-2 fs-8 fw-bold mt-3 mb-0">
+              <i class="bi bi-exclamation-triangle-fill me-1"></i>{{ errorMessage }}
+            </div>
+            }
+
+          </form>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer bg-light px-4 py-3 border-top d-flex justify-content-end align-items-center gap-2">
+          <button type="button" class="btn btn-light px-4 fw-semibold text-secondary rounded-pill border-0" (click)="closeDrawer()">
+            Cancel
+          </button>
+          <button type="submit" form="productReqForm"
+            class="btn btn-primary px-4 py-2 fw-bold text-white rounded-pill shadow-sm d-flex align-items-center gap-2"
+            style="background: #2563eb; border: none;">
+            <i class="bi bi-arrow-left-right"></i>
+            <span>{{ isEdit ? 'Commit Update Ledger' : 'Commit Requirement Ledger' }}</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="isDrawerOpen"></div>
+
+  <!-- ═══════════════════════════════════════════════════
+        PDF Preview Modal
+  ═══════════════════════════════════════════════════ -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.65);"
+    *ngIf="isPdfModalOpen">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+
+        <div class="modal-header bg-dark text-white px-4 py-3">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-file-earmark-text-fill me-2 text-danger"></i> Product Requirement Document Preview
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closePdfModal()"></button>
+        </div>
+
+        <div class="modal-body bg-light p-4 d-flex justify-content-center">
+          <!-- Printable Document -->
+          <div #pdfContainer class="bg-white p-5 shadow-sm rounded-3 border"
+            style="width: 794px; font-family: Arial, sans-serif; color: #000; line-height: 1.7;">
+
+            <!-- Company Header -->
+            <div class="text-center mb-4 pb-3 border-bottom">
+              <h1 class="fw-bold mb-0"
+                style="letter-spacing: 3px; font-size: 34px; font-family: 'Segoe UI', sans-serif;">
+                <span style="color: #0b2545;">S</span><span style="color: #0b2545;">C</span><span
+                  style="color: #38b000;">M</span>
+              </h1>
+              <h6 class="fw-bold text-dark mt-1 mb-2" style="letter-spacing: 4px; font-size: 12px;">
+                ENTERPRISE LOGISTICS NODE
+              </h6>
+              <div class="d-flex justify-content-center align-items-center gap-3 mt-2 text-uppercase"
+                style="font-size: 11px; font-weight: 700; color: #0b2545;">
+                <span><i class="bi bi-link-45deg text-primary me-1"></i>CONNECT</span>
+                <span class="text-muted">|</span>
+                <span><i class="bi bi-gear-fill text-success me-1"></i>OPTIMIZE</span>
+                <span class="text-muted">|</span>
+                <span><i class="bi bi-truck text-primary me-1"></i>DELIVER</span>
+              </div>
+            </div>
+
+            <!-- Document Title -->
+            <div class="text-center mb-4">
+              <h3 class="fw-bold text-dark mb-1" style="letter-spacing: 1px;">PRODUCT REQUIREMENT REQUEST</h3>
+              <p class="text-muted small mb-0">
+                <b>Ref:</b> {{ selectedForPdf?.requestReferenceNo }} &nbsp;|&nbsp;
+                <b>ID:</b> #{{ selectedForPdf?.id }}
+              </p>
+            </div>
+
+            <!-- Info Grid -->
+            <div class="row g-3 mb-4 fs-7 bg-light p-3 rounded border border-secondary-subtle">
+              <div class="col-6">
+                <span class="text-uppercase font-monospace text-secondary fs-8 d-block fw-bold mb-2">Request Details</span>
+                <table style="width:100%; font-size:13px;">
+                  <tr><td style="padding:4px 0; color:#555; width:45%;">Product Name:</td>
+                    <td style="padding:4px 0;"><strong>{{ selectedForPdf?.productName }}</strong></td></tr>
+                  <tr><td style="padding:4px 0; color:#555;">Order Number:</td>
+                    <td style="padding:4px 0; font-family:monospace;">{{ selectedForPdf?.customerOrderNumber || '—' }}</td></tr>
+                  <tr><td style="padding:4px 0; color:#555;">Quantity:</td>
+                    <td style="padding:4px 0;"><strong style="color:#0b5ed7;">{{ selectedForPdf?.requestedQuantity }} {{ selectedForPdf?.unit }}</strong></td></tr>
+                  <tr><td style="padding:4px 0; color:#555;">Price Range:</td>
+                    <td style="padding:4px 0;">{{ selectedForPdf?.targetPriceRange || '—' }}</td></tr>
+                  <tr><td style="padding:4px 0; color:#555;">Urgency Level:</td>
+                    <td style="padding:4px 0;"><strong>{{ selectedForPdf?.urgencyLevel }}</strong></td></tr>
+                </table>
+              </div>
+              <div class="col-6 border-start">
+                <span class="text-uppercase font-monospace text-secondary fs-8 d-block fw-bold mb-2">Status & Officer</span>
+                <table style="width:100%; font-size:13px;">
+                  <tr><td style="padding:4px 0; color:#555; width:45%;">Status:</td>
+                    <td style="padding:4px 0;"><strong>{{ selectedForPdf?.status }}</strong></td></tr>
+                  <tr><td style="padding:4px 0; color:#555;">Requested By:</td>
+                    <td style="padding:4px 0;">{{ selectedForPdf?.requestedByOfficerName || '—' }}</td></tr>
+                  <tr><td style="padding:4px 0; color:#555;">Created At:</td>
+                    <td style="padding:4px 0;">{{ selectedForPdf?.createdAt | date:'dd MMM yyyy, hh:mm a' }}</td></tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-4">
+              <h6 class="fw-bold text-dark border-bottom pb-2 mb-2" style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
+                Product Description / Specification
+              </h6>
+              <p style="font-size: 13px; color: #333; background: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid #dee2e6;">
+                {{ selectedForPdf?.description || 'No description provided.' }}
+              </p>
+            </div>
+
+            <!-- Procurement Remarks -->
+            @if (selectedForPdf?.procurementRemarks) {
+            <div class="mb-4">
+              <h6 class="fw-bold text-dark border-bottom pb-2 mb-2" style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
+                Procurement Remarks
+              </h6>
+              <p style="font-size: 13px; color: #333; background: #fff3cd; padding: 12px; border-radius: 6px; border: 1px solid #ffc107; font-style: italic;">
+                {{ selectedForPdf?.procurementRemarks }}
+              </p>
+            </div>
+            }
+
+            <!-- Signature Section -->
+            <div style="display: flex; justify-content: space-between; margin-top: 60px; padding-top: 20px; border-top: 1px solid #ddd;">
+              <div style="width: 30%; text-align: center;">
+                <div style="border-top: 1px solid #000; width: 90%; margin: 0 auto 5px;"></div>
+                <p style="font-size: 11px; font-weight: bold; margin: 0;">Logistics Officer</p>
+                <p style="font-size: 9px; color: #666; margin: 0;">(Requested & Submitted)</p>
+              </div>
+              <div style="width: 30%; text-align: center;">
+                <div style="border-top: 1px solid #000; width: 90%; margin: 0 auto 5px;"></div>
+                <p style="font-size: 11px; font-weight: bold; margin: 0;">Procurement Officer</p>
+                <p style="font-size: 9px; color: #666; margin: 0;">(Reviewed & Verified)</p>
+              </div>
+              <div style="width: 30%; text-align: center;">
+                <div style="border-top: 1px solid #000; width: 90%; margin: 0 auto 5px;"></div>
+                <p style="font-size: 11px; font-weight: bold; margin: 0;">Manager / Admin</p>
+                <p style="font-size: 9px; color: #666; margin: 0;">(Authorized & Approved)</p>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-4 pt-3 border-top text-muted" style="font-size: 10px;">
+              <p class="mb-0">This is a system-generated Product Requirement document from SCM Enterprise Logistics Node.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer bg-white px-4 py-3 border-top">
+          <button class="btn btn-outline-secondary px-4 fw-bold" (click)="closePdfModal()">Close</button>
+          <button class="btn btn-danger px-4 fw-bold d-flex align-items-center gap-2" (click)="downloadPdf()">
+            <i class="bi bi-download"></i> Download PDF
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="isPdfModalOpen"></div>
+
+  <!-- ═══════════════════════════════════════════════════
+        Status Update Modal
+  ═══════════════════════════════════════════════════ -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);"
+    *ngIf="isStatusModalOpen">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+        <div class="modal-header bg-dark text-white px-4 py-3">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-gear-wide-connected me-2 text-primary"></i>Update Requirement Status
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeStatusModal()"></button>
+        </div>
+        <div class="modal-body p-4 bg-light">
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Reference</label>
+            <div class="font-monospace fw-bold text-dark fs-6">{{ selectedForStatus?.requestReferenceNo }}</div>
+            <small class="text-muted">{{ selectedForStatus?.productName }}</small>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-uppercase text-secondary">Select New Status</label>
+            <select class="form-select fw-bold text-primary" [(ngModel)]="newStatus">
+              @for (st of availableStatuses; track st) {
+              <option [value]="st">{{ st }}</option>
+              }
+            </select>
+            <small class="text-muted d-block mt-1">This will instantly update the requirement's approval state.</small>
+          </div>
+        </div>
+        <div class="modal-footer bg-white px-4 py-3">
+          <button class="btn btn-outline-secondary px-4 fw-bold rounded-pill" (click)="closeStatusModal()">Cancel</button>
+          <button class="btn btn-primary px-4 fw-bold rounded-pill d-flex align-items-center gap-2" (click)="updateStatus()">
+            <i class="bi bi-check2-circle"></i> Save Status
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="isStatusModalOpen"></div>
+
+</div>

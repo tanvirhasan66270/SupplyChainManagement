@@ -1,0 +1,5 @@
+- [x] Implement enhanced `generateStatementPdf` in `PdfGenerator.java`
+    - [x] Add branded header and summary metrics
+    - [x] Implement detailed invoice table with formatting
+    - [x] Add multi-page support for long invoice lists
+- [x] Verify PDF generation from the Billing Page

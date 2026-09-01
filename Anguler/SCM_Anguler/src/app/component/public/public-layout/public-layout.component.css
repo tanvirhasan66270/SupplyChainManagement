@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.public-main-content {
+  flex: 1;
+  background-color: #f8fafc;
+  transition: background-color 0.25s ease;
+}
+
+body.dark-theme .public-main-content {
+  background-color: #0f172a;
+}

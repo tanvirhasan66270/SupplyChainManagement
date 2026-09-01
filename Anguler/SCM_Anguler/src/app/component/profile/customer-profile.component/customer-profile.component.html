@@ -1,0 +1,184 @@
+<div class="container-fluid py-4 px-4 bg-light min-vh-100 text-dark" *ngIf="customerData">
+
+  <!-- ─── GLOBAL operational ALERT LINE ─── -->
+  @if (errorMessage) {
+    <div class="alert alert-danger shadow-sm border-2 mb-4 fs-7" role="alert">
+      <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>System Alert:</strong> {{ errorMessage }}
+    </div>
+  }
+
+  <!-- Header Banner matching Supplier Portal style -->
+  <div class="d-flex justify-content-between align-items-center mb-4 p-4 rounded-4 shadow-sm" style="background: linear-gradient(135deg, #fefefe 0%, #fffbeb 100%); border: 1px solid #fef3c7;">
+    <div>
+      <h3 class="fw-bold mb-1 text-dark">Customer Engagement Hub</h3>
+      <p class="text-secondary mb-0 fs-7.5">Customer: <strong class="text-primary">{{ customerData.name }}</strong> | Order tracking, invoicing, and profile settings.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary px-3.5 py-2 fw-semibold rounded-3 fs-8" routerLink="/dashboard">
+        <i class="bi bi-arrow-left me-1"></i> Dashboard
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── 3-COLUMN STRUCTURE MOCK GRID ─── -->
+  <div class="row g-4 bg-white p-4 rounded shadow-sm">
+    
+    <!-- =========================================================
+         COLUMN 1: YOUR AVATAR PROFILE (বাম পাশের ৩ কলাম)
+         ========================================================= -->
+    <div class="col-xl-3 text-center border-end pe-xl-4 pb-4 pb-xl-0">
+      <h6 class="text-muted fw-bold small text-uppercase mb-4 tracking-wide">Your Profile</h6>
+      
+      <!-- Avatar Box Frame -->
+      <div class="position-relative d-inline-block mx-auto mb-3">
+        <ng-container *ngIf="getProfileImage(); else noImage">
+          <img [src]="getProfileImage()" 
+               alt="Customer Identity" 
+               (error)="onImageError()"
+               class="rounded-circle border shadow-sm img-thumbnail"
+               style="width: 140px; height: 140px; object-fit: cover;">
+        </ng-container>
+        <ng-template #noImage>
+          <div class="rounded-circle shadow-sm d-flex justify-content-center align-items-center bg-primary text-white mx-auto" style="width: 140px; height: 140px; font-size: 3.5rem; font-weight: bold;">
+            {{ getInitials() }}
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Dynamic Basic Meta -->
+      <h4 class="fw-bold text-dark mb-1">{{ customerData.name }}</h4>
+      <p class="text-secondary small font-monospace mb-4">Role: {{ customerData.role }}</p>
+
+      <!-- Scoreboard metrics -->
+      <div class="row g-2 text-center mb-4 py-2 bg-light rounded mx-1">
+        <div class="col-6 border-end">
+          <span class="fw-bold text-dark fs-5 font-monospace">4.9</span>
+          <span class="text-muted fs-8 d-block text-uppercase fw-semibold"><i class="bi bi-star-fill text-warning me-1"></i>Score</span>
+        </div>
+        <div class="col-6">
+          <span class="fw-bold text-success fs-5 font-monospace">Active</span>
+          <span class="text-muted fs-8 d-block text-uppercase fw-semibold"><i class="bi bi-check-circle-fill text-success me-1"></i>Status</span>
+        </div>
+      </div>
+
+      <!-- Image upload section -->
+      <div class="px-2">
+        <label class="btn btn-outline-secondary btn-sm w-100 fs-7.5 fw-semibold mb-2 cursor-pointer">
+          <i class="bi bi-camera me-1"></i> Choose New Image
+          <input type="file" (change)="onFileChange($event)" accept="image/*" class="d-none">
+        </label>
+        
+        <button class="btn btn-primary btn-sm w-100 fs-7.5 fw-bold text-uppercase py-2 shadow-sm animate-fade" 
+                [disabled]="!selectedFile" 
+                (click)="uploadAvatar()">
+          <i class="bi bi-cloud-arrow-up-fill me-1"></i> Upload New Avatar
+        </button>
+      </div>
+
+      <!-- Completion progress bar -->
+      <div class="mt-4 p-3 bg-light rounded text-start fs-8">
+        <div class="d-flex justify-content-between align-items-center mb-2 fw-semibold">
+          <span class="text-secondary">Completion Pipeline:</span>
+          <span class="text-primary fw-bold font-monospace">{{ profileCompletion }}%</span>
+        </div>
+        <div class="progress mb-3" style="height: 6px;">
+          <div class="progress-bar bg-primary" role="progressbar" [style.width.%]="profileCompletion"></div>
+        </div>
+        <div class="d-flex flex-column gap-1.5 text-muted">
+          <div><i class="bi" [ngClass]="hasGeneralInfo ? 'bi-check-circle-fill text-success' : 'bi-circle'"></i> Customer Name Node</div>
+          <div><i class="bi" [ngClass]="hasContactInfo ? 'bi-check-circle-fill text-success' : 'bi-circle'"></i> Communication Lines</div>
+          <div><i class="bi" [ngClass]="hasPhoto ? 'bi-check-circle-fill text-success' : 'bi-circle'"></i> Identity Avatar Image</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         COLUMN 2: PERSONAL & SETTINGS (মাঝখানের ৫ কলাম)
+         ========================================================= -->
+    <div class="col-xl-5 border-end px-xl-4 pb-4 pb-xl-0">
+      <h6 class="text-muted fw-bold small text-uppercase mb-4 tracking-wide">Edit Personal Settings</h6>
+      
+      <form #infoForm="ngForm">
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-semibold small mb-1">Full Customer Name</label>
+          <input type="text" class="form-control form-control-md fs-7.5" [(ngModel)]="editModel.name" name="name" required placeholder="Enter full name">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-semibold small mb-1">Corporate Secure Email</label>
+          <input type="email" class="form-control form-control-md fs-7.5 font-monospace" [(ngModel)]="editModel.email" name="email" required placeholder="name@company.com">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-semibold small mb-1">Secure Mobile Route</label>
+          <input type="text" class="form-control form-control-md fs-7.5 font-monospace" [(ngModel)]="editModel.phone" name="phone" required placeholder="+8801...">
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label text-secondary fw-semibold small mb-1">Gender Node</label>
+            <select class="form-select fs-7.5" [(ngModel)]="editModel.gender" name="gender">
+              <option value="MALE">MALE</option>
+              <option value="FEMALE">FEMALE</option>
+              <option value="OTHER">OTHER</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-secondary fw-semibold small mb-1">Date of Birth</label>
+            <input type="date" class="form-control fs-7.5 font-monospace" [(ngModel)]="editModel.dob" name="dob">
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label text-secondary fw-semibold small mb-1">National ID (NID)</label>
+            <input type="text" class="form-control fs-7.5 font-monospace" [(ngModel)]="editModel.nidNumber" name="nidNumber" placeholder="NID Number">
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- =========================================================
+         COLUMN 3: LOGISTICS & SUBMIT (ডান পাশের ৪ কলাম)
+         ========================================================= -->
+    <div class="col-xl-4 ps-xl-4">
+      <h6 class="text-muted fw-bold small text-uppercase mb-4 tracking-wide">Logistics & Location Metadata</h6>
+      
+      <!-- Read-only Location Hierarchies -->
+      <div class="mb-3 bg-light p-3 rounded border fs-7.5 text-secondary">
+        <label class="d-block text-uppercase small font-monospace fw-bold mb-2 text-primary"><i class="bi bi-geo-alt-fill me-1"></i>System Track Terminal</label>
+        <div class="mb-1.5"><strong>Division Node:</strong> <span class="text-dark font-monospace ms-1">{{ customerData.divisionName || 'N/A' }}</span></div>
+        <div class="mb-1.5"><strong>District Sector:</strong> <span class="text-dark font-monospace ms-1">{{ customerData.districtName || 'N/A' }}</span></div>
+        <div><strong>Police Station:</strong> <span class="text-dark font-monospace ms-1">{{ customerData.policeStationName || 'N/A' }}</span></div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label text-secondary fw-semibold small mb-1">Detailed Dispatch Address HQ</label>
+        <textarea 
+          class="form-control fs-7.5 bg-light text-dark border-light" 
+          rows="4" 
+          [value]="editModel.address" 
+          name="address" 
+          readonly 
+          style="cursor: not-allowed; resize: none;">
+        </textarea>
+      </div>
+
+      <!-- Audit dates -->
+      <div class="mb-4 font-monospace fs-8 text-muted bg-light p-2.5 rounded border-dashed">
+        <div><i class="bi bi-clock me-1"></i> Registered: {{ customerData.createdAt | date:'medium' }}</div>
+      </div>
+
+      <!-- Update button -->
+      <div class="pt-2">
+        <button class="btn btn-primary btn-md w-100 py-2.5 fw-bold text-uppercase shadow-sm d-flex align-items-center justify-content-center gap-2 fs-7" 
+                [disabled]="!infoForm.valid" 
+                (click)="updateProfileData()">
+          <i class="bi bi-shield-check"></i> Update Profile Registry
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

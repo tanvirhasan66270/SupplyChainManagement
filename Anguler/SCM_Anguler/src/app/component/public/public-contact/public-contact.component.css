@@ -1,0 +1,19 @@
+.public-contact {
+  background-color: #f8fafc;
+}
+
+.contact-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+}
+
+.office-item {
+  transition: all 0.2s ease;
+}
+
+.office-item:hover {
+  transform: translateX(4px);
+}
+
+body.dark-theme .public-contact {
+  background-color: #0f172a;
+}

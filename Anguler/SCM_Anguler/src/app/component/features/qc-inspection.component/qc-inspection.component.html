@@ -1,0 +1,452 @@
+<div class="container-fluid py-4 px-4">
+
+  <div
+    class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1">Quality Control (QC) Inspections</h4>
+      <p class="text-muted mb-0 small">Audit arriving cargo batches, flag material defects, compile SWIFT lab records,
+        and verify checkpoint sheets.</p>
+    </div>
+    <button *ngIf="userRole !== 'LOGISTICS_OFFICER'" class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 shadow-sm fw-semibold"
+      (click)="openDrawer()">
+      <i class="bi bi-shield-check me-2"></i>Execute New Inspection
+    </button>
+  </div>
+
+  @if (errorMessage) {
+  <div class="alert alert-danger shadow-sm border-2 mb-4 fs-7" role="alert">
+    <strong><i class="bi bi-exclamation-octagon-fill me-2"></i>QC Core Exception:</strong> {{ errorMessage }}
+  </div>
+  }
+
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-7">
+          <thead class="table-light text-uppercase fs-8">
+            <tr>
+              <th class="ps-4">Audit ID Node</th>
+              <th>Linked Cargo GRN</th>
+              <th>Target Product</th>
+              <th>QC Inspector Personnel</th>
+              <th>Sample Data (Size / Def)</th>
+              <th>Evaluation Grade</th>
+              <th>Timestamp</th>
+              <th class="text-end px-4" width="220">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+  @for (q of inspections; track q.id) {
+  <tr>
+    <td class="ps-4">
+      <span class="badge bg-secondary font-monospace">QC-NODE-#{{ q.id }}</span>
+      @if (q.labTestReport) {
+      <small class="d-block text-success font-monospace mt-1"><i class="bi bi-file-earmark-medical-fill"></i>
+        Lab Report Attached</small>
+      }
+    </td>
+    <td>
+      <div class="fw-bold font-monospace text-dark">{{ q.grnNumber }}</div>
+    </td>
+    <td>
+      <div class="fw-bold text-secondary">{{ q.productName }}</div>
+      <small class="text-muted font-sans bg-light px-1 border rounded">Type: {{ q.inspectionType }}</small>
+    </td>
+    <td>
+      <div class="fw-semibold text-dark">{{ q.inspectedByName }}</div>
+    </td>
+    <td>
+      <div class="font-monospace">
+        Sample Batch: <b class="text-dark">{{ q.sampleSize }}</b> /
+        Defects: <span [class.text-danger]="q.defectsFound > 0" class="fw-bold">{{ q.defectsFound }}</span>
+      </div>
+    </td>
+    <td>
+      <span class="badge px-2.5 py-1.5 fs-8 text-uppercase border" [ngClass]="{
+            'bg-success text-white': q.result === 'VERY_GOOD',
+            'bg-success-subtle text-success border-success': q.result === 'GOOD',
+            'bg-warning-subtle text-warning border-warning': q.result === 'AVERAGE',
+            'bg-danger-subtle text-danger border-danger': q.result === 'BAD'
+          }">
+        {{ q.result }}
+      </span>
+    </td>
+    <td><span class="font-monospace text-muted">{{ q.inspectedAt }}</span></td>
+     <td class="text-end px-4">
+      <div class="d-flex justify-content-end gap-1.5">
+        <button class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 py-1 px-2.5 rounded-pill fw-semibold font-sans" (click)="openDetailsModal(q)">
+          <i class="bi bi-file-earmark-text-fill"></i> View
+        </button>
+        
+        @if (q.labTestReport) {
+          <button class="btn btn-sm btn-outline-info d-inline-flex align-items-center gap-1 py-1 px-2.5 rounded-pill fw-semibold font-sans" (click)="openImageModal(q)">
+            <i class="bi bi-image"></i> Image
+          </button>
+        }
+
+        @if (userRole!== 'LOGISTICS_OFFICER') {
+          <button class="btn btn-icon btn-light text-warning" title="Modify Record Mapping" (click)="edit(q)">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+        }
+
+        @if (userRole !== 'LOGISTICS_OFFICER' && userRole !== 'QC_INSPECTOR') {
+          <button class="btn btn-icon btn-light text-danger" title="Purge Node Cascade" (click)="delete(q.id)">
+            <i class="bi bi-trash3-fill"></i>
+          </button>
+        }
+      </div>
+    </td>
+  </tr>
+  }
+  @empty {
+  <tr>
+    <td colspan="8" class="text-center py-5 text-muted font-monospace fs-8">
+      <i class="bi bi-shield-slash-fill fs-2 d-block mb-2 text-secondary"></i>No cargo consignments processed
+      inside operational QC matrix ledger.
+    </td>
+  </tr>
+  }
+</tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-drawer shadow" [class.open]="isDrawerOpen">
+    <div class="drawer-header bg-teal text-white p-4 d-flex justify-content-between align-items-center">
+      <h5 class="fw-bold mb-0">{{ isEdit ? 'Modify QC Parameters' : 'Authorize Quality Matrix' }}</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4" style="overflow-y: auto; height: calc(100vh - 110px);">
+      <form #qcForm="ngForm" (ngSubmit)="qcForm.valid && save()">
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Arriving Cargo Node Vector (GRN
+            Link)</label>
+          <select class="form-select fs-7" [(ngModel)]="inspection.grnId" name="grnId" (change)="onGrnChange()" required [disabled]="isEdit">
+            <option [value]="0">-- Select Inbound GRN Code Reference --</option>
+            @for (g of grns; track g.id) {
+            <option [value]="g.id">GRN: {{ g.grnNumber }} (PO: {{ g.poNumber }})</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Target Consignment Product</label>
+          <select class="form-select fs-7" [(ngModel)]="inspection.productId" name="productId" required
+            [disabled]="isEdit">
+            <option [value]="0">-- Select Core Target Product --</option>
+            @for (p of getFilteredProducts(); track p.id) {
+            <option [value]="p.id">{{ p.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Inspection Topology</label>
+            <select class="form-select fs-7" [(ngModel)]="inspection.inspectionType" name="inspectionType" required>
+              <option value="VISUAL">VISUAL EXAMINATION</option>
+              <option value="LAB_TEST">CHEMICAL LAB TEST</option>
+              <option value="FUNCTIONAL">FUNCTIONAL AUDIT</option>
+              <option value="DIMENSIONAL">DIMENSIONAL METRIC</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Audit Evaluation Grade</label>
+            <select class="form-select fs-7 font-sans fw-bold text-teal" [(ngModel)]="inspection.result" name="result"
+              required>
+              <option value="VERY_GOOD">🌟 VERY GOOD</option>
+              <option value="GOOD">✅ GOOD</option>
+              <option value="AVERAGE">⚠️ AVERAGE</option>
+              <option value="BAD">❌ BAD</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Sample Pool Volume Size</label>
+            <input type="number" class="form-control fs-7 font-monospace fw-bold" [(ngModel)]="inspection.sampleSize"
+              name="sampleSize" min="1" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Total Defectives Identified</label>
+            <input type="number" class="form-control fs-7 font-monospace fw-bold text-danger"
+              [(ngModel)]="inspection.defectsFound" name="defectsFound" min="0" required>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Audit Authority Execution Date</label>
+            <input type="date" class="form-control fs-7 font-monospace" [(ngModel)]="inspection.inspectedAt"
+              name="inspectedAt" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Certificate Reference Stamp</label>
+            <input type="text" class="form-control fs-7 font-monospace" [(ngModel)]="inspection.certificateRef"
+              name="certificateRef" placeholder="e.g. ISO-QC-99221">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Inspector Controller Assigned</label>
+          <input type="text" class="form-control fs-7 bg-light text-muted" [value]="getInspectorDisplayName()"
+            disabled />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Defect Layer Narrative
+            Description</label>
+          <textarea class="form-control fs-7" rows="2" [(ngModel)]="inspection.defectDescription"
+            name="defectDescription"
+            placeholder="Provide detailed specifications of flaws discovered during batch audit..."></textarea>
+        </div>
+
+        <div class="border p-3 rounded mb-4 bg-white shadow-xs">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold small text-teal text-uppercase mb-0"><i class="bi bi-list-task me-1"></i> Target QC
+              Checkpoint Metrics</h6>
+            <button type="button" class="btn btn-sm btn-outline-teal font-sans fs-8 px-2 py-1 fw-bold"
+              (click)="addChecklistRow()">
+              <i class="bi bi-plus-circle me-1"></i>Add Checkpoint
+            </button>
+          </div>
+
+          @for (chk of inspection.checklists; track $index; let idx = $index) {
+          <div class="row g-1 align-items-center mb-2 bg-light p-2 rounded position-relative">
+            <div class="col-md-5">
+              <input type="text" class="form-control fs-8 py-1" [(ngModel)]="chk.checkpointName" name="chkName_{{idx}}"
+                placeholder="Checkpoint Label (e.g. Density Check)" required>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select fs-8 py-1 font-sans fw-semibold" [(ngModel)]="chk.isPassed"
+                name="chkPass_{{idx}}" required>
+                <option [ngValue]="true">✔ PASS</option>
+                <option [ngValue]="false">❌ FAIL</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <input type="text" class="form-control fs-8 py-1" [(ngModel)]="chk.remarks" name="chkRem_{{idx}}"
+                placeholder="Remarks Details">
+            </div>
+            <div class="col-md-1 text-end">
+              <button type="button" class="btn btn-sm text-danger p-0" (click)="removeChecklistRow(idx)"><i
+                  class="bi bi-dash-circle-fill"></i></button>
+            </div>
+          </div>
+          }
+          @if (inspection.checklists.length === 0) {
+          <small class="text-muted font-monospace d-block text-center py-2 border-dashed rounded bg-light fs-8">No
+            specific child checklist checkpoints deployed yet.</small>
+          }
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Chemical Lab SWIFT Telemetry Report
+            Copy</label>
+          <input type="file" class="form-control fs-7" (change)="onFileChange($event)" accept="image/*,.pdf">
+          <small class="text-muted fs-8 d-block mt-1">Upload verified chemical composition maps or spectroscopic scan
+            logs.</small>
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 pt-2 border-top">
+          <button
+            class="btn btn-teal text-white flex-grow-1 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-bold fs-7 text-uppercase"
+            type="submit">
+            <i class="bi bi-cloud-arrow-up-fill"></i> {{ isEdit ? 'Commit Audit Changes' : 'Authorize & Broadcast
+            Matrix' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3 fs-7 text-uppercase"
+            (click)="reset()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  @if (isDrawerOpen) {
+  <div class="drawer-backdrop" (click)="closeDrawer()"></div>
+  }
+
+  <!-- QC DETAILS PDF/WORD REPORT MODAL -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6); z-index: 1100;" *ngIf="showDetailsModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white">
+        <div class="modal-header bg-dark text-white px-4 py-3 d-flex justify-content-between align-items-center">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i> Quality Assurance Audit Report
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeDetailsModal()"></button>
+        </div>
+        
+        <div class="modal-body p-5 bg-white text-dark" style="max-height: 70vh; overflow-y: auto; font-family: 'Times New Roman', Times, serif;">
+          <div class="border p-4 rounded-2 bg-white" style="box-shadow: 0 0 10px rgba(0,0,0,0.05); min-height: 500px; border: 1px solid #ddd !important;">
+            
+            <div class="text-center mb-4 pb-3 border-bottom">
+              <h3 class="fw-bold tracking-wide mb-1" style="color: #1e293b; font-size: 1.65rem;">SCM GLOBAL ENTERPRISE</h3>
+              <p class="text-uppercase text-secondary mb-0 tracking-wider small fw-semibold" style="font-size: 0.75rem;">Quality Control & Consignment Compliance Laboratory</p>
+              <small class="text-muted">ISO 9001:2015 & SCM Compliance Audit Standards</small>
+            </div>
+
+            <div class="row g-3 mb-4 fs-7 font-sans">
+              <div class="col-6">
+                <span class="text-muted d-block small">Audit Node ID:</span>
+                <strong class="text-dark">QC-NODE-#{{ selectedInspectionForView?.id }}</strong>
+              </div>
+              <div class="col-6 text-end">
+                <span class="text-muted d-block small">Audit Date:</span>
+                <strong class="text-dark">{{ selectedInspectionForView?.inspectedAt }}</strong>
+              </div>
+              <div class="col-6">
+                <span class="text-muted d-block small">Linked GRN Number:</span>
+                <strong class="text-dark font-monospace">{{ selectedInspectionForView?.grnNumber }}</strong>
+              </div>
+              <div class="col-6 text-end">
+                <span class="text-muted d-block small">Inspection Type:</span>
+                <strong class="text-dark text-uppercase">{{ selectedInspectionForView?.inspectionType }}</strong>
+              </div>
+            </div>
+
+            <h5 class="fw-bold border-bottom pb-1 text-teal text-uppercase mb-3 font-sans" style="font-size: 0.9rem;">I. Batch Consignment Parameters</h5>
+            <div class="table-responsive mb-4 font-sans fs-7">
+              <table class="table table-bordered border-secondary align-middle">
+                <tbody>
+                  <tr>
+                    <td class="bg-light fw-bold w-30">Target Product:</td>
+                    <td>{{ selectedInspectionForView?.productName }}</td>
+                  </tr>
+                  <tr>
+                    <td class="bg-light fw-bold">Inspector Personnel:</td>
+                    <td>{{ selectedInspectionForView?.inspectedByName }} (ID: {{ selectedInspectionForView?.inspectedBy }})</td>
+                  </tr>
+                  <tr>
+                    <td class="bg-light fw-bold">Sample Pool Volume:</td>
+                    <td>{{ selectedInspectionForView?.sampleSize }} cargo samples selected</td>
+                  </tr>
+                  <tr>
+                    <td class="bg-light fw-bold">Defectives Detected:</td>
+                    <td class="text-danger fw-bold">{{ selectedInspectionForView?.defectsFound }} samples flagged</td>
+                  </tr>
+                  <tr>
+                    <td class="bg-light fw-bold">Certificate Stamp:</td>
+                    <td>{{ selectedInspectionForView?.certificateRef || 'N/A' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h5 class="fw-bold border-bottom pb-1 text-teal text-uppercase mb-3 font-sans" style="font-size: 0.9rem;">II. Diagnostic Checklist Checkpoints</h5>
+            <div class="table-responsive mb-4 font-sans fs-7">
+              <table class="table table-bordered border-secondary align-middle text-center">
+                <thead class="table-light text-secondary small text-uppercase">
+                  <tr>
+                    <th>Checkpoint Label</th>
+                    <th width="100">Status</th>
+                    <th>Audit Remarks Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let ch of selectedInspectionForView?.checklists">
+                    <td class="text-start font-monospace">{{ ch.checkpointName }}</td>
+                    <td>
+                      <span class="badge rounded-pill" [ngClass]="ch.isPassed ? 'bg-success-subtle text-success border border-success' : 'bg-danger-subtle text-danger border border-danger'" style="font-size: 0.65rem;">
+                        {{ ch.isPassed ? '✔ PASS' : '❌ FAIL' }}
+                      </span>
+                    </td>
+                    <td class="text-start text-muted">{{ ch.remarks || 'No detailed anomaly noted' }}</td>
+                  </tr>
+                  <tr *ngIf="!selectedInspectionForView?.checklists || selectedInspectionForView?.checklists.length === 0">
+                    <td colspan="3" class="text-muted py-3">No specific checklist checkpoints recorded for this consignment.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h5 class="fw-bold border-bottom pb-1 text-teal text-uppercase mb-3 font-sans" style="font-size: 0.9rem;">III. Defect Narrative & Audit Verdict</h5>
+            <div class="p-3 bg-light rounded-2 mb-4 font-sans fs-7 border">
+              <span class="text-secondary small d-block">Defect Anomaly Logs:</span>
+              <p class="mb-2 italic text-dark" style="white-space: pre-wrap;">"{{ selectedInspectionForView?.defectDescription || 'No material defect layers reported.' }}"</p>
+              <div class="d-flex align-items-center gap-2 mt-3 pt-2 border-top">
+                <span class="fw-bold">Compliance Status:</span>
+                <span class="badge px-3 py-1.5 fs-8 text-uppercase border" [ngClass]="{
+                      'bg-success text-white': selectedInspectionForView?.result === 'VERY_GOOD' || selectedInspectionForView?.result === 'GOOD',
+                      'bg-warning text-dark border-warning': selectedInspectionForView?.result === 'AVERAGE',
+                      'bg-danger text-white': selectedInspectionForView?.result === 'BAD'
+                    }">
+                  {{ selectedInspectionForView?.result }}
+                </span>
+              </div>
+            </div>
+
+            <div class="row pt-5 mt-4 border-top font-sans fs-8 text-center text-secondary">
+              <div class="col-4">
+                <div class="mb-4 d-inline-block border-bottom w-80" style="height: 40px;"></div>
+                <div>Logistics Cargo Dispatch EOD</div>
+              </div>
+              <div class="col-4">
+                <div class="d-inline-flex align-items-center justify-content-center border-2 border-dashed border-success rounded-circle" style="width: 70px; height: 70px; color: #15803d; transform: rotate(-15deg); opacity: 0.75; font-size: 0.55rem; font-weight: bold; line-height: 1.1;">
+                  <div>SCM LAB<br>APPROVED<br>QA UNIT</div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="mb-4 d-inline-block border-bottom w-80" style="height: 40px;"></div>
+                <div>Authorized Quality Auditor</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer bg-light px-4 py-3 border-top d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-primary px-3 fw-bold rounded-pill" onclick="window.print()">
+            <i class="bi bi-printer me-1"></i> Print Report
+          </button>
+          <button type="button" class="btn btn-secondary px-4 fw-bold rounded-pill" (click)="closeDetailsModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" style="z-index: 1090;" *ngIf="showDetailsModal"></div>
+
+  <!-- QC IMAGE VIEW MODAL -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6); z-index: 1100;" *ngIf="showImageModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden">
+        <div class="modal-header bg-dark text-white px-4 py-3">
+          <h5 class="modal-title fw-bold">
+            <i class="bi bi-image text-info me-2"></i> Chemical Lab Telemetry Scan Report
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeImageModal()"></button>
+        </div>
+        <div class="modal-body p-4 bg-light text-center">
+          <div class="card border-0 shadow-sm rounded-3 overflow-hidden bg-white mx-auto" style="max-width: 100%;">
+            <img [src]="getInspectionImageUrl(selectedInspectionForView?.labTestReport)" class="img-fluid rounded-3" style="max-height: 500px; object-fit: contain;" alt="QC Inspection Lab Report">
+            <div class="card-body bg-white border-top p-3 text-start">
+              <div class="row">
+                <div class="col-6">
+                  <span class="text-secondary small d-block">Consignment Audit ID</span>
+                  <strong class="text-dark">QC-NODE-#{{ selectedInspectionForView?.id }}</strong>
+                </div>
+                <div class="col-6 text-end">
+                  <span class="text-secondary small d-block">Result Grade</span>
+                  <strong class="text-teal font-monospace">{{ selectedInspectionForView?.result }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer bg-white px-4 py-3 border-top d-flex justify-content-between">
+          <a [href]="getInspectionImageUrl(selectedInspectionForView?.labTestReport)" target="_blank" class="btn btn-outline-primary px-4 fw-bold rounded-pill">
+            <i class="bi bi-box-arrow-up-right me-1"></i> Open in New Tab
+          </a>
+          <button type="button" class="btn btn-secondary px-4 fw-bold rounded-pill" (click)="closeImageModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" style="z-index: 1090;" *ngIf="showImageModal"></div>
+
+</div>

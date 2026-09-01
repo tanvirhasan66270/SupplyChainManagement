@@ -1,0 +1,669 @@
+<div class="driver-dashboard-container pb-5" style="background-color: #f8fafc; min-height: 100vh;">
+  
+  <!-- Router Outlet for Child Routes (e.g. Driver Profile) -->
+  <router-outlet *ngIf="isChildRouteActive()"></router-outlet>
+
+  <!-- DASHBOARD MAIN CONTENT -->
+  <ng-container *ngIf="!isChildRouteActive()">
+    <div class="px-4 pt-4">
+    <div class="dashboard-header bg-white p-4 rounded-4 shadow-sm border mb-4 d-flex justify-content-between align-items-center">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h2 class="fw-bold text-dark fs-4 mb-0">Welcome back, <span class="text-primary">{{ userName }}</span> <span class="fs-4">👋</span></h2>
+      </div>
+      <p class="text-muted fs-8 mb-0 d-flex align-items-center gap-2">
+        <span class="text-dark fw-bold">Driver</span> &bull; Delivery trips & vehicle status.
+        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 fs-9"><span class="pulse-dot-green me-1"></span> Live</span>
+      </p>
+    </div>
+    <div class="header-actions d-flex gap-2">
+      <button class="btn btn-outline-secondary btn-sm px-3 fw-semibold rounded-3 d-flex align-items-center gap-1" (click)="showSettings = true"><i class="bi bi-gear"></i></button>
+      <button class="btn btn-outline-danger btn-sm px-3 fw-semibold rounded-3 d-flex align-items-center gap-1" (click)="logout()"><i class="bi bi-box-arrow-right"></i> Log Out</button>
+    </div>
+  </div>
+
+    <!-- KPI ROW -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3 mb-4">
+      <!-- Total Trips -->
+      <div class="col">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white hover-elevate">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="kpi-icon-box bg-primary text-white rounded-4 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #2563eb !important;">
+              <i class="bi bi-geo-alt fs-4"></i>
+            </div>
+            <div class="text-secondary fw-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Total Trips</div>
+          </div>
+          <h2 class="fw-bolder text-dark mb-1">{{ totalTrips }}</h2>
+          <div class="text-muted small">{{ deliveredCount }} delivered, {{ inTransitCount }} in transit</div>
+        </div>
+      </div>
+      
+      <!-- Vehicle Health -->
+      <div class="col">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white hover-elevate">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="kpi-icon-box bg-success text-white rounded-4 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #10b981 !important;">
+              <i class="bi bi-activity fs-4"></i>
+            </div>
+            <div class="text-secondary fw-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Vehicle Health</div>
+          </div>
+          <h4 class="fw-bolder text-dark mb-1 text-truncate">{{ vehicle ? vehicle.type : 'N/A' }}</h4>
+          <div class="text-muted small">
+            <span *ngIf="vehicle && vehicle.status === 'AVAILABLE'" class="text-success"><i class="bi bi-check-circle-fill me-1"></i>All systems normal</span>
+            <span *ngIf="vehicle && vehicle.status !== 'AVAILABLE'" class="text-warning"><i class="bi bi-info-circle-fill me-1"></i>{{ vehicle.status }}</span>
+            <span *ngIf="!vehicle">No active vehicle</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Fuel Level -->
+      <div class="col">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white hover-elevate">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="kpi-icon-box bg-warning text-white rounded-4 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #f59e0b !important;">
+                <i class="bi bi-fuel-pump fs-4"></i>
+              </div>
+              <div class="text-secondary fw-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Fuel Level</div>
+            </div>
+            <i class="bi bi-speedometer2 text-light fs-1 opacity-25"></i>
+          </div>
+          <h2 class="fw-bolder text-dark mb-1">{{ fuelLevel }}%</h2>
+          <div class="text-danger small fw-semibold" *ngIf="fuelLevel <= 20"><i class="bi bi-exclamation-triangle-fill me-1"></i>Low Fuel</div>
+          <div class="text-success small fw-semibold" *ngIf="fuelLevel > 20"><i class="bi bi-check-circle-fill me-1"></i>Optimal</div>
+        </div>
+      </div>
+
+      <!-- Distance Covered -->
+      <div class="col">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white hover-elevate position-relative overflow-hidden">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="kpi-icon-box bg-info text-white rounded-4 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #0ea5e9 !important;">
+              <i class="bi bi-speedometer fs-4"></i>
+            </div>
+            <div class="text-secondary fw-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">Distance Covered</div>
+          </div>
+          <h2 class="fw-bolder text-dark mb-1">{{ distanceCovered }} km</h2>
+          <div class="text-muted small">Based on {{ deliveredCount }} deliveries</div>
+          <svg class="position-absolute bottom-0 end-0 opacity-10" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:-10px; margin-bottom:-10px;"><path d="M4 22L12 2L20 22"></path><path d="M12 10V14"></path></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="mb-4">
+      <div class="text-muted fw-bold text-uppercase mb-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">Quick Actions</div>
+      <div class="d-flex flex-wrap gap-3">
+        <!-- These buttons only show if vehicle status is AVAILABLE or ON_TRIP -->
+        <ng-container *ngIf="vehicle?.status === 'AVAILABLE' || vehicle?.status === 'ON_TRIP'">
+          <div (click)="openTrackerModal('START')" tabindex="0" style="cursor: pointer; outline: none;" class="quick-action-btn bg-white rounded-3 shadow-sm border-0 flex-grow-1 text-center py-3 text-decoration-none hover-elevate">
+            <i class="bi bi-play-fill fs-3 text-success d-block mb-1"></i>
+            <span class="fw-bold text-dark" style="font-size: 0.8rem;">Start Trip</span>
+          </div>
+          <div (click)="openTrackerModal('COMPLETE')" tabindex="0" style="cursor: pointer; outline: none;" class="quick-action-btn bg-white rounded-3 shadow-sm border-0 flex-grow-1 text-center py-3 text-decoration-none hover-elevate">
+            <i class="bi bi-check-circle fs-3 text-success d-block mb-1"></i>
+            <span class="fw-bold text-dark" style="font-size: 0.8rem;">Complete Delivery</span>
+          </div>
+          <a routerLink="/messages" class="quick-action-btn bg-white rounded-3 shadow-sm border-0 flex-grow-1 text-center py-3 text-decoration-none hover-elevate">
+            <i class="bi bi-chat-dots fs-3 text-primary d-block mb-1"></i>
+            <span class="fw-bold text-dark" style="font-size: 0.8rem;">Message</span>
+          </a>
+        </ng-container>
+
+        <!-- Always show Update Status so they can change their status -->
+        <div (click)="openDriverVehicleStatusModal()" tabindex="0" style="cursor: pointer; outline: none;" class="quick-action-btn bg-white rounded-3 shadow-sm border-0 flex-grow-1 text-center py-3 text-decoration-none hover-elevate">
+          <i class="bi bi-car-front fs-3 text-primary d-block mb-1"></i>
+          <span class="fw-bold text-dark" style="font-size: 0.8rem;">Update Status</span>
+        </div>
+      </div>
+    </div>
+    <div class="row g-4 mb-4">
+      <!-- TODAY'S TRIP SUMMARY -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-white">
+          <div class="card-body p-4 d-flex flex-column">
+            <h6 class="fw-bold text-dark text-uppercase mb-4" style="font-size: 0.8rem; letter-spacing: 0.5px;">{{ summaryMode === 'TODAY' ? "Today's Trip Summary" : "Trip Summary" }}</h6>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-list-check text-primary"></i>
+                <span class="text-dark fw-semibold" style="font-size: 0.9rem;">Assigned Trips</span>
+              </div>
+              <span class="fw-bold text-dark">{{ totalTrips < 10 && totalTrips > 0 ? '0'+totalTrips : totalTrips }}</span>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle text-success"></i>
+                <span class="text-dark fw-semibold" style="font-size: 0.9rem;">Completed</span>
+              </div>
+              <span class="fw-bold text-success">{{ deliveredCount < 10 && deliveredCount > 0 ? '0'+deliveredCount : deliveredCount }}</span>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-truck text-primary"></i>
+                <span class="text-dark fw-semibold" style="font-size: 0.9rem;">In Transit</span>
+              </div>
+              <span class="fw-bold text-primary">{{ inTransitCount < 10 && inTransitCount > 0 ? '0'+inTransitCount : inTransitCount }}</span>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-clock-history text-warning"></i>
+                <span class="text-dark fw-semibold" style="font-size: 0.9rem;">Pending</span>
+              </div>
+              <span class="fw-bold text-warning">{{ pendingCount < 10 && pendingCount > 0 ? '0'+pendingCount : pendingCount }}</span>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-x-circle text-danger"></i>
+                <span class="text-dark fw-semibold" style="font-size: 0.9rem;">Cancelled</span>
+              </div>
+              <span class="fw-bold text-danger">{{ cancelledCount < 10 && cancelledCount > 0 ? '0'+cancelledCount : cancelledCount }}</span>
+            </div>
+
+            <div class="mt-auto d-flex gap-2">
+              <button type="button" (click)="setSummaryMode('TODAY')" class="btn flex-grow-1 fw-bold rounded-3" [ngClass]="summaryMode === 'TODAY' ? 'btn-primary' : 'btn-outline-primary'" [style]="summaryMode === 'TODAY' ? 'background-color: #2563eb; border-color: #2563eb;' : ''">Today</button>
+              <button type="button" (click)="setSummaryMode('ALL')" class="btn flex-grow-1 fw-bold rounded-3" [ngClass]="summaryMode === 'ALL' ? 'btn-primary' : 'btn-outline-primary'" [style]="summaryMode === 'ALL' ? 'background-color: #2563eb; border-color: #2563eb;' : ''">View All</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ROUTE MAP OVERVIEW -->
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-white">
+          <div class="card-body p-4 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h6 class="fw-bold text-dark text-uppercase mb-0" style="font-size: 0.8rem; letter-spacing: 0.5px;">+ Route Map Overview</h6>
+              <span class="badge bg-warning-subtle text-warning border border-warning rounded-pill px-3">{{ routes.length }} Routes</span>
+            </div>
+            
+            <!-- Map SVG Graphic -->
+            <div class="flex-grow-1 bg-light rounded-4 d-flex align-items-center justify-content-center position-relative overflow-hidden p-3" style="min-height: 200px;">
+              <div class="position-absolute top-0 start-0 w-100 h-100 opacity-25" style="background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px;"></div>
+              
+              <svg viewBox="0 0 400 150" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" style="z-index: 1;">
+                <path d="M 50 100 Q 150 140, 200 80 T 350 40" fill="none" stroke="#e2e8f0" stroke-width="8" stroke-linecap="round"></path>
+                <path d="M 50 100 Q 150 140, 200 80" fill="none" stroke="#3b82f6" stroke-width="4" stroke-linecap="round"></path>
+                <path d="M 200 80 T 350 40" fill="none" stroke="#94a3b8" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 6"></path>
+                
+                <circle cx="50" cy="100" r="7" fill="#10b981"></circle>
+                <circle cx="200" cy="80" r="7" fill="#3b82f6"></circle>
+                <circle cx="350" cy="40" r="7" fill="#ef4444"></circle>
+              </svg>
+            </div>
+            
+            <!-- Stats below map -->
+            <div class="d-flex justify-content-between mt-4 px-2">
+              <div class="text-center">
+                <div class="text-muted mb-1" style="font-size: 0.75rem;">Pending</div>
+                <h5 class="fw-bold text-warning mb-0">{{ pendingCount }}</h5>
+              </div>
+              <div class="text-center">
+                <div class="text-muted mb-1" style="font-size: 0.75rem;">In Transit</div>
+                <h5 class="fw-bold text-primary mb-0">{{ inTransitCount }}</h5>
+              </div>
+              <div class="text-center">
+                <div class="text-muted mb-1" style="font-size: 0.75rem;">Delivered</div>
+                <h5 class="fw-bold text-success mb-0">{{ deliveredCount }}</h5>
+              </div>
+              <div class="text-center">
+                <div class="text-muted mb-1" style="font-size: 0.75rem;">Cancelled</div>
+                <h5 class="fw-bold text-danger mb-0">{{ cancelledCount }}</h5>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID 2 -->
+    <div class="row g-4 mb-4">
+      <!-- VEHICLE STATUS -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-white">
+          <div class="card-body p-4">
+            <h6 class="fw-bold text-dark text-uppercase mb-4" style="font-size: 0.8rem; letter-spacing: 0.5px;">Vehicle Status</h6>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-light">
+              <div class="d-flex align-items-center gap-2 text-muted">
+                <i class="bi bi-car-front text-info"></i> <span style="font-size: 0.85rem;">Status</span>
+              </div>
+              <span class="fw-semibold text-success">{{ vehicle ? vehicle.status : 'N/A' }}</span>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-light">
+              <div class="d-flex align-items-center gap-2 text-muted">
+                <i class="bi bi-fuel-pump text-warning"></i> <span style="font-size: 0.85rem;">Fuel</span>
+              </div>
+              <span class="fw-semibold text-warning">{{ fuelLevel }}%</span>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-light">
+              <div class="d-flex align-items-center gap-2 text-muted">
+                <i class="bi bi-tag text-primary"></i> <span style="font-size: 0.85rem;">License Plate</span>
+              </div>
+              <span class="fw-semibold text-dark">{{ vehicle ? vehicle.plateNumber : 'N/A' }}</span>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-light">
+              <div class="d-flex align-items-center gap-2 text-muted">
+                <i class="bi bi-truck text-dark"></i> <span style="font-size: 0.85rem;">Type</span>
+              </div>
+              <span class="fw-semibold text-success">{{ vehicle ? vehicle.type : 'N/A' }}</span>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="d-flex align-items-center gap-2 text-muted">
+                <i class="bi bi-calendar-check text-primary"></i> <span style="font-size: 0.85rem;">Next Maintenance</span>
+              </div>
+              <span class="fw-semibold text-primary">N/A</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARGO INFORMATION -->
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 bg-white">
+          <div class="card-body p-4">
+            <h6 class="fw-bold text-dark text-uppercase mb-4" style="font-size: 0.8rem; letter-spacing: 0.5px;">Recent Delivery Trips</h6>
+            
+            <div class="d-flex flex-column gap-3 overflow-auto" style="max-height: 300px;">
+              <div *ngIf="recentTrips.length === 0" class="text-muted small text-center py-4">
+                No recent trips found.
+              </div>
+              
+              <div *ngFor="let trip of recentTrips" class="p-3 border border-light-subtle rounded-3 shadow-sm d-flex flex-column" style="background-color: #f8fafc;">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <span class="fw-bold text-dark text-truncate" style="font-size: 0.85rem; max-width: 65%;">{{ trip.customer }}</span>
+                  <span class="badge" style="font-size: 0.65rem;"
+                        [ngClass]="{
+                          'bg-success': trip.status === 'DELIVERED',
+                          'bg-primary': trip.status === 'IN_TRANSIT',
+                          'bg-warning text-dark': trip.status === 'PENDING',
+                          'bg-danger': trip.status === 'CANCELLED'
+                        }">{{ trip.status }}</span>
+                </div>
+                <div class="d-flex align-items-center text-muted mb-1" style="font-size: 0.75rem;">
+                  <i class="bi bi-geo-alt text-danger me-2"></i> <span class="text-truncate" style="max-width: 90%;">{{ trip.destination }}</span>
+                </div>
+                <div class="d-flex align-items-center text-muted" style="font-size: 0.75rem;">
+                  <i class="bi bi-box-seam text-info me-2"></i> <span class="text-truncate" style="max-width: 90%;">{{ trip.load }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DELIVERY PROGRESS & ALERTS -->
+      <div class="col-lg-4">
+        <div class="d-flex flex-column gap-4 h-100">
+          
+          <!-- DELIVERY PROGRESS -->
+          <div class="card border-0 shadow-sm rounded-4 bg-white">
+            <div class="card-body p-4 text-center">
+              <h6 class="fw-bold text-dark text-uppercase text-start mb-3" style="font-size: 0.8rem; letter-spacing: 0.5px;">Delivery Progress</h6>
+              
+              <div class="position-relative d-inline-block mx-auto mb-3">
+                <div class="progress-donut" [style.--progress]="deliveryProgress"></div>
+                <div class="position-absolute top-50 start-50 translate-middle d-flex flex-column align-items-center">
+                  <h2 class="fw-bolder text-dark mb-0" style="font-size: 2rem;">{{ deliveryProgress }}%</h2>
+                </div>
+              </div>
+              
+              <div class="d-flex justify-content-center gap-4 mt-2 mb-2">
+                <div class="d-flex align-items-center gap-1 text-muted" style="font-size: 0.75rem;">
+                  <span class="badge bg-success p-1 rounded-circle"></span> Completed <br><span class="fw-bold text-dark fs-6">{{ deliveredCount }}</span>
+                </div>
+                <div class="d-flex align-items-center gap-1 text-muted" style="font-size: 0.75rem;">
+                  <span class="badge bg-warning p-1 rounded-circle"></span> Pending <br><span class="fw-bold text-dark fs-6">{{ pendingCount + inTransitCount }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+    <!-- ALERTS -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4 bg-white">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h6 class="fw-bold text-dark text-uppercase mb-0" style="font-size: 0.8rem; letter-spacing: 0.5px;"><i class="bi bi-bell me-2 text-danger"></i> Alerts & Notifications</h6>
+              <button class="btn btn-sm btn-outline-danger rounded-pill px-3" routerLink="/dashboard/notifications">View All Alerts</button>
+            </div>
+            
+            <div class="row g-3">
+              <div class="col-md-4" *ngFor="let n of notifications">
+                <div class="alert-card border rounded-3 p-3 d-flex align-items-start gap-3 h-100 position-relative hover-elevate">
+                  <div class="bg-danger bg-opacity-10 text-danger p-2 rounded-3">
+                    <i class="bi {{ getNotificationIcon(n.type) }}"></i>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold text-dark mb-1 fs-7">{{ n.title }}</h6>
+                    <p class="text-muted mb-0 lh-sm" style="font-size: 0.75rem;">{{ n.message }}</p>
+                  </div>
+                  <span *ngIf="!n.isRead" class="position-absolute top-0 end-0 mt-3 me-3 p-1 bg-danger border border-light rounded-circle"></span>
+                </div>
+              </div>
+              
+              <div class="col-12 text-center py-4" *ngIf="notifications.length === 0">
+                <i class="bi bi-check-circle text-success fs-1"></i>
+                <p class="text-muted mt-2">All systems clear. No new alerts.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </ng-container>
+
+  <!-- SETTINGS PANEL -->
+  <app-dashboard-settings
+    *ngIf="showSettings"
+    [isOpen]="showSettings"
+    (close)="showSettings = false"
+    (onEditProfile)="onEditProfileTriggered()"
+  >
+  </app-dashboard-settings>
+
+  <!-- START TRIP / TRIP TRACKER MODAL -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);" *ngIf="showTrackerModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-light border-0 px-4 pt-4">
+          <h5 class="fw-bold text-dark mb-0"><i class="bi bi-geo-alt text-primary me-2"></i>Trip Tracker & Status Update</h5>
+          <button type="button" class="btn-close" (click)="closeTrackerModal()"></button>
+        </div>
+        
+        <div class="modal-body px-4 py-3">
+          <!-- Search Trip ID Input -->
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-muted">Enter Trip ID</label>
+            <div class="input-group">
+              <input type="text" class="form-control" [(ngModel)]="searchTripId" placeholder="e.g. 101" (keyup.enter)="searchTrip()">
+              <button class="btn btn-primary px-3" type="button" (click)="searchTrip()">Search</button>
+            </div>
+            <div class="text-danger small mt-1" *ngIf="trackerSearchError">{{ trackerSearchError }}</div>
+          </div>
+
+          <!-- Trip Details & Status Update Form -->
+          <div *ngIf="searchedTrip" class="border rounded-3 p-3 bg-light mt-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="small text-muted">Trip #<strong>{{ searchedTrip.id }}</strong></span>
+              <span class="badge" [ngClass]="getStatusClass(searchedTrip.status)">{{ getStatusLabel(searchedTrip.status) }}</span>
+            </div>
+            <p class="mb-1 small"><strong>Destination:</strong> {{ searchedTrip.customerAddress || 'N/A' }}</p>
+            <p class="mb-3 small"><strong>Recipient:</strong> {{ searchedTrip.recipientName || 'N/A' }}</p>
+
+            <!-- Update Status Dropdown -->
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Action Status</label>
+              <select class="form-select form-select-sm fw-bold text-primary bg-primary bg-opacity-10 border-primary-subtle" [(ngModel)]="trackerStatus" disabled>
+                <option value="PENDING">Pending</option>
+                <option value="IN_TRANSIT">DELIVERY TRIP STARTED (IN TRANSIT)</option>
+                <option value="DELIVERED">DELIVERED (Requires Proof)</option>
+                <option value="CANCELLED">Cancelled</option>
+              </select>
+              <div class="text-muted mt-1" style="font-size: 0.7rem;"><i class="bi bi-info-circle me-1"></i> Status is automatically fixed based on your selected action.</div>
+            </div>
+
+            <!-- Proof Files if Delivered -->
+            <div *ngIf="trackerStatus === 'DELIVERED'" class="mb-3">
+              <label class="form-label small fw-semibold text-muted">Signature File (Optional)</label>
+              <input type="file" class="form-control form-control-sm" accept="image/*" (change)="onSignatureChange($event)">
+              <div class="mt-2 text-center" *ngIf="trackerSignaturePreview">
+                <img [src]="trackerSignaturePreview" class="img-thumbnail rounded-3 shadow-sm" style="max-height: 120px; object-fit: contain;">
+              </div>
+              
+              <label class="form-label small fw-semibold text-muted mt-3">Photo Proof (Optional)</label>
+              <input type="file" class="form-control form-control-sm" accept="image/*" (change)="onPhotoChange($event)">
+              <div class="mt-2 text-center" *ngIf="trackerPhotoPreview">
+                <img [src]="trackerPhotoPreview" class="img-thumbnail rounded-3 shadow-sm" style="max-height: 120px; object-fit: contain;">
+              </div>
+            </div>
+
+            <button class="btn btn-success btn-sm w-100 fw-bold" [disabled]="isUpdatingTrip" (click)="updateTripStatus()">
+              <span *ngIf="isUpdatingTrip" class="spinner-border spinner-border-sm me-1"></span>
+              Save Status Update
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 px-4 pb-4">
+          <button type="button" class="btn btn-secondary btn-sm rounded-3 px-4" (click)="closeTrackerModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VEHICLE STATUS UPDATE MODAL -->
+<div *ngIf="isVehicleStatusModalOpen" class="modal-overlay d-flex align-items-center justify-content-center" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 1050;">
+  <div class="modal-window bg-white rounded shadow-lg p-4 animate-scale-in" style="width: 100%; max-width: 500px;">
+    <h5 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="bi bi-activity text-teal me-1"></i>Update Vehicle Status</h5>
+    
+    <div class="mb-4">
+      <label class="form-label fw-bold text-secondary text-uppercase" style="font-size: 0.8rem;">Current Status</label>
+      <select class="form-select fs-6 fw-bold" [(ngModel)]="driverVehicleStatusUpdateValue">
+        <option value="AVAILABLE">🟢 AVAILABLE (Ready for Mission)</option>
+        <option value="ON_TRIP">🔵 ON_TRIP (Dispatched Node)</option>
+        <option value="MAINTENANCE">🟡 MAINTENANCE (Workshop Maintenance)</option>
+        <option value="OUT_OF_SERVICE">🔴 OUT_OF_SERVICE (Decommissioned)</option>
+      </select>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-end pt-2 border-top">
+      <button class="btn btn-primary px-4 fw-bold" (click)="executeDriverVehicleStatusUpdate()"><i class="bi bi-check-circle-fill me-1"></i>Commit Status</button>
+      <button class="btn btn-secondary px-4" (click)="closeDriverVehicleStatusModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+  <!-- VEHICLE SEARCH MODAL -->
+  <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);" *ngIf="showVehicleModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 1rem;">
+        
+        <!-- Header -->
+        <div class="modal-header border-0 px-4 pt-4 pb-2 align-items-start">
+          <div class="d-flex align-items-center">
+            <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+              <i class="bi bi-car-front fs-4 text-primary"></i>
+            </div>
+            <div>
+              <h4 class="fw-bold text-dark mb-1" style="letter-spacing: -0.5px;">Vehicle Search</h4>
+              <p class="text-muted mb-0" style="font-size: 0.85rem;">Search vehicle by plate number or driver email</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close" (click)="closeVehicleModal()" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body px-4 py-3">
+          
+          <!-- Search Input Section -->
+          <div class="mb-4">
+            <label class="form-label fw-bold text-dark" style="font-size: 0.9rem;">Vehicle Plate Number or Driver Email</label>
+            <div class="input-group input-group-lg shadow-sm" style="border-radius: 0.5rem; overflow: hidden;">
+              <span class="input-group-text bg-white border-end-0 text-muted px-3">
+                <i class="bi bi-search"></i>
+              </span>
+              <input type="text" class="form-control border-start-0 ps-0" [(ngModel)]="vehicleSearchQuery" placeholder="Dhaka Metro-MOTO-88-7722" (keyup.enter)="searchVehicle()" style="font-size: 0.95rem;">
+              <button class="btn btn-primary px-4 fw-semibold" type="button" (click)="searchVehicle()" [disabled]="isSearchingVehicle" style="border-radius: 0 0.5rem 0.5rem 0;">
+                <span *ngIf="isSearchingVehicle" class="spinner-border spinner-border-sm me-2"></span>
+                <i class="bi bi-search me-2" *ngIf="!isSearchingVehicle"></i> Search
+              </button>
+            </div>
+            <div class="text-danger small mt-2 fw-semibold" *ngIf="vehicleSearchError"><i class="bi bi-exclamation-circle me-1"></i>{{ vehicleSearchError }}</div>
+          </div>
+
+          <!-- Vehicle Details Card -->
+          <div *ngIf="searchedVehicle" class="card border border-light-subtle shadow-sm mb-4" style="border-radius: 0.75rem; background-color: #fcfcfd;">
+            <div class="card-body p-4">
+              <h5 class="fw-bold text-primary mb-4 d-flex align-items-center" style="font-size: 1.05rem;">
+                <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                  <i class="bi bi-car-front fs-5"></i>
+                </div>
+                Vehicle Details
+              </h5>
+              
+              <div class="row gx-5">
+                <!-- Left Column -->
+                <div class="col-md-6 border-end">
+                  
+                  <div class="d-flex align-items-start mb-4">
+                    <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                      <i class="bi bi-123 text-primary fs-5"></i>
+                    </div>
+                    <div>
+                      <div class="text-muted small fw-semibold mb-1">Plate Number</div>
+                      <div class="fw-bold text-dark" style="font-size: 0.95rem;">{{ searchedVehicle.plateNumber }}</div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-start mb-4">
+                    <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                      <i class="bi bi-truck text-primary fs-5"></i>
+                    </div>
+                    <div>
+                      <div class="text-muted small fw-semibold mb-1">Type</div>
+                      <div class="fw-bold text-dark" style="font-size: 0.95rem;">{{ searchedVehicle.type }}</div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-start mb-2">
+                    <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                      <i class="bi bi-box-seam text-primary fs-5"></i>
+                    </div>
+                    <div>
+                      <div class="text-muted small fw-semibold mb-1">Capacity</div>
+                      <div class="fw-bold text-dark" style="font-size: 0.95rem;">{{ searchedVehicle.capacity }} tons</div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-md-6 ps-md-4 mt-4 mt-md-0">
+                  
+                  <div class="d-flex align-items-start mb-4">
+                    <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                      <i class="bi bi-fuel-pump text-primary fs-5"></i>
+                    </div>
+                    <div class="w-100">
+                      <div class="text-muted small fw-semibold mb-1">Fuel Level</div>
+                      <div class="fw-bold text-dark mb-2" style="font-size: 0.95rem;">{{ searchedVehicle.fuelLevel }}%</div>
+                      <div class="progress" style="height: 6px; border-radius: 3px; background-color: #e9ecef;">
+                        <div class="progress-bar bg-success" role="progressbar" [style.width.%]="searchedVehicle.fuelLevel" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-start">
+                    <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                      <i class="bi bi-shield-check text-primary fs-5"></i>
+                    </div>
+                    <div>
+                      <div class="text-muted small fw-semibold mb-2">Status</div>
+                      
+                      <span class="badge rounded-pill bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2" *ngIf="searchedVehicle.status === 'AVAILABLE'">
+                        <i class="bi bi-check-circle me-1"></i> Available
+                      </span>
+                      <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2" *ngIf="searchedVehicle.status === 'ON_TRIP'">
+                        <i class="bi bi-truck me-1"></i> On Trip
+                      </span>
+                      <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-3 py-2" *ngIf="searchedVehicle.status === 'MAINTENANCE'">
+                        <i class="bi bi-tools me-1"></i> Maintenance
+                      </span>
+                      <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2" *ngIf="searchedVehicle.status === 'OUT_OF_SERVICE'">
+                        <i class="bi bi-x-circle me-1"></i> Out of Service
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Assigned Driver Card -->
+          <div *ngIf="searchedVehicleDriver" class="card border border-light-subtle shadow-sm" style="border-radius: 0.75rem; background-color: #fcfcfd;">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-4 d-flex align-items-center" style="color: #6f42c1; font-size: 1.05rem;">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; background-color: rgba(111, 66, 193, 0.1);">
+                  <i class="bi bi-person fs-5"></i>
+                </div>
+                Assigned Driver
+              </h5>
+
+              <div class="d-flex align-items-center mb-3">
+                <div class="rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; background-color: rgba(111, 66, 193, 0.1);">
+                  <i class="bi bi-person text-purple" style="color: #6f42c1;"></i>
+                </div>
+                <div class="row w-100 align-items-center">
+                  <div class="col-4"><span class="small text-muted fw-semibold">Name</span></div>
+                  <div class="col-8"><span class="fw-bold text-dark small">{{ searchedVehicleDriver.driverName }}</span></div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center mb-3">
+                <div class="rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; background-color: rgba(111, 66, 193, 0.1);">
+                  <i class="bi bi-envelope text-purple" style="color: #6f42c1;"></i>
+                </div>
+                <div class="row w-100 align-items-center">
+                  <div class="col-4"><span class="small text-muted fw-semibold">Email</span></div>
+                  <div class="col-4"><span class="fw-bold text-dark small">{{ searchedVehicleDriver.email }}</span></div>
+                  <div class="col-4 text-end">
+                    <a [href]="'mailto:' + searchedVehicleDriver.email" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">
+                      <i class="bi bi-envelope me-1"></i> Send Email
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center mb-1">
+                <div class="rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px; background-color: rgba(111, 66, 193, 0.1);">
+                  <i class="bi bi-telephone text-purple" style="color: #6f42c1;"></i>
+                </div>
+                <div class="row w-100 align-items-center">
+                  <div class="col-4"><span class="small text-muted fw-semibold">Phone</span></div>
+                  <div class="col-4"><span class="fw-bold text-dark small">{{ searchedVehicleDriver.phone }}</span></div>
+                  <div class="col-4 text-end">
+                    <a [href]="'tel:' + searchedVehicleDriver.phone" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1" style="font-size: 0.75rem; font-weight: 600;">
+                      <i class="bi bi-telephone me-1"></i> Call Driver
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          
+          <div *ngIf="searchedVehicle && !searchedVehicleDriver" class="alert alert-warning py-3 rounded-4 mt-4 d-flex align-items-center shadow-sm border-warning border-opacity-25">
+            <i class="bi bi-exclamation-triangle-fill fs-4 text-warning me-3"></i>
+            <div>
+              <div class="fw-bold text-dark mb-1">No Assigned Driver</div>
+              <div class="small text-muted">This vehicle is currently in the fleet but does not have an active driver assigned to it.</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer border-0 px-4 pb-4">
+          <button type="button" class="btn btn-light fw-semibold text-dark rounded-3 px-4 shadow-sm border" (click)="closeVehicleModal()">
+            <i class="bi bi-x me-1"></i> Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

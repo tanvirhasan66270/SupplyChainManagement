@@ -1,0 +1,246 @@
+<div class="container-fluid py-4 px-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1">Commercial Letter of Credit (LC) Hub</h4>
+      <p class="text-muted mb-0 small">Audit trade finance instruments, control swift banking links, and issue custom legal patch amendments.</p>
+    </div>
+    @if (canModify()) {
+      <button class="btn btn-primary px-4 py-2 fw-bold shadow-sm fs-7" (click)="openDrawer()">
+        <i class="bi bi-bank2 me-2"></i>Initiate Letter of Credit
+      </button>
+    }
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger shadow-sm border-2 mb-4 fs-7" role="alert">
+      <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>Finance Layer Fault:</strong> {{ errorMessage }}
+    </div>
+  }
+
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-7">
+          <thead class="table-light text-uppercase fs-8">
+            <tr>
+              <th class="ps-4">LC Reference No</th>
+              <th>Parent Order Node</th>
+              <th>Issuing Bank Terminal</th>
+              <th>Trade Supplier</th>
+              <th>Total Financial Value</th>
+              <th class="text-center">Amend Count</th>
+              <th>Instrument Stage</th>
+              @if (canModify()) {
+                <th class="text-end px-4" width="160">Actions</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (l of lcs; track l.id) {
+              <tr>
+                <td class="ps-4">
+                  <span class="badge bg-dark font-monospace tracking-wide">{{ l.lcNumber || 'NOT-OPENED' }}</span>
+                  @if (l.documentVaultUrl) {
+                    <small class="d-block text-primary font-monospace mt-1"><i class="bi bi-file-earmark-check-fill"></i> Swift Copy</small>
+                  }
+                </td>
+                <td>
+                  <div class="fw-bold text-dark">PO Ref: {{ l.poNumber || 'N/A' }}</div>
+                  <small class="text-muted font-monospace d-block">ID Node: #{{ l.purchaseOrderId }}</small>
+                </td>
+                <td>
+                  <div class="fw-bold text-secondary">{{ l.issuingBankName || 'Central Bank Node' }}</div>
+                  <div class="text-muted small font-monospace"><i class="bi bi-shield-check"></i> Code Ref: {{ l.issuingBankSwiftCode || 'SWIFT-MIGRATED' }}</div>
+                </td>
+                <td>
+                  <div class="fw-bold text-dark">{{ l.supplierName }}</div>
+                  <div class="text-muted small font-sans"><i class="bi bi-envelope-fill me-1"></i>{{ l.supplierEmail }}</div>
+                </td>
+                <td class="font-monospace fw-bold text-success">${{ l.amount | number:'1.2-2' }} {{ l.currency }}</td>
+                <td class="text-center"><span class="badge bg-light text-dark border font-monospace px-2 py-1">{{ l.amendmentCount }}</span></td>
+                <td>
+                  <span class="badge px-2.5 py-1.5 fs-8 text-uppercase border"
+                    [ngClass]="{
+                      'bg-light text-dark': l.lcStatus === 'DRAFT',
+                      'bg-success-subtle text-success border-success': l.lcStatus === 'OPENED',
+                      'bg-info-subtle text-info border-info': l.lcStatus === 'AMENDED',
+                      'bg-danger-subtle text-danger border-danger': l.lcStatus === 'EXPIRED' || l.lcStatus === 'CANCELLED'
+                    }">
+                    {{ l.lcStatus }}
+                  </span>
+                </td>
+                @if (canModify()) {
+                  <td class="text-end px-4">
+                    <div class="d-flex justify-content-end gap-2">
+                      <button class="btn btn-icon btn-light text-success" title="Apply Commercial Amendment" (click)="openAmendWindow(l)">
+                        <i class="bi bi-sliders"></i>
+                      </button>
+                      <button class="btn btn-icon btn-light text-warning" title="Metadata Edit" (click)="edit(l)" [disabled]="l.lcStatus === 'EXPIRED'">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button class="btn btn-icon btn-light text-danger" title="Purge Mapping" (click)="delete(l.id)">
+                        <i class="bi bi-trash3-fill"></i>
+                      </button>
+                    </div>
+                  </td>
+                }
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="8" class="text-center py-5 text-muted font-monospace fs-8">
+                  <i class="bi bi-file-earmark-lock2 fs-2 d-block mb-2 text-secondary"></i>No commercial letters of credit filed in central database indices.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-drawer shadow" [class.open]="isDrawerOpen">
+    <div class="drawer-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
+      <h5 class="fw-bold mb-0">
+        {{ isAmendMode ? 'Official Trade Amendment (PATCH)' : (isEdit ? 'Update LC Configuration' : 'Formulate Commercial LC') }}
+      </h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4" style="overflow-y: auto; height: calc(100vh - 110px);">
+      <form #lcForm="ngForm" (ngSubmit)="lcForm.valid && save()">
+        
+        <div [class.d-none]="isAmendMode">
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Target Corporate Purchase Order</label>
+            <select class="form-select fs-7" [(ngModel)]="lc.purchaseOrderId" name="purchaseOrderId" required [disabled]="isEdit">
+              <option [ngValue]="0">-- Select Firm Purchase Order Node --</option>
+              @for (po of purchaseOrders; track po.id) {
+                <option [ngValue]="po.id">PO: {{ po.poNumber }} (Financial Valuation: ${{ po.totalAmount }})</option>
+              }
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Credit Beneficiary (Supplier)</label>
+            <select class="form-select fs-7" [(ngModel)]="lc.supplierId" name="supplierId" required [disabled]="isEdit">
+              <option [ngValue]="0">-- Select Vendor Beneficiary --</option>
+              @for (s of suppliers; track s.id) {
+                <option [ngValue]="s.id">{{ s.name }} (Email: {{ s.email || 'N/A' }})</option>
+              }
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Issuing Financial Institution (Bank)</label>
+            <select class="form-select fs-7" [(ngModel)]="lc.issuingBankId" name="issuingBankId" required>
+              <option [ngValue]="0">-- Select SWIFT Banking Terminal --</option>
+              @for (b of banks; track b.id) {
+                <option [ngValue]="b.id">{{ b.name }} (Swift: {{ b.swiftCode }})</option>
+              }
+            </select>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-uppercase text-secondary">Incoterms Framework</label>
+              <select class="form-select fs-7" [(ngModel)]="lc.shipmentIncoTerms" name="shipmentIncoTerms" required>
+                <option value="FOB">FOB (Free on Board)</option>
+                <option value="CIF">CIF (Cost, Insurance & Freight)</option>
+                <option value="EXW">EXW (Ex Works)</option>
+                <option value="DDP">DDP (Delivered Duty Paid)</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-uppercase text-secondary">LC Operation State</label>
+              <select class="form-select fs-7" [(ngModel)]="lc.lcStatus" name="lcStatus" required>
+                <option value="DRAFT">DRAFT</option>
+                <option value="OPENED">OPENED (Dispatched)</option>
+                <option value="AMENDED">AMENDED</option>
+                <option value="EXPIRED">EXPIRED</option>
+                <option value="CANCELLED">CANCELLED</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-uppercase text-secondary">Port of Loading</label>
+              <input type="text" class="form-control fs-7" [(ngModel)]="lc.portOfLoading" name="portOfLoading" placeholder="e.g. Port of Singapore">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-uppercase text-secondary">Port of Discharge</label>
+              <input type="text" class="form-control fs-7" [(ngModel)]="lc.portOfDischarge" name="portOfDischarge" placeholder="e.g. Chittagong Port (CTG)">
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-light p-3 rounded border border-warning-subtle mb-3">
+          <h6 class="fw-bold small text-warning mb-2" *ngIf="isAmendMode"><i class="bi bi-info-circle-fill me-1"></i> Active Financial Amendment Bounds</h6>
+          <h6 class="fw-bold small text-muted mb-2" *ngIf="isEdit && !isAmendMode"><i class="bi bi-lock-fill me-1"></i> Financial Bounds Locked (Use Amend mode to change)</h6>
+          <h6 class="fw-bold small text-primary mb-2" *ngIf="!isEdit"><i class="bi bi-currency-dollar me-1"></i> Financial Bounds Configuration</h6>
+          
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Total Credit Value ($ Amount)</label>
+            <input type="number" class="form-control fs-7 font-monospace fw-bold text-success" [(ngModel)]="lc.amount" name="amount" min="1" required [disabled]="isEdit && !isAmendMode">
+          </div>
+
+          <div class="row g-2">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-uppercase text-secondary">Latest Shipment Date</label>
+              <input type="date" class="form-control fs-7 font-monospace" [(ngModel)]="lc.latestShipmentDate" name="latestShipmentDate" required [disabled]="isEdit && !isAmendMode">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-uppercase text-secondary">LC Expiry Deadline</label>
+              <input type="date" class="form-control fs-7 font-monospace text-danger" [(ngModel)]="lc.expiryDate" name="expiryDate" required [disabled]="isEdit && !isAmendMode">
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4" *ngIf="!isAmendMode">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Official SWIFT Letter Document Copy</label>
+          
+          <!-- Show LIVE PREVIEW of newly selected image (Create or Update) -->
+          <div *ngIf="selectedFilePreview" class="mb-3 p-3 bg-light border border-primary border-2 rounded text-center shadow-sm">
+            <h6 class="fs-7 text-primary fw-bold mb-2 text-start"><i class="bi bi-eye me-2"></i>New File Selected (Live Preview):</h6>
+            <img [src]="selectedFilePreview" alt="New SWIFT Document Preview" class="img-thumbnail" style="max-height: 180px; object-fit: contain;">
+          </div>
+
+          <!-- Show existing document link or preview if available AND no new file is selected -->
+          <div *ngIf="isEdit && lc.documentVaultUrl && !selectedFilePreview" class="mb-3 p-3 bg-light border rounded text-center">
+            <h6 class="fs-7 text-dark fw-bold mb-2 text-start">Existing Document:</h6>
+            
+            <div *ngIf="isImage(lc.documentVaultUrl)" class="d-inline-block position-relative">
+              <img [src]="getFileUrl(lc.documentVaultUrl)" alt="SWIFT Document Preview" class="img-thumbnail shadow-sm" style="max-height: 180px; object-fit: contain;">
+              <div class="mt-2 text-center">
+                <a [href]="getFileUrl(lc.documentVaultUrl)" target="_blank" class="badge bg-primary text-decoration-none px-3 py-1"><i class="bi bi-arrows-fullscreen me-1"></i>View Full Image</a>
+              </div>
+            </div>
+
+            <div *ngIf="!isImage(lc.documentVaultUrl)" class="d-flex align-items-center justify-content-start gap-2">
+              <i class="bi bi-file-earmark-pdf-fill text-danger fs-3"></i>
+              <a [href]="getFileUrl(lc.documentVaultUrl)" target="_blank" class="fs-7 text-primary fw-bold text-decoration-none">View Uploaded PDF Document</a>
+            </div>
+          </div>
+
+          <input type="file" class="form-control fs-7" (change)="onFileChange($event)" accept="image/*,.pdf">
+          <small *ngIf="isEdit && lc.documentVaultUrl" class="text-muted fs-8 d-block mt-1">Upload a new file only if you want to replace the existing one.</small>
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 pt-2 border-top">
+          <button class="btn btn-success flex-grow-1 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-bold fs-7 text-uppercase" type="submit">
+            <i class="bi bi-cloud-arrow-up-fill"></i> 
+            {{ isAmendMode ? 'Deploy Legal Patch' : (isEdit ? 'Commit Metadata' : 'Open Credit Node') }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3 fs-7 text-uppercase" (click)="reset()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  @if (isDrawerOpen) {
+    <div class="drawer-backdrop" (click)="closeDrawer()"></div>
+  }
+
+</div>

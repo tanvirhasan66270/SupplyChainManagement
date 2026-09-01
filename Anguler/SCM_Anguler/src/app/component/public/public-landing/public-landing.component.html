@@ -1,0 +1,154 @@
+<div class="public-landing">
+
+  <!-- HERO SECTION -->
+  <section class="hero-section text-white position-relative overflow-hidden">
+    <div class="hero-bg-shapes"></div>
+    <div class="container py-5 z-2 position-relative">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+          <div class="badge bg-white/10 text-white text-uppercase px-3 py-1.5 fw-bold mb-3 small border border-white/20 rounded-pill">
+            <i class="bi bi-globe2 me-1"></i> Enterprise Global SCM Platform
+          </div>
+          <h1 class="display-3 fw-black text-white mb-3 leading-tight">
+            The Future of<br>
+            <span class="text-gradient-primary">Supply Chain</span> Management
+          </h1>
+          <p class="lead text-white-50 mb-4 col-lg-10">
+            Streamline procurement, freight forwarding, customs clearance, and warehouse operations across 150+ ports worldwide — all from a single dashboard.
+          </p>
+          <div class="d-flex gap-3 flex-wrap">
+            <a routerLink="/join-us" class="btn btn-lg btn-warning px-5 py-3 fw-bold rounded-pill shadow-lg">
+              <i class="bi bi-rocket-takeoff me-2"></i> Join Us Free
+            </a>
+            <a routerLink="/services" class="btn btn-lg btn-outline-light px-5 py-3 fw-bold rounded-pill">
+              Explore Solutions
+            </a>
+          </div>
+
+          <div class="d-flex gap-4 mt-5 pt-3 border-top border-white/10">
+            <div>
+              <h4 class="fw-black text-white mb-0 font-monospace">৳4.8B+</h4>
+              <small class="text-white-50">Trade Volume</small>
+            </div>
+            <div>
+              <h4 class="fw-black text-white mb-0 font-monospace">150+</h4>
+              <small class="text-white-50">Ports Connected</small>
+            </div>
+            <div>
+              <h4 class="fw-black text-white mb-0 font-monospace">99.8%</h4>
+              <small class="text-white-50">QC Pass Rate</small>
+            </div>
+            <div>
+              <h4 class="fw-black text-white mb-0 font-monospace">24/7</h4>
+              <small class="text-white-50">Support</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tracking Widget -->
+        <div class="col-lg-5">
+          <div class="card glass-card border-white/10 p-4 rounded-4">
+            <h5 class="fw-bold text-white mb-2">
+              <i class="bi bi-geo-alt-fill text-warning me-2"></i> Live Container Tracking
+            </h5>
+            <p class="small text-white-50 mb-3">No login required. Track your freight, air bill, or invoice status instantly.</p>
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-white/10 border-white/20 text-white-50"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control bg-white/10 border-white/20 text-white placeholder-white/40" placeholder="Bill of Lading / Booking No." [(ngModel)]="trackingNumber">
+              <button class="btn btn-warning fw-bold" (click)="trackShipment()">Track</button>
+            </div>
+
+            <div class="tracking-result p-3 rounded-3" *ngIf="showDetails">
+              <div class="d-flex justify-content-between small mb-2">
+                <span class="text-white-50">Vessel: <strong class="text-white">{{ trackingDetails?.vessel }}</strong></span>
+                <span class="badge bg-warning text-dark fw-bold">{{ trackingDetails?.status }}</span>
+              </div>
+              <div class="progress mb-2" style="height: 6px;">
+                <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" [style.width.%]="trackingDetails?.progress"></div>
+              </div>
+              <div class="d-flex justify-content-between small font-monospace text-white-50">
+                <span>{{ trackingDetails?.origin }}</span>
+                <span>ETA: {{ trackingDetails?.eta }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES OVERVIEW -->
+  <section class="py-5 bg-white">
+    <div class="container py-4">
+      <div class="text-center mb-5">
+        <span class="badge bg-primary-subtle text-primary text-uppercase px-3 py-1.5 fw-bold mb-2 small">What We Do</span>
+        <h2 class="fw-black text-dark display-6">End-to-End Supply Chain Solutions</h2>
+        <p class="text-secondary col-lg-7 mx-auto">From procurement to last-mile delivery, we orchestrate every node of your global trade operations.</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3" *ngFor="let s of services; let i = index">
+          <div class="card border-0 shadow-sm p-4 rounded-4 h-100 service-card">
+            <div class="service-icon-wrapper mb-3" [ngClass]="s.iconBg">
+              <i class="bi" [ngClass]="s.icon" [style.color]="s.color"></i>
+            </div>
+            <h5 class="fw-bold text-dark mb-2">{{ s.title }}</h5>
+            <p class="text-secondary small mb-0">{{ s.desc }}</p>
+            <a routerLink="/services" class="stretched-link"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE US -->
+  <section class="py-5 bg-light">
+    <div class="container py-4">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <span class="badge bg-success-subtle text-success text-uppercase px-3 py-1 fw-bold mb-3 small">Why Global SCM Pro</span>
+          <h2 class="fw-black text-dark display-6 mb-4">Trusted by Fortune 500 Companies</h2>
+
+          <div class="d-flex gap-3 mb-4" *ngFor="let item of whyUs">
+            <div class="flex-shrink-0">
+              <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;" [ngClass]="item.iconBg">
+                <i class="bi" [ngClass]="item.icon" [style.color]="item.color"></i>
+              </div>
+            </div>
+            <div>
+              <h6 class="fw-bold text-dark mb-1">{{ item.title }}</h6>
+              <p class="text-secondary small mb-0">{{ item.desc }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="row g-3">
+            <div class="col-6" *ngFor="let stat of stats">
+              <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100">
+                <h3 class="fw-black mb-1 font-monospace" [style.color]="stat.color">{{ stat.value }}</h3>
+                <small class="text-secondary fw-semibold">{{ stat.label }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="py-5 bg-primary text-white position-relative overflow-hidden">
+    <div class="container py-5 text-center position-relative z-2">
+      <h2 class="display-5 fw-black mb-3">Ready to Transform Your Supply Chain?</h2>
+      <p class="text-white-50 col-lg-6 mx-auto mb-4">Join 2,000+ businesses already using Global SCM Pro to manage their international trade operations.</p>
+      <div class="d-flex gap-3 justify-content-center">
+        <a routerLink="/join-us" class="btn btn-lg btn-warning px-5 py-3 fw-bold rounded-pill shadow-lg">
+          <i class="bi bi-person-plus me-2"></i> Create Free Account
+        </a>
+        <a routerLink="/contact" class="btn btn-lg btn-outline-light px-5 py-3 fw-bold rounded-pill">
+          Talk to Sales
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>

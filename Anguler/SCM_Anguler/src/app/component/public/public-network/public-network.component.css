@@ -1,0 +1,24 @@
+.public-network {
+  background-color: #f8fafc;
+}
+
+.network-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+}
+
+.hub-card {
+  transition: all 0.3s ease;
+}
+
+.hub-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08) !important;
+}
+
+.network-visual {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+body.dark-theme .public-network {
+  background-color: #0f172a;
+}

@@ -1,0 +1,7 @@
+- [x] Create `SalesOfficerProfileScreen`
+    - [x] Basic structure and controllers
+    - [x] Data fetching using `currentSalesOfficerProvider`
+    - [x] UI Layout (Header, Form, Location Metadata)
+    - [x] Edit/Update logic and image picking
+- [x] Add route to `appRoute.dart`
+- [x] Verify implementation

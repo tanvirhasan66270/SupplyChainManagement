@@ -1,0 +1,245 @@
+<div class="container-fluid px-4 mt-4">
+  
+  <!-- হেডার প্যানেল -->
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="mb-1 text-dark fw-bold">Warehouse Management System</h4>
+      <p class="text-muted mb-0 small">Control enterprise logistics hubs, track footprint capacities, and resolve nested shipping territories.</p>
+    </div>
+    <!-- শুধুমাত্র ADMIN এবং MANAGER দের জন্য ডিপ্লয় বাটন দৃশ্যমান হবে -->
+    <button *ngIf="canModifyWarehouse()" class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 shadow-sm fw-semibold" (click)="openDrawer()">
+      <i class="bi bi-plus-circle-fill"></i> Deploy New Warehouse
+    </button>
+  </div>
+
+  <!-- আলাদা ৩টি সার্চ অপশন সম্বলিত কার্ড -->
+  <div class="card border-0 shadow-sm rounded-3 mb-4 p-3 bg-light">
+    <div class="row g-3 align-items-center">
+      <div class="col-md-12">
+        <span class="fw-bold text-secondary small text-uppercase"><i class="bi bi-filter me-1"></i> Multi-Criteria Search Filter</span>
+      </div>
+      
+      <!-- অপশন ১: ID দিয়ে সার্চ -->
+      <div class="col-md-4">
+        <div class="input-group shadow-sm">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-hash text-secondary"></i></span>
+          <input type="text" class="form-control bg-white border-start-0 fs-7" 
+                 placeholder="Filter by ID..." 
+                 [(ngModel)]="searchId" 
+                 (input)="applySearch()">
+        </div>
+      </div>
+
+      <!-- অপশন ২: Email দিয়ে সার্চ -->
+      <div class="col-md-4">
+        <div class="input-group shadow-sm">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-envelope text-secondary"></i></span>
+          <input type="text" class="form-control bg-white border-start-0 fs-7" 
+                 placeholder="Filter by Email..." 
+                 [(ngModel)]="searchEmail" 
+                 (input)="applySearch()">
+        </div>
+      </div>
+
+      <!-- অপশন ৩: Status দিয়ে সার্চ -->
+      <div class="col-md-4">
+        <div class="input-group shadow-sm">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-toggle-on text-secondary"></i></span>
+          <select class="form-select bg-white border-start-0 fs-7" 
+                  [(ngModel)]="searchStatus" 
+                  (change)="applySearch()">
+            <option value="">All Operational Status</option>
+            <option value="active">Active</option>
+            <option value="locked">Locked</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ওয়ারহাউস টেবিল কার্ড -->
+  <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light text-uppercase fs-7 tracking-wider">
+            <tr>
+              <th class="ps-4" width="80">ID</th>
+              <th>Depot Details</th>
+              <th>Volume Capacity</th>
+              <th>Aggregated Address String</th>
+              <th>Operational Status</th>
+              <th *ngIf="canModifyWarehouse()" class="text-end pe-4" width="160">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let w of filteredWarehouses" class="transition-all">
+              <td class="ps-4 text-muted fw-medium font-monospace">#{{ w.id }}</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar-sm bg-primary-subtle text-primary rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold fs-6">
+                    <i class="bi bi-house-gear-fill"></i>
+                  </div>
+                  <div>
+                    <span class="fw-semibold text-dark d-block mb-0.5">{{ w.name }}</span>
+                    <span class="text-secondary small d-block"><i class="bi bi-envelope me-1"></i>{{ w.email }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-dark px-2.5 py-1.5 fw-semibold font-monospace">
+                  {{ w.capacity | number }} SQFT
+                </span>
+              </td>
+              <td>
+                <span class="text-dark small fw-medium d-block text-truncate" style="max-width: 340px;" [title]="w.address">
+                  {{ w.address }}
+                </span>
+              </td>
+              <td>
+                <span class="badge rounded-pill px-3 py-1.5 fs-8" 
+                      [class.bg-success-subtle]="w.isActive" [class.text-success]="w.isActive"
+                      [class.bg-danger-subtle]="!w.isActive" [class.text-danger]="!w.isActive">
+                  <i class="bi bi-circle-fill me-1 small-dot"></i> {{ w.isActive ? 'Active' : 'Locked' }}
+                </span>
+              </td>
+              <td *ngIf="canModifyWarehouse()" class="text-end pe-4">
+                <div class="d-flex justify-content-end gap-2">
+                  <button class="btn btn-icon btn-light border-0 text-warning" title="Edit Parameters" (click)="edit(w)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-icon btn-light border-0 text-danger" title="Purge Record" (click)="delete(w.id)">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!filteredWarehouses || filteredWarehouses.length === 0">
+              <td [attr.colspan]="canModifyWarehouse() ? 6 : 5" class="text-center py-5 text-muted">
+                <i class="bi bi-inboxes fs-1 d-block mb-2 text-secondary"></i>
+                No warehouses found matching the search criteria.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-backdrop" *ngIf="isDrawerOpen" (click)="closeDrawer()"></div>
+
+  <div class="slide-drawer" [class.show]="isDrawerOpen">
+    <div class="drawer-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="mb-1 fw-bold">{{ isEdit ? 'Modify Warehouse Data' : 'Configure New Warehouse' }}</h5>
+        <p class="mb-0 text-muted small">Establish logistics terminal parameters.</p>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4" style="overflow-y: auto; height: calc(100vh - 100px);">
+      <form (ngSubmit)="save()">
+        
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-secondary small text-uppercase">Warehouse Hub Name</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-building"></i></span>
+            <input type="text" class="form-control border-start-0 ps-0 fs-7" placeholder="e.g., Chittagong Main Port Hub" [(ngModel)]="warehouse.name" name="name" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-secondary small text-uppercase">Official Contact Email</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-envelope"></i></span>
+            <input type="email" class="form-control border-start-0 ps-0 fs-7" placeholder="e.g., depot.ctg@domain.com" [(ngModel)]="warehouse.email" name="email" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-secondary small text-uppercase">Footprint Storage Capacity (SQFT)</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-boxes"></i></span>
+            <input type="number" class="form-control border-start-0 ps-0 fs-7 font-monospace" placeholder="e.g., 25000" [(ngModel)]="warehouse.capacity" name="capacity" required>
+          </div>
+        </div>
+
+        <div class="p-3 bg-light rounded-3 mb-3 border shadow-sm">
+          <span class="fw-bold d-block text-dark small text-uppercase mb-3 text-primary">
+            <i class="bi bi-geo-alt-fill me-1"></i> Territorial Distribution Hierarchy
+          </span>
+          
+          <div class="mb-2">
+            <label class="form-label text-muted small fw-medium">Country</label>
+            <select class="form-select fs-7" [(ngModel)]="selectedCountryId" name="countryId" (change)="onCountryChange(); generateFullAddress()">
+              <option value="">-- Select Country --</option>
+              <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label text-muted small fw-medium">Division</label>
+            <select class="form-select fs-7" [(ngModel)]="selectedDivisionId" name="divisionId" (change)="onDivisionChange(); generateFullAddress()" [disabled]="!divisions || divisions.length === 0">
+              <option value="">-- Select Division --</option>
+              <option *ngFor="let d of divisions" [value]="d.id">{{ d.name }}</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label text-muted small fw-medium">District</label>
+            <select class="form-select fs-7" [(ngModel)]="selectedDistrictId" name="districtId" (change)="onDistrictChange(); generateFullAddress()" [disabled]="!districts || districts.length === 0">
+              <option value="">-- Select District --</option>
+              <option *ngFor="let dst of districts" [value]="dst.id">{{ dst.name }}</option>
+            </select>
+          </div>
+
+          <div class="mb-1">
+            <label class="form-label text-muted small fw-medium">Police Station Terminal</label>
+            <select class="form-select fs-7" [(ngModel)]="warehouse.policeStationId" name="policeStationId" (change)="generateFullAddress()" [disabled]="!policeStations || policeStations.length === 0" required>
+              <option value="0">-- Select Station --</option>
+              <option *ngFor="let ps of policeStations" [value]="ps.id">{{ ps.name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold text-secondary small text-uppercase">Local Street Address</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-signpost"></i></span>
+            <input type="text" class="form-control border-start-0 ps-0 fs-7" placeholder="e.g., Gate-3, Industrial Area" [(ngModel)]="warehouse.location" name="location" (input)="generateFullAddress()" required>
+          </div>
+        </div>
+
+        <div class="mb-4 bg-primary-subtle border border-primary-subtle p-3 rounded-3 position-relative overflow-hidden">
+          <div class="position-absolute top-0 end-0 p-2 opacity-10">
+            <i class="bi bi-magic fs-1 text-primary"></i>
+          </div>
+          <label class="form-label fw-bold text-primary small text-uppercase mb-2"><i class="bi bi-cpu-fill me-1"></i>Full Address</label>
+          <div class="bg-white p-2.5 rounded border text-dark fs-7 fw-medium font-monospace shadow-sm" style="min-height: 55px; word-break: break-word;">
+            <i class="bi bi-geo-fill text-danger me-1" *ngIf="warehouse.address"></i>
+            {{ warehouse.address || '' }}
+          </div>
+        </div>
+
+        <!-- স্ট্যাটাস ফিল্ড: LOGISTICS_OFFICER হলে এটি ফর্মে দেখাবে না -->
+        <div *ngIf="activeRole !== 'LOGISTICS_OFFICER'" class="mb-4 bg-light p-3 rounded-3 d-flex justify-content-between align-items-center border">
+          <div>
+            <label class="form-label fw-semibold text-dark mb-0 d-block">Operational Status Lifecycle</label>
+            <span class="text-muted small">Toggle to accept stocks or flag warehouse as locked.</span>
+          </div>
+          <div class="form-check form-switch fs-4 mb-0">
+            <input class="form-check-input pointer" type="checkbox" role="switch" [(ngModel)]="warehouse.isActive" name="isActive">
+          </div>
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 mt-5">
+          <button class="btn btn-success flex-grow-1 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-semibold" type="submit">
+            <i class="bi bi-cloud-arrow-up-fill"></i> {{ isEdit ? 'Commit Updates' : 'Deploy Node Asset' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3" (click)="reset()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>

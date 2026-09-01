@@ -1,0 +1,247 @@
+<div class="container-fluid px-4 mt-4">
+
+  <div class="drawer-backdrop" *ngIf="isDrawerOpen" (click)="closeDrawer()"></div>
+
+  <div class="slide-drawer" [class.show]="isDrawerOpen">
+    <div class="drawer-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="mb-1 fw-bold">{{ isEdit ? 'Modify Supplier Core Parameters' : 'Deploy New Supplier Station Node' }}</h5>
+        <p class="mb-0 text-muted small">Establish high-level persistence profiles.</p>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4" style="overflow-y: auto; height: calc(100vh - 100px);">
+      
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm border-2 mb-4" role="alert">
+        <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+        <div class="fs-7 fw-semibold">{{ errorMessage }}</div>
+        <button type="button" class="btn-close small" (click)="errorMessage = null" aria-label="Close"></button>
+      </div>
+
+      <form #supplierForm="ngForm" (ngSubmit)="supplierForm.valid && save()">
+        
+        <div class="mb-3 text-center p-3 bg-light rounded-3 border">
+          <label class="form-label fw-semibold text-secondary small text-uppercase d-block mb-2">Corporate Identity Logo/Portrait</label>
+          <div class="position-relative d-inline-block mb-2">
+            <div class="avatar-md bg-white rounded-circle d-flex align-items-center justify-content-center overflow-hidden border" style="width: 85px; height: 85px; margin: 0 auto;">
+              <img *ngIf="imagePreview" [src]="imagePreview" class="w-100 h-100 object-fit-cover">
+              <i *ngIf="!imagePreview" class="bi bi-building-up text-secondary fs-2"></i>
+            </div>
+            <button *ngIf="imagePreview" type="button" class="btn btn-danger btn-sm rounded-circle position-absolute bottom-0 end-0" (click)="removeSelectedFile(fileInput)"><i class="bi bi-x-lg"></i></button>
+          </div>
+          <input #fileInput type="file" class="form-control form-control-sm" accept="image/*" (change)="onFileSelected($event)">
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Supplier Vendor Name</label>
+            <input type="text" class="form-control fs-7" [class.is-invalid]="nameRef.invalid && (nameRef.dirty || nameRef.touched || supplierForm.submitted)" placeholder="e.g., Apex Logistics" [(ngModel)]="supplier.name" name="name" #nameRef="ngModel" required>
+            <div class="invalid-feedback small fw-bold mt-1" *ngIf="nameRef.invalid && (nameRef.dirty || nameRef.touched || supplierForm.submitted)">
+              Supplier Vendor Name is required!
+            </div>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Contact Person Alias</label>
+            <input type="text" class="form-control fs-7" [class.is-invalid]="cpRef.invalid && (cpRef.dirty || cpRef.touched || supplierForm.submitted)" placeholder="Representative Name" [(ngModel)]="supplier.contactPerson" name="contactPerson" #cpRef="ngModel" required>
+            <div class="invalid-feedback small fw-bold mt-1" *ngIf="cpRef.invalid && (cpRef.dirty || cpRef.touched || supplierForm.submitted)">
+              Contact Person name is mandatory!
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Corporate Mail Identity</label>
+            <input type="email" class="form-control fs-7" [class.is-invalid]="emailRef.invalid && (emailRef.dirty || emailRef.touched || supplierForm.submitted)" placeholder="vendor@domain.com" [(ngModel)]="supplier.email" name="email" #emailRef="ngModel" required email>
+            <div class="invalid-feedback small fw-bold mt-1" *ngIf="emailRef.invalid && (emailRef.dirty || emailRef.touched || supplierForm.submitted)">
+              <span *ngIf="emailRef.errors?.['required']">Email address is required!</span>
+              <span *ngIf="emailRef.errors?.['email']">Please enter a valid format!</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Mobile Contact Vector</label>
+            <input type="text" class="form-control fs-7" [class.is-invalid]="phoneRef.invalid && (phoneRef.dirty || phoneRef.touched || supplierForm.submitted)" placeholder="017XXXXXXXX" [(ngModel)]="supplier.phone" name="phone" #phoneRef="ngModel" required minlength="11">
+            <div class="invalid-feedback small fw-bold mt-1" *ngIf="phoneRef.invalid && (phoneRef.dirty || phoneRef.touched || supplierForm.submitted)">
+              <span *ngIf="phoneRef.errors?.['required']">Phone vector index required!</span>
+              <span *ngIf="phoneRef.errors?.['minlength']">Must be 11 characters minimum!</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3" *ngIf="!isEdit">
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Gateway Access Password</label>
+            <input type="password" class="form-control fs-7" [class.is-invalid]="passRef.invalid && (passRef.dirty || passRef.touched || supplierForm.submitted)" placeholder="••••••••" [(ngModel)]="supplier.password" name="password" #passRef="ngModel" required minlength="6">
+            <div class="invalid-feedback small fw-bold mt-1" *ngIf="passRef.invalid && (passRef.dirty || passRef.touched || supplierForm.submitted)">
+              <span *ngIf="passRef.errors?.['required']">Password parameter required!</span>
+              <span *ngIf="passRef.errors?.['minlength']">Length must exceed 5 chars!</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Confirm Access Password</label>
+            <input type="password" class="form-control fs-7" [class.is-invalid]="cPassRef.invalid && (cPassRef.dirty || cPassRef.touched || supplierForm.submitted)" placeholder="••••••••" [(ngModel)]="confirmPassword" name="confirmPassword" #cPassRef="ngModel" required>
+            <div class="invalid-feedback small fw-bold mt-1" *ngIf="cPassRef.invalid && (cPassRef.dirty || cPassRef.touched || supplierForm.submitted)">
+              Verification token cannot be empty!
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">National Identity Matrix (NID)</label>
+            <input type="text" class="form-control fs-7 font-monospace" [class.is-invalid]="nidRef.invalid && (nidRef.dirty || nidRef.touched || supplierForm.submitted)" placeholder="199XXXXXXXXXX" [(ngModel)]="supplier.nidNumber" name="nidNumber" #nidRef="ngModel" required>
+            <div class="invalid-feedback small fw-bold mt-1" *ngIf="nidRef.invalid && (nidRef.dirty || nidRef.touched || supplierForm.submitted)">
+              National ID mapping is required!
+            </div>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Passport Index</label>
+            <input type="text" class="form-control fs-7 font-monospace" placeholder="SXXXXXXXX" [(ngModel)]="supplier.passportNumber" name="passportNumber">
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-4">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Average Lead Time (Days)</label>
+            <input type="number" class="form-control fs-7 text-center" [class.is-invalid]="ltRef.invalid && (supplierForm.submitted)" min="1" [(ngModel)]="supplier.averageLeadTimeDays" name="averageLeadTimeDays" #ltRef="ngModel" required>
+            <div class="invalid-feedback small" *ngIf="ltRef.invalid && (supplierForm.submitted)">Invalid!</div>
+          </div>
+          <div class="col-4">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Birthdate/Est.</label>
+            <input type="date" class="form-control fs-7" [class.is-invalid]="dobRef.invalid && (supplierForm.submitted)" [(ngModel)]="supplier.dob" name="dob" #dobRef="ngModel" required>
+            <div class="invalid-feedback small" *ngIf="dobRef.invalid && (supplierForm.submitted)">Required!</div>
+          </div>
+          <div class="col-4">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Gender Spectrum</label>
+            <select class="form-select fs-7" [class.is-invalid]="genderRef.invalid && (supplierForm.submitted)" [(ngModel)]="supplier.gender" name="gender" #genderRef="ngModel" required>
+              <option value="">-- Gender --</option>
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+            </select>
+            <div class="invalid-feedback small" *ngIf="genderRef.invalid && (supplierForm.submitted)">Required!</div>
+          </div>
+        </div>
+
+        <div class="mb-3 bg-dark-subtle p-2.5 rounded border" *ngIf="isEdit">
+          <label class="form-label text-secondary fw-bold small text-uppercase mb-1">Operational Rating Index Matrix</label>
+          <input type="number" step="0.1" max="5" class="form-control fs-7 font-monospace fw-bold text-primary text-center" [(ngModel)]="supplier.rating" name="rating">
+        </div>
+
+        <div class="p-3 bg-light rounded-3 mb-3 border shadow-sm">
+          <span class="fw-bold d-block text-dark small text-uppercase mb-3 text-primary"><i class="bi bi-geo-alt-fill me-1"></i> Regional Matrix Core Hub</span>
+          <div class="mb-2"><select class="form-select fs-7" [(ngModel)]="selectedCountryId" name="countryId" (change)="onCountryChange()"><option [ngValue]="null">-- Country Base --</option><option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option></select></div>
+          <div class="mb-2"><select class="form-select fs-7" [(ngModel)]="selectedDivisionId" name="divisionId" (change)="onDivisionChange()" [disabled]="!divisions || divisions.length === 0"><option [ngValue]="null">-- Division Cluster --</option><option *ngFor="let d of divisions" [value]="d.id">{{ d.name }}</option></select></div>
+          <div class="mb-2"><select class="form-select fs-7" [(ngModel)]="selectedDistrictId" name="districtId" (change)="onDistrictChange()" [disabled]="!districts || districts.length === 0"><option [ngValue]="null">-- District Node --</option><option *ngFor="let dst of districts" [value]="dst.id">{{ dst.name }}</option></select></div>
+          <div class="mb-1">
+            <select class="form-select fs-7" [class.is-invalid]="psIdRef.value === 0 && supplierForm.submitted" [(ngModel)]="supplier.policeStationId" name="policeStationId" (change)="generateFullAddress()" [disabled]="!policeStations || policeStations.length === 0" #psIdRef="ngModel" required>
+              <option value="0">-- Police Station Terminal --</option>
+              <option *ngFor="let ps of policeStations" [value]="ps.id">{{ ps.name }}</option>
+            </select>
+            <div class="invalid-feedback small fw-bold mt-1" *ngIf="psIdRef.value === 0 && supplierForm.submitted">
+              Selection must settle up to active Police Station terminal!
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-secondary small text-uppercase">Local Terminal Street Vector Line</label>
+          <input type="text" class="form-control fs-7" [class.is-invalid]="streetRef.invalid && (streetRef.dirty || streetRef.touched || supplierForm.submitted)" placeholder="e.g., Gate 4, Warehouse 12" [(ngModel)]="streetAddress" name="streetAddress" #streetRef="ngModel" (input)="generateFullAddress()" required>
+          <div class="invalid-feedback small fw-bold mt-1" *ngIf="streetRef.invalid && (streetRef.dirty || streetRef.touched || supplierForm.submitted)">
+            Street address vector line is required!
+          </div>
+        </div>
+
+        <div class="mb-4 bg-primary-subtle border border-primary-subtle p-3 rounded-3">
+          <label class="form-label fw-bold text-primary small text-uppercase mb-2"><i class="bi bi-cpu-fill me-1"></i>Aggregated Compiled Target Address</label>
+          <div class="bg-white p-2.5 rounded border text-dark fs-7 fw-medium font-monospace shadow-sm" style="min-height: 55px; word-break: break-word;">
+            {{ supplier.address || 'Standing by for coordinate matrix parameters...' }}
+          </div>
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 mt-5">
+          <button class="btn btn-success flex-grow-1 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-semibold" type="submit">
+            <i class="bi bi-cloud-arrow-up-fill"></i> {{ isEdit ? 'Mutate Manifest Node' : 'Initialize Supplier Node' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3" (click)="reset()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="mb-1 text-dark fw-bold">Supplier Infrastructure Workspace</h4>
+      <p class="text-muted mb-0 small">Administer global enterprise supply vectors, coordinate lead metrics and manage account authorizations.</p>
+    </div>
+    <button class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 shadow-sm fw-semibold" (click)="openDrawer()">
+      <i class="bi bi-plus-circle-fill"></i> Deploy New Supplier
+    </button>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light text-uppercase fs-7 tracking-wider">
+            <tr>
+              <th class="ps-4" width="80">ID</th>
+              <th>Vendor Identity Specs</th>
+              <th>Representative Contact</th>
+              <th>Performance Statistics</th>
+              <th>Operational Address Vector</th>
+              <th class="text-end pe-4" width="160">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of suppliers">
+              <td class="ps-4 text-muted fw-medium font-monospace">#{{ s.id }}</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar-sm bg-light border text-primary rounded-circle me-3 d-flex align-items-center justify-content-center overflow-hidden" style="width: 40px; height: 40px;">
+                    <img *ngIf="s.image" [src]="imageBaseUrl+s?.image" class="w-100 h-100 object-fit-cover" (error)="onImageError($event)" />
+                    <i *ngIf="!s.image" class="bi bi-building-fill fs-5 text-secondary"></i>
+                  </div>
+                  <div>
+                    <span class="fw-semibold text-dark d-block mb-0.5">{{ s.name }}</span>
+                    <span class="text-secondary small d-block"><i class="bi bi-envelope-at me-1"></i>{{ s.email }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="d-block text-dark fw-bold small">{{ s.contactPerson }}</span>
+                <span class="text-muted small"><i class="bi bi-telephone me-1"></i>{{ s.phone }}</span>
+              </td>
+              <td>
+                <span class="d-block small text-dark fw-bold"><i class="bi bi-star-fill text-warning me-1"></i>{{ s.rating | number:'1.1-1' }}</span>
+                <span class="badge bg-secondary-subtle text-secondary border border-secondary fs-8 mt-1">Lead: {{ s.averageLeadTimeDays }} Days</span>
+              </td>
+              <td>
+                <span class="text-dark small fw-medium d-block text-truncate" style="max-width: 250px;" [title]="s.address">
+                  {{ s.address }}
+                </span>
+              </td>
+              <td class="text-end pe-4">
+                <div class="d-flex justify-content-end gap-2">
+                  <button class="btn btn-icon btn-light border-0 text-warning" title="Modify Matrix Node" (click)="edit(s)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-icon btn-light border-0 text-danger" title="Purge Signature Node" (click)="delete(s.id)">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!suppliers || suppliers.length === 0">
+              <td colspan="6" class="text-center py-5 text-muted">
+                <i class="bi bi-building-dash fs-1 d-block mb-2 text-secondary"></i>
+                No validation tracking nodes found in frontline supply registers.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>

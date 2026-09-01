@@ -1,0 +1,375 @@
+/* Core Page Layout Matrix */
+.container-fluid { 
+  background-color: #f8fafc; 
+  min-height: 100vh; 
+}
+
+.bg-white { 
+  background-color: #ffffff !important; 
+}
+
+.bg-primary { 
+  background-color: #4f63f0 !important; 
+}
+
+.text-primary { 
+  color: #4f63f0 !important; 
+}
+
+.btn-primary { 
+  background-color: #4f63f0 !important; 
+  border-color: #4f63f0 !important; 
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #3b4fc2 !important;
+  border-color: #3b4fc2 !important;
+}
+
+.border-start.border-primary { 
+  border-color: #4f63f0 !important; 
+}
+
+/* Grid Table Elements Profile Styling */
+.table th { 
+  padding: 14px 12px; 
+  border-bottom: 2px solid #e2e8f0; 
+  letter-spacing: 0.5px;
+}
+
+.table td { 
+  padding: 12px 12px; 
+  border-bottom: 1px solid #edf2f7; 
+}
+
+/* Avatar Profile Circular Wrappers */
+.avatar-wrapper {
+  width: 44px; 
+  height: 44px; 
+  overflow: hidden; 
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  display: inline-block;
+}
+
+.avatar-wrapper img {
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 44px; 
+  height: 44px; 
+  border-radius: 50%;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  font-size: 13px; 
+  letter-spacing: 0.5px;
+}
+
+/* Action Utilities Matrix Mapping Buttons */
+.btn-action-edit {
+  color: #3b82f6; 
+  background-color: #eff6ff; 
+  border: 1px solid #bfdbfe;
+  transition: all 0.2s ease;
+}
+
+.btn-action-edit:hover {
+  color: #ffffff; 
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.btn-action-delete {
+  color: #ef4444; 
+  background-color: #fef2f2; 
+  border: 1px solid #fca5a5;
+  transition: all 0.2s ease;
+}
+
+.btn-action-delete:hover {
+  color: #ffffff; 
+  background-color: #ef4444;
+  border-color: #ef4444;
+}
+
+/* Registration Modal Layout */
+.registration-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(15, 23, 42, 0.4);
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(3px);
+}
+
+.registration-modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.registration-modal {
+  width: 100%;
+  max-width: 950px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transform: translateY(20px) scale(0.98);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.registration-modal-overlay.open .registration-modal {
+  transform: translateY(0) scale(1);
+}
+
+.reg-modal-header {
+  background: linear-gradient(135deg, #6254e8 0%, #8c52ff 100%);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.reg-modal-header-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  font-size: 20px;
+}
+
+.reg-modal-body {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar Stepper */
+.reg-sidebar {
+  width: 240px;
+  background-color: #f8fafc;
+  border-right: 1px solid #edf2f7;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.stepper-item {
+  display: flex;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.stepper-item:hover {
+  opacity: 0.85;
+}
+
+.stepper-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 40px;
+  bottom: -30px;
+  width: 1px;
+  border-left: 2px dashed #cbd5e1;
+  z-index: -1;
+}
+
+.stepper-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.stepper-icon-1 { background-color: #f3e8ff; color: #a855f7; }
+.stepper-item.active .stepper-icon-1 { background-color: #8b5cf6; color: #fff; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); }
+.stepper-item.active .stepper-text-1 h6 { color: #8b5cf6; font-weight: 700; }
+
+.stepper-icon-2 { background-color: #e0f2fe; color: #3b82f6; }
+.stepper-item.active .stepper-icon-2 { background-color: #3b82f6; color: #fff; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); }
+.stepper-item.active .stepper-text-2 h6 { color: #3b82f6; font-weight: 700; }
+
+.stepper-icon-3 { background-color: #dcfce7; color: #10b981; }
+.stepper-item.active .stepper-icon-3 { background-color: #10b981; color: #fff; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+.stepper-item.active .stepper-text-3 h6 { color: #10b981; font-weight: 700; }
+
+/* Completed State */
+.stepper-item.completed:not(.active) .stepper-icon {
+  background-color: #6254e8;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(98, 84, 232, 0.3);
+}
+.stepper-item.completed:not(.active) .stepper-text h6 {
+  color: #6254e8;
+  font-weight: 700;
+}
+
+/* Sidebar Illustration Placeholder */
+.sidebar-illustration {
+  margin-top: auto;
+  text-align: center;
+  padding-top: 30px;
+}
+.sidebar-illustration-box {
+  width: 140px;
+  height: 160px;
+  background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%);
+  border-radius: 12px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+.sidebar-illustration-box i {
+  font-size: 70px;
+  color: #6254e8;
+  opacity: 0.8;
+}
+.sidebar-illustration-box::before {
+  content: '';
+  position: absolute;
+  top: -10px; right: -10px;
+  width: 30px; height: 30px;
+  background: #a78bfa;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+/* Content Area */
+.reg-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+.section-title {
+  color: #6254e8;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.section-title i {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+/* Input Groups */
+.reg-input-group .input-group-text {
+  background-color: #ffffff;
+  border-right: none;
+  color: #64748b;
+}
+
+.reg-input-group .form-control,
+.reg-input-group .form-select {
+  border-left: none;
+}
+
+.reg-input-group .form-control:focus,
+.reg-input-group .form-select:focus {
+  box-shadow: none;
+  border-color: #dee2e6;
+}
+
+.reg-input-group:focus-within {
+  box-shadow: 0 0 0 0.25rem rgba(98, 84, 232, 0.25);
+  border-radius: 6px;
+}
+.reg-input-group:focus-within .input-group-text,
+.reg-input-group:focus-within .form-control,
+.reg-input-group:focus-within .form-select {
+  border-color: #8c52ff;
+}
+
+/* File Upload Box */
+.file-upload-box {
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: left;
+  transition: all 0.2s ease;
+  background-color: #f8fafc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.file-upload-box:hover {
+  border-color: #6254e8;
+  background-color: #f1f5f9;
+}
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  background-color: #eff6ff;
+  color: #3b82f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.reg-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background: #ffffff;
+}
+
+.btn-reg-primary {
+  background: linear-gradient(135deg, #6254e8 0%, #8c52ff 100%);
+  border: none;
+  color: white;
+}
+.btn-reg-primary:hover {
+  background: linear-gradient(135deg, #5144d1 0%, #753cf0 100%);
+  color: white;
+}
+
+/* Typography Matrix Resizers (Fixed Overlap) */
+.fs-7 { font-size: 13px !important; }
+.fs-7\.5 { font-size: 12px !important; }
+.fs-8 { font-size: 11px !important; }
+.fs-9 { font-size: 10px !important; }

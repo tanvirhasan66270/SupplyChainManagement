@@ -1,0 +1,1949 @@
+<div class="logistics-dashboard p-4 bg-light min-vh-100" style="background-color: #f8f9fa !important;">
+  <!-- ───────────────── TOP BAR ───────────────── -->
+  <div class="dashboard-header bg-white p-4 rounded-4 shadow-sm border mb-4 d-flex justify-content-between align-items-center">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h2 class="fw-bold text-dark fs-4 mb-0">Welcome back, <span class="text-primary">{{ userName }}</span> <span class="fs-4">👋</span></h2>
+      </div>
+      <p class="text-muted fs-8 mb-0 d-flex align-items-center gap-2">
+        <span class="text-dark fw-bold">Logistics Officer</span> &bull; Warehouse, inventory & logistics tracking.
+        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 fs-9"><span class="pulse-dot-green me-1"></span> Live</span>
+      </p>
+    </div>
+    <div class="header-actions d-flex gap-2">
+      <button class="btn btn-outline-secondary btn-sm px-3 fw-semibold rounded-3 d-flex align-items-center gap-1" (click)="toggleSettings()" title="Settings"><i class="bi bi-gear"></i></button>
+      <button class="btn btn-outline-danger btn-sm px-3 fw-semibold rounded-3 d-flex align-items-center gap-1" (click)="logout()"><i class="bi bi-box-arrow-right"></i> Log Out</button>
+    </div>
+  </div>
+
+  @if (loading) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  }
+
+  <!-- ───────────────── KPI GRID (6 Cards) ───────────────── -->
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-3 mb-4">
+    <!-- Outbound Shipments -->
+    <div class="col">
+      <div class="card border-0 shadow-sm p-3 rounded-4 bg-white h-100 kpi-card">
+        <div class="d-flex align-items-start gap-2 mb-3">
+          <div
+            class="icon-box bg-primary text-white rounded-3 d-flex justify-content-center align-items-center flex-shrink-0"
+            style="width: 38px; height: 38px;">
+            <i class="bi bi-truck fs-5"></i>
+          </div>
+          <div class="d-flex flex-column justify-content-center w-100">
+            <div class="text-secondary fw-semibold lh-1 mb-2" style="font-size: 11px; letter-spacing: 0.2px;">Outbound Shipments</div>
+            <div class="d-flex align-items-baseline justify-content-between gap-1 flex-wrap">
+              <span class="fs-4 fw-bold text-dark lh-1">{{ totalShipments }}</span>
+              <span class="badge bg-primary-subtle text-primary rounded-pill" style="font-size: 10px; font-weight: 600; padding: 2px 6px;">Active</span>
+            </div>
+          </div>
+        </div>
+        <div class="small fw-semibold mt-auto"
+          [ngClass]="{'text-success': shipmentsTrend > 0, 'text-danger': shipmentsTrend < 0, 'text-secondary': shipmentsTrend === 0}" style="font-size: 11px;">
+          <i class="bi"
+            [ngClass]="{'bi-arrow-up-short': shipmentsTrend > 0, 'bi-arrow-down-short': shipmentsTrend < 0}"></i>
+          {{ shipmentsTrend > 0 ? shipmentsTrend : (shipmentsTrend < 0 ? -shipmentsTrend : 0) }}% vs yesterday </div>
+      </div>
+    </div>
+
+    <!-- Low Stock Alert -->
+    <div class="col" [title]="lowStockTooltip">
+      <div class="card border-0 shadow-sm p-3 rounded-4 bg-white h-100 kpi-card">
+        <div class="d-flex align-items-start gap-2 mb-3">
+          <div
+            class="icon-box bg-warning text-white rounded-3 d-flex justify-content-center align-items-center flex-shrink-0"
+            style="width: 38px; height: 38px;">
+            <i class="bi bi-exclamation-triangle fs-5"></i>
+          </div>
+          <div class="d-flex flex-column justify-content-center w-100">
+            <div class="text-secondary fw-semibold lh-1 mb-2" style="font-size: 11px; letter-spacing: 0.2px;">Low Stock Alert</div>
+            <div class="d-flex align-items-baseline justify-content-between gap-1 flex-wrap">
+              <span class="fs-4 fw-bold text-dark lh-1">{{ lowStockItemsCount }}</span>
+              <span class="badge bg-danger-subtle text-danger rounded-pill" style="font-size: 10px; font-weight: 600; padding: 2px 6px;">Items</span>
+            </div>
+          </div>
+        </div>
+        <div class="small fw-semibold mt-auto text-danger" style="font-size: 11px;">
+          <i class="bi bi-info-circle me-1"></i>
+          Reserved Quota &le; 5 </div>
+      </div>
+    </div>
+
+    <!-- Active Vehicles -->
+    <div class="col">
+      <div class="card border-0 shadow-sm p-3 rounded-4 bg-white h-100 kpi-card">
+        <div class="d-flex align-items-start gap-2 mb-3">
+          <div class="icon-box text-white rounded-3 d-flex justify-content-center align-items-center flex-shrink-0"
+            style="width: 38px; height: 38px; background-color: #6366f1;">
+            <i class="bi bi-car-front fs-5"></i>
+          </div>
+          <div class="d-flex flex-column justify-content-center w-100">
+            <div class="text-secondary fw-semibold lh-1 mb-2" style="font-size: 11px; letter-spacing: 0.2px;">Active Vehicles</div>
+            <div class="d-flex align-items-baseline justify-content-between gap-1 flex-wrap">
+              <span class="fs-4 fw-bold text-dark lh-1">{{ totalVehicles }}</span>
+              <span class="badge rounded-pill" style="background-color: #e0e7ff; color: #4338ca; font-size: 10px; font-weight: 600; padding: 2px 6px;">Total</span>
+            </div>
+          </div>
+        </div>
+        <div class="small fw-semibold mt-auto" style="color: #4f46e5; font-size: 11px;">
+          {{ availableVehicles }} Available
+        </div>
+      </div>
+    </div>
+
+    <!-- Warehouse Capacity -->
+    <div class="col">
+      <div class="card border-0 shadow-sm p-3 rounded-4 bg-white h-100 kpi-card d-flex flex-column justify-content-between">
+        <div class="d-flex align-items-start gap-2 mb-3">
+          <div
+            class="icon-box bg-info text-white rounded-3 d-flex justify-content-center align-items-center flex-shrink-0"
+            style="width: 38px; height: 38px;">
+            <i class="bi bi-building fs-5"></i>
+          </div>
+          <div class="d-flex flex-column justify-content-center w-100">
+            <div class="text-secondary fw-semibold lh-1 mb-2" style="font-size: 11px; letter-spacing: 0.2px;">Warehouse Capacity</div>
+            <div class="d-flex align-items-baseline justify-content-between gap-1 flex-wrap">
+              <span class="fs-4 fw-bold text-dark lh-1">{{ warehouseCapacityPercent }}%</span>
+              <span class="badge bg-info-subtle text-info rounded-pill" style="font-size: 10px; font-weight: 600; padding: 2px 6px;">Utilized</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar Section -->
+        <div class="mb-2">
+          <div class="d-flex justify-content-between fw-bold text-muted mb-1" style="font-size: 10px;">
+            <span class="text-danger">Booked: {{ warehouseCapacityPercent }}%</span>
+            <span class="text-success">Empty: {{ 100 - warehouseCapacityPercent }}%</span>
+          </div>
+          <div class="progress" style="height: 6px; border-radius: 3px;">
+            <div class="progress-bar bg-danger" role="progressbar" [style.width.%]="warehouseCapacityPercent"></div>
+            <div class="progress-bar bg-success" role="progressbar"
+              [style.width.%]="100 - warehouseCapacityPercent"></div>
+          </div>
+        </div>
+
+        <div class="small text-secondary fw-semibold mt-auto pt-2 border-top" style="font-size: 11px;">
+          <i class="bi bi-info-circle me-1"></i> Aggregate utilization
+        </div>
+      </div>
+    </div>
+
+    <!-- Inventory Movements & Total Stock Card -->
+    <div class="col">
+      <div class="card border-0 shadow-sm p-3 rounded-4 bg-white h-100 kpi-card d-flex flex-column justify-content-between">
+        <div class="d-flex align-items-start gap-2 mb-2">
+          <div class="icon-box text-white rounded-3 d-flex justify-content-center align-items-center flex-shrink-0"
+            style="width: 38px; height: 38px; background-color: #06b6d4;">
+            <i class="bi bi-arrow-left-right fs-5"></i>
+          </div>
+          <div class="d-flex flex-column justify-content-center w-100">
+            <div class="text-secondary fw-semibold lh-1 mb-2" style="font-size: 11px; letter-spacing: 0.2px;">Total Stock</div>
+            <div class="d-flex align-items-baseline justify-content-between gap-1 flex-wrap">
+              <span class="fs-4 fw-bold text-dark lh-1">{{ totalInventoryCount }} <small
+                  class="text-muted fw-normal" style="font-size: 10px;">Units</small>
+              </span>
+              <span class="badge rounded-pill"
+                style="background-color: #cffafe; color: #0891b2; font-size: 10px; font-weight: 600; padding: 2px 6px;">
+                Stock
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="small fw-semibold mt-auto pt-2 border-top"
+          [ngClass]="{'text-success': inventoryTrend > 0, 'text-danger': inventoryTrend < 0, 'text-secondary': inventoryTrend === 0}" style="font-size: 11px;">
+          <i class="bi"
+            [ngClass]="{'bi-arrow-up-short': inventoryTrend > 0, 'bi-arrow-down-short': inventoryTrend < 0}"></i>
+          {{ inventoryTrend > 0 ? inventoryTrend : (inventoryTrend < 0 ? -inventoryTrend : 0) }}% vs yesterday
+        </div>
+      </div>
+    </div>
+
+    <!-- Available Quantity -->
+    <div class="col">
+      <div class="card border-0 shadow-sm p-3 rounded-4 bg-white h-100 kpi-card">
+        <div class="d-flex align-items-start gap-2 mb-3">
+          <div
+            class="icon-box text-white rounded-3 d-flex justify-content-center align-items-center flex-shrink-0"
+            style="width: 38px; height: 38px; background-color: #f97316 !important;">
+            <i class="bi bi-box-seam fs-5"></i>
+          </div>
+          <div class="d-flex flex-column justify-content-center w-100">
+            <div class="text-secondary fw-semibold lh-1 mb-2" style="font-size: 11px; letter-spacing: 0.2px;">Available Quantity</div>
+            <div class="d-flex align-items-baseline justify-content-between gap-1 flex-wrap">
+              <span class="fs-4 fw-bold text-dark lh-1">{{ totalAvailableQuantity }}</span>
+              <span class="badge bg-success-subtle text-success rounded-pill" style="font-size: 10px; font-weight: 600; padding: 2px 6px;">Available</span>
+            </div>
+          </div>
+        </div>
+        <div class="small text-secondary fw-semibold mt-auto" style="font-size: 11px;">
+          <i class="bi bi-info-circle me-1"></i> Net available units </div>
+      </div>
+    </div>
+  </div>
+
+          <!-- ───────────────── QUICK NAVIGATION CARDS ───────────────── -->
+          <div class="mb-4">
+            <div class="d-flex align-items-center gap-2 mb-3 ps-1">
+              <i class="bi bi-grid-1x2-fill text-primary fs-5"></i>
+              <h6 class="fw-bold text-dark mb-0 fs-6">Quick Navigation</h6>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-3">
+
+              <!-- 1. Stock Card -->
+              <div class="col">
+                <a href="javascript:void(0)" (click)="openStockNavModal($event)" class="text-decoration-none">
+                  <div class="card border-0 shadow-sm rounded-4 bg-white p-3 h-100 logi-nav-card">
+                    <div class="d-flex align-items-center gap-3">
+                      <div
+                        class="nav-card-icon rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                        style="width: 48px; height: 48px; background: #eff6ff; color: #2563eb;">
+                        <i class="bi bi-layers-fill fs-4"></i>
+                      </div>
+                      <div class="overflow-hidden">
+                        <div class="fw-bold text-dark text-truncate fs-7">Stock</div>
+                        <small class="text-muted d-block text-truncate" style="font-size: 0.75rem;">Inventory
+                          Control</small>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <!-- 2. Stock Movement Card -->
+              <div class="col">
+                <a href="javascript:void(0)" (click)="openStockMovementNavModal($event)" class="text-decoration-none">
+                  <div class="card border-0 shadow-sm rounded-4 bg-white p-3 h-100 logi-nav-card">
+                    <div class="d-flex align-items-center gap-3">
+                      <div
+                        class="nav-card-icon rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                        style="width: 48px; height: 48px; background: #ecfeff; color: #0891b2;">
+                        <i class="bi bi-arrow-left-right fs-4"></i>
+                      </div>
+                      <div class="overflow-hidden">
+                        <div class="fw-bold text-dark text-truncate fs-7">Stock Movement</div>
+                        <small class="text-muted d-block text-truncate" style="font-size: 0.75rem;">Stock
+                          Transfers</small>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <!-- 3. Goods Received Note Card -->
+              <div class="col">
+                <a href="javascript:void(0)" (click)="openGRNNavModal($event)" class="text-decoration-none">
+                  <div class="card border-0 shadow-sm rounded-4 bg-white p-3 h-100 logi-nav-card">
+                    <div class="d-flex align-items-center gap-3">
+                      <div
+                        class="nav-card-icon rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                        style="width: 48px; height: 48px; background: #f0fdf4; color: #16a34a;">
+                        <i class="bi bi-box-arrow-in-down fs-4"></i>
+                      </div>
+                      <div class="overflow-hidden">
+                        <div class="fw-bold text-dark text-truncate fs-7">Goods Received</div>
+                        <small class="text-muted d-block text-truncate" style="font-size: 0.75rem;">Inbound Cargo
+                          GRN</small>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <!-- 4. Delivery Trip Card -->
+              <div class="col">
+                <a href="javascript:void(0)" (click)="openDeliveryTripNavModal($event)" class="text-decoration-none">
+                  <div class="card border-0 shadow-sm rounded-4 bg-white p-3 h-100 logi-nav-card logi-nav-card--active">
+                    <div class="d-flex align-items-center gap-3">
+                      <div
+                        class="nav-card-icon rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                        style="width: 48px; height: 48px; background: #f3e8ff; color: #7c3aed;">
+                        <i class="bi bi-signpost-2-fill fs-4"></i>
+                      </div>
+                      <div class="overflow-hidden">
+                        <div class="fw-bold text-dark text-truncate fs-7">Delivery Trip</div>
+                        <small class="text-muted d-block text-truncate" style="font-size: 0.75rem;">Dispatch
+                          Routes</small>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <!-- 5. Vehicles Card -->
+              <div class="col">
+                <a href="javascript:void(0)" (click)="openVehicleNavModal($event)" class="text-decoration-none">
+                  <div class="card border-0 shadow-sm rounded-4 bg-white p-3 h-100 logi-nav-card">
+                    <div class="d-flex align-items-center gap-3">
+                      <div
+                        class="nav-card-icon rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                        style="width: 48px; height: 48px; background: #fff7ed; color: #ea580c;">
+                        <i class="bi bi-bus-front-fill fs-4"></i>
+                      </div>
+                      <div class="overflow-hidden">
+                        <div class="fw-bold text-dark text-truncate fs-7">Vehicles</div>
+                        <small class="text-muted d-block text-truncate" style="font-size: 0.75rem;">Fleet
+                          Management</small>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <!-- 6. QC Inspection Card -->
+              <div class="col">
+                <a href="javascript:void(0)" (click)="openQCInspectionNavModal($event)" class="text-decoration-none">
+                  <div class="card border-0 shadow-sm rounded-4 bg-white p-3 h-100 logi-nav-card">
+                    <div class="d-flex align-items-center gap-3">
+                      <div
+                        class="nav-card-icon rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                        style="width: 48px; height: 48px; background: #f0fdfa; color: #0d9488;">
+                        <i class="bi bi-clipboard-pulse fs-4"></i>
+                      </div>
+                      <div class="overflow-hidden">
+                        <div class="fw-bold text-dark text-truncate fs-7">QC Inspection</div>
+                        <small class="text-muted d-block text-truncate" style="font-size: 0.75rem;">Quality Control
+                          Logs</small>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ───────────────── ROW 1: SCHEDULE, FLEET, TIMELINE ───────────────── -->
+          <div class="row g-4 mb-4">
+            <!-- Today's Dispatch Schedule -->
+            <div class="col-lg-5">
+              <div class="card border-0 shadow-sm rounded-4 h-100 bg-white">
+                <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-calendar-event me-2"></i>Today's Dispatch
+                    Schedule</h6>
+                  <a href="#" class="text-primary text-decoration-none fw-semibold fs-7"
+                    (click)="openScheduleModal($event)">View Full Schedule</a>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 fs-7 border-top">
+                      <thead class="table-light text-secondary">
+                        <tr>
+                          <th class="ps-4 fw-semibold">Trip ID</th>
+                          <th class="fw-semibold">Destination</th>
+                          <th class="fw-semibold">Time</th>
+                          <th class="fw-semibold text-center">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let row of dispatchSchedule.slice(0, 3)">
+                          <td class="ps-4 fw-bold text-dark">{{ row.tripId }}</td>
+                          <td class="text-secondary">{{ row.destination }}</td>
+                          <td class="text-secondary">{{ row.time }}</td>
+                          <td class="text-center">
+                            <span class="fw-semibold small" [ngClass]="{
+                      'text-success': row.status === 'In Transit',
+                      'text-primary': row.status === 'Scheduled',
+                      'text-warning': row.status === 'Pending'
+                    }">{{ row.status }}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fleet Status Overview -->
+            <div class="col-lg-3">
+              <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                <h6 class="fw-bold text-dark mb-4"><i class="bi bi-car-front me-2"></i>Fleet Status Overview</h6>
+                <div class="d-flex justify-content-center mb-4 position-relative">
+                  <svg viewBox="0 0 42 42" class="donut-chart" style="width: 150px; height: 150px;">
+                    <circle class="donut-hole" cx="21" cy="21" r="15.91549430918954" fill="#fff"></circle>
+                    <!-- Available (Green) -->
+                    <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                      stroke="#10b981" stroke-width="6" [attr.stroke-dasharray]="fleetStats.available.dash"
+                      [attr.stroke-dashoffset]="fleetStats.available.offset"></circle>
+                    <!-- On Route (Blue) -->
+                    <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                      stroke="#3b82f6" stroke-width="6" [attr.stroke-dasharray]="fleetStats.onRoute.dash"
+                      [attr.stroke-dashoffset]="fleetStats.onRoute.offset"></circle>
+                    <!-- Maintenance (Orange) -->
+                    <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                      stroke="#f59e0b" stroke-width="6" [attr.stroke-dasharray]="fleetStats.maintenance.dash"
+                      [attr.stroke-dashoffset]="fleetStats.maintenance.offset"></circle>
+                    <!-- Offline (Red) -->
+                    <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                      stroke="#ef4444" stroke-width="6" [attr.stroke-dasharray]="fleetStats.offline.dash"
+                      [attr.stroke-dashoffset]="fleetStats.offline.offset"></circle>
+                  </svg>
+                  <div class="position-absolute top-50 start-50 translate-middle text-center bg-white rounded-circle"
+                    style="width: 80px; height: 80px; padding-top: 25px;">
+                    <div class="fs-4 fw-bold text-dark lh-1">{{ totalVehicles }}</div>
+                    <div class="text-muted" style="font-size: 0.65rem;">Total</div>
+                  </div>
+                </div>
+                <!-- Legend -->
+                <div class="d-flex flex-column gap-2 mt-3">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fs-7 text-dark"><span class="d-inline-block rounded-circle me-2"
+                        style="width: 8px; height: 8px; background-color: #10b981;"></span>Available</span>
+                    <span class="fs-7 fw-semibold text-dark">{{ fleetStats.available.val }} ({{
+                      fleetStats.available.pct }}%)</span>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fs-7 text-dark"><span class="d-inline-block rounded-circle me-2"
+                        style="width: 8px; height: 8px; background-color: #3b82f6;"></span>On Route</span>
+                    <span class="fs-7 fw-semibold text-dark">{{ fleetStats.onRoute.val }} ({{ fleetStats.onRoute.pct
+                      }}%)</span>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fs-7 text-dark"><span class="d-inline-block rounded-circle me-2"
+                        style="width: 8px; height: 8px; background-color: #f59e0b;"></span>Maintenance</span>
+                    <span class="fs-7 fw-semibold text-dark">{{ fleetStats.maintenance.val }} ({{
+                      fleetStats.maintenance.pct }}%)</span>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fs-7 text-dark"><span class="d-inline-block rounded-circle me-2"
+                        style="width: 8px; height: 8px; background-color: #ef4444;"></span>Offline</span>
+                    <span class="fs-7 fw-semibold text-dark">{{ fleetStats.offline.val }} ({{ fleetStats.offline.pct
+                      }}%)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Shipment Timeline -->
+            <div class="col-lg-4">
+              <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <h6 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history me-2"></i>Live Shipment Timeline
+                  </h6>
+                  <a href="#" class="text-primary text-decoration-none fw-semibold fs-7"
+                    (click)="openShipmentModal($event)">View All Shipments</a>
+                </div>
+                <div class="timeline-container px-3 position-relative">
+                  <div
+                    class="timeline-line position-absolute top-0 bottom-0 start-0 ms-4 border-start border-2 border-light">
+                  </div>
+                  <div class="timeline-item d-flex gap-3 mb-4 position-relative"
+                    *ngFor="let item of liveTimeline.slice(0, 2)">
+                    <div class="timeline-dot bg-{{ item.color }} rounded-circle border border-white border-2 shadow-sm"
+                      style="width: 14px; height: 14px; margin-top: 4px; z-index: 2;"></div>
+                    <div class="d-flex justify-content-between w-100 align-items-start">
+                      <div>
+                        <div class="fw-bold text-dark">Order {{ item.order }}</div>
+                        <div class="text-muted small">{{ item.status }}</div>
+                      </div>
+                      <div class="text-end">
+                        <div class="small fw-semibold text-{{ item.color }}">{{ item.time }}</div>
+                        <div class="text-muted small" style="font-size: 0.7rem;">{{ item.time2 }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── ROW 2: PERFORMANCE, WAREHOUSE, INVENTORY ───────────────── -->
+          <div class="row g-4 mb-4">
+            <!-- Shipment Performance -->
+            <div class="col-lg-5">
+              <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 class="fw-bold text-dark mb-0">Shipment Performance <span class="fs-8 text-secondary">({{
+                      monthsList[selectedPerformanceMonth].label }})</span></h6>
+                  <select
+                    class="form-select form-select-sm w-auto border-0 bg-light rounded-pill px-3 fw-semibold text-secondary cursor-pointer"
+                    (change)="onPerformanceMonthChange($event)">
+                    <option *ngFor="let m of monthsList" [value]="m.value"
+                      [selected]="m.value === selectedPerformanceMonth">{{ m.label }}</option>
+                  </select>
+                </div>
+                <div class="flex-grow-1 position-relative" style="min-height: 150px;">
+                  <svg viewBox="0 0 500 150" class="w-100" style="height: 120px;" preserveAspectRatio="none">
+                    <!-- Background gradient -->
+                    <defs>
+                      <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3" />
+                        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <!-- Grid lines -->
+                    <line x1="0" y1="30" x2="500" y2="30" stroke="#f1f5f9" stroke-width="1" />
+                    <line x1="0" y1="60" x2="500" y2="60" stroke="#f1f5f9" stroke-width="1" />
+                    <line x1="0" y1="90" x2="500" y2="90" stroke="#f1f5f9" stroke-width="1" />
+                    <line x1="0" y1="120" x2="500" y2="120" stroke="#f1f5f9" stroke-width="1" />
+
+                    <!-- Dynamic Filled area -->
+                    <path [attr.d]="shipmentPerformanceFill" fill="url(#chartGradient)" />
+
+                    <!-- Dynamic Line -->
+                    <path [attr.d]="shipmentPerformancePoints" fill="none" stroke="#3b82f6" stroke-width="3"
+                      stroke-linecap="round" />
+
+                    <!-- Points (using dynamic data) -->
+                    <circle *ngFor="let pt of shipmentDataPoints" [attr.cx]="pt.x" [attr.cy]="pt.y" r="4" fill="#ffffff"
+                      stroke="#3b82f6" stroke-width="2" />
+
+                    <!-- X Axis Labels (Dynamic) -->
+                    <text *ngFor="let lbl of chartLabels" [attr.x]="lbl.x" y="150" font-size="10" fill="#94a3b8">{{
+                      lbl.text }}</text>
+                  </svg>
+                </div>
+                <div class="row g-3 mt-3 border-top pt-3">
+                  <div class="col-3">
+                    <div class="p-2 rounded-3 bg-light text-center">
+                      <div class="text-muted small">Total Shipments</div>
+                      <div class="fs-5 fw-bold text-dark lh-1 mt-1">{{ shipmentHistoryStats.total }} <span
+                          class="fs-8 text-success fw-normal ms-1"><i class="bi bi-arrow-up-short"></i>18%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="p-2 rounded-3 bg-success-subtle text-center">
+                      <div class="text-muted small">Delivered</div>
+                      <div class="fs-5 fw-bold text-dark lh-1 mt-1">{{ shipmentHistoryStats.delivered }} <span
+                          class="fs-8 text-success fw-normal ms-1"><i class="bi bi-arrow-up-short"></i>22%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="p-2 rounded-3 bg-warning-subtle text-center">
+                      <div class="text-muted small">In Transit</div>
+                      <div class="fs-5 fw-bold text-dark lh-1 mt-1">{{ shipmentHistoryStats.inTransit }} <span
+                          class="fs-8 text-danger fw-normal ms-1"><i class="bi bi-arrow-down-short"></i>5%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="p-2 rounded-3 bg-danger-subtle text-center">
+                      <div class="text-muted small">Delayed</div>
+                      <div class="fs-5 fw-bold text-dark lh-1 mt-1">{{ shipmentHistoryStats.delayed }} <span
+                          class="fs-8 text-danger fw-normal ms-1"><i class="bi bi-arrow-down-short"></i>33%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Warehouse Capacity Progress -->
+            <div class="col-lg-4">
+              <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <h6 class="fw-bold text-dark mb-0"><i class="bi bi-boxes me-2 text-warning"></i>Warehouse Capacity
+                  </h6>
+                  <a href="#" class="text-primary text-decoration-none fw-semibold fs-7 d-flex align-items-center gap-1"
+                    (click)="openWarehouseModal($event)">View All <i class="bi bi-chevron-down small"></i></a>
+                </div>
+
+                <div class="mb-4" *ngFor="let wh of warehouses.slice(0, 2)">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fs-7 fw-semibold text-dark">{{ wh.name }}</span>
+                    <span class="fs-7 fw-bold text-dark">{{ wh.usedPercent }}%<span class="text-muted fw-normal">({{
+                        wh.used }} / {{ wh.capacity }})</span></span>
+                  </div>
+                  <div class="progress" style="height: 10px;">
+                    <div class="progress-bar rounded-pill"
+                      [ngClass]="{'bg-success': wh.usedPercent < 70, 'bg-warning': wh.usedPercent >= 70 && wh.usedPercent < 90, 'bg-danger': wh.usedPercent >= 90}"
+                      role="progressbar" [style.width]="wh.usedPercent + '%'" [attr.aria-valuenow]="wh.usedPercent"
+                      aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Inventory Movement -->
+            <div class="col-lg-3">
+              <div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3">
+                <h6 class="fw-bold text-dark mb-4"><i class="bi bi-arrow-left-right me-2 text-info"></i>Inventory
+                  Movement (Today)</h6>
+                <div class="d-flex justify-content-center mb-4 position-relative">
+                  <svg viewBox="0 0 42 42" class="donut-chart" style="width: 150px; height: 150px;">
+                    <circle class="donut-hole" cx="21" cy="21" r="15.91549430918954" fill="#fff"></circle>
+                    <!-- In (Green) -->
+                    <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                      stroke="#10b981" stroke-width="6" [attr.stroke-dasharray]="inventoryStats.in.dash"
+                      [attr.stroke-dashoffset]="inventoryStats.in.offset"></circle>
+                    <!-- Out (Blue) -->
+                    <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                      stroke="#3b82f6" stroke-width="6" [attr.stroke-dasharray]="inventoryStats.out.dash"
+                      [attr.stroke-dashoffset]="inventoryStats.out.offset"></circle>
+                    <!-- Transfer (Orange) -->
+                    <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent"
+                      stroke="#f59e0b" stroke-width="6" [attr.stroke-dasharray]="inventoryStats.transfer.dash"
+                      [attr.stroke-dashoffset]="inventoryStats.transfer.offset"></circle>
+                  </svg>
+                  <div class="position-absolute top-50 start-50 translate-middle text-center bg-white rounded-circle"
+                    style="width: 80px; height: 80px; padding-top: 25px;">
+                    <div class="fs-4 fw-bold text-dark lh-1">{{ totalMovements }}</div>
+                    <div class="text-muted" style="font-size: 0.65rem;">Total</div>
+                  </div>
+                </div>
+                <!-- Legend -->
+                <div class="d-flex flex-column gap-2 mt-3">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fs-7 text-dark"><span class="d-inline-block rounded-circle me-2"
+                        style="width: 8px; height: 8px; background-color: #10b981;"></span>In</span>
+                    <span class="fs-7 fw-semibold text-dark">{{ inventoryStats.in.val }} ({{ inventoryStats.in.pct
+                      }}%)</span>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fs-7 text-dark"><span class="d-inline-block rounded-circle me-2"
+                        style="width: 8px; height: 8px; background-color: #3b82f6;"></span>Out</span>
+                    <span class="fs-7 fw-semibold text-dark">{{ inventoryStats.out.val }} ({{ inventoryStats.out.pct
+                      }}%)</span>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="fs-7 text-dark"><span class="d-inline-block rounded-circle me-2"
+                        style="width: 8px; height: 8px; background-color: #f59e0b;"></span>Transfer</span>
+                    <span class="fs-7 fw-semibold text-dark">{{ inventoryStats.transfer.val }} ({{
+                      inventoryStats.transfer.pct }}%)</span>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-4 border-top pt-3">
+                  <span class="text-muted small">Total Movements</span>
+                  <span class="fw-bold fs-5 text-dark">
+                    {{ totalMovements }}
+                    <span *ngIf="inventoryTrend > 0" class="fs-8 text-success fw-normal ms-1"><i
+                        class="bi bi-arrow-up-short"></i>{{ inventoryTrend }}% vs yesterday</span>
+                    <span *ngIf="inventoryTrend < 0" class="fs-8 text-danger fw-normal ms-1"><i
+                        class="bi bi-arrow-down-short"></i>{{ -inventoryTrend }}% vs yesterday</span>
+                    <span *ngIf="inventoryTrend === 0" class="fs-8 text-secondary fw-normal ms-1">0% vs
+                      yesterday</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── ROW 3: DISPATCH QUEUE, MAP, ACTIVITY ───────────────── -->
+          <div class="row g-4 mb-4">
+            <!-- Dispatch Queue -->
+            <div class="col-lg-6">
+              <div class="card border-0 shadow-sm rounded-4 h-100 bg-white">
+                <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0 fw-bold text-dark">Dispatch Queue</h6>
+                  <a href="#" class="text-primary text-decoration-none fw-semibold fs-7"
+                    (click)="openDispatchModal($event)">View All</a>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 fs-7">
+                      <thead class="table-light text-secondary border-top">
+                        <tr>
+                          <th class="ps-4 fw-semibold">Shipment ID</th>
+                          <th class="fw-semibold">Customer</th>
+                          <th class="fw-semibold">Driver</th>
+                          <th class="fw-semibold">Vehicle</th>
+                          <th class="fw-semibold">Destination</th>
+                          <th class="fw-semibold">Priority</th>
+                          <th class="fw-semibold">ETA</th>
+                          <th class="fw-semibold">Status</th>
+                          <th class="fw-semibold text-center">Track</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let s of dispatchQueue.slice(0, 3)">
+                          <td class="ps-4 fw-bold text-primary">{{ s.id }}</td>
+                          <td class="text-dark fw-semibold">{{ s.customer }}</td>
+                          <td class="text-secondary">{{ s.driver }}</td>
+                          <td class="text-dark">{{ s.vehicle }}</td>
+                          <td class="text-secondary">{{ s.destination }}</td>
+                          <td>
+                            <span class="fw-bold" [ngClass]="{
+                      'text-danger': s.priority === 'High',
+                      'text-warning': s.priority === 'Medium',
+                      'text-success': s.priority === 'Low'
+                    }">{{ s.priority }}</span>
+                          </td>
+                          <td class="text-secondary">{{ s.eta }}</td>
+                          <td>
+                            <span class="badge rounded-pill text-uppercase px-2" [ngClass]="{
+                      'bg-primary-subtle text-primary': s.status === 'IN_TRANSIT',
+                      'bg-secondary-subtle text-secondary': s.status === 'SCHEDULED' || s.status === 'PENDING'
+                    }">{{ s.status }}</span>
+                          </td>
+                          <td class="text-center">
+                            <button class="btn btn-sm btn-light text-primary rounded-circle"><i
+                                class="bi bi-geo-alt"></i></button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Tracking Map Placeholder -->
+            <div class="col-lg-6">
+              <div class="card border-0 shadow-sm rounded-4 h-100 bg-white">
+                <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0 fw-bold text-dark">Live Tracking Map</h6>
+                  <a href="#" class="text-primary text-decoration-none fw-semibold fs-7"
+                    (click)="openMapModal($event)">View Full Map</a>
+                </div>
+                <div class="card-body p-2 position-relative">
+                  <div
+                    class="bg-light rounded-4 h-100 w-100 position-relative overflow-hidden d-flex justify-content-center align-items-center"
+                    style="min-height: 250px; background: url('https://www.transparenttextures.com/patterns/cartographer.png') #eef2f6;">
+                    <!-- Map dummy lines -->
+                    <svg class="position-absolute top-0 start-0 w-100 h-100">
+                      <line x1="20%" y1="20%" x2="50%" y2="50%" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4">
+                      </line>
+                      <line x1="80%" y1="20%" x2="50%" y2="50%" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4">
+                      </line>
+                      <line x1="20%" y1="80%" x2="50%" y2="50%" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4">
+                      </line>
+                      <line x1="80%" y1="80%" x2="50%" y2="50%" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4">
+                      </line>
+                    </svg>
+                    <div class="position-absolute" style="top: 15%; left: 15%;">
+                      <div class="badge bg-white text-dark shadow-sm border mb-1">Rajshahi</div>
+                      <div class="bg-primary rounded-circle shadow border border-white border-2"
+                        style="width:12px; height:12px;"></div>
+                    </div>
+                    <div class="position-absolute" style="top: 15%; right: 15%;">
+                      <div class="badge bg-white text-dark shadow-sm border mb-1">Sylhet</div>
+                      <div class="bg-primary rounded-circle shadow border border-white border-2"
+                        style="width:12px; height:12px;"></div>
+                    </div>
+                    <div class="position-absolute" style="bottom: 15%; left: 15%;">
+                      <div class="badge bg-white text-dark shadow-sm border mb-1">Khulna</div>
+                      <div class="bg-primary rounded-circle shadow border border-white border-2"
+                        style="width:12px; height:12px;"></div>
+                    </div>
+                    <div class="position-absolute" style="bottom: 15%; right: 15%;">
+                      <div class="badge bg-white text-dark shadow-sm border mb-1">Chattogram</div>
+                      <div class="bg-primary rounded-circle shadow border border-white border-2"
+                        style="width:12px; height:12px;"></div>
+                    </div>
+                    <div class="position-absolute text-center" style="top: 45%; left: 45%;">
+                      <div class="badge bg-white text-dark shadow-sm border mb-1">Dhaka</div>
+                      <div
+                        class="bg-success text-white rounded-circle shadow border border-white border-2 d-flex justify-content-center align-items-center fs-6"
+                        style="width:24px; height:24px;">
+                        <i class="bi bi-truck"></i>
+                      </div>
+                    </div>
+
+                    <div class="position-absolute bottom-0 end-0 p-2 d-flex flex-column gap-1">
+                      <button class="btn btn-sm btn-white shadow-sm border"><i class="bi bi-plus"></i></button>
+                      <button class="btn btn-sm btn-white shadow-sm border"><i class="bi bi-dash"></i></button>
+                      <button class="btn btn-sm btn-white shadow-sm border"><i class="bi bi-cursor-fill"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+
+          <!-- ───────────────── FOOTER ALERTS ───────────────── -->
+          <h6 class="fw-bold mb-3 text-dark mt-2">Alerts & Notifications</h6>
+
+          <div class="row g-3">
+            <div class="col-md-3" *ngFor="let alert of alerts">
+              <div class="card border-0 shadow-sm rounded-4 bg-white p-3 d-flex flex-row align-items-center gap-3">
+                <div class="text-{{ alert.type }} fs-4">
+                  <i [class]="alert.icon"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="fs-7 fw-bold text-dark lh-sm mb-1">{{ alert.message.split('(')[0] }}</div>
+                  <div class="text-muted" style="font-size: 0.65rem;" *ngIf="alert.message.includes('(')">
+                    {{ alert.message.substring(alert.message.indexOf('(')+1, alert.message.indexOf(')')) }}
+                  </div>
+                </div>
+                <div class="text-muted fw-semibold" style="font-size: 0.7rem;">{{ alert.time }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── WAREHOUSE MODAL ───────────────── -->
+          <div class="modal fade" [class.show]="showWarehouseModal"
+            [style.display]="showWarehouseModal ? 'block' : 'none'" tabindex="-1"
+            style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+              <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header border-bottom-0 pb-0">
+                  <h5 class="modal-title fw-bold text-dark"><i class="bi bi-boxes me-2 text-warning"></i>Warehouse
+                    Capacity</h5>
+                  <button type="button" class="btn-close" (click)="closeWarehouseModal()"></button>
+                </div>
+                <div class="modal-body">
+                  @if (warehouses.length === 0) {
+                  <div class="text-center py-4 text-muted">
+                    No warehouses found.
+                  </div>
+                  } @else {
+                  <div class="mb-4" *ngFor="let wh of warehouses">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="fs-7 fw-semibold text-dark">{{ wh.name }}</span>
+                      <span class="fs-7 fw-bold text-dark">{{ wh.usedPercent }}%<span class="text-muted fw-normal">({{
+                          wh.used }} / {{ wh.capacity }})</span></span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                      <div class="progress-bar rounded-pill"
+                        [ngClass]="{'bg-success': wh.usedPercent < 70, 'bg-warning': wh.usedPercent >= 70 && wh.usedPercent < 90, 'bg-danger': wh.usedPercent >= 90}"
+                        role="progressbar" [style.width]="wh.usedPercent + '%'" [attr.aria-valuenow]="wh.usedPercent"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── SHIPMENT MODAL ───────────────── -->
+          <div class="modal fade" [class.show]="showShipmentModal"
+            [style.display]="showShipmentModal ? 'block' : 'none'" tabindex="-1"
+            style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+              <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header border-bottom-0 pb-0">
+                  <h5 class="modal-title fw-bold text-dark"><i class="bi bi-clock-history me-2"></i>Live Shipment
+                    Timeline</h5>
+                  <button type="button" class="btn-close" (click)="closeShipmentModal()"></button>
+                </div>
+                <div class="modal-body">
+                  @if (liveTimeline.length === 0) {
+                  <div class="text-center py-4 text-muted">
+                    No shipments found.
+                  </div>
+                  } @else {
+                  <div class="timeline-container px-3 position-relative">
+                    <div
+                      class="timeline-line position-absolute top-0 bottom-0 start-0 ms-4 border-start border-2 border-light">
+                    </div>
+                    <div class="timeline-item d-flex gap-3 mb-4 position-relative" *ngFor="let item of liveTimeline">
+                      <div
+                        class="timeline-dot bg-{{ item.color }} rounded-circle border border-white border-2 shadow-sm"
+                        style="width: 14px; height: 14px; margin-top: 4px; z-index: 2;"></div>
+                      <div class="d-flex justify-content-between w-100 align-items-start">
+                        <div>
+                          <div class="fw-bold text-dark">Order {{ item.order }}</div>
+                          <div class="text-muted small">{{ item.status }}</div>
+                        </div>
+                        <div class="text-end">
+                          <div class="small fw-semibold text-{{ item.color }}">{{ item.time }}</div>
+                          <div class="text-muted small" style="font-size: 0.7rem;">{{ item.time2 }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── DISPATCH QUEUE MODAL ───────────────── -->
+          <div class="modal fade" [class.show]="showDispatchModal"
+            [style.display]="showDispatchModal ? 'block' : 'none'" tabindex="-1"
+            style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+              <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header border-bottom-0 pb-0">
+                  <h5 class="modal-title fw-bold text-dark">Dispatch Queue</h5>
+                  <button type="button" class="btn-close" (click)="closeDispatchModal()"></button>
+                </div>
+                <div class="modal-body p-0">
+                  @if (dispatchQueue.length === 0) {
+                  <div class="text-center py-4 text-muted">
+                    No shipments in dispatch queue.
+                  </div>
+                  } @else {
+                  <div class="table-responsive mt-3">
+                    <table class="table table-hover align-middle mb-0 fs-7">
+                      <thead class="table-light text-secondary border-top border-bottom">
+                        <tr>
+                          <th class="ps-4 fw-semibold">Shipment ID</th>
+                          <th class="fw-semibold">Customer</th>
+                          <th class="fw-semibold">Driver</th>
+                          <th class="fw-semibold">Vehicle</th>
+                          <th class="fw-semibold">Destination</th>
+                          <th class="fw-semibold">Priority</th>
+                          <th class="fw-semibold">ETA</th>
+                          <th class="fw-semibold">Status</th>
+                          <th class="fw-semibold text-center">Track</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let s of dispatchQueue">
+                          <td class="ps-4 fw-bold text-primary">{{ s.id }}</td>
+                          <td class="text-dark fw-semibold">{{ s.customer }}</td>
+                          <td class="text-secondary">{{ s.driver }}</td>
+                          <td class="text-dark">{{ s.vehicle }}</td>
+                          <td class="text-secondary">{{ s.destination }}</td>
+                          <td>
+                            <span class="fw-bold" [ngClass]="{
+                        'text-danger': s.priority === 'High',
+                        'text-warning': s.priority === 'Medium',
+                        'text-success': s.priority === 'Low'
+                      }">{{ s.priority }}</span>
+                          </td>
+                          <td class="text-secondary">{{ s.eta }}</td>
+                          <td>
+                            <span class="badge rounded-pill text-uppercase px-2" [ngClass]="{
+                        'bg-primary-subtle text-primary': s.status === 'IN_TRANSIT',
+                        'bg-secondary-subtle text-secondary': s.status === 'SCHEDULED' || s.status === 'PENDING'
+                      }">{{ s.status }}</span>
+                          </td>
+                          <td class="text-center">
+                            <button class="btn btn-sm btn-light text-primary rounded-circle"><i
+                                class="bi bi-geo-alt"></i></button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── DISPATCH SCHEDULE MODAL ───────────────── -->
+          <div class="modal fade" [class.show]="showScheduleModal"
+            [style.display]="showScheduleModal ? 'block' : 'none'" tabindex="-1"
+            style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+              <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header border-bottom-0 pb-0">
+                  <h5 class="modal-title fw-bold text-dark"><i class="bi bi-calendar-event me-2"></i>Today's Dispatch
+                    Schedule</h5>
+                  <button type="button" class="btn-close" (click)="closeScheduleModal()"></button>
+                </div>
+                <div class="modal-body p-0">
+                  @if (dispatchSchedule.length === 0) {
+                  <div class="text-center py-4 text-muted">
+                    No schedules found for today.
+                  </div>
+                  } @else {
+                  <div class="table-responsive mt-3">
+                    <table class="table table-hover align-middle mb-0 fs-7">
+                      <thead class="table-light text-secondary border-top border-bottom">
+                        <tr>
+                          <th class="ps-4 fw-semibold">Trip ID</th>
+                          <th class="fw-semibold">Destination</th>
+                          <th class="fw-semibold">Time</th>
+                          <th class="fw-semibold text-center">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let row of dispatchSchedule">
+                          <td class="ps-4 fw-bold text-dark">{{ row.tripId }}</td>
+                          <td class="text-secondary">{{ row.destination }}</td>
+                          <td class="text-secondary">{{ row.time }}</td>
+                          <td class="text-center">
+                            <span class="badge rounded-pill px-2 text-dark border" [ngClass]="{
+                        'bg-light border-secondary-subtle': row.status === 'PENDING' || row.status === 'SCHEDULED'
+                      }">{{ row.status }}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── MAP MODAL ───────────────── -->
+          <div class="modal fade" [class.show]="showMapModal" [style.display]="showMapModal ? 'block' : 'none'"
+            tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header border-bottom-0 pb-0">
+                  <h5 class="modal-title fw-bold text-dark">Live Tracking Map</h5>
+                  <button type="button" class="btn-close" (click)="closeMapModal()"></button>
+                </div>
+                <div class="modal-body">
+                  @if (hasActiveTrackingDevice) {
+                  <div
+                    class="bg-light rounded-4 w-100 position-relative overflow-hidden d-flex justify-content-center align-items-center"
+                    style="min-height: 500px; background: url('https://www.transparenttextures.com/patterns/cartographer.png') #eef2f6;">
+                    <!-- Map dummy lines -->
+                    <svg class="position-absolute top-0 start-0 w-100 h-100">
+                      <line x1="20%" y1="20%" x2="50%" y2="50%" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4">
+                      </line>
+                      <line x1="80%" y1="20%" x2="50%" y2="50%" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4">
+                      </line>
+                      <line x1="20%" y1="80%" x2="50%" y2="50%" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4">
+                      </line>
+                      <line x1="80%" y1="80%" x2="50%" y2="50%" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4">
+                      </line>
+                    </svg>
+                    <div class="position-absolute" style="top: 15%; left: 15%;">
+                      <div class="badge bg-white text-dark shadow-sm border mb-1">Rajshahi</div>
+                      <div class="bg-primary rounded-circle shadow border border-white border-2"
+                        style="width:16px; height:16px;"></div>
+                    </div>
+                    <div class="position-absolute" style="top: 15%; right: 15%;">
+                      <div class="badge bg-white text-dark shadow-sm border mb-1">Sylhet</div>
+                      <div class="bg-primary rounded-circle shadow border border-white border-2"
+                        style="width:16px; height:16px;"></div>
+                    </div>
+                    <div class="position-absolute" style="bottom: 15%; left: 15%;">
+                      <div class="badge bg-white text-dark shadow-sm border mb-1">Khulna</div>
+                      <div class="bg-primary rounded-circle shadow border border-white border-2"
+                        style="width:16px; height:16px;"></div>
+                    </div>
+                    <div class="position-absolute" style="bottom: 15%; right: 15%;">
+                      <div class="badge bg-white text-dark shadow-sm border mb-1">Chattogram</div>
+                      <div class="bg-primary rounded-circle shadow border border-white border-2"
+                        style="width:16px; height:16px;"></div>
+                    </div>
+                    <div class="position-absolute text-center" style="top: 45%; left: 45%;">
+                      <div class="badge bg-white text-dark shadow-sm border mb-1">Dhaka</div>
+                      <div
+                        class="bg-success text-white rounded-circle shadow border border-white border-2 d-flex justify-content-center align-items-center fs-5"
+                        style="width:40px; height:40px;">
+                        <i class="bi bi-truck"></i>
+                      </div>
+                    </div>
+
+                    <div class="position-absolute bottom-0 end-0 p-3 d-flex flex-column gap-2">
+                      <button class="btn btn-white shadow border"><i class="bi bi-plus"></i></button>
+                      <button class="btn btn-white shadow border"><i class="bi bi-dash"></i></button>
+                      <button class="btn btn-white shadow border"><i class="bi bi-cursor-fill"></i></button>
+                    </div>
+                  </div>
+                  } @else {
+                  <div class="text-center py-5">
+                    <div class="mb-4 d-inline-flex justify-content-center align-items-center bg-light rounded-circle"
+                      style="width: 80px; height: 80px;">
+                      <i class="bi bi-geo-alt-fill text-muted" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">No Connected Tracking Device</h4>
+                    <p class="text-secondary mx-auto" style="max-width: 400px;">
+                      We cannot display the live tracking map because there are no active GPS tracking devices
+                      connected to your current shipments.
+                    </p>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── 1. STOCK NAV MODAL (FORM + DATA) ───────────────── -->
+          <div class="modal fade" [class.show]="showStockNavModal"
+            [style.display]="showStockNavModal ? 'block' : 'none'" tabindex="-1"
+            style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px);">
+            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+              <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <!-- Modal Header matching screenshot -->
+                <div class="custom-modal-header d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="custom-modal-icon">
+                      <i class="bi bi-layers-fill fs-4 text-white"></i>
+                    </div>
+                    <div>
+                      <h5 class="fw-bold mb-0 text-white">Stock Inventory Control</h5>
+                      <small class="text-white-50">Manage inventory levels, adjust stock counts, and verify warehouse
+                        nodes</small>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-close btn-close-white" (click)="closeStockNavModal()"></button>
+                </div>
+
+                <!-- Form Body matching 2-column screenshot layout -->
+                <div class="modal-body p-4 bg-white">
+                  <form #fStock="ngForm" (ngSubmit)="fStock.valid && submitStockForm()">
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Target Product / Item SKU *</label>
+                        <select class="form-select custom-form-control" [(ngModel)]="stockForm.productId"
+                          name="productId" required>
+                          <option [value]="0">-- Select Product SKU --</option>
+                          <option *ngFor="let p of productList" [value]="p.id">{{ p.name }} (Code: {{ p.productCode
+                            }})</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Assigned Warehouse Node *</label>
+                        <select class="form-select custom-form-control" [(ngModel)]="stockForm.warehouseId"
+                          name="warehouseId" required>
+                          <option [value]="0">-- Select Warehouse Node --</option>
+                          <option *ngFor="let wh of warehouses" [value]="wh.id">{{ wh.name }}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Quantity on Hand *</label>
+                        <input type="number" class="form-control custom-form-control"
+                          [(ngModel)]="stockForm.quantityOnHand" name="quantityOnHand" placeholder="100" min="1"
+                          required />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Reorder Safety Level</label>
+                        <input type="number" class="form-control custom-form-control"
+                          [(ngModel)]="stockForm.quantityReserved" name="quantityReserved" placeholder="15" />
+                      </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Location Status (Rack/Row)</label>
+                        <input type="text" class="form-control custom-form-control"
+                          [(ngModel)]="stockForm.locationStatus" name="locationStatus" placeholder="e.g. Rack-A, Row-3" />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Expiry Date</label>
+                        <input type="date" class="form-control custom-form-control text-muted"
+                          [(ngModel)]="stockForm.expiryDate" name="expiryDate" />
+                      </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                      <div class="col-md-12">
+                        <label class="custom-form-label">Updated By Officer</label>
+                        <input type="text" class="form-control custom-form-control bg-light"
+                          [value]="userName || 'Logistics Officer'" readonly />
+                      </div>
+                    </div>
+
+                    <!-- Footer matching screenshot button layout -->
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                      <button type="button" class="btn btn-modal-cancel" (click)="closeStockNavModal()">Cancel</button>
+                      <button type="submit" class="btn btn-modal-submit">
+                        <i class="bi bi-box-seam me-2"></i>Update Stock Record
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── 2. STOCK MOVEMENT NAV MODAL (FORM + DATA) ───────────────── -->
+          <div class="modal fade" [class.show]="showStockMovementNavModal"
+            [style.display]="showStockMovementNavModal ? 'block' : 'none'" tabindex="-1"
+            style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px);">
+            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+              <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <div class="custom-modal-header d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="custom-modal-icon">
+                      <i class="bi bi-arrow-left-right fs-4 text-white"></i>
+                    </div>
+                    <div>
+                      <h5 class="fw-bold mb-0 text-white">Record Stock Movement</h5>
+                      <small class="text-white-50">Log inbound, outbound, or inter-warehouse transfer
+                        transactions</small>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-close btn-close-white"
+                    (click)="closeStockMovementNavModal()"></button>
+                </div>
+
+                <div class="modal-body p-4 bg-white">
+                  <form #fMove="ngForm" (ngSubmit)="fMove.valid && submitMovementForm()">
+                    <div class="mb-3">
+                      <label class="custom-form-label">Movement Type *</label>
+                      <select class="form-select custom-form-control" [(ngModel)]="movementForm.movementType"
+                        name="movementType" required>
+                        <option value="INWARD">📥 INWARD (Vendor Receipt/GRN)</option>
+                        <option value="OUTWARD">📤 OUTWARD (Customer Dispatch/Sales)</option>
+                        <option value="TRANSFER">🔄 TRANSFER (Inter-Warehouse Shift)</option>
+                        <option value="ADJUSTMENT">⚙️ ADJUSTMENT (Audit / Damage Balancing)</option>
+                      </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="custom-form-label">Product Item *</label>
+                      <select class="form-select custom-form-control" [(ngModel)]="movementForm.productId"
+                        name="productId" (change)="onMovementProductChange()" required>
+                        <option [value]="0">-- Select Product --</option>
+                        <option *ngFor="let p of availableProductsForMovement" [value]="p.id">{{ p.name }} (Code: {{
+                          p.productCode }})</option>
+                      </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="custom-form-label">Available Stock Quantity</label>
+                      <input type="text"
+                        class="form-control custom-form-control bg-light fw-bold text-success font-monospace"
+                        [value]="getSelectedProductStock()" readonly
+                        placeholder="Select a product to view available stock...">
+                    </div>
+
+                    <!-- SOURCE WAREHOUSE NODE (FROM) (Wrapped in light-blue alert card/box) -->
+                    <div *ngIf="movementForm.movementType === 'TRANSFER'"
+                      class="mb-3 bg-info-subtle p-3 rounded border border-info-subtle">
+                      <label class="custom-form-label fw-bold text-info-emphasis text-uppercase"
+                        style="font-size: 0.75rem;">Source Warehouse Node (To) *</label>
+                      <select class="form-select custom-form-control mt-1" [(ngModel)]="movementForm.sourceWarehouseId"
+                        name="sourceWarehouseId" required>
+                        <option [value]="null">-- Choose Origin Facility --</option>
+                        <option *ngFor="let wh of warehouses" [value]="wh.id">{{ wh.name }}</option>
+                      </select>
+                    </div>
+
+                    <!-- <div class="mb-3">
+              <label class="custom-form-label">
+                <span *ngIf="movementForm.movementType === 'OUTWARD'">External Destination</span>
+                <span *ngIf="movementForm.movementType === 'TRANSFER'">Destination Warehouse Node (From) *</span>
+                <span *ngIf="movementForm.movementType !== 'OUTWARD' && movementForm.movementType !== 'TRANSFER'">Target Warehouse Node *</span>
+              </label>
+              
+              <select *ngIf="movementForm.movementType === 'TRANSFER' || movementForm.movementType === 'INWARD' || movementForm.movementType === 'ADJUSTMENT'; else readOnlyWarehouse" class="form-select custom-form-control" [(ngModel)]="movementForm.warehouseId" name="warehouseId" required>
+                <option [value]="0">-- Choose Destination Facility --</option>
+                <option *ngFor="let w of warehouses" [value]="w.id">{{ w.name }}</option>
+              </select>
+              <ng-template #readOnlyWarehouse>
+                <input type="text" class="form-control custom-form-control bg-light fw-bold text-dark" [value]="getTargetWarehouseName()" readonly placeholder="Auto-filled from inventory stock...">
+                <input type="hidden" [(ngModel)]="movementForm.warehouseId" name="warehouseId" required>
+              </ng-template>
+            </div> -->
+
+
+                    <div class="mb-3">
+                      <label class="custom-form-label">
+                        <span *ngIf="movementForm.movementType === 'OUTWARD'">External Destination</span>
+                        <span *ngIf="movementForm.movementType === 'TRANSFER'">Destination Warehouse Node (From)
+                          *</span>
+                        <span
+                          *ngIf="movementForm.movementType !== 'OUTWARD' && movementForm.movementType !== 'TRANSFER'">Target
+                          Warehouse Node *</span>
+                      </label>
+
+                      <input type="text" class="form-control custom-form-control bg-light fw-bold text-dark"
+                        [value]="getTargetWarehouseName()" readonly placeholder="Warehouse facility...">
+
+                      <!-- ব্যাকএন্ডে আইডি পাঠানোর জন্য হিডেন ফিল্ড -->
+                      <input type="hidden" [(ngModel)]="movementForm.warehouseId" name="warehouseId" required>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Movement Quantity *</label>
+                        <input type="number" class="form-control custom-form-control"
+                          [(ngModel)]="movementForm.quantity" name="quantity" placeholder="50" min="1" required />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Reference Identifier / PO / GRN *</label>
+                        <input type="text" class="form-control custom-form-control"
+                          [(ngModel)]="movementForm.referenceId" name="referenceId" placeholder="e.g. GRN-994"
+                          required />
+                      </div>
+                    </div>
+
+                    <div class="mb-4">
+                      <label class="custom-form-label">Remarks &amp; Audit Notes</label>
+                      <textarea class="form-control custom-form-control" [(ngModel)]="movementForm.remarks"
+                        name="remarks" rows="2" placeholder="Cause of stock adjustment or movement..."></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                      <button type="button" class="btn btn-modal-cancel"
+                        (click)="closeStockMovementNavModal()">Cancel</button>
+                      <button type="submit" class="btn btn-modal-submit">
+                        <i class="bi bi-arrow-left-right me-2"></i>Commit Movement Ledger
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── 3. GOODS RECEIVED NOTE NAV MODAL (FORM + DATA) ───────────────── -->
+          <div class="modal fade" [class.show]="showGRNNavModal" [style.display]="showGRNNavModal ? 'block' : 'none'"
+            tabindex="-1" style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px);">
+            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+              <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <div class="custom-modal-header d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="custom-modal-icon">
+                      <i class="bi bi-box-arrow-in-down fs-4 text-white"></i>
+                    </div>
+                    <div>
+                      <h5 class="fw-bold mb-0 text-white">Goods Received Note (GRN) Entry</h5>
+                      <small class="text-white-50">Log inbound cargo consignments and verify purchase order
+                        matching</small>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-close btn-close-white" (click)="closeGRNNavModal()"></button>
+                </div>
+
+                <div class="modal-body p-4 bg-white">
+                  <form #fGrn="ngForm" (ngSubmit)="fGrn.valid && submitGRNForm()">
+                    <!-- SOURCE PURCHASE ORDER VECTOR -->
+                    <div class="mb-3">
+                      <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">SOURCE PURCHASE ORDER
+                        VECTOR *</label>
+                      <select class="form-select custom-form-control" [(ngModel)]="grnForm.poId" name="poId" required (change)="onDashboardPoChange()">
+                        <option [value]="0">-- Link Core Procurement PO --</option>
+                        <option *ngFor="let po of purchaseOrders" [value]="po.id">PO #{{ po.poNumber }} (Volume: {{
+                          po.quantity || 0 }} Units)</option>
+                      </select>
+                    </div>
+
+                    <!-- DESTINATION VAULT (WAREHOUSE ALLOCATION) -->
+                    <div class="mb-3">
+                      <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">DESTINATION VAULT
+                        (WAREHOUSE ALLOCATION) *</label>
+                      <select class="form-select custom-form-control" [(ngModel)]="grnForm.warehouseId"
+                        name="warehouseId" required>
+                        <option [value]="0">-- Select Destination Terminal --</option>
+                        <option *ngFor="let wh of warehouses" [value]="wh.id">{{ wh.name }} (Location: {{ wh.address ||
+                          'Central Zone' }})</option>
+                      </select>
+                    </div>
+
+                    <!-- TOTAL RECEIVED VOLUME & ARRIVAL LOG DATE -->
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-6">
+                        <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">TOTAL RECEIVED
+                          VOLUME *</label>
+                        <input type="number" class="form-control custom-form-control"
+                          [(ngModel)]="grnForm.receivedQuantity" name="receivedQuantity" min="0" required />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">ARRIVAL LOG DATE
+                          *</label>
+                        <input type="date" class="form-control custom-form-control" [(ngModel)]="grnForm.receivedAt"
+                          name="receivedAt" required />
+                      </div>
+                    </div>
+
+                    <!-- Quality Assurance Checks (Screenshot Style) -->
+                    <div class="card border border-info-subtle mb-3 p-3"
+                      style="background-color: #f8fafc; border-radius: 10px;">
+                      <h6 class="fw-bold small text-primary mb-3">
+                        <i class="bi bi-shield-fill me-2"></i>Quality Assurance Checks
+                      </h6>
+                      <div class="row g-3">
+                        <div class="col-md-6">
+                          <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">QC AUTHORIZED
+                            INSPECTOR</label>
+                          <select class="form-select custom-form-control" [(ngModel)]="grnForm.inspectedBy"
+                            name="inspectedBy">
+                            <option [value]="null">-- Map Inspector Node --</option>
+                            <option *ngFor="let u of users" [value]="u.id">{{ u.name }} ({{ u.role }})</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">INSPECTION
+                            TIMESTAMP</label>
+                          <input type="date" class="form-control custom-form-control"
+                            [(ngModel)]="grnForm.inspectionDate" name="inspectionDate" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Bulk Item Line Cargo Allocation (Screenshot Style) -->
+                    <div class="card border border-light-subtle mb-3 p-3 bg-white" style="border-radius: 10px;">
+                      <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold small text-secondary mb-0">
+                          <i class="bi bi-box-seam me-2"></i>BULK ITEM LINE CARGO ALLOCATION
+                        </h6>
+                        <button type="button" class="btn btn-sm btn-outline-primary px-3 rounded-pill fw-semibold"
+                          (click)="addDashboardGrnLineItem()">
+                          <i class="bi bi-plus-circle me-1"></i>Add Product Row
+                        </button>
+                      </div>
+
+                      <!-- Empty State Dashboard Placeholder -->
+                      <div *ngIf="grnForm.lineItems.length === 0" class="text-center py-4 border-dashed rounded"
+                        style="border: 1.5px dashed #cbd5e1; color: #64748b; font-size: 0.85rem;">
+                        No specific child line-items added yet.
+                      </div>
+
+                      <!-- Lines List -->
+                      <div *ngFor="let item of grnForm.lineItems; let idx = index"
+                        class="row g-2 align-items-center mb-2 bg-light p-2.5 rounded">
+                        <div class="col-md-5">
+                          <label class="custom-form-label fs-8 text-secondary">Product</label>
+                          <select class="form-select custom-form-control py-1 fs-7" [(ngModel)]="item.productId"
+                            name="itemProd_{{idx}}" required>
+                            <option [value]="0">-- Select Product --</option>
+                            <option *ngFor="let p of filteredProducts" [value]="p.id">{{ p.name }}</option>
+                          </select>
+                        </div>
+                        <div class="col-md-3">
+                          <label class="custom-form-label fs-8 text-secondary">Qty Ordered</label>
+                          <input type="number" class="form-control custom-form-control py-1 fs-7 font-monospace"
+                            [(ngModel)]="item.quantityOrdered" name="itemOrd_{{idx}}" placeholder="Ordered" required />
+                        </div>
+                        <div class="col-md-3">
+                          <label class="custom-form-label fs-8 text-secondary">Qty Received</label>
+                          <input type="number"
+                            class="form-control custom-form-control py-1 fs-7 font-monospace fw-semibold"
+                            [(ngModel)]="item.quantityReceived" name="itemRec_{{idx}}" placeholder="Received"
+                            required />
+                        </div>
+                        <div class="col-md-1 text-center pt-3">
+                          <button type="button" class="btn btn-sm text-danger p-0 mt-1"
+                            (click)="removeDashboardGrnLineItem(idx)">
+                            <i class="bi bi-x-circle-fill fs-5"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- OPERATIONAL TONNAGE TERMINAL REMARKS -->
+                    <div class="mb-4">
+                      <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">OPERATIONAL TONNAGE
+                        TERMINAL REMARKS</label>
+                      <textarea class="form-control custom-form-control" [(ngModel)]="grnForm.remarks" name="remarks"
+                        rows="3" placeholder="Consignment damage logs, missing parts descriptions..."></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                      <button type="button" class="btn btn-modal-cancel" (click)="closeGRNNavModal()">Cancel</button>
+                      <button type="submit" class="btn btn-modal-submit">
+                        <i class="bi bi-file-earmark-check me-2"></i>Authorize &amp; Stream Stock
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── 4. DELIVERY TRIP NAV MODAL (FORM + DATA) ───────────────── -->
+          <div class="modal fade" [class.show]="showDeliveryTripNavModal"
+            [style.display]="showDeliveryTripNavModal ? 'block' : 'none'" tabindex="-1"
+            style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px);">
+            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+              <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <div class="custom-modal-header d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="custom-modal-icon">
+                      <i class="bi bi-signpost-2-fill fs-4 text-white"></i>
+                    </div>
+                    <div>
+                      <h5 class="fw-bold mb-0 text-white">Create Delivery Trip</h5>
+                      <small class="text-white-50">Dispatch official cargo delivery manifest to assigned drivers</small>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-close btn-close-white"
+                    (click)="closeDeliveryTripNavModal()"></button>
+                </div>
+
+                <div class="modal-body p-4 bg-white">
+                  <form #fTrip="ngForm" (ngSubmit)="fTrip.valid && submitTripForm()">
+                    <!-- TARGET CUSTOMER ACCOUNT -->
+                    <div class="mb-3">
+                      <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">TARGET CUSTOMER
+                        ACCOUNT *</label>
+                      <select class="form-select custom-form-control" [(ngModel)]="tripForm.customerId"
+                        name="customerId" required>
+                        <option [value]="0">-- Choose Client Nodes --</option>
+                        <option *ngFor="let c of customerList" [value]="c.id">{{ c.name }} ({{ c.companyName ||
+                          'Corporate Client' }})</option>
+                      </select>
+                    </div>
+
+                    <!-- SELECT VEHICLE MODE -->
+                    <div class="mb-3">
+                      <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">SELECT VEHICLE MODE
+                        *</label>
+                      <select class="form-select custom-form-control" [(ngModel)]="selectedVehicleType"
+                        name="selectedVehicleType" (change)="onVehicleTypeChange()" required>
+                        <option value="">-- Choose Fleet Mode --</option>
+                        <option value="TRUCK">🚛 TRUCK DISPATCH</option>
+                        <option value="VAN">🚐 VAN INFRASTRUCTURE</option>
+                        <option value="BIKE">🏍️ BIKE FAST DELIVERY</option>
+                        <option value="AIR">✈️ AIR FREIGHT CORE</option>
+                        <option value="RIVER_SHIP">🚢 RIVER SHIFT NETWORK</option>
+                      </select>
+                    </div>
+
+                    <!-- ASSIGN CAPTAIN & FLEET ASSET -->
+                    <div class="mb-3">
+                      <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">ASSIGN CAPTAIN &amp;
+                        FLEET ASSET</label>
+                      <select class="form-select custom-form-control" [(ngModel)]="tripForm.vehicleId" name="vehicleId"
+                        [disabled]="filteredVehicles.length === 0" required>
+                        <option [value]="0">
+                          {{ filteredVehicles.length === 0 ? '-- Choose Fleet Mode First / No Driver Available --' : '--
+                          Choose Captain (Vehicle Number) --' }}
+                        </option>
+                        <option *ngFor="let v of filteredVehicles" [value]="v.id">
+                          👤 {{ v.driverName }} (🚗 {{ v.vehicleNumber || v.plateNumber }})
+                        </option>
+                      </select>
+                    </div>
+
+                    <!-- INITIAL OPERATIONAL STATE -->
+                    <div class="mb-3">
+                      <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">INITIAL OPERATIONAL
+                        STATE</label>
+                      <select class="form-select custom-form-control" [(ngModel)]="tripForm.status" name="status">
+                        <option value="PENDING">📂 PENDING (Manifest Locked)</option>
+                        <option value="IN_TRANSIT">🚚 IN TRANSIT (On Route)</option>
+                        <option value="DELIVERED">✅ DELIVERED (Manifest Closed)</option>
+                      </select>
+                    </div>
+
+                    <!-- CONSIGNMENT DROP COORDINATE ADDRESS -->
+                    <div class="mb-3">
+                      <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">CONSIGNMENT DROP
+                        COORDINATE ADDRESS *</label>
+                      <textarea class="form-control custom-form-control" [(ngModel)]="tripForm.customerAddress"
+                        name="customerAddress" rows="3" placeholder="Input target shipping map coordinates..."
+                        required></textarea>
+                    </div>
+
+                    <!-- OPERATIONAL TRANSIT NOTES -->
+                    <div class="mb-4">
+                      <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">OPERATIONAL TRANSIT
+                        NOTES</label>
+                      <textarea class="form-control custom-form-control" [(ngModel)]="tripForm.remarks" name="remarks"
+                        rows="3" placeholder="Log route delays, damage profiles or general variables..."></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                      <button type="button" class="btn btn-modal-cancel"
+                        (click)="closeDeliveryTripNavModal()">Cancel</button>
+                      <button type="submit" class="btn btn-modal-submit">
+                        <i class="bi bi-truck me-2"></i>Dispatch Delivery Trip
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── 5. VEHICLE NAV MODAL (FORM + DATA) ───────────────── -->
+          <div class="modal fade" [class.show]="showVehicleNavModal"
+            [style.display]="showVehicleNavModal ? 'block' : 'none'" tabindex="-1"
+            style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px);">
+            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+              <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <div class="custom-modal-header d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="custom-modal-icon">
+                      <i class="bi bi-bus-front-fill fs-4 text-white"></i>
+                    </div>
+                    <div>
+                      <h5 class="fw-bold mb-0 text-white">Register Fleet Vehicle</h5>
+                      <small class="text-white-50">Add new cargo transport vehicles and assign designated
+                        drivers</small>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-close btn-close-white" (click)="closeVehicleNavModal()"></button>
+                </div>
+
+                <div class="modal-body p-4 bg-white">
+                  <form #fVeh="ngForm" (ngSubmit)="fVeh.valid && submitVehicleForm()">
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Registration Number *</label>
+                        <input type="text" class="form-control custom-form-control"
+                          [(ngModel)]="vehicleForm.vehicleNumber" name="vehicleNumber" placeholder="DHAKA-METRO-TA-1122"
+                          required />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Vehicle Type / Category *</label>
+                        <select class="form-select custom-form-control" [(ngModel)]="vehicleForm.type" name="type"
+                          required>
+                          <option value="COVERED_VAN">COVERED VAN</option>
+                          <option value="CARGO_TRUCK">CARGO TRUCK</option>
+                          <option value="PICKUP">PICKUP</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Load Capacity (Tons) *</label>
+                        <input type="number" class="form-control custom-form-control" [(ngModel)]="vehicleForm.capacity"
+                          name="capacity" placeholder="5" min="1" required />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Operational Status</label>
+                        <select class="form-select custom-form-control" [(ngModel)]="vehicleForm.status" name="status">
+                          <option value="AVAILABLE">AVAILABLE</option>
+                          <option value="IN_TRANSIT">IN TRANSIT</option>
+                          <option value="MAINTENANCE">MAINTENANCE</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Assign Primary Driver Name</label>
+                        <input type="text" class="form-control custom-form-control" [(ngModel)]="vehicleForm.driverName"
+                          name="driverName" placeholder="Rahim Uddin" />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="custom-form-label">Registered By Officer</label>
+                        <input type="text" class="form-control custom-form-control bg-light"
+                          [value]="userName || 'Logistics Officer'" readonly />
+                      </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                      <button type="button" class="btn btn-modal-cancel"
+                        (click)="closeVehicleNavModal()">Cancel</button>
+                      <button type="submit" class="btn btn-modal-submit">
+                        <i class="bi bi-bus-front me-2"></i>Register Fleet Vehicle
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- ───────────────── 6. QC INSPECTION NAV MODAL (READ-ONLY DATA TABLE) ───────────────── -->
+          <div class="modal fade" [class.show]="showQCInspectionNavModal"
+            [style.display]="showQCInspectionNavModal ? 'block' : 'none'" tabindex="-1"
+            style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px); z-index: 1050;">
+            <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+              <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <div class="custom-modal-header d-flex justify-content-between align-items-center"
+                  style="background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="custom-modal-icon" style="background: rgba(255, 255, 255, 0.2);">
+                      <i class="bi bi-clipboard-pulse fs-4 text-white"></i>
+                    </div>
+                    <div>
+                      <h5 class="fw-bold mb-0 text-white">Quality Control (QC) Inspections Ledger</h5>
+                      <small class="text-white-50">View cargo batch inspection logs, evaluation grades, and child
+                        checkpoint metrics</small>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-close btn-close-white"
+                    (click)="closeQCInspectionNavModal()"></button>
+                </div>
+
+                <div class="modal-body p-4 bg-white">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 fs-7">
+                      <thead class="table-light text-uppercase fs-8 text-secondary">
+                        <tr>
+                          <th class="ps-4">Audit ID</th>
+                          <th>Linked GRN</th>
+                          <th>Target Product</th>
+                          <th>Sample Data (Size / Def)</th>
+                          <th>Evaluation Grade</th>
+                          <th>Timestamp</th>
+                          <th>Lab Report</th>
+                          <th>Checkpoints</th>
+                          <th class="text-end pe-4" width="180">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngFor="let q of qcInspectionList">
+                          <tr>
+                            <td class="ps-4 font-monospace fw-bold text-dark">QC-NODE-#{{ q.id }}</td>
+                            <td class="font-monospace text-secondary">{{ q.grnNumber }}</td>
+                            <td>
+                              <div class="fw-bold text-dark">{{ q.productName }}</div>
+                              <small class="text-muted fs-8 font-sans bg-light px-1.5 py-0.5 border rounded">Type: {{
+                                q.inspectionType }}</small>
+                            </td>
+                            <td>
+                              <div class="font-monospace">
+                                Pool Size: <b class="text-dark">{{ q.sampleSize }}</b> /
+                                Defects: <span [class.text-danger]="q.defectsFound > 0" class="fw-bold">{{
+                                  q.defectsFound }}</span>
+                              </div>
+                            </td>
+                            <td>
+                              <span class="badge px-2.5 py-1.5 fs-8 text-uppercase border" [ngClass]="{
+                            'bg-success text-white': q.result === 'VERY_GOOD' || q.result === 'GOOD',
+                            'bg-warning text-dark border-warning': q.result === 'AVERAGE',
+                            'bg-danger text-white': q.result === 'BAD'
+                          }">
+                                {{ q.result }}
+                              </span>
+                            </td>
+                            <td class="font-monospace text-muted">{{ q.inspectedAt }}</td>
+                            <td>
+                              <span *ngIf="q.labTestReport"
+                                class="badge bg-success-subtle text-success border border-success-subtle font-monospace py-1">
+                                <i class="bi bi-file-earmark-medical me-1"></i>Attached
+                              </span>
+                              <span *ngIf="!q.labTestReport" class="text-muted fs-8">None</span>
+                            </td>
+                            <td class="pe-4">
+                              <div *ngIf="q.checklists && q.checklists.length > 0; else noChecklists"
+                                class="d-flex flex-wrap gap-1">
+                                <span *ngFor="let ch of q.checklists"
+                                  class="badge rounded-pill bg-light text-dark border d-inline-flex align-items-center gap-1 py-1"
+                                  style="font-size: 0.65rem;">
+                                  <i class="bi"
+                                    [ngClass]="ch.isPassed ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'"></i>
+                                  {{ ch.checkpointName }}
+                                </span>
+                              </div>
+                              <ng-template #noChecklists>
+                                <span class="text-muted fs-8 italic">No checkpoints</span>
+                              </ng-template>
+                            </td>
+                            <td class="text-end pe-4">
+                              <div class="d-flex justify-content-end gap-1.5">
+                                <button
+                                  class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 py-1 px-2.5 rounded-pill fw-semibold font-sans"
+                                  (click)="openDetailsModal(q)">
+                                  <i class="bi bi-file-earmark-text-fill"></i> View
+                                </button>
+                                <button *ngIf="q.labTestReport"
+                                  class="btn btn-sm btn-outline-info d-inline-flex align-items-center gap-1 py-1 px-2.5 rounded-pill fw-semibold font-sans"
+                                  (click)="openImageModal(q)">
+                                  <i class="bi bi-image"></i> Image
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        </ng-container>
+                        <tr *ngIf="qcInspectionList.length === 0">
+                          <td colspan="9" class="text-center py-5 text-muted font-monospace fs-8">
+                            <i class="bi bi-shield-slash fs-2 d-block mb-2 text-secondary"></i>No cargo batch QC
+                            inspections available in database.
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="modal-footer bg-light px-4 py-3 border-top d-flex justify-content-end">
+                  <button type="button" class="btn btn-secondary px-4 fw-bold rounded-pill"
+                    (click)="closeQCInspectionNavModal()">Close</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- QC DETAILS PDF/WORD REPORT MODAL -->
+        <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6); z-index: 1100;"
+          *ngIf="showDetailsModal">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white">
+              <div class="modal-header bg-dark text-white px-4 py-3 d-flex justify-content-between align-items-center">
+                <h5 class="modal-title fw-bold">
+                  <i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i> Quality Assurance Audit Report
+                </h5>
+                <button type="button" class="btn-close btn-close-white" (click)="closeDetailsModal()"></button>
+              </div>
+
+              <div class="modal-body p-5 bg-white text-dark"
+                style="max-height: 70vh; overflow-y: auto; font-family: 'Times New Roman', Times, serif;">
+                <div class="border p-4 rounded-2 bg-white"
+                  style="box-shadow: 0 0 10px rgba(0,0,0,0.05); min-height: 500px; border: 1px solid #ddd !important;">
+
+                  <div class="text-center mb-4 pb-3 border-bottom">
+                    <h3 class="fw-bold tracking-wide mb-1" style="color: #1e293b; font-size: 1.65rem;">SCM GLOBAL
+                      ENTERPRISE</h3>
+                    <p class="text-uppercase text-secondary mb-0 tracking-wider small fw-semibold"
+                      style="font-size: 0.75rem;">Quality Control & Consignment Compliance Laboratory</p>
+                    <small class="text-muted">ISO 9001:2015 & SCM Compliance Audit Standards</small>
+                  </div>
+
+                  <div class="row g-3 mb-4 fs-7 font-sans">
+                    <div class="col-6">
+                      <span class="text-muted d-block small">Audit Node ID:</span>
+                      <strong class="text-dark">QC-NODE-#{{ selectedInspectionForView?.id }}</strong>
+                    </div>
+                    <div class="col-6 text-end">
+                      <span class="text-muted d-block small">Audit Date:</span>
+                      <strong class="text-dark">{{ selectedInspectionForView?.inspectedAt }}</strong>
+                    </div>
+                    <div class="col-6">
+                      <span class="text-muted d-block small">Linked GRN Number:</span>
+                      <strong class="text-dark font-monospace">{{ selectedInspectionForView?.grnNumber }}</strong>
+                    </div>
+                    <div class="col-6 text-end">
+                      <span class="text-muted d-block small">Inspection Type:</span>
+                      <strong class="text-dark text-uppercase">{{ selectedInspectionForView?.inspectionType }}</strong>
+                    </div>
+                  </div>
+
+                  <h5 class="fw-bold border-bottom pb-1 text-teal text-uppercase mb-3 font-sans"
+                    style="font-size: 0.9rem;">I. Batch Consignment Parameters</h5>
+                  <div class="table-responsive mb-4 font-sans fs-7">
+                    <table class="table table-bordered border-secondary align-middle">
+                      <tbody>
+                        <tr>
+                          <td class="bg-light fw-bold w-30">Target Product:</td>
+                          <td>{{ selectedInspectionForView?.productName }}</td>
+                        </tr>
+                        <tr>
+                          <td class="bg-light fw-bold">Inspector Personnel:</td>
+                          <td>{{ selectedInspectionForView?.inspectedByName }} (ID: {{
+                            selectedInspectionForView?.inspectedBy }})</td>
+                        </tr>
+                        <tr>
+                          <td class="bg-light fw-bold">Sample Pool Volume:</td>
+                          <td>{{ selectedInspectionForView?.sampleSize }} cargo samples selected</td>
+                        </tr>
+                        <tr>
+                          <td class="bg-light fw-bold">Defectives Detected:</td>
+                          <td class="text-danger fw-bold">{{ selectedInspectionForView?.defectsFound }} samples flagged
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="bg-light fw-bold">Certificate Stamp:</td>
+                          <td>{{ selectedInspectionForView?.certificateRef || 'N/A' }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <h5 class="fw-bold border-bottom pb-1 text-teal text-uppercase mb-3 font-sans"
+                    style="font-size: 0.9rem;">II. Diagnostic Checklist Checkpoints</h5>
+                  <div class="table-responsive mb-4 font-sans fs-7">
+                    <table class="table table-bordered border-secondary align-middle text-center">
+                      <thead class="table-light text-secondary small text-uppercase">
+                        <tr>
+                          <th>Checkpoint Label</th>
+                          <th width="100">Status</th>
+                          <th>Audit Remarks Details</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let ch of selectedInspectionForView?.checklists">
+                          <td class="text-start font-monospace">{{ ch.checkpointName }}</td>
+                          <td>
+                            <span class="badge rounded-pill"
+                              [ngClass]="ch.isPassed ? 'bg-success-subtle text-success border border-success' : 'bg-danger-subtle text-danger border border-danger'"
+                              style="font-size: 0.65rem;">
+                              {{ ch.isPassed ? '✔ PASS' : '❌ FAIL' }}
+                            </span>
+                          </td>
+                          <td class="text-start text-muted">{{ ch.remarks || 'No detailed anomaly noted' }}</td>
+                        </tr>
+                        <tr
+                          *ngIf="!selectedInspectionForView?.checklists || selectedInspectionForView?.checklists.length === 0">
+                          <td colspan="3" class="text-muted py-3">No specific checklist checkpoints recorded for this
+                            consignment.</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <h5 class="fw-bold border-bottom pb-1 text-teal text-uppercase mb-3 font-sans"
+                    style="font-size: 0.9rem;">III. Defect Narrative & Audit Verdict</h5>
+                  <div class="p-3 bg-light rounded-2 mb-4 font-sans fs-7 border">
+                    <span class="text-secondary small d-block">Defect Anomaly Logs:</span>
+                    <p class="mb-2 italic text-dark" style="white-space: pre-wrap;">"{{
+                      selectedInspectionForView?.defectDescription || 'No material defect layers reported.' }}"</p>
+                    <div class="d-flex align-items-center gap-2 mt-3 pt-2 border-top">
+                      <span class="fw-bold">Compliance Status:</span>
+                      <span class="badge px-3 py-1.5 fs-8 text-uppercase border" [ngClass]="{
+                      'bg-success text-white': selectedInspectionForView?.result === 'VERY_GOOD' || selectedInspectionForView?.result === 'GOOD',
+                      'bg-warning text-dark border-warning': selectedInspectionForView?.result === 'AVERAGE',
+                      'bg-danger text-white': selectedInspectionForView?.result === 'BAD'
+                    }">
+                        {{ selectedInspectionForView?.result }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="row pt-5 mt-4 border-top font-sans fs-8 text-center text-secondary">
+                    <div class="col-4">
+                      <div class="mb-4 d-inline-block border-bottom w-80" style="height: 40px;"></div>
+                      <div>Logistics Cargo Dispatch EOD</div>
+                    </div>
+                    <div class="col-4">
+                      <div
+                        class="d-inline-flex align-items-center justify-content-center border-2 border-dashed border-success rounded-circle"
+                        style="width: 70px; height: 70px; color: #15803d; transform: rotate(-15deg); opacity: 0.75; font-size: 0.55rem; font-weight: bold; line-height: 1.1;">
+                        <div>SCM LAB<br>APPROVED<br>QA UNIT</div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="mb-4 d-inline-block border-bottom w-80" style="height: 40px;"></div>
+                      <div>Authorized Quality Auditor</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="modal-footer bg-light px-4 py-3 border-top d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-primary px-3 fw-bold rounded-pill"
+                  onclick="window.print()">
+                  <i class="bi bi-printer me-1"></i> Print Report
+                </button>
+                <button type="button" class="btn btn-secondary px-4 fw-bold rounded-pill"
+                  (click)="closeDetailsModal()">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-backdrop fade show" style="z-index: 1090;" *ngIf="showDetailsModal"></div>
+
+        <!-- QC IMAGE VIEW MODAL -->
+        <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6); z-index: 1100;"
+          *ngIf="showImageModal">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden">
+              <div class="modal-header bg-dark text-white px-4 py-3">
+                <h5 class="modal-title fw-bold">
+                  <i class="bi bi-image text-info me-2"></i> Chemical Lab Telemetry Scan Report
+                </h5>
+                <button type="button" class="btn-close btn-close-white" (click)="closeImageModal()"></button>
+              </div>
+              <div class="modal-body p-4 bg-light text-center">
+                <div class="card border-0 shadow-sm rounded-3 overflow-hidden bg-white mx-auto"
+                  style="max-width: 100%;">
+                  <img [src]="getInspectionImageUrl(selectedInspectionForView?.labTestReport)"
+                    class="img-fluid rounded-3" style="max-height: 500px; object-fit: contain;"
+                    alt="QC Inspection Lab Report">
+                  <div class="card-body bg-white border-top p-3 text-start">
+                    <div class="row">
+                      <div class="col-6">
+                        <span class="text-secondary small d-block">Consignment Audit ID</span>
+                        <strong class="text-dark">QC-NODE-#{{ selectedInspectionForView?.id }}</strong>
+                      </div>
+                      <div class="col-6 text-end">
+                        <span class="text-secondary small d-block">Result Grade</span>
+                        <strong class="text-teal font-monospace">{{ selectedInspectionForView?.result }}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer bg-white px-4 py-3 border-top d-flex justify-content-between">
+                <a [href]="getInspectionImageUrl(selectedInspectionForView?.labTestReport)" target="_blank"
+                  class="btn btn-outline-primary px-4 fw-bold rounded-pill">
+                  <i class="bi bi-box-arrow-up-right me-1"></i> Open in New Tab
+                </a>
+                <button type="button" class="btn btn-secondary px-4 fw-bold rounded-pill"
+                  (click)="closeImageModal()">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-backdrop fade show" style="z-index: 1090;" *ngIf="showImageModal"></div>
+
+        <app-dashboard-settings [isOpen]="showSettings" (close)="closeSettings()"></app-dashboard-settings>

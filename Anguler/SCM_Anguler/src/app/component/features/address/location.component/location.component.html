@@ -1,0 +1,142 @@
+<div class="container-fluid px-4 mt-4">
+  
+  <div class="bg-white p-3 rounded shadow-sm mb-4 border-start border-primary border-4">
+    <h4 class="mb-1 text-dark fw-bold">Smart Courier Location System</h4>
+    <p class="text-muted mb-0 small">Dynamically route parcel hubs via cascading parameters or perform indexing keywords query lookup.</p>
+  </div>
+
+  <div class="row g-4">
+    
+    <div class="col-xl-4 col-lg-5">
+      <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="card-header bg-dark text-white fw-semibold py-3 d-flex align-items-center gap-2">
+          <i class="bi bi-sliders"></i> Location Control Panel
+        </div>
+        <div class="card-body p-4 bg-white">
+          
+          <div class="mb-4">
+            <label class="form-label fw-semibold text-primary small text-uppercase">
+              <i class="bi bi-lightning-charge-fill"></i> Smart Global Finder
+            </label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-search"></i></span>
+              <input type="text"
+                     class="form-control border-start-0 ps-0 fs-7"
+                     placeholder="Type: Mirpur / Dhaka / 1216"
+                     [(ngModel)]="keyword"
+                     (input)="search()">
+            </div>
+            <div class="form-text text-muted fs-8">Direct indexed search bypasses hierarchy selection.</div>
+          </div>
+
+          <div class="d-flex align-items-center my-3">
+            <hr class="flex-grow-1 text-muted">
+            <span class="mx-2 text-muted small fw-bold tracking-wider text-uppercase fs-8">OR HIERARCHY TREE</span>
+            <hr class="flex-grow-1 text-muted">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Country Region</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-globe"></i></span>
+              <select class="form-select border-start-0 ps-0 fs-7"
+                      [(ngModel)]="selectedCountryId"
+                      (change)="onCountryChange()">
+                <option [ngValue]="null">Select Country</option>
+                <option *ngFor="let c of countries" [ngValue]="c.id">
+                  {{ c.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Division Zone</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-layers"></i></span>
+              <select class="form-select border-start-0 ps-0 fs-7"
+                      [(ngModel)]="selectedDivisionId"
+                      (change)="onDivisionChange()"
+                      [disabled]="!selectedCountryId || divisions.length === 0">
+                <option [ngValue]="null">Select Division</option>
+                <option *ngFor="let d of divisions" [ngValue]="d.id">
+                  {{ d.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Target District</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-geo-alt"></i></span>
+              <select class="form-select border-start-0 ps-0 fs-7"
+                      [(ngModel)]="selectedDistrictId"
+                      (change)="onDistrictChange()"
+                      [disabled]="!selectedDivisionId || districts.length === 0">
+                <option [ngValue]="null">Select District</option>
+                <option *ngFor="let d of districts" [ngValue]="d.id">
+                  {{ d.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-8 col-lg-7">
+      <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+          <span class="fw-bold text-dark"><i class="bi bi-buildings-fill me-2 text-primary"></i> Police Stations / Operational Terminals</span>
+          <span class="badge bg-primary rounded-pill px-3 py-2 font-monospace fs-8">{{ stations.length }} Areas Loaded</span>
+        </div>
+        
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light text-uppercase fs-7 tracking-wider">
+                <tr>
+                  <th class="ps-4">Station Name (EN)</th>
+                  <th>Station Name (BN)</th>
+                  <th class="pe-4 text-end" width="160">Postal Code</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let s of stations" class="transition-all">
+                  <td class="ps-4">
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-sm bg-primary-subtle text-primary rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold fs-7">
+                        {{ s.name.charAt(0) }}
+                      </div>
+                      <span class="fw-semibold text-dark">{{ s.name }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="text-secondary fw-medium">{{ s.nameBn }}</span>
+                  </td>
+                  <td class="pe-4 text-end">
+                    <span class="badge bg-light text-dark border px-2.5 py-1.5 font-monospace fs-7">
+                      <i class="bi bi-mailbox text-muted me-1"></i> {{ s.postalCode || 'N/A' }}
+                    </span>
+                  </td>
+                </tr>
+                
+                <tr *ngIf="stations.length === 0">
+                  <td colspan="3" class="text-center py-5 text-muted">
+                    <i class="bi bi-pin-map fs-1 d-block mb-2 text-secondary"></i>
+                    <span class="d-block fw-semibold text-dark">No Hub Data Found</span>
+                    <p class="mb-0 fs-7 px-4">Modify the parameter filters on the left panel or type directly inside global lookups.</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

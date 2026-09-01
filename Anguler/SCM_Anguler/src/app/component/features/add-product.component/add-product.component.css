@@ -1,0 +1,62 @@
+.custom-drawer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 750px;       /* 🌟 ফর্মের চওড়া বাড়ানোর জন্য width বাড়িয়ে দিন (যেমন: 750px বা আপনার প্রয়োজনমতো) */
+  max-width: 95vw;    /* মোবাইল বা ছোট স্ক্রিনের জন্য রেস্পন্সিভ রাখতে */
+  height: 85vh;       /* 🌟 ফর্মের উচ্চতা বড় করার জন্য height সেট করুন */
+  background-color: #ffffff;
+  z-index: 1050;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.custom-drawer.open {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  visibility: visible;
+}
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #fcfcfd;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 1040;
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fs-7 {
+  font-size: 0.825rem !important;
+}
+
+.table th {
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+}

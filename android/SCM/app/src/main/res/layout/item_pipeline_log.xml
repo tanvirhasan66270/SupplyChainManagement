@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="8dp"
+    android:paddingHorizontal="4dp">
+
+    <ImageView
+        android:id="@+id/ivDot"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/bg_status_badge_paid"
+        android:backgroundTint="@color/blue_primary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvOrderNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="ORD-2024-001"
+        android:textColor="#1A1A1A"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/tvStatus"
+        app:layout_constraintStart_toEndOf="@id/ivDot"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="24 May 2024"
+        android:textColor="#888888"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="@id/tvOrderNumber"
+        app:layout_constraintTop_toBottomOf="@id/tvOrderNumber" />
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_status_badge_delivered"
+        android:backgroundTint="#F0F4F8"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:text="Shipped"
+        android:textColor="@color/blue_primary"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvOrderNumber" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="#F0F0F0"
+        app:layout_constraintTop_toBottomOf="@id/tvDate" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

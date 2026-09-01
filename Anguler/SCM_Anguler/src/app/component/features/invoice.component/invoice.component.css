@@ -1,0 +1,193 @@
+.container-fluid {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.bg-white { background-color: #ffffff !important; }
+.btn-indigo { background-color: #4f46e5 !important; border-color: #4f46e5 !important; }
+.btn-indigo:hover { background-color: #4338ca !important; }
+.btn-outline-indigo { color: #4f46e5 !important; border-color: #4f46e5 !important; background-color: transparent; }
+.btn-outline-indigo:hover { background-color: #4f46e5 !important; color: white !important; }
+.text-indigo { color: #4f46e5 !important; }
+.border-indigo { border-color: #4f46e5 !important; }
+.bg-indigo { background-color: #4f46e5 !important; }
+
+.table th {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 14px 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.table td {
+  padding: 14px 12px;
+  color: #1e293b;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+.btn-icon:hover {
+  background-color: #f1f5f9 !important;
+  transform: translateY(-1px);
+}
+.custom-drawer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 750px;       /* 🌟 ফর্মের চওড়া বাড়ানোর জন্য width বাড়িয়ে দিন (যেমন: 750px বা আপনার প্রয়োজনমতো) */
+  max-width: 95vw;    /* মোবাইল বা ছোট স্ক্রিনের জন্য রেস্পন্সিভ রাখতে */
+  height: 85vh;       /* 🌟 ফর্মের উচ্চতা বড় করার জন্য height সেট করুন */
+  background-color: #ffffff;
+  z-index: 1050;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.custom-drawer.open {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  visibility: visible;
+}
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(2px);
+  z-index: 1040;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.drawer-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Print Preview Popover Modal View Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(3px);
+  z-index: 1060;
+}
+
+.invoice-bill-card {
+  width: 580px;
+  max-width: 95%;
+  border-top: 5px solid #4f46e5;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.fs-7 { font-size: 13px !important; }
+.fs-8 { font-size: 11px !important; }
+
+.drawer-header {
+  flex-shrink: 0;
+  border-radius: 12px 12px 0 0;
+}
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.drawer-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.drawer-body::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.drawer-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.drawer-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.drawer-footer {
+  flex-shrink: 0;
+  border-radius: 0 0 12px 12px;
+}
+
+/* Animation for modal appearance */
+@keyframes scale-in {
+  from {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Form Field Error Styling */
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #dc3545 !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath fill='%23dc3545' d='M8 3L4 8M4 3l4 5'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+  padding-right: calc(1.5em + 0.75rem);
+}
+
+.invalid-feedback {
+  display: none;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.invalid-feedback.d-block {
+  display: block !important;
+  animation: slideDown 0.3s ease-out;
+}
+
+.invalid-feedback i {
+  font-size: 0.85em;
+}
+
+/* Slide down animation for error messages */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
