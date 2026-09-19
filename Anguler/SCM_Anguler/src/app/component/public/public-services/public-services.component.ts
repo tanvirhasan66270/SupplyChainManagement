@@ -34,7 +34,7 @@ export class PublicServicesComponent {
       headerBg: 'bg-success-subtle',
       features: [
         'Air, sea, road, and rail logistics integration',
-        'Real-time container tracking with ETA predictions',
+        'Real-time container tracking with estimated arrival times',
         'Optimized route planning with cost comparison',
         'Consolidation and deconsolidation services',
       ]

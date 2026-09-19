@@ -87,7 +87,6 @@ public class InvoiceServiceImp implements InvoiceService {
                 notificationService.send(recipientId, "INVOICE", title, message);
             }
         } catch (Exception e) {
-            System.err.println("Customer Invoice Notification Error: " + e.getMessage());
         }
 
         if (savedInvoice.getInvoiceStatus() == InvoiceStatus.ISSUED && !savedInvoice.getCustomerEmail().contains("no-email")) {
@@ -314,7 +313,6 @@ public class InvoiceServiceImp implements InvoiceService {
         try {
             mailService.senderGeneralMail(customerEmail, subject, mailText);
         } catch (Exception e) {
-            System.err.println("Failed to send invoice notification email: " + e.getMessage());
         }
     }
 }

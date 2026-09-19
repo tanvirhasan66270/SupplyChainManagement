@@ -127,6 +127,14 @@ public class OrderDashboardActivity extends AppCompatActivity {
         // Service Strategy
         String[] services = {"STANDARD Logistics Delivery", "EXPRESS Bullet Velocity", "OVERNIGHT Cargo"};
         spinnerServiceStrategy.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, services));
+        spinnerServiceStrategy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateTotals();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
         // Order Priority
         String[] priorities = {"NORMAL Priority (90 Days Standard)", "LOW Priority (120 Days)", "HIGH Priority (50 Days)", "URGENT Priority (30 Days)"};
@@ -248,7 +256,7 @@ public class OrderDashboardActivity extends AppCompatActivity {
         for (OrderCreatingAdapter.OrderItem item : selectedItems) {
             subtotal += item.product.getSellingPrice() * item.quantity;
         }
-        double delivery = 13710.0; // Hardcoded to match design screenshot for fidelity
+        double delivery = calculateDeliveryCharge();
         double total = subtotal + delivery;
 
         tvSubtotal.setText(String.format(Locale.US, "৳%,.2f", subtotal));
@@ -256,6 +264,31 @@ public class OrderDashboardActivity extends AppCompatActivity {
         tvTotalAmount.setText(String.format(Locale.US, "৳%,.2f", total));
         tvDueAmount.setText(String.format(Locale.US, "৳%,.2f", total));
         tvAttachedTitle.setText("ATTACHED PRODUCTS (" + selectedItems.size() + ")");
+    }
+
+    private double calculateDeliveryCharge() {
+        if (selectedItems.isEmpty()) return 0.0;
+        String strategy = (spinnerServiceStrategy != null && spinnerServiceStrategy.getSelectedItem() != null)
+                ? spinnerServiceStrategy.getSelectedItem().toString().toUpperCase()
+                : "STANDARD";
+
+        double baseCharge = 60.0;
+        if (strategy.contains("EXPRESS")) {
+            baseCharge = 100.0;
+        } else if (strategy.contains("OVERNIGHT")) {
+            baseCharge = 180.0;
+        } else if (strategy.contains("SAME_DAY")) {
+            baseCharge = 250.0;
+        }
+
+        double totalWeight = 0;
+        for (OrderCreatingAdapter.OrderItem item : selectedItems) {
+            double weight = (item.product != null && item.product.getWeight() > 0) ? item.product.getWeight() : 0.5;
+            totalWeight += weight * item.quantity;
+        }
+
+        double weightCharge = totalWeight > 1 ? (totalWeight - 1) * 20.0 : 0.0;
+        return baseCharge + weightCharge;
     }
 
     private void loadCustomerData() {

@@ -6,7 +6,7 @@ import com.example.SCM.entity.PurchaseRequisition;
 import com.example.SCM.entity.Quotation;
 import com.example.SCM.dto.mapper.QuotationMapper;
 import com.example.SCM.repository.QuotationRepository;
-import com.example.SCM.repository.PurchaseRequisitionRepository; // পিআর রিপোজিটরি ইমপোর্ট করুন
+import com.example.SCM.repository.PurchaseRequisitionRepository;
 import com.example.SCM.repository.UserRepository;
 import com.example.SCM.role.Role;
 import com.example.SCM.service.NotificationService;
@@ -46,7 +46,6 @@ public class QuotationServiceImp implements QuotationService {
     @Transactional
     public QuotationResponseDTO save(QuotationRequestDTO dto, MultipartFile image) {
         try {
-            System.out.println("Processing Quotation for PR ID: " + dto.getPurchaseRequisitionId());
 
             Quotation quotation = quotationMapper.toEntity(dto);
 
@@ -98,7 +97,6 @@ public class QuotationServiceImp implements QuotationService {
                     );
                 }
             } catch (Exception e) {
-                System.out.println("Error sending notification for quotation save: " + e.getMessage());
             }
 
             return quotationMapper.toResponseDTO(savedQuotation);
@@ -211,7 +209,6 @@ public class QuotationServiceImp implements QuotationService {
                 );
             }
         } catch (Exception e) {
-            System.out.println("Error sending notification for quotation status update: " + e.getMessage());
         }
 
         return quotationMapper.toResponseDTO(updatedQuotation);

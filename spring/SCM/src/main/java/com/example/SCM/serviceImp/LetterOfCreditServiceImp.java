@@ -292,7 +292,6 @@ public class LetterOfCreditServiceImp implements LetterOfCreditService {
         try {
             mailService.senderGeneralMail(supplierEmail, subject, mailContent);
         } catch (Exception e) {
-            System.err.println("Failed to send supplier notification email: " + e.getMessage());
         }
     }
 }

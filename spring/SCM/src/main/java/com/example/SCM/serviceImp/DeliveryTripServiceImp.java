@@ -63,7 +63,6 @@ public class DeliveryTripServiceImp implements DeliveryTripService {
                 notificationService.send(recipientId, "TRIP_ALERT", title, message);
             }
         } catch (Exception e) {
-            System.err.println("Driver Notification Error: " + e.getMessage());
         }
 
         try {
@@ -78,7 +77,6 @@ public class DeliveryTripServiceImp implements DeliveryTripService {
                 notificationService.send(recipientId, "TRIP_ALERT", title, message);
             }
         } catch (Exception e) {
-            System.err.println("Customer Delivery Trip Notification Error: " + e.getMessage());
         }
 
         return tripMapper.convertTOResponseDTO(savedTrip);
@@ -191,7 +189,6 @@ public class DeliveryTripServiceImp implements DeliveryTripService {
         try {
             mailService.senderGeneralMail(driver.getEmail(), subject, mailText);
         } catch (Exception e) {
-            System.err.println("Advanced Email Layout failed to deliver: " + e.getMessage());
         }
     }
 

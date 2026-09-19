@@ -51,7 +51,6 @@ public class ProductRequirementServiceImp implements ProductRequirementService {
                 );
             }
         } catch (Exception e) {
-            System.err.println("Error sending notification for Product Requirement creation: " + e.getMessage());
         }
 
 

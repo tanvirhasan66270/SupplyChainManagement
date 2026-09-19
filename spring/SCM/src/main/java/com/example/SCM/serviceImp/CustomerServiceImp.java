@@ -92,7 +92,6 @@ public class CustomerServiceImp implements CustomerService {
         try {
             authService.sendVerificationEmail(savedCustomer.getUser().getEmail());
         } catch (Exception e) {
-            System.err.println("Verification email sending bypassed/failed: " + e.getMessage());
         }
 
 

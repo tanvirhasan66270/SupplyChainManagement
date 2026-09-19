@@ -235,7 +235,6 @@ public class DailyReportServiceImp implements DailyReportService {
                     successfullyNotified.add(authorityInfo);
                 }
             } catch (Exception e) {
-                System.err.println("Skipping failed mail route: " + user.getEmail());
             }
         }
         return successfullyNotified;

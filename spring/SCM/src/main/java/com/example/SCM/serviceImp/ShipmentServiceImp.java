@@ -88,7 +88,6 @@ public class ShipmentServiceImp implements ShipmentService {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Shipment Notification Error: " + e.getMessage());
         }
 
         return shipmentMapper.convertTOResponseDTO(savedShipment);

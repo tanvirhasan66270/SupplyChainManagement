@@ -119,7 +119,6 @@ public class PurchaseRequisitionServiceImp implements PurchaseRequisitionService
                 }
             }
         } catch (Exception e) {
-            System.err.println("SCM Error: Failed to route isolated notifications: " + e.getMessage());
         }
 
         return requisitionMapper.convertTOResponseDTO(savedPr);
@@ -342,7 +341,6 @@ public class PurchaseRequisitionServiceImp implements PurchaseRequisitionService
             try {
                 mailService.senderGeneralMail(supplier.getEmail(), subject, mailContent);
             } catch (Exception e) {
-                System.err.println("Failed to route notice: " + supplier.getEmail());
             }
         }
     }
@@ -360,7 +358,6 @@ public class PurchaseRequisitionServiceImp implements PurchaseRequisitionService
         try {
             mailService.senderGeneralMail(officerEmail, subject, mailContent);
         } catch (Exception e) {
-            System.err.println("Back routing alert mail failed.");
         }
     }
 

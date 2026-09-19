@@ -101,7 +101,6 @@ public class PaymentStatementServiceImpl implements PaymentStatementService {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error sending payment notification: " + e.getMessage());
         }
 
         return paymentStatementMapper.toResponseDTO(payment);

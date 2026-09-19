@@ -50,7 +50,6 @@ public class CustomerOrderController {
     @GetMapping
     public ResponseEntity<List<CustomerOrderResponseDTO>> getAllOrders(Authentication authentication) {
         String currentUsername = authentication.getName();
-        System.out.println(currentUsername);
 
 
         boolean isCustomer = authentication.getAuthorities().stream()

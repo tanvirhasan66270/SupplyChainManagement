@@ -119,7 +119,6 @@ public class QCInspectionServiceImp implements QCInspectionService {
                 }
             }
         } catch (Exception e) {
-            System.err.println("QC Inspection Notification Error: " + e.getMessage());
         }
 
 

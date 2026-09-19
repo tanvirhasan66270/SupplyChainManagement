@@ -5,11 +5,9 @@ import com.example.SCM.repository.DriverRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Component("driverSecurity")
 @RequiredArgsConstructor
-@Slf4j
 public class DriverSecurity {
 
     private final DriverRepository driverRepository;

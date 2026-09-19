@@ -87,8 +87,6 @@ public class Profile_View_Activity extends AppCompatActivity {
         // Basic Info
         profileName.setText(customer.getName() != null ? customer.getName() : "N/A");
         profileRole.setText(customer.getRole() != null ? customer.getRole().toUpperCase() : "CUSTOMER");
-        profileScore.setText("4.9"); // Static as per screenshot
-        profileStatus.setText("Active"); // Static as per screenshot
 
         // Profile Image
         if (customer.getImage() != null && !customer.getImage().isEmpty()) {
@@ -148,6 +146,11 @@ public class Profile_View_Activity extends AppCompatActivity {
 
         profileProgressBar.setProgress(completion);
         tvCompletionPercent.setText(completion + "%");
+
+        // Dynamic Score and Status based on completeness
+        double dynamicScore = 3.0 + ((completion / 100.0) * 2.0);
+        profileScore.setText(String.format(java.util.Locale.US, "%.1f", dynamicScore));
+        profileStatus.setText(completion == 100 ? "Verified" : (completion >= 67 ? "Active" : "Incomplete"));
 
         checkName.setAlpha(nameDone ? 1.0f : 0.3f);
         checkComm.setAlpha(commDone ? 1.0f : 0.3f);

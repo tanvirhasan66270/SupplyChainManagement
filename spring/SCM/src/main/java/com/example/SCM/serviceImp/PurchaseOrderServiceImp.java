@@ -95,7 +95,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
                 );
             }
         } catch (Exception e) {
-            System.out.println("Error sending notification for PO creation: " + e.getMessage());
         }
 
         PurchaseOrderToken token = new PurchaseOrderToken();
@@ -500,7 +499,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
                 mailService.senderGeneralMail(manager.getEmail(), subject, mailContent);
             }
         } catch (Exception e) {
-            System.err.println("Failed to send manager PO email: " + e.getMessage());
         }
     }
 
@@ -550,7 +548,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
         try {
             mailService.senderGeneralMail(supplierEmail, subject, mailContent);
         } catch (Exception e) {
-            System.err.println("Failed to send supplier PO email: " + e.getMessage());
         }
     }
 }

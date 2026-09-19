@@ -320,7 +320,6 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
         try {
             mailService.senderGeneralMail(order.getCustomerEmail(), subject, mailContent);
         } catch (Exception e) {
-            System.err.println("Init Mail Error: " + e.getMessage());
         }
     }
 
@@ -417,7 +416,6 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
         try {
             mailService.senderGeneralMail(order.getCustomerEmail(), subject, mailText);
         } catch (Exception e) {
-            System.err.println("Final Mail Error: " + e.getMessage());
         }
     }
 

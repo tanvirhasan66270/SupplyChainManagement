@@ -23,7 +23,7 @@ export class PublicLandingComponent {
   ];
 
   whyUs = [
-    { title: 'AI-Powered Route Optimization', desc: 'Machine learning algorithms find the fastest, cheapest shipping routes.', icon: 'bi-cpu', color: '#0d6efd', iconBg: 'bg-primary-subtle' },
+    { title: 'Smart Route Optimization', desc: 'Efficient logistics planning to reduce transit times and shipping costs.', icon: 'bi-cpu', color: '#0d6efd', iconBg: 'bg-primary-subtle' },
     { title: 'Real-Time Visibility', desc: 'Track every shipment, container, and delivery across your entire supply chain.', icon: 'bi-eye', color: '#198754', iconBg: 'bg-success-subtle' },
     { title: 'Compliance Automation', desc: 'Auto-generate customs docs, LC papers, and regulatory filings.', icon: 'bi-shield-check', color: '#ffc107', iconBg: 'bg-warning-subtle' },
   ];

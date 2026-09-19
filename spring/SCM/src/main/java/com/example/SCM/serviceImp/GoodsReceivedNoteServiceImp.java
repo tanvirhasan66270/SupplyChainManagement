@@ -115,7 +115,6 @@ public class GoodsReceivedNoteServiceImp implements GoodsReceivedNoteService {
                 }
             }
         } catch (Exception e) {
-            System.err.println("GRN Notification Error: " + e.getMessage());
         }
 
         return goodsReceivedNoteMapper.convertTOResponseDTO(savedGrn);

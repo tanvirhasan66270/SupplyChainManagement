@@ -117,8 +117,7 @@ public class CustomerMapper {
         if (dto.getDob() != null && !dto.getDob().isBlank()) {
             try {
                 entity.setDob(java.time.LocalDate.parse(dto.getDob().trim()));
-            } catch (Exception e) {
-                System.err.println("DOB parse warning: " + e.getMessage());
+            } catch (Exception ignored) {
             }
         }
 

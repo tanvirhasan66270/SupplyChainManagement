@@ -2,7 +2,7 @@ package com.example.SCM.dto.mapper;
 
 import com.example.SCM.dto.request.QuotationRequestDTO;
 import com.example.SCM.dto.response.QuotationResponseDTO;
-import com.example.SCM.entity.PurchaseRequisition; // আপনার সিস্টেমের পিআর এনটিটি
+import com.example.SCM.entity.PurchaseRequisition;
 import com.example.SCM.entity.Quotation;
 import com.example.SCM.entity.Supplier;
 import com.example.SCM.enumClass.QuotationStatus;

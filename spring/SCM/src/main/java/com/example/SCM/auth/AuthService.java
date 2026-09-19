@@ -47,10 +47,6 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
-//    private final QCInspectorRepository qCInspectorRepository;
-
-
-
 
     public LoginResponseDTO login(LoginRequestDTO dto) {
         try {
@@ -61,9 +57,6 @@ public class AuthService {
                     )
             );
         } catch (Exception e) {
-            System.out.println("Exception Class = " + e.getClass().getName());
-            System.out.println("Exception Message = " + e.getMessage());
-            e.printStackTrace();
             throw e;
         }
 
