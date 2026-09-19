@@ -47,7 +47,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     @Value("${image.upload.dir}")
     private String uploadDir;
 
-
+    //activity log connect with user id savely
     private String resolveCurrentUserId() {
         String userId = request.getHeader("X-User-Id");
         if (userId != null && !userId.isBlank()) {
@@ -92,7 +92,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
         } else {
             sendInitPaymentVerificationEmail(savedOrder, inputPaid);
         }
-
+   // activity load workflow
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,

@@ -46,7 +46,7 @@ public class CustomerOrder {
     private String paidAmount;
 
     private String dueAmount;
-
+//Enum, formet
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus = PaymentStatus.UNPAID;
 
@@ -74,6 +74,7 @@ public class CustomerOrder {
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
+    //relational matarial
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
@@ -109,19 +110,14 @@ public class CustomerOrder {
     }
 
     public void executeCalculations() {
-        // 1. Calculate the subtotal for all line items
         this.itemSubtotal = ExecuteCalculations.calculateItemSubtotal(this.lineItems);
 
-        // 2. Calculate the total weight of all line items
         this.weight = ExecuteCalculations.calculateTotalOrderWeight(this.lineItems);
 
-        // 3. Calculate delivery charge
         this.deliveryCharge = ExecuteCalculations.calculateDeliveryCharge(this.weight, this.serviceType, this.codAmount);
 
-        // 4. Grand Total
         this.totalAmount = this.itemSubtotal + this.deliveryCharge;
 
-        // 5. Calculate total paid amount ONLY from CONFIRMED_BY_OFFICER payments
         double totalPaid = 0.0;
         if (this.paymentStatements != null) {
             totalPaid = this.paymentStatements.stream()
@@ -130,13 +126,11 @@ public class CustomerOrder {
                     .sum();
         }
 
-        // COD amount is usually considered pre-paid or confirmed upon delivery,
-        // so we keep it if you still use it as initial paid amount
+
         double finalPaid = totalPaid + this.codAmount;
 
         this.paidAmount = String.valueOf(finalPaid);
 
-        // 6. Due Amount: Total - Paid
         double due = this.totalAmount - finalPaid;
         this.dueAmount = String.valueOf(due < 0 ? 0.0 : due);
 

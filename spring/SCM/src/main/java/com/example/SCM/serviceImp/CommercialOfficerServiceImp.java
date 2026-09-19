@@ -45,7 +45,6 @@ public class CommercialOfficerServiceImp implements CommercialOfficerService {
     @Value("${image.upload.dir}")
     private String uploadDir;
 
-    @Transactional
     @Override
     public CommercialOfficerResponseDTO save(CommercialOfficerRequestDTO dto, MultipartFile file) {
         if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
@@ -58,6 +57,8 @@ public class CommercialOfficerServiceImp implements CommercialOfficerService {
         if (officerRepository.existsByNidNumber(dto.getNidNumber())) {
             throw new RuntimeException("This NID number is already registered under another commercial officer!");
         }
+
+        // come to uiser data
 
         User user = new User();
         user.setName(dto.getName());

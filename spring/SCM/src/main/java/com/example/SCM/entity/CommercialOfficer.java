@@ -47,7 +47,7 @@ public class CommercialOfficer {
 
     @Enumerated(EnumType.STRING)
     private LanguageStatus language;
-
+ //relational matarial
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "police_station_id")
     private PoliceStation policeStation;
@@ -56,6 +56,8 @@ public class CommercialOfficer {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    //relational matarial
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id", nullable = false, unique = true)

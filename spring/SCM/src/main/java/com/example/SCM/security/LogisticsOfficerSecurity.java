@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 public class LogisticsOfficerSecurity {
 
     private final LogisticsOfficerRepository logisticsOfficerRepository;
-
+//find itselfsds
     public boolean isSelf(Long requestedId, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated() || requestedId == null) {
             return false;
