@@ -348,7 +348,7 @@ export class PurchaseRequisitionComponent implements OnInit {
     this.selectedReqForPdf = null;
     this.cdr.markForCheck();
   }
-
+//cdvfghdf
   downloadPdfFromModal() {
     const element = this.pdfPreviewContainer.nativeElement;
     html2canvas(element, { scale: 2, useCORS: true, windowHeight: element.scrollHeight, height: element.scrollHeight }).then((canvas: HTMLCanvasElement) => {

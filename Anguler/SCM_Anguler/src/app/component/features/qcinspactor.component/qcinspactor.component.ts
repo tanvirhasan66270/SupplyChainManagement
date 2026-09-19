@@ -58,7 +58,7 @@ export class QcinspactorComponent implements OnInit {
   isEdit = false;
   currentEditId: number | null = null;
   isDrawerOpen = false;
-
+ //asdgjhdgbash
   constructor(
     private service: QcInspectorService,
     private countryService: CountryService,
