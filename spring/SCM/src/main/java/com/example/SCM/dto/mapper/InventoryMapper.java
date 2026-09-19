@@ -5,7 +5,7 @@ import com.example.SCM.dto.response.InventoryResponseDTO;
 import com.example.SCM.entity.Inventory;
 import com.example.SCM.entity.Product;
 import com.example.SCM.entity.Warehouse;
-import com.example.SCM.enumClass.StockStatus;
+import com.example.SCM.enumClass.StockStatus; // 🎯 কাস্টম এনাম প্যাকেজ ইমপোর্ট
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

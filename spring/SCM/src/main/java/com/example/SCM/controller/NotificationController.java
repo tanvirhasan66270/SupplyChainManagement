@@ -5,19 +5,18 @@ import com.example.SCM.entity.User;
 import com.example.SCM.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/notifications")
 @RequiredArgsConstructor
-@PreAuthorize("isAuthenticated()")
+@CrossOrigin("*")
 public class NotificationController {
 
     private final NotificationService service;
+
 
     @GetMapping
     public ResponseEntity<List<Notification>> getUserNotifications(
@@ -37,6 +36,7 @@ public class NotificationController {
         return ResponseEntity.ok(service.getNotificationsForUserAndRole(finalUserId, finalRole));
     }
 
+
     @GetMapping("/unread-count")
     public ResponseEntity<Long> getCount(
             @AuthenticationPrincipal User currentUser,
@@ -55,11 +55,13 @@ public class NotificationController {
         return ResponseEntity.ok(service.getUnreadCountForUserAndRole(finalUserId, finalRole));
     }
 
+
     @PatchMapping("/{id}/read")
     public ResponseEntity<Void> markRead(@PathVariable Long id) {
         service.markAsRead(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // 204 Content এর জন্য স্ট্যান্ডার্ড নো-কন্টেন্ট
     }
+
 
     @PatchMapping("/read-all")
     public ResponseEntity<Void> markAllRead(
@@ -73,12 +75,15 @@ public class NotificationController {
         return ResponseEntity.noContent().build();
     }
 
+
     private String resolveUserId(User currentUser, String backupUserId) {
+        // প্রথম লেয়ার: স্প্রিং সিকিউরিটি সেশন থেকে চেক করা হচ্ছে
         if (currentUser != null && currentUser.getId() != null) {
             return currentUser.getId().toString();
         }
+        // দ্বিতীয় লেয়ার: ফ্রন্টএন্ডের পাঠানো কাস্টম রিকোয়েস্ট হেডার থেকে ফলব্যাক চেক
         if (backupUserId != null && !backupUserId.trim().isEmpty() && !"null".equalsIgnoreCase(backupUserId)) {
-            return backupUserId.trim();
+            return backupUserId;
         }
         return null;
     }

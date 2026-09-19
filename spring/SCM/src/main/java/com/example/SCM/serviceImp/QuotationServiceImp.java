@@ -6,7 +6,7 @@ import com.example.SCM.entity.PurchaseRequisition;
 import com.example.SCM.entity.Quotation;
 import com.example.SCM.dto.mapper.QuotationMapper;
 import com.example.SCM.repository.QuotationRepository;
-import com.example.SCM.repository.PurchaseRequisitionRepository;
+import com.example.SCM.repository.PurchaseRequisitionRepository; // পিআর রিপোজিটরি ইমপোর্ট করুন
 import com.example.SCM.repository.UserRepository;
 import com.example.SCM.role.Role;
 import com.example.SCM.service.NotificationService;
