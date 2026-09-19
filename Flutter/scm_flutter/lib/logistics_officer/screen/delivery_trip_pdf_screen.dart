@@ -90,7 +90,7 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
     } catch (_) {
       italicFont = font;
     }
-
+  //all color come to them folder
     final primaryDark = PdfColor.fromHex('#0F172A');
     final primaryAccent = PdfColor.fromHex('#2563EB');
     final bgLight = PdfColor.fromHex('#F8FAFC');
@@ -126,7 +126,7 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
         driverPath = matched?.image;
       } catch (_) {}
     }
-
+//cxfvgbed
     final sigImage = await _fetchImageWithAuth(trip.recipientSignature, ref);
     final podImage = await _fetchImageWithAuth(trip.deliveryPhotoUrl, ref);
     final driverImage = await _fetchImageWithAuth(driverPath, ref);

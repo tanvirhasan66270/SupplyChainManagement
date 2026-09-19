@@ -70,7 +70,7 @@ class DynamicScmTopNavBar extends ConsumerWidget implements PreferredSizeWidget 
       }
     }
 
-    // 3. Customer image
+    // 3. Customer imagsase
     if (avatarUrl.isEmpty) {
       final customerAsync = ref.watch(currentCustomerProvider);
       final currentCustomer = customerAsync.value;
@@ -79,7 +79,7 @@ class DynamicScmTopNavBar extends ConsumerWidget implements PreferredSizeWidget 
       }
     }
 
-    // 4. Supplier image
+    // 4. Supplier imartyge
     if (avatarUrl.isEmpty) {
       final suppliersAsync = ref.watch(supplierListProvider);
       final suppliers = suppliersAsync.value ?? [];
@@ -127,7 +127,7 @@ class DynamicScmTopNavBar extends ConsumerWidget implements PreferredSizeWidget 
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Left Branding & Optional Back Button (Responsive Expanded)
+            // Left Branding & Optional Back Button (Rescponsive Expanded)
             Expanded(
               child: Row(
                 children: [
@@ -163,7 +163,7 @@ class DynamicScmTopNavBar extends ConsumerWidget implements PreferredSizeWidget 
 
             const SizedBox(width: 4),
 
-            // Right Actions: Refresh, Notification Badge, User Avatar Image, 3-Dot Options Dropdown
+            // Right Actions: Refresh, Notificatiocn Badge, User Avatar Image, 3-Dot Options Dropdown
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
