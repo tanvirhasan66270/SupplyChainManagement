@@ -3,7 +3,7 @@ import 'package:scm_flutter/auth/authProvider.dart';
 import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/driver/data/driver_repository.dart';
 import 'package:scm_flutter/entity/driver_model.dart';
-
+//provider likks
 final driverRepositoryProvider = Provider<DriverRepository>((ref) {
   return DriverRepository(ref.watch(apiClientProvider));
 });

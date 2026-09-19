@@ -200,7 +200,7 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
     final due = total - paid;
     return due < 0 ? 0.0 : due;
   }
-
+  /discount flow
   String _getEstimatedDeliveryByPriority(String priority) {
     switch (priority) {
       case Priority.low:
