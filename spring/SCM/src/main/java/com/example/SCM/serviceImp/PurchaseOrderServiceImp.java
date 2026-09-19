@@ -147,7 +147,7 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
         }
 
         PurchaseOrder po = purchaseOrderRepository.findById(poToken.getPurchaseOrderId())
-                .orElseThrow(() -> new RuntimeException("Purchase Order node missing at ID: " + poToken.getPurchaseOrderId()));
+                .orElseThrow(() -> new RuntimeException("Purchase Order not found with ID: " + poToken.getPurchaseOrderId()));
 
         if (po.getStatus() != PurchaseOrderStatus.DRAFT) {
             throw new RuntimeException("Order has already been processed or Issued!");
@@ -192,7 +192,7 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
         }
 
         PurchaseOrder po = purchaseOrderRepository.findById(poToken.getPurchaseOrderId())
-                .orElseThrow(() -> new RuntimeException("Purchase Order node missing at ID: " + poToken.getPurchaseOrderId()));
+                .orElseThrow(() -> new RuntimeException("Purchase Order not found with ID: " + poToken.getPurchaseOrderId()));
 
         if (po.getStatus() != PurchaseOrderStatus.ISSUED) {
             throw new RuntimeException("Only ISSUED orders can be acknowledged or Received by Supplier!");
@@ -227,7 +227,7 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
     @Transactional
     public PurchaseOrderResponseDTO approveOrder(Long id) {
         PurchaseOrder po = purchaseOrderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Purchase Order node missing at ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Purchase Order not found with ID: " + id));
 
         if (po.getStatus() != PurchaseOrderStatus.DRAFT) {
             throw new RuntimeException("Order has already been processed or Issued!");
@@ -306,7 +306,7 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
         }
 
         PurchaseOrder po = purchaseOrderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Purchase Order node missing at ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Purchase Order not found with ID: " + id));
 
         if (po.getStatus() != PurchaseOrderStatus.ISSUED) {
             throw new RuntimeException("Action denied: Only ISSUED purchase orders can be updated by the supplier.");
@@ -500,7 +500,7 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
                 mailService.senderGeneralMail(manager.getEmail(), subject, mailContent);
             }
         } catch (Exception e) {
-            System.err.println("Manager PO Dispatch Pipeline Failed: " + e.getMessage());
+            System.err.println("Failed to send manager PO email: " + e.getMessage());
         }
     }
 
@@ -550,7 +550,7 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
         try {
             mailService.senderGeneralMail(supplierEmail, subject, mailContent);
         } catch (Exception e) {
-            System.err.println("Supplier PO Dispatch Pipeline Failed: " + e.getMessage());
+            System.err.println("Failed to send supplier PO email: " + e.getMessage());
         }
     }
 }

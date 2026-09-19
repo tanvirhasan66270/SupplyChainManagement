@@ -53,7 +53,7 @@ public class DriverServiceImp implements DriverService {
 
         PoliceStation policeStation = dto.getPoliceStationId() != null ?
                 policeStationRepository.findById(dto.getPoliceStationId())
-                .orElseThrow(() -> new RuntimeException("Target location police station node not found")) : null;
+                .orElseThrow(() -> new RuntimeException("Police Station not found")) : null;
 
         User user = new User();
         user.setName(dto.getDriverName());
@@ -87,12 +87,12 @@ public class DriverServiceImp implements DriverService {
     @Override
     public DriverResponseDTO update(Long id, DriverRequestDTO dto, MultipartFile file) {
         Driver driver = driverRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Driver node signature not resolved at ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Driver not found with ID: " + id));
 
         PoliceStation policeStation = driver.getPoliceStation();
         if (dto.getPoliceStationId() != null) {
             policeStation = policeStationRepository.findById(dto.getPoliceStationId())
-                    .orElseThrow(() -> new RuntimeException("New target location police station node not found"));
+                    .orElseThrow(() -> new RuntimeException("Selected Police Station not found"));
             driver.setPoliceStation(policeStation);
         }
 

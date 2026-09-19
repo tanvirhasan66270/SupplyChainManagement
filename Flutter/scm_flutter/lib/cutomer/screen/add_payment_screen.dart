@@ -376,7 +376,7 @@ class _AddPaymentScreenState extends ConsumerState<AddPaymentScreen> {
         border: Border.all(color: isBank ? Colors.blue.shade200 : Colors.red.shade200),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(isBank ? 'Secure Bank Gateway' : 'MFS Wallet Engine', style: TextStyle(fontWeight: FontWeight.bold, color: isBank ? Colors.blue : Colors.red, fontSize: 12)),
+        Text(isBank ? 'Secure Bank Gateway' : 'MFS Mobile Wallet', style: TextStyle(fontWeight: FontWeight.bold, color: isBank ? Colors.blue : Colors.red, fontSize: 12)),
         const SizedBox(height: 4),
         Text(isBank ? 'Pay to: City Bank PLC\nA/C: 120-3341-98234101' : 'Send to: 01712-345678', style: const TextStyle(fontSize: 11)),
       ]),

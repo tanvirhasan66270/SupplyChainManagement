@@ -127,8 +127,8 @@ public class CustomerOrderController {
             </head>
             <body style='font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f7fafc;'>
                 <div style='max-width: 500px; margin: auto; padding: 30px; border: 1px solid #e2e8f0; border-radius: 10px; background-color: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);'>
-                    <h2 style='color: #2F855A; margin-bottom: 10px;'>Payment Matrix Verified!</h2>
-                    <p style='color: #4A5568; line-height: 1.5;'>Thank you. Your order confirmation invoice and tracking metrics have been successfully transmitted via email system.</p>
+                    <h2 style='color: #2F855A; margin-bottom: 10px;'>Payment Verified!</h2>
+                    <p style='color: #4A5568; line-height: 1.5;'>Thank you. Your order confirmation invoice and tracking details have been sent to your email.</p>
                 </div>
             </body>
             </html>

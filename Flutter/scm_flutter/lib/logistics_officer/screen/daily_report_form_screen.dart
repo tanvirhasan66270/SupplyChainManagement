@@ -111,7 +111,7 @@ class _DailyReportFormScreenState extends ConsumerState<DailyReportFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildNumberedLabel(1, 'TARGET WAREHOUSE NODE *'),
+                      _buildNumberedLabel(1, 'TARGET WAREHOUSE *'),
                       DropdownButtonFormField<String>(
                         initialValue: warehouseId.isEmpty ? null : warehouseId,
                         decoration: _inputDecoration().copyWith(
@@ -120,7 +120,7 @@ class _DailyReportFormScreenState extends ConsumerState<DailyReportFormScreen> {
                         ),
                         items: [
                           const DropdownMenuItem(value: 'WH-DHAKA-01', child: Text('WH-DHAKA-01 (Central Hub)', style: TextStyle(fontSize: 12))),
-                          const DropdownMenuItem(value: 'WH-CHITTAGONG-02', child: Text('WH-CHITTAGONG-02 (Port Node)', style: TextStyle(fontSize: 12))),
+                          const DropdownMenuItem(value: 'WH-CHITTAGONG-02', child: Text('WH-CHITTAGONG-02 (Port)', style: TextStyle(fontSize: 12))),
                           ...warehouses.map((w) => DropdownMenuItem<String>(
                             value:  w.id.toString(),
                             child: Text(w.name, style: const TextStyle(fontSize: 12)),
@@ -257,7 +257,7 @@ class _DailyReportFormScreenState extends ConsumerState<DailyReportFormScreen> {
                               onPressed: () async {
                                 if (warehouseId.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Validation Error: Target Warehouse Node is mandatory.')),
+                                    const SnackBar(content: Text('Validation Error: Target Warehouse is mandatory.')),
                                   );
                                   return;
                                 }

@@ -33,7 +33,7 @@ public class SupplierController {
             SupplierRequestDTO dto = objectMapper.readValue(supplierJson, SupplierRequestDTO.class);
             return new ResponseEntity<>(supplierService.save(dto, image), HttpStatus.CREATED);
         } catch (Exception e) {
-            throw new RuntimeException("Supplier profile node generation failed: " + e.getMessage());
+            throw new RuntimeException("Failed to create supplier profile: " + e.getMessage());
         }
     }
 

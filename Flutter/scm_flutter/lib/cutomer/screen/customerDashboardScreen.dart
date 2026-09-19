@@ -320,7 +320,7 @@ class _CustomerDashboardScreenState extends ConsumerState<CustomerDashboardScree
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Active Order Pipeline', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Text('Active Orders', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   GestureDetector(
                     onTap: () => Navigator.of(context).pushNamed('/customer-orders'),
                     child: const Text('View All →', style: TextStyle(color: AppTheme.primary, fontSize: 12, fontWeight: FontWeight.bold)),

@@ -97,7 +97,7 @@ public class ManagerServiceImp implements ManagerService {
         PoliceStation policeStation = manager.getPoliceStation();
         if (dto.getPoliceStationId() != null) {
             policeStation = policeStationRepository.findById(dto.getPoliceStationId())
-                    .orElseThrow(() -> new RuntimeException("Police Station node mismatch"));
+                    .orElseThrow(() -> new RuntimeException("Police Station not found"));
             manager.setPoliceStation(policeStation);
         }
 

@@ -338,7 +338,7 @@
             <i class="bi bi-journal-check text-primary me-2"></i> Vendor Full Purchase Order Ledger Archive
           </h6>
           <div>
-            <span class="badge bg-primary text-white fw-bold me-2">Supplier Secured Node</span>
+            <span class="badge bg-primary text-white fw-bold me-2">Supplier Verified</span>
             <a routerLink="purchase-order" class="btn btn-sm btn-outline-primary fw-semibold">View All</a>
           </div>
         </div>
@@ -384,7 +384,7 @@
             <i class="bi bi-bank text-warning me-2"></i> Associated Letters of Credit (LC Status)
           </h6>
           <div>
-            <span class="badge bg-warning text-dark fw-bold me-2">Commercial Node</span>
+            <span class="badge bg-warning text-dark fw-bold me-2">Commercial</span>
             <a routerLink="letter-of-credit" class="btn btn-sm btn-outline-warning fw-semibold">View All</a>
           </div>
         </div>
@@ -566,13 +566,13 @@
         </div>
       </div>
 
-      <!-- CENTRAL PR DEMAND MATRIX -->
+      <!-- CENTRAL PR DEMAND -->
       <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 border-top border-teal border-4" *ngIf="activeTableTab === 'DEMANDS'">
         <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
           <h6 class="mb-0 fw-bold text-dark text-uppercase">
             <i class="bi bi-file-earmark-ruled text-teal me-2"></i> Corporate Demand Slips & Purchase Requisitions
           </h6>
-          <a routerLink="purchase-requisition" class="btn btn-sm btn-outline-teal fw-semibold">View All Pipeline</a>
+          <a routerLink="purchase-requisition" class="btn btn-sm btn-outline-teal fw-semibold">View All</a>
         </div>
         <div class="card-body p-0">
           <div class="table-responsive">
@@ -581,7 +581,7 @@
                 <tr>
                   <th class="ps-4">PR Reference</th>
                   <th>Material Component Specs</th>
-                  <th>Target Sourcing Node</th>
+                  <th>Target Sourcing</th>
                   <th>Volume Required</th>
                   <th>Priority / Deadline</th>
                   <th>Workflow Stage</th>
@@ -1143,7 +1143,7 @@
               <div class="col-md-6">
                 <span class="text-secondary small d-block">Parent Purchase Order</span>
                 <strong class="text-dark fs-7">PO Reference: {{ foundLc.poNumber || 'N/A' }}</strong>
-                <small class="text-muted d-block font-monospace">Order Node ID: #{{ foundLc.purchaseOrderId }}</small>
+                <small class="text-muted d-block font-monospace">Order ID: #{{ foundLc.purchaseOrderId }}</small>
               </div>
               <div class="col-md-6">
                 <span class="text-secondary small d-block">Financial Value</span>
@@ -1152,7 +1152,7 @@
 
               <div class="col-md-6">
                 <span class="text-secondary small d-block">Issuing Bank Terminal</span>
-                <strong class="text-dark fs-7">{{ foundLc.issuingBankName || 'Central Bank Node' }}</strong>
+                <strong class="text-dark fs-7">{{ foundLc.issuingBankName || 'Central Bank' }}</strong>
                 <small class="text-muted d-block fs-8"><i class="bi bi-shield-check me-1"></i>SWIFT Code: {{ foundLc.issuingBankSwiftCode || 'N/A' }}</small>
                 <small class="text-muted d-block fs-8" *ngIf="foundLc.issuingBankBranch"><i class="bi bi-geo-alt me-1"></i>Branch: {{ foundLc.issuingBankBranch }}</small>
               </div>

@@ -67,7 +67,7 @@ public class CustomerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         customerService.delete(id);
-        return ResponseEntity.ok("Customer matrix index and associated auth account purged successfully.");
+        return ResponseEntity.ok("Customer and associated account deleted successfully.");
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES_OFFICER', 'CUSTOMER', 'LOGISTICS_OFFICER', 'PROCUREMENT', 'COMMERCIAL_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'SUPPLIER')")

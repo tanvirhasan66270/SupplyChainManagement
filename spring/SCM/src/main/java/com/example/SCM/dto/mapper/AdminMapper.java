@@ -6,7 +6,7 @@ import com.example.SCM.entity.Admin;
 import com.example.SCM.entity.User;
 import org.springframework.stereotype.Component;
 
-@Component("scmAdminMapperServiceNode")
+@Component
 public class AdminMapper {
 
 

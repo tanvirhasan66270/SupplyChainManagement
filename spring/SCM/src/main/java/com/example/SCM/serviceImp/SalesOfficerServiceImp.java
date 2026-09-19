@@ -109,7 +109,7 @@ public class SalesOfficerServiceImp implements SalesOfficerService {
 
             policeStation = policeStationRepository.findById(dto.getPoliceStationId())
 
-                    .orElseThrow(() -> new RuntimeException("Police Station node missing with ID: " + dto.getPoliceStationId()));
+                    .orElseThrow(() -> new RuntimeException("Police Station not found with ID: " + dto.getPoliceStationId()));
 
         }
 

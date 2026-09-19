@@ -40,7 +40,7 @@ class CommercialInvoicePdfScreen extends StatelessWidget {
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text(
-                        'SCM ENTERPRISE BILLING NODE',
+                        'SCM ENTERPRISE BILLING',
                         style: pw.TextStyle(
                           color: darkBlueHeader,
                           fontSize: 18,
@@ -161,14 +161,14 @@ class CommercialInvoicePdfScreen extends StatelessWidget {
                   _buildTableRow('Delivery Scheduled Date', inv.deliveryDate ?? 'Not Scheduled', bg: bgLightGrey),
                   _buildTableRow('Issued Timestamp', inv.issuedAt ?? 'Draft / Not Issued'),
                   _buildTableRow('Sales Officer ID', '#${inv.salesOfficerId ?? "N/A"}', bg: bgLightGrey),
-                  _buildTableRow('Subtotal Volume Matrix', '${inv.currency} ${inv.subtotal.toStringAsFixed(2)}'),
+                  _buildTableRow('Subtotal Amount', '${inv.currency} ${inv.subtotal.toStringAsFixed(2)}'),
                   _buildTableRow('Tax Rate & Amount (+)', '${(inv.taxRate * 100).toStringAsFixed(1)}% (${inv.currency} ${inv.taxAmount.toStringAsFixed(2)})', bg: bgLightGrey),
                   _buildTableRow('Logistics Shipping Fees (+)', '${inv.currency} ${inv.shippingFees.toStringAsFixed(2)}'),
                   _buildTableRow('Discount Margin (${inv.discountPercentage.toStringAsFixed(1)}%) (-)', '${inv.currency} ${inv.discountAmount.toStringAsFixed(2)}', bg: bgLightGrey),
                   _buildTableRow('Grand Total Financials', '${inv.currency} ${inv.totalAmount.toStringAsFixed(2)}', isBold: true, textColor: darkBlueHeader),
                   _buildTableRow('Paid Ledger Balance', '${inv.currency} ${inv.paidAmount.toStringAsFixed(2)}', bg: bgLightGrey, textColor: accentGreen),
                   _buildTableRow('Outstanding Due Net', '${inv.currency} ${inv.dueAmount.toStringAsFixed(2)}', isBold: true, textColor: inv.dueAmount > 0 ? PdfColors.red700 : accentGreen),
-                  _buildTableRow('Payment Matrix & Method', '${inv.paymentStatus} (${inv.paymentMethod ?? "N/A"}) - Txn Ref: ${inv.transactionReference ?? "N/A"}', bg: bgLightGrey),
+                  _buildTableRow('Payment Method', '${inv.paymentStatus} (${inv.paymentMethod ?? "N/A"}) - Txn Ref: ${inv.transactionReference ?? "N/A"}', bg: bgLightGrey),
                   if (inv.cancelledReason != null && inv.cancelledReason!.isNotEmpty)
                     _buildTableRow('Cancellation Reason', inv.cancelledReason!, textColor: PdfColors.red800),
                 ],

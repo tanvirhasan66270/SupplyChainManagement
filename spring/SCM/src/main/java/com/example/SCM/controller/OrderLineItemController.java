@@ -40,6 +40,6 @@ public class OrderLineItemController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> removeLineItem(@PathVariable Long id) {
         lineItemService.deleteItem(id);
-        return ResponseEntity.ok("Target line item node removed and order subtotal recalculated.");
+        return ResponseEntity.ok("Order line item removed and subtotal recalculated.");
     }
 }

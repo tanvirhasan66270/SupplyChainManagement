@@ -25,7 +25,7 @@ public class LCBankServiceImp implements LCBankService {
     @Override
     public LCBankResponseDTO save(LCBankRequestDTO dto) {
         if (dto.getSwiftCode() != null && bankRepository.findBySwiftCode(dto.getSwiftCode()).isPresent()) {
-            throw new RuntimeException("Bank with this SWIFT code already registered cluster context.");
+            throw new RuntimeException("Bank with this SWIFT code already exists.");
         }
         LCBank bank = bankMapper.toEntity(dto);
         LCBank savedBank = bankRepository.save(bank);
@@ -36,7 +36,7 @@ public class LCBankServiceImp implements LCBankService {
     @Override
     public LCBankResponseDTO update(Long id, LCBankRequestDTO dto) {
         LCBank bank = bankRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Target LC Bank matrix record row missing for ID: " + id));
+                .orElseThrow(() -> new RuntimeException("LC Bank not found with ID: " + id));
 
         if (dto.getName() != null) bank.setName(dto.getName());
         if (dto.getSwiftCode() != null) bank.setSwiftCode(dto.getSwiftCode());

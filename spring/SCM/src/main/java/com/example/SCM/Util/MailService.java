@@ -172,7 +172,7 @@ public class MailService {
                                         </h2>
                                         
                                         <p style="font-size:15px; line-height:1.6; color:#475569; margin:0 0 24px 0;">
-                                            Thank you for creating an account with SCM Enterprise—your central node for fast, secure, and reliable supply chain logistics management. To initialize your dashboard and activate your administrative access, please verify your endpoint email.
+                                            Thank you for creating an account with SCM Enterprise—your platform for fast, secure, and reliable supply chain logistics management. To activate your account, please verify your email address.
                                         </p>
 
                                         <table width="100%%" cellpadding="0" cellspacing="0" style="margin:30px 0;">
@@ -187,7 +187,7 @@ public class MailService {
 
                                         <div style="background-color:#f1f5f9; border-radius:12px; padding:16px 20px; border-left:4px solid #3b82f6; margin-bottom:24px;">
                                             <p style="margin:0; font-size:13px; line-height:1.5; color:#64748b;">
-                                                <strong>TTL Expiration Notice:</strong> This authorization token is secure and will automatically expire in <strong>1 hour</strong>. If this initialization request wasn't triggered by you, this node handshake can be safely ignored.
+                                                <strong>Notice:</strong> This authorization token is secure and will automatically expire in <strong>1 hour</strong>. If you did not request this, you can safely ignore this email.
                                             </p>
                                         </div>
 
@@ -258,21 +258,21 @@ public class MailService {
                         </div>
                         <div class='content'>
                             <p>Dear <b>{{customerName}}</b>,</p>
-                            <p>A warm welcome to <b>SCM Enterprise Cluster</b>! We are absolutely thrilled to have you onboard as a premium partner in our digital global logistics ecosystem.</p>
+                            <p>Welcome to <b>SCM Enterprise</b>! We are thrilled to have you onboard as a partner in our supply chain management platform.</p>
                 
                             <div class='welcome-box'>
                                 <p style='margin: 0; font-size: 15px; color: #1B5E20; font-weight: bold;'>Your account onboarding is complete.</p>
-                                <p style='margin: 5px 0 0 0; font-size: 13px; color: #475569;'>You can now log into your console node to dispatch customer purchase orders, manage real-time shipments, and monitor your unique delivery lifecycle tracks.</p>
+                                <p style='margin: 5px 0 0 0; font-size: 13px; color: #475569;'>You can now log into your dashboard to manage purchase orders and track shipments in real time.</p>
                             </div>
                 
-                            <p><b>Your Registered SCM Network Credentials:</b></p>
+                            <p><b>Your Registered Account Details:</b></p>
                             <table class='profile-details'>
                                 <tr>
-                                    <td class='label'>Authorized Name:</td>
+                                    <td class='label'>Name:</td>
                                     <td>{{customerName}}</td>
                                 </tr>
                                 <tr>
-                                    <td class='label'>Primary Email/User:</td>
+                                    <td class='label'>Email:</td>
                                     <td>{{userEmail}}</td>
                                 </tr>
                                 <tr>
@@ -280,20 +280,20 @@ public class MailService {
                                     <td>{{customerPhone}}</td>
                                 </tr>
                                 <tr>
-                                    <td class='label'>Registered Node Role:</td>
+                                    <td class='label'>Role:</td>
                                     <td><span style='background-color:#E2E8F0; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:bold;'>{{userRole}}</span></td>
                                 </tr>
                             </table>
                 
                             <div class='btn-container'>
-                                <a href='http://localhost:4200/login' class='btn'>Log Into Your Client Dashboard</a>
+                                <a href='http://localhost:4200/login' class='btn'>Log Into Your Dashboard</a>
                             </div>
                 
-                            <p>If you have any questions or require administrative assistance setting up your procurement matrix, our central network support desk is here for you 24/7.</p>
-                            <p>Best regards,<br><b>SCM Enterprise Administration Team</b></p>
+                            <p>If you have any questions or require assistance setting up your account, our support team is available to help.</p>
+                            <p>Best regards,<br><b>SCM Support Team</b></p>
                         </div>
                         <div class='footer'>
-                            &copy; {{currentYear}} SCM Global Logistics Network Cluster. All rights reserved.
+                            &copy; {{currentYear}} SCM Enterprise. All rights reserved.
                         </div>
                     </div>
                 </body>
@@ -309,9 +309,9 @@ public class MailService {
 
         try {
             senderGeneralMail(email, subject, mailText);
-            System.out.println("Customer Registration Congratulation Email successfully dispatched to node: " + email);
+            System.out.println("Welcome email successfully sent to: " + email);
         } catch (Exception e) {
-            System.err.println("Registration Onboarding Email failed to execute: " + e.getMessage());
+            System.err.println("Failed to send welcome email: " + e.getMessage());
         }
     }
 

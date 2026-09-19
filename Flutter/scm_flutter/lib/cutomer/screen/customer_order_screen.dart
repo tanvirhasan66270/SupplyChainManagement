@@ -200,7 +200,7 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
     final due = total - paid;
     return due < 0 ? 0.0 : due;
   }
-  /discount flow
+  // discount flow
   String _getEstimatedDeliveryByPriority(String priority) {
     switch (priority) {
       case Priority.low:
@@ -690,7 +690,7 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                           Expanded(
                             child: _buildCardBox(
                               icon: Icons.assignment_turned_in_outlined,
-                              title: 'SERVICE STRATEGY MATRIX',
+                              title: 'SERVICE STRATEGY',
                               child: DropdownButtonFormField<String>(
                                 initialValue: _selectedServiceType,
                                 isExpanded: true,
@@ -711,7 +711,7 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                           Expanded(
                             child: _buildCardBox(
                               icon: Icons.flag_outlined,
-                              title: 'ORDER PRIORITY MATRIX',
+                              title: 'ORDER PRIORITY',
                               child: DropdownButtonFormField<String>(
                                 initialValue: _selectedPriority,
                                 isExpanded: true,
@@ -734,7 +734,7 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
 
                       _buildCardBox(
                         icon: Icons.account_balance_wallet_outlined,
-                        title: 'PAYMENT STRATEGY ROUTER',
+                        title: 'PAYMENT METHOD',
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -746,8 +746,8 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                                 DropdownMenuItem(value: PaymentMethod.cash, child: Text('CASH On Delivery', style: TextStyle(fontSize: 12))),
                                 DropdownMenuItem(value: PaymentMethod.bank, child: Text('BANK Transfer Swift Service', style: TextStyle(fontSize: 12))),
                                 DropdownMenuItem(value: PaymentMethod.bkash, child: Text('BKASH Mobile Wallet', style: TextStyle(fontSize: 12))),
-                                DropdownMenuItem(value: PaymentMethod.nagad, child: Text('NAGAD Fast Engine', style: TextStyle(fontSize: 12))),
-                                DropdownMenuItem(value: PaymentMethod.rocket, child: Text('ROCKET DBBL Node', style: TextStyle(fontSize: 12))),
+                                DropdownMenuItem(value: PaymentMethod.nagad, child: Text('Nagad', style: TextStyle(fontSize: 12))),
+                                DropdownMenuItem(value: PaymentMethod.rocket, child: Text('Rocket (DBBL)', style: TextStyle(fontSize: 12))),
                               ],
                               onChanged: (val) {
                                 if (val != null) setState(() => _selectedPaymentMethod = val);
@@ -827,7 +827,7 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                                       children: [
                                         const Icon(Icons.phonelink_ring_outlined, size: 16, color: Color(0xFFDC2626)),
                                         const SizedBox(width: 6),
-                                        Text('$_selectedPaymentMethod MFS WALLET ENGINE VERIFICATION', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFB91C1C))),
+                                        Text('$_selectedPaymentMethod MFS WALLET VERIFICATION', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFB91C1C))),
                                       ],
                                     ),
                                     const SizedBox(height: 8),
@@ -1017,7 +1017,7 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(20),
                                 decoration: BoxDecoration(color: Colors.grey.shade50, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey.shade200)),
-                                child: const Text('No product items attached to this envelope matrix yet.', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 12)),
+                                child: const Text('No product items added yet.', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 12)),
                               )
                             else
                               Container(
@@ -1204,7 +1204,7 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                               icon: _isSubmitting
                                   ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                                   : const Icon(Icons.local_shipping_outlined, size: 18),
-                              label: Text(_isSubmitting ? 'Dispatching...' : 'Dispatch Consignment Node', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                              label: Text(_isSubmitting ? 'Dispatching...' : 'Dispatch Consignment', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                             ),
                           ),
                           const SizedBox(width: 12),

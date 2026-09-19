@@ -233,11 +233,11 @@
         
 
 
-      <!-- ACTIVE ORDER PIPELINE (Full width table) -->
+      <!-- ACTIVE ORDERS (Full width table) -->
       <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-white">
         <div class="card-header bg-white py-3.5 border-0 d-flex justify-content-between align-items-center">
           <h6 class="mb-0 fw-bold text-dark text-uppercase d-flex align-items-center gap-2">
-            Active Order Pipeline
+            Active Orders
           </h6>
         </div>
         <div class="card-body p-0">
@@ -426,7 +426,7 @@
 
         <div class="row g-3 mb-3">
           <div class="col-md-6">
-            <label class="form-label fw-bold small text-uppercase text-secondary">Service Strategy Matrix</label>
+            <label class="form-label fw-bold small text-uppercase text-secondary">Service Strategy</label>
             <select class="form-select fs-7 rounded-3" [(ngModel)]="order.serviceType" name="serviceType" required>
               <option value="STANDARD">STANDARD Logistics Delivery</option>
               <option value="EXPRESS">EXPRESS Bullet Velocity</option>
@@ -436,7 +436,7 @@
           </div>
           
           <div class="col-md-6">
-            <label class="form-label fw-bold small text-uppercase text-secondary">Order Priority Matrix</label>
+            <label class="form-label fw-bold small text-uppercase text-secondary">Order Priority</label>
             <select class="form-select fs-7 fw-bold border-info rounded-3" [(ngModel)]="order.priority" name="priority" required>
               <option value="LOW">LOW Priority (120 Days / 1% Disc.)</option>
               <option value="NORMAL">NORMAL Priority (90 Days Standard)</option>
@@ -447,13 +447,13 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label fw-bold small text-uppercase text-secondary">Payment Strategy Router</label>
+          <label class="form-label fw-bold small text-uppercase text-secondary">Payment Method</label>
           <select class="form-select fs-7 rounded-3" [(ngModel)]="order.paymentMethod" name="paymentMethod" required>
             <option value="CASH">CASH On Delivery</option>
             <option value="BANK">BANK Transfer Swift Service</option>
             <option value="BKASH">BKASH Mobile Wallet</option>
-            <option value="NAGAD">NAGAD Fast Engine</option>
-            <option value="ROCKET">ROCKET DBBL Node</option>
+            <option value="NAGAD">Nagad</option>
+            <option value="ROCKET">Rocket (DBBL)</option>
           </select>
         </div>
 
@@ -468,7 +468,7 @@
             <div class="text-danger mt-2 fw-bold" style="font-size: 0.75rem;"><i class="bi bi-exclamation-triangle-fill me-1"></i>Note: Payment must be completed within 7 days, otherwise the order will be cancelled.</div>
           </div>
           <div class="form-group">
-            <label class="small fw-semibold text-secondary mb-1">Customer Settlement Bank Account Index</label>
+            <label class="small fw-semibold text-secondary mb-1">Customer Bank Account Number</label>
             <input type="text" class="form-control form-control-sm font-monospace fs-7 rounded-3" [(ngModel)]="order.customerAccountNumber" placeholder="e.g. 10214300982341" name="customerAccountNumberBank">
           </div>
           
@@ -482,7 +482,7 @@
         </div>
 
         <div *ngIf="['BKASH', 'NAGAD', 'ROCKET'].includes(order.paymentMethod)" class="alert alert-danger border border-danger bg-white shadow-sm p-3 mb-3 rounded-4">
-          <h6 class="fw-bold text-danger mb-2 small text-uppercase"><i class="bi bi-phone-vibrate me-2"></i>MFS Wallet Engine Verification</h6>
+          <h6 class="fw-bold text-danger mb-2 small text-uppercase"><i class="bi bi-phone-vibrate me-2"></i>MFS Wallet Verification</h6>
           <div class="mb-2 p-2.5 bg-light rounded border border-danger-subtle fs-8 font-monospace text-dark">
             <div class="fw-bold mb-1"><i class="bi bi-info-circle-fill text-danger me-1"></i> Send money to this company number:</div>
             <div><b>{{ order.paymentMethod }} Merchant/Personal:</b> <span class="text-danger fw-bold">01712-345678</span></div>
@@ -598,7 +598,7 @@
 
         <div class="d-flex gap-2 pt-2 border-top">
           <button class="btn btn-success flex-grow-1 py-3 fw-bold fs-7 text-uppercase rounded-3" type="submit">
-            <i class="bi bi-cloud-arrow-up-fill me-2"></i> Dispatch Consignment Node
+            <i class="bi bi-cloud-arrow-up-fill me-2"></i> Dispatch Consignment
           </button>
           <button type="button" class="btn btn-outline-secondary px-4 fs-7 text-uppercase rounded-3" (click)="closeOrderFormView()">Cancel</button>
         </div>
@@ -618,7 +618,7 @@
             </div>
             <div>
               <h5 class="modal-title fw-bold mb-0">Live Product Tracking</h5>
-              <p class="text-white-50 small mb-0 fs-8">Real-time logistic pipeline and fulfillment status</p>
+              <p class="text-white-50 small mb-0 fs-8">Real-time logistic tracking and fulfillment status</p>
             </div>
           </div>
           <button type="button" class="btn-close btn-close-white" (click)="closeTrackModal()"></button>
@@ -678,7 +678,7 @@
               </div>
 
               <div>
-                <span class="text-uppercase font-monospace text-secondary fs-8 fw-bold d-block mb-3">Milestone Progress Pipeline</span>
+                <span class="text-uppercase font-monospace text-secondary fs-8 fw-bold d-block mb-3">Milestone Progress</span>
                 <div class="d-flex justify-content-between position-relative px-2">
                   
                   <div class="text-center z-1">
@@ -1307,7 +1307,7 @@
                 </div>
 
                 <div *ngIf="['BKASH', 'NAGAD', 'ROCKET'].includes(paymentMethod)" class="alert alert-danger border border-danger bg-white shadow-sm p-3 mb-4 rounded-4">
-                  <h6 class="fw-bold text-danger mb-2 small text-uppercase"><i class="bi bi-phone-vibrate me-2"></i>MFS Wallet Engine Verification</h6>
+                  <h6 class="fw-bold text-danger mb-2 small text-uppercase"><i class="bi bi-phone-vibrate me-2"></i>MFS Wallet Verification</h6>
                   <div class="mb-2 p-2.5 bg-light rounded border border-danger-subtle fs-8 font-monospace text-dark">
                     <div class="fw-bold mb-1"><i class="bi bi-info-circle-fill text-danger me-1"></i> Send money to this company number:</div>
                     <div><b>{{ paymentMethod }} Merchant/Personal:</b> <span class="text-danger fw-bold">01712-345678</span></div>

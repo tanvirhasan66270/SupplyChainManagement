@@ -211,7 +211,7 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       DropdownButtonFormField<int>(
                         initialValue: purchaseOrderId == 0 ? null : purchaseOrderId,
                         decoration: _inputDecoration().copyWith(
-                          hintText: '-- Select Firm Purchase Order Node --',
+                          hintText: '-- Select Purchase Order --',
                           prefixIcon: const Icon(Icons.description_outlined, size: 18, color: AppTheme.primary),
                         ),
                         items: purchaseOrders.map((po) => DropdownMenuItem<int>(
@@ -496,7 +496,7 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                               ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.white))
                               : Icon(isAmend ? Icons.build_circle_outlined : (isEdit ? Icons.edit : Icons.verified), size: 18),
                           label: Text(
-                            isAmend ? 'DEPLOY LEGAL PATCH' : (isEdit ? 'COMMIT METADATA' : 'OPEN CREDIT NODE'),
+                            isAmend ? 'AMEND LETTER OF CREDIT' : (isEdit ? 'UPDATE LETTER OF CREDIT' : 'OPEN LETTER OF CREDIT'),
                             style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5),
                           ),
                           style: ElevatedButton.styleFrom(

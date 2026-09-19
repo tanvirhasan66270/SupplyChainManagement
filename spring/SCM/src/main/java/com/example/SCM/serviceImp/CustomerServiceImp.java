@@ -154,7 +154,7 @@ public class CustomerServiceImp implements CustomerService {
     @Override
     public void delete(Long id) {
         Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Target customer node index missing"));
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
         customerRepository.delete(customer);
         if (customer.getUser() != null) {
             userRepository.delete(customer.getUser());

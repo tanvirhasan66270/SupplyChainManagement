@@ -446,8 +446,8 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen> {
             borderRadius: BorderRadius.circular(3),
           ),
           const SizedBox(height: 16),
-          _buildCompletionStep('Customer Name Node', _nameController.text.isNotEmpty),
-          _buildCompletionStep('Email & Mobile Route', _emailController.text.isNotEmpty && _phoneController.text.isNotEmpty),
+          _buildCompletionStep('Customer Name', _nameController.text.isNotEmpty),
+          _buildCompletionStep('Email & Mobile Phone', _emailController.text.isNotEmpty && _phoneController.text.isNotEmpty),
           _buildCompletionStep('National ID & DOB', _nidController.text.isNotEmpty && _dobController.text.isNotEmpty),
           _buildCompletionStep('Identity Avatar Image', completion > 80),
         ],
@@ -570,7 +570,7 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen> {
         decoration: BoxDecoration(color: AppTheme.blueLight.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
         child: const Icon(Icons.male_outlined, color: AppTheme.primary, size: 20),
       ),
-      title: const Text('Gender Node', style: TextStyle(fontSize: 10, color: AppTheme.grey, fontWeight: FontWeight.bold)),
+      title: const Text('Gender', style: TextStyle(fontSize: 10, color: AppTheme.grey, fontWeight: FontWeight.bold)),
       subtitle: _isEditing
           ? DropdownButtonFormField<String>(
               initialValue: ['MALE', 'FEMALE', 'OTHER'].contains(_genderController.text.toUpperCase())
@@ -612,15 +612,15 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen> {
             children: const [
               Icon(Icons.location_on, color: AppTheme.primary, size: 18),
               SizedBox(width: 8),
-              Text('SYSTEM TRACK TERMINAL', style: TextStyle(color: AppTheme.primary, fontSize: 11, fontWeight: FontWeight.bold)),
+              Text('LOCATION DETAILS', style: TextStyle(color: AppTheme.primary, fontSize: 11, fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 12),
-          _locationMeta('Division Node', customer.divisionName),
-          _locationMeta('District Sector', customer.districtName),
+          _locationMeta('Division', customer.divisionName),
+          _locationMeta('District', customer.districtName),
           _locationMeta('Police Station', customer.policeStationName),
           const Divider(color: AppTheme.borderGrey, height: 24),
-          const Text('Detailed Dispatch Address HQ', style: TextStyle(fontSize: 10, color: AppTheme.grey, fontWeight: FontWeight.bold)),
+          const Text('Detailed Address', style: TextStyle(fontSize: 10, color: AppTheme.grey, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
           if (_isEditing)
             Padding(

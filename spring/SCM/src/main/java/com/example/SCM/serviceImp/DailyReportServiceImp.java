@@ -90,7 +90,7 @@ public class DailyReportServiceImp implements DailyReportService {
         activityLogService.log(
                 resolveCurrentUserId(), null, "CREATE", "DAILY_REPORT",
                 savedReport.getId().toString(),
-                "Logistics Officer generated daily operational report for Node: " + savedReport.getWarehouseId(),
+                "Logistics Officer generated daily operational report for Warehouse ID: " + savedReport.getWarehouseId(),
                 null, savedReport.getReportStatus().toString(), ActionStatus.SUCCESS, request.getRemoteAddr()
         );
 
@@ -124,7 +124,7 @@ public class DailyReportServiceImp implements DailyReportService {
         activityLogService.log(
                 resolveCurrentUserId(), null, "UPDATE", "DAILY_REPORT",
                 updatedReport.getId().toString(),
-                "Daily report parameters modified for Node: " + updatedReport.getWarehouseId(),
+                "Daily report modified for Warehouse ID: " + updatedReport.getWarehouseId(),
                 "{\"summary\":\"" + oldSummary + "\"}", "{\"summary\":\"" + updatedReport.getSummary() + "\"}",
                 ActionStatus.SUCCESS, request.getRemoteAddr()
         );
@@ -201,7 +201,7 @@ public class DailyReportServiceImp implements DailyReportService {
                                 
                                 <table class='info-grid'>
                                     <tr><td class='label'>Logistics Officer ID:</td><td><b>%s</b></td></tr>
-                                    <tr><td class='label'>Warehouse Node:</td><td>%s</td></tr>
+                                    <tr><td class='label'>Warehouse:</td><td>%s</td></tr>
                                     <tr><td class='label'>Operation Date:</td><td><b>%s</b></td></tr>
                                     <tr><td class='label'>Total Tasks Processed:</td><td><span style='color:#2B6CB0; font-weight:bold;'>%d Transactions</span></td></tr>
                                     <tr><td class='label'>Issues / Damages Logged:</td><td><span style='color:#C53030; font-weight:bold;'>%d Counter(s)</span></td></tr>

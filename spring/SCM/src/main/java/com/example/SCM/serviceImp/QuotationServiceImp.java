@@ -117,7 +117,7 @@ public class QuotationServiceImp implements QuotationService {
         PurchaseRequisition pr = null;
         if (dto.getPurchaseRequisitionId() != null) {
             pr = requisitionRepository.findById(dto.getPurchaseRequisitionId())
-                    .orElseThrow(() -> new EntityNotFoundException("Requisition node failed to resolve."));
+                    .orElseThrow(() -> new EntityNotFoundException("Purchase requisition not found."));
         } else if (existingQuotation.getPurchaseRequisition() != null) {
             pr = existingQuotation.getPurchaseRequisition();
         }
@@ -135,7 +135,7 @@ public class QuotationServiceImp implements QuotationService {
 
         if (dto.getPurchaseRequisitionId() != null) {
             PurchaseRequisition pur = requisitionRepository.findById(dto.getPurchaseRequisitionId())
-                    .orElseThrow(() -> new EntityNotFoundException("Requisition node failed to resolve."));
+                    .orElseThrow(() -> new EntityNotFoundException("Purchase requisition not found."));
 
             if (pur.getProducts() != null && !pur.getProducts().isEmpty()) {
                 String combinedProductNames = pur.getProducts().stream()

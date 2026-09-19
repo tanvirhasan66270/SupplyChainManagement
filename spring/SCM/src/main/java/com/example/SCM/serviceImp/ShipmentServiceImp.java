@@ -130,7 +130,7 @@ public class ShipmentServiceImp implements ShipmentService {
     @Override
     @Transactional
     public void delete(Long id) {
-        if (!shipmentRepository.existsById(id)) throw new RuntimeException("Shipment node not found");
+        if (!shipmentRepository.existsById(id)) throw new RuntimeException("Shipment not found");
         shipmentRepository.deleteById(id);
     }
 

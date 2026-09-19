@@ -104,7 +104,7 @@ public class DailyReportController {
             <body>
                 <div class="card">
                     <h2>✔ Report Approved Successfully!</h2>
-                    <p>Daily Report ID: <b>#%d</b> has been officially locked and marked as <b>APPROVED</b> in SCM Cluster Nodes.</p>
+                    <p>Daily Report ID: <b>#%d</b> has been marked as <b>APPROVED</b> in SCM system.</p>
                 </div>
             </body>
             </html>

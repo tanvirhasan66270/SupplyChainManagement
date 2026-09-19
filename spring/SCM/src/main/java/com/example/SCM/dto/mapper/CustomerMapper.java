@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 
-@Component("scmCustomerMapperServiceNode")
+@Component
 public class CustomerMapper {
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

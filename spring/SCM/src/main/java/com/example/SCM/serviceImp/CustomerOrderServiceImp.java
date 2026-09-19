@@ -113,7 +113,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     @Override
     public void processFinalPaymentConfirmation(Long orderId, double amountPaid, String method) {
         CustomerOrder order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order matrix record missing for ID: " + orderId));
+                .orElseThrow(() -> new RuntimeException("Customer order not found with ID: " + orderId));
 
         double oldPaid = Double.parseDouble(order.getPaidAmount() != null ? order.getPaidAmount() : "0");
 
@@ -208,7 +208,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
             }
             else if (newStatus == CustomerOrderStatus.CANCELLED) {
                 if (order.getRemarks() == null || order.getRemarks().isEmpty()) {
-                    order.setRemarks("Order lifecycle cancelled by management node.");
+                    order.setRemarks("Order cancelled by admin.");
                 }
             }
             else if (newStatus == CustomerOrderStatus.RETURNED) {
@@ -370,7 +370,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
             </div>
             <div class='content'>
                 <p>Dear <b>%s</b>,</p>
-                <p>Your purchase order has been logged into our logistics cluster node.</p>
+                <p>Your purchase order has been received and is being processed.</p>
                 <p>Payment Method: <b>%s</b> | Payment Status: <span style='color:blue;'><b>%s</b></span></p>
                 
                 <div class='tracking-box'>

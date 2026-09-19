@@ -73,6 +73,6 @@ public class DeliveryTripController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         tripService.delete(id);
-        return ResponseEntity.ok("Delivery trip cluster index cleared successfully from control matrix.");
+        return ResponseEntity.ok("Delivery trip deleted successfully.");
     }
 }

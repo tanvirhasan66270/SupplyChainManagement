@@ -45,7 +45,7 @@ public class SalesOfficerController {
             SalesOfficerRequestDTO dto = objectMapper.readValue(officerJson, SalesOfficerRequestDTO.class);
             return ResponseEntity.ok(officerService.update(id, dto, file));
         } catch (Exception e) {
-            throw new RuntimeException("Sales structural modification matrix rejected: " + e.getMessage());
+            throw new RuntimeException("Failed to update sales officer profile: " + e.getMessage());
         }
     }
 

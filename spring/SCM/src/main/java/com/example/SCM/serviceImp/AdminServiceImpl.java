@@ -88,7 +88,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AdminResponse getById(Long id) {
         Admin admin = adminRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Target admin node index missing"));
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
         return adminMapper.toResponse(admin);
     }
 
@@ -96,7 +96,7 @@ public class AdminServiceImpl implements AdminService {
 //    @Override
 //    public void delete(Long id) {
 //        Admin admin = adminRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Target admin node index missing"));
+//                .orElseThrow(() -> new RuntimeException("Admin not found"));
 //
 //        adminRepository.delete(admin);
 //

@@ -28,7 +28,7 @@ class _LCBankDataScreenState extends ConsumerState<LCBankDataScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Confirm Deletion'),
-        content: Text('Definitively wipe "${bank.name}" (${bank.swiftCode}) from enterprise matrix? Active LCs may lose bank references.'),
+        content: Text('Are you sure you want to delete "${bank.name}" (${bank.swiftCode})? Active LCs may lose bank references.'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
           ElevatedButton(
@@ -274,7 +274,7 @@ class _LCBankDataScreenState extends ConsumerState<LCBankDataScreen> {
                                           ),
                                           const SizedBox(height: 2),
                                           Text(
-                                            'Node Reference: #${b.id}',
+                                            'Reference ID: #${b.id}',
                                             style: const TextStyle(fontSize: 10, color: AppTheme.grey),
                                           ),
                                         ],

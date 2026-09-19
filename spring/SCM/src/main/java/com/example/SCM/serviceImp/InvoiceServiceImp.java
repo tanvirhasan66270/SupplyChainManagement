@@ -114,7 +114,7 @@ public class InvoiceServiceImp implements InvoiceService {
     @Transactional
     public InvoiceResponseDTO update(Long id, InvoiceRequestDTO dto) {
         Invoice invoice = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Invoice dataset node not found at ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Invoice not found with ID: " + id));
 
         double oldTotalAmount = invoice.getTotalAmount();
         String oldPaymentStatus = invoice.getPaymentStatus() != null ? invoice.getPaymentStatus().name() : "N/A";
@@ -123,7 +123,7 @@ public class InvoiceServiceImp implements InvoiceService {
         mapper.updateEntityFromDTO(dto, invoice);
 
         CustomerOrder order = orderRepository.findByIdWithDetails(dto.getCustomerOrderId())
-                .orElseThrow(() -> new RuntimeException("Customer Order node structural integrity broken."));
+                .orElseThrow(() -> new RuntimeException("Associated Customer Order not found."));
 
         if (order.getCustomer() != null) {
             invoice.setIssuedToName(order.getCustomer().getName());
@@ -314,7 +314,7 @@ public class InvoiceServiceImp implements InvoiceService {
         try {
             mailService.senderGeneralMail(customerEmail, subject, mailText);
         } catch (Exception e) {
-            System.err.println("Invoice Notification Dispatch engine error: " + e.getMessage());
+            System.err.println("Failed to send invoice notification email: " + e.getMessage());
         }
     }
 }

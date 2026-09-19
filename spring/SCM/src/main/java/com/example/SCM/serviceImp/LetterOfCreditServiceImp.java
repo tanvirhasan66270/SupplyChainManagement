@@ -97,7 +97,7 @@ public class LetterOfCreditServiceImp implements LetterOfCreditService {
     @Transactional
     public LetterOfCreditResponseDTO update(Long id, LetterOfCreditRequestDTO dto, MultipartFile file) {
         LetterOfCredit lc = lcRepository.findByIdWithDetails(id)
-                .orElseThrow(() -> new RuntimeException("Letter of credit index matrix missing for ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Letter of Credit not found with ID: " + id));
 
         String oldBankName = (lc.getIssuingBank() != null) ? lc.getIssuingBank().getName() : "NONE";
         LcStatus oldStatus = lc.getLcStatus();
@@ -183,7 +183,7 @@ public class LetterOfCreditServiceImp implements LetterOfCreditService {
     @Transactional
     public void delete(Long id) {
         LetterOfCredit lc = lcRepository.findByIdWithDetails(id)
-                .orElseThrow(() -> new RuntimeException("Target LC matrix log node missing"));
+                .orElseThrow(() -> new RuntimeException("Letter of Credit not found"));
 
         String deletedLcNumber = lc.getLcNumber();
         lcRepository.delete(lc);
@@ -194,7 +194,7 @@ public class LetterOfCreditServiceImp implements LetterOfCreditService {
                 "DELETE",
                 "LC",
                 id.toString(),
-                "Letter of Credit entity purged permanently from logistics node. LC Number was: " + deletedLcNumber,
+                "Letter of Credit deleted successfully. LC Number was: " + deletedLcNumber,
                 "{\"lcNumber\":\"" + deletedLcNumber + "\"}",
                 null,
                 ActionStatus.SUCCESS,
@@ -263,7 +263,7 @@ public class LetterOfCreditServiceImp implements LetterOfCreditService {
                 </div>
                 <div class='content'>
                     <p>Dear <b>%s</b>,</p>
-                    <p>We would like to inform you that the Letter of Credit mapped with your supplier profile has been updated in our Global Supply Chain Node.</p>
+                    <p>We would like to inform you that the Letter of Credit mapped with your supplier profile has been updated in our SCM system.</p>
                     <table class='info-table'>
                         <tr><td class='label'>LC Tracking Number:</td><td><b>%s</b></td></tr>
                         <tr><td class='label'>Associated PO:</td><td>%s</td></tr>
@@ -292,7 +292,7 @@ public class LetterOfCreditServiceImp implements LetterOfCreditService {
         try {
             mailService.senderGeneralMail(supplierEmail, subject, mailContent);
         } catch (Exception e) {
-            System.err.println("Supplier Notification Cluster Mail delivery failed: " + e.getMessage());
+            System.err.println("Failed to send supplier notification email: " + e.getMessage());
         }
     }
 }

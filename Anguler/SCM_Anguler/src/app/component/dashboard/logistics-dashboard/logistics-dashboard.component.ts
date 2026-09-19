@@ -1019,7 +1019,7 @@ export class LogisticsDashboardComponent implements OnInit {
 
   submitStockForm(): void {
     if (!this.stockForm.productId || !this.stockForm.warehouseId) {
-      alert('Validation Error: Target Product and Warehouse Node must be specified.');
+      alert('Validation Error: Target Product and Warehouse must be specified.');
       return;
     }
     const payload: InventoryRequestModel = {
@@ -1033,7 +1033,7 @@ export class LogisticsDashboardComponent implements OnInit {
     };
     this.inventoryService.save(payload).subscribe({
       next: () => {
-        alert('Inventory Stock node allocated and committed successfully.');
+        alert('Inventory Stock allocated and committed successfully.');
         this.closeStockNavModal();
         this.loadDashboardData();
       },
@@ -1043,7 +1043,7 @@ export class LogisticsDashboardComponent implements OnInit {
 
   submitMovementForm(): void {
     if (!this.movementForm.productId || !this.movementForm.warehouseId) {
-      alert('Validation Error: Product and Target Warehouse Node must be specified.');
+      alert('Validation Error: Product and Target Warehouse must be specified.');
       return;
     }
 

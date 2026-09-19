@@ -243,7 +243,7 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                             Icon(Icons.analytics_outlined, color: AppTheme.blueLight, size: 20),
                             SizedBox(width: 8),
                             Text(
-                              'ORDER PIPELINE SUMMARY',
+                              'ORDERS SUMMARY',
                               style: TextStyle(color: AppTheme.white, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 0.5),
                             ),
                           ],

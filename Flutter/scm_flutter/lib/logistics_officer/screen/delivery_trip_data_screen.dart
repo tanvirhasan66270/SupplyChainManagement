@@ -70,7 +70,7 @@ class _DeliveryTripDataScreenState extends ConsumerState<DeliveryTripDataScreen>
       backgroundColor: AppTheme.light,
       appBar: AppBar(
         title: const Text(
-          'Fleet Delivery Trip Matrix',
+          'Fleet Delivery Trips',
           style: TextStyle(color: AppTheme.dark, fontWeight: FontWeight.bold, fontSize: 17),
         ),
         backgroundColor: AppTheme.surfaceWhite,
@@ -178,7 +178,7 @@ class _DeliveryTripDataScreenState extends ConsumerState<DeliveryTripDataScreen>
                             Icon(Icons.alt_route, color: AppTheme.surfaceWhite, size: 20),
                             SizedBox(width: 8),
                             Text(
-                              'FLEET DISPATCH & DELIVERY TRIP MATRIX SUMMARY',
+                              'FLEET DISPATCH & DELIVERY TRIPS SUMMARY',
                               style: TextStyle(color: AppTheme.surfaceWhite, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 0.5),
                             ),
                           ],
@@ -253,7 +253,7 @@ class _DeliveryTripDataScreenState extends ConsumerState<DeliveryTripDataScreen>
                         children: const [
                           Icon(Icons.alt_route_outlined, size: 48, color: AppTheme.secondary),
                           SizedBox(height: 12),
-                          Text('No deployment tracking maps localized in matrix', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.dark)),
+                          Text('No delivery trips found', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.dark)),
                           SizedBox(height: 4),
                           Text('Try adjusting your search query or status filter.', style: TextStyle(fontSize: 11, color: AppTheme.secondary)),
                         ],
@@ -430,7 +430,7 @@ class _DeliveryTripDataScreenState extends ConsumerState<DeliveryTripDataScreen>
                                               context: context,
                                               builder: (ctx) => AlertDialog(
                                                 title: const Text('Terminate Delivery Manifest?'),
-                                                content: const Text('Definitively remove this delivery trip manifest pointer from matrix?'),
+                                                 content: const Text('Are you sure you want to delete this delivery trip?'),
                                                 actions: [
                                                   TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
                                                   TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Terminate', style: TextStyle(color: AppTheme.danger))),

@@ -130,7 +130,7 @@ public class CommercialOfficerServiceImp implements CommercialOfficerService {
 
         if (dto.getPoliceStationId() != null) {
             PoliceStation policeStation = policeStationRepository.findById(dto.getPoliceStationId())
-                    .orElseThrow(() -> new RuntimeException("Police Station node mismatch"));
+                    .orElseThrow(() -> new RuntimeException("Police Station not found"));
             officer.setPoliceStation(policeStation);
         }
 
@@ -191,7 +191,7 @@ public class CommercialOfficerServiceImp implements CommercialOfficerService {
             return fileName;
 
         } catch (Exception e) {
-            throw new RuntimeException("Commercial file system node upload fault: " + e.getMessage());
+            throw new RuntimeException("Failed to upload profile image: " + e.getMessage());
         }
     }
 }

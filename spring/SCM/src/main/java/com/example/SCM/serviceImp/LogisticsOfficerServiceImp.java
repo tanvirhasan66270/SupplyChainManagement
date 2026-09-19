@@ -92,7 +92,7 @@ public class LogisticsOfficerServiceImp implements LogisticsOfficerService {
         PoliceStation policeStation = officer.getPoliceStation();
         if (dto.getPoliceStationId() != null) {
             policeStation = policeStationRepository.findById(dto.getPoliceStationId())
-                    .orElseThrow(() -> new RuntimeException("Police Station node mismatch"));
+                    .orElseThrow(() -> new RuntimeException("Police Station not found"));
             officer.setPoliceStation(policeStation);
         }
 

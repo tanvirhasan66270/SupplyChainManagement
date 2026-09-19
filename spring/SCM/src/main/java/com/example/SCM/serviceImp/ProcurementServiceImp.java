@@ -49,7 +49,7 @@ public class ProcurementServiceImp implements ProcurementService {
     @Transactional
     public ProcurementResponseDTO save(ProcurementRequestDTO dto, MultipartFile file) {
         if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
-            throw new RuntimeException("Credential password mandatory for procurement node recruitment!");
+            throw new RuntimeException("Password is required for procurement officer account.");
         }
 
         if (dto.getPassportNumber() != null && !dto.getPassportNumber().isBlank() && procurementRepository.existsByPassportNumber(dto.getPassportNumber())) {
@@ -102,7 +102,7 @@ public class ProcurementServiceImp implements ProcurementService {
         PoliceStation policeStation = procurement.getPoliceStation();
         if (dto.getPoliceStationId() != null) {
             policeStation = policeStationRepository.findById(dto.getPoliceStationId())
-                    .orElseThrow(() -> new RuntimeException("Police Station node mismatch"));
+                    .orElseThrow(() -> new RuntimeException("Police Station not found"));
             procurement.setPoliceStation(policeStation);
         }
 
@@ -199,7 +199,7 @@ public class ProcurementServiceImp implements ProcurementService {
             Files.copy(file.getInputStream(), path.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
             return fileName;
         } catch (Exception e) {
-            throw new RuntimeException("Procurement storage node allocation failure: " + e.getMessage());
+            throw new RuntimeException("Failed to upload profile image: " + e.getMessage());
         }
     }
 }

@@ -147,7 +147,7 @@ class _CommercialInvoiceDataScreenState extends ConsumerState<CommercialInvoiceD
                                 Icon(Icons.receipt_long_outlined, color: AppTheme.blueLight, size: 20),
                                 SizedBox(width: 8),
                                 Text(
-                                  'Commercial Billing Ledger Pipeline',
+                                  'Commercial Billing Ledger',
                                   style: TextStyle(color: AppTheme.white, fontWeight: FontWeight.bold, fontSize: 14),
                                 ),
                               ],

@@ -567,7 +567,7 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
         <table width="100%" style="margin-top: 15px; border-top: 1px solid #cbd5e1;">
           <tr>
             <td style="padding-top: 8px; font-size: 8.5pt; color: #64748b; text-align: center;">
-              Official System Generated Invoice — Supply Chain Management Engine
+              Official System Generated Invoice — Supply Chain Management System
             </td>
           </tr>
         </table>
@@ -1182,7 +1182,7 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
         <table width="100%" style="margin-top: 15px; border-top: 1px solid #cbd5e1;">
           <tr>
             <td style="padding-top: 8px; font-size: 8.5pt; color: #64748b; text-align: center;">
-              Official System Generated Statement — Supply Chain Management Engine
+              Official System Generated Statement — Supply Chain Management System
             </td>
           </tr>
         </table>

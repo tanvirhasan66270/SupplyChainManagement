@@ -284,7 +284,7 @@ class _CustomerOrderTrackScreenState extends ConsumerState<CustomerOrderTrackScr
 
         const Align(
           alignment: Alignment.centerLeft,
-          child: Text('MILESTONE PROGRESS PIPELINE', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.grey)),
+          child: Text('MILESTONE PROGRESS', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.grey)),
         ),
         const SizedBox(height: 10),
         Container(

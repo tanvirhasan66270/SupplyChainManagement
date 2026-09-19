@@ -42,7 +42,7 @@ public class DeliveryTripServiceImp implements DeliveryTripService {
         Customer customer = customerRepository.findById(dto.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer profile mapping failure"));
         Driver driver = driverRepository.findById(dto.getDriverId())
-                .orElseThrow(() -> new RuntimeException("Driver assignment node missing"));
+                .orElseThrow(() -> new RuntimeException("Assigned driver not found"));
         Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())
                 .orElseThrow(() -> new RuntimeException("Allocated fleet vehicle missing"));
 
@@ -163,19 +163,19 @@ public class DeliveryTripServiceImp implements DeliveryTripService {
                 <div class='content'>
                     <p>Dear Captain <b>%s</b>,</p>
                     <p>A new delivery transit manifest has been assigned to your active profile today by sales team operations.</p>
-                    <p><b>Trip Deployment Brief Matrix:</b></p>
+                    <p><b>Trip Details Summary:</b></p>
                     <ul>
-                        <li><b>Client Address Node:</b> %s</li>
+                        <li><b>Client Address:</b> %s</li>
                         <li><b>Vehicle Fleet Assigned:</b> %s</li>
                     </ul>
                     <div class='btn-container'>
                         <a href='http://localhost:8085/api/delivery-trips/%d' class='btn'>View Manifest Details</a>
                     </div>
-                    <p>Your action is required to trigger routing map console nodes to IN_TRANSIT.</p>
+                    <p>Please update your trip status when you begin transit.</p>
                     <p>Best regards,<br><b>SCM Logistics Support Team</b></p>
                 </div>
                 <div class='footer'>
-                    &copy; %d SCM Enterprise Network Cluster. All rights reserved.
+                    &copy; %d SCM Logistics System. All rights reserved.
                 </div>
             </div>
         </body>

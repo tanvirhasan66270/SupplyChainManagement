@@ -310,7 +310,7 @@ public class PurchaseRequisitionServiceImp implements PurchaseRequisitionService
                     </div>
                     <div class='content'>
                         <p>Dear <b>%s</b>,</p>
-                        <p>A new purchase requisition has been officially audited and <b>APPROVED</b> by SCM Board Management. You have been authorized to review the requirement matrix:</p>
+                        <p>A new purchase requisition has been approved. You can now review the requisition details:</p>
                         
                         <table class='info-table'>
                             <tr><td class='label'>Requisition Reference:</td><td><b>#%s</b></td></tr>
@@ -354,7 +354,7 @@ public class PurchaseRequisitionServiceImp implements PurchaseRequisitionService
 
         String mailContent = """
         <!DOCTYPE html><html><head><style>body{font-family:'Segoe UI',Arial,sans-serif;line-height:1.6;color:#2D3748;padding:20px}.container{max-width:600px;margin:0 auto;background:#fff;border:1px solid #E2E8F0;border-radius:8px;overflow:hidden}.header-alert{background-color:#C53030;color:#fff;padding:25px;text-align:center}.content{padding:30px}.alert-box{background-color:#FFF5F5;border-left:4px solid #C53030;padding:15px;margin:15px 0;font-weight:700;color:#9B2C2C}.footer{background-color:#F7FAFC;padding:15px;text-align:center;font-size:12px;color:#718096;border-top:1px solid #E2E8F0}</style></head>
-        <body><div class='container'><div class='header-alert'><h2 style='margin:0;'>Requisition Tracking Node</h2></div><div class='content'><p>Dear SCM Procurement Node (<b>%s</b>),</p><p>Your generated purchase requisition profile has been locked with the following parameter matrix:</p><div class='alert-box'>Requisition ID: #%d<br>Evaluation State: %s</div><p>Please check your warehouse catalog guidelines before initiating any new pipeline requests.</p></div><div class='footer'>&copy; 2026 SCM Sourcing Engine.</div></div></body></html>
+        <body><div class='container'><div class='header-alert'><h2 style='margin:0;'>Requisition Details</h2></div><div class='content'><p>Dear <b>%s</b>,</p><p>Your purchase requisition has been updated with the following details:</p><div class='alert-box'>Requisition ID: #%d<br>Status: %s</div><p>Please check your warehouse catalog guidelines before submitting new requisitions.</p></div><div class='footer'>&copy; 2026 SCM System.</div></div></body></html>
         """.formatted(procurementOfficer.getName(), requisition.getId(), currentStatus);
 
         try {
@@ -403,6 +403,6 @@ public class PurchaseRequisitionServiceImp implements PurchaseRequisitionService
     @Override
     @Transactional
     public void delete(Long id) {
-        throw new RuntimeException("Hard-Locked! Executed Procurement Requisitions cannot be deleted from matrix index!");
+        throw new RuntimeException("Approved or executed purchase requisitions cannot be deleted.");
     }
 }

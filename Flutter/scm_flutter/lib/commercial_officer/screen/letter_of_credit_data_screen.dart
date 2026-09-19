@@ -144,7 +144,7 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
                                 Icon(Icons.account_balance_outlined, color: AppTheme.blueLight, size: 20),
                                 SizedBox(width: 8),
                                 Text(
-                                  'TRADE FINANCE PIPELINE SUMMARY',
+                                  'TRADE FINANCE SUMMARY',
                                   style: TextStyle(color: AppTheme.white, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 0.5),
                                 ),
                               ],

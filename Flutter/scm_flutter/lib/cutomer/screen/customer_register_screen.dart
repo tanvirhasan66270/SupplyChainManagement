@@ -500,13 +500,13 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
                     const SizedBox(height: 16),
 
                     _buildSectionCard(
-                      title: '3. REGIONAL MATRIX BASE & FULL ADDRESS',
+                      title: '3. LOCATION & FULL ADDRESS',
                       icon: Icons.location_on_outlined,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Country → Division → District → Police Station Cascade *',
+                            'Country → Division → District → Police Station *',
                             style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.dark),
                           ),
                           const SizedBox(height: 8),
@@ -532,7 +532,7 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
 
                           _buildTextField(
                             controller: _streetAddressController,
-                            label: 'Local Street Vector / House / Road *',
+                            label: 'Street Address / House / Road *',
                             hint: 'e.g. House #12, Road #4, Sector 7',
                             icon: Icons.home_outlined,
                             onChanged: (_) => _updateFullAddress(),

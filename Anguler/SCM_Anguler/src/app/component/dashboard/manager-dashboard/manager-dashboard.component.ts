@@ -450,7 +450,7 @@ filteredRequisitions: any[] = [];
         if (done) done();
       },
       error: (err: any) => {
-        console.error('SCM PO Matrix Stream Error:', err);
+        console.error('SCM PO List Fetch Error:', err);
         if (done) done();
       }
     });

@@ -816,7 +816,7 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
                 children: [
                   Icon(Icons.format_list_bulleted, color: AppTheme.warning, size: 18),
                   SizedBox(width: 6),
-                  Text('Purchase Order Line Items Matrix', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.dark)),
+                  Text('Purchase Order Line Items', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.dark)),
                 ],
               ),
               InkWell(
@@ -902,7 +902,7 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Shipment Vector Parameters', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.dark)),
+          Text('Shipment Parameters', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.dark)),
           SizedBox(height: 10),
           Text('🚢 Ocean Vessel Sea Freight: 65%', style: TextStyle(fontSize: 10)),
           SizedBox(height: 4),
@@ -957,7 +957,7 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Import Tariff & Customs Matrix', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.dark)),
+          Text('Import Tariff & Customs', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.dark)),
           SizedBox(height: 10),
           Text('🇨🇳 China (Guangzhou Port) - CLEARED', style: TextStyle(fontSize: 10, color: Colors.green, fontWeight: FontWeight.bold)),
           SizedBox(height: 4),
@@ -1307,7 +1307,7 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Purchase Order Line Items Matrix', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        title: const Text('Purchase Order Line Items', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         content: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 550),
           child: SizedBox(

@@ -627,7 +627,7 @@ export class CommercialDashboardComponent implements OnInit {
         <table width="100%" style="margin-top: 15px; border-top: 1px solid #cbd5e1;">
           <tr>
             <td style="padding-top: 8px; font-size: 8.5pt; color: #64748b; text-align: center;">
-              Official System Generated Document — Supply Chain Management Engine
+              Official System Generated Document — Supply Chain Management System
             </td>
           </tr>
         </table>

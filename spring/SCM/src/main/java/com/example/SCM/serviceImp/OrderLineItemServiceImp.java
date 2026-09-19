@@ -38,7 +38,7 @@ public class OrderLineItemServiceImp implements OrderLineItemService {
     @Transactional
     public void deleteItem(Long id) {
         OrderLineItem item = lineItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Target order line item node missing index"));
+                .orElseThrow(() -> new RuntimeException("Order line item not found"));
 
         if (item.getCustomerOrder() != null) {
             item.getCustomerOrder().getLineItems().remove(item);

@@ -188,13 +188,13 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_isEdit ? 'Invoice configuration updated successfully.' : 'New commercial invoice node created.'),
+            content: Text(_isEdit ? 'Invoice configuration updated successfully.' : 'New commercial invoice created successfully.'),
             backgroundColor: AppTheme.success,
           ),
         );
         Navigator.pop(context);
       } else {
-        setState(() => _errorMessage = 'Failed to submit invoice dataset node.');
+        setState(() => _errorMessage = 'Failed to submit commercial invoice.');
       }
     }
   }
@@ -208,7 +208,7 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
       backgroundColor: AppTheme.light,
       appBar: AppBar(
         title: Text(
-          _isEdit ? 'Modify Commercial Invoice' : 'Generate Commercial Invoice Node',
+          _isEdit ? 'Modify Commercial Invoice' : 'Generate Commercial Invoice',
           style: const TextStyle(color: AppTheme.dark, fontWeight: FontWeight.bold, fontSize: 16),
         ),
         backgroundColor: AppTheme.white,
@@ -271,7 +271,7 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
                 const SizedBox(height: 16),
               ],
 
-              _buildStepHeader('Step 1', 'Link Customer Order Vector'),
+              _buildStepHeader('Step 1', 'Select Customer Order'),
               const SizedBox(height: 6),
               DropdownButtonFormField<int>(
                 initialValue: _selectedCustomerOrderId,
@@ -284,171 +284,148 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
                 items: ordersList.map((o) {
                   return DropdownMenuItem<int>(
                     value: o.id,
-                    child: Text(
-                      'Order #${o.orderNumber} (${o.customerName}) - ৳${o.totalAmount.toStringAsFixed(2)}',
-                      style: const TextStyle(fontSize: 12),
-                    ),
+                    child: Text('Order #${o.orderNumber} - ${o.customerName} (${o.currency} ${o.totalAmount})'),
                   );
                 }).toList(),
-                onChanged: _isEdit
-                    ? null
-                    : (val) {
-                        final selected = ordersList.firstWhere((element) => element.id == val);
-                        _onCustomerOrderChanged(selected);
-                      },
+                onChanged: (val) => setState(() {
+                  _selectedCustomerOrderId = val;
+                  if (val != null) {
+                    final order = ordersList.firstWhere((o) => o.id == val);
+                    _onCustomerOrderChanged(order);
+                  }
+                }),
+                validator: (val) => val == null ? 'Customer order is required' : null,
               ),
               const SizedBox(height: 16),
 
-              _buildStepHeader('Step 2', 'Financial Subtotal Volume'),
+              _buildStepHeader('Step 2', 'Financial Amounts'),
               const SizedBox(height: 6),
-              TextFormField(
-                controller: _subtotalController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(
-                  labelText: 'Financial Subtotal Amount *',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-                onChanged: (_) => _recalculateDiscountPct(),
-                validator: (val) => val == null || val.isEmpty ? 'Subtotal is required' : null,
-              ),
-              const SizedBox(height: 16),
-
-              _buildStepHeader('Step 3', 'Tax Rate Tariff Multiplier'),
-              const SizedBox(height: 6),
-              DropdownButtonFormField<double>(
-                initialValue: _selectedTaxRate,
-                decoration: const InputDecoration(
-                  labelText: 'Select Tax Rate',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-                items: const [
-                  DropdownMenuItem(value: 0.0, child: Text('0% (Zero Rated)')),
-                  DropdownMenuItem(value: 0.05, child: Text('5% (Standard Tariffs)')),
-                  DropdownMenuItem(value: 0.15, child: Text('15% (Corporate VAT)')),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _subtotalController,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: 'Subtotal *',
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      validator: (val) => val == null || double.tryParse(val) == null ? 'Valid subtotal required' : null,
+                      onChanged: (_) => _recalculateDiscountPct(),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      initialValue: _selectedTaxRate.toStringAsFixed(2),
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: 'Tax Rate (%)',
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      onChanged: (val) => _selectedTaxRate = double.tryParse(val) ?? 0.0,
+                    ),
+                  ),
                 ],
-                onChanged: (v) => setState(() => _selectedTaxRate = v ?? 0.0),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _discountPctController,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: 'Discount (%)',
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      onChanged: (_) => _recalculateDiscountFlat(),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _discountFlatController,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: 'Discount Amount',
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      onChanged: (_) => _recalculateDiscountPct(),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _shippingFeesController,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: 'Shipping Fees',
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _paidAmountController,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        labelText: 'Paid Amount',
+                        border: OutlineInputBorder(),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
 
-              _buildStepHeader('Step 4', 'Discount Percentage Margin (%)'),
-              const SizedBox(height: 6),
-              TextFormField(
-                controller: _discountPctController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(
-                  labelText: 'Discount Percentage (%)',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-                onChanged: (_) => _recalculateDiscountPct(),
-              ),
-              const SizedBox(height: 16),
-
-              _buildStepHeader('Step 5', 'Discount Flat Amount'),
-              const SizedBox(height: 6),
-              TextFormField(
-                controller: _discountFlatController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(
-                  labelText: 'Discount Flat Amount (৳)',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-                onChanged: (_) => _recalculateDiscountFlat(),
-              ),
-              const SizedBox(height: 16),
-
-              _buildStepHeader('Step 6', 'Logistics Shipping Fees'),
-              const SizedBox(height: 6),
-              TextFormField(
-                controller: _shippingFeesController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(
-                  labelText: 'Logistics / Shipping Fees (৳)',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              _buildStepHeader('Step 7', 'Paid Account Balance'),
-              const SizedBox(height: 6),
-              TextFormField(
-                controller: _paidAmountController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(
-                  labelText: 'Paid Account Balance (৳)',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              _buildStepHeader('Step 8', 'Payment Instrument'),
+              _buildStepHeader('Step 3', 'Payment & Delivery'),
               const SizedBox(height: 6),
               DropdownButtonFormField<String>(
                 initialValue: _paymentMethod,
                 decoration: const InputDecoration(
-                  labelText: 'Payment Instrument / Channel',
+                  labelText: 'Payment Method',
                   border: OutlineInputBorder(),
                   filled: true,
                   fillColor: Colors.white,
                 ),
                 items: const [
                   DropdownMenuItem(value: 'CASH', child: Text('CASH')),
-                  DropdownMenuItem(value: 'BANK', child: Text('BANK / CHECK / LC')),
-                  DropdownMenuItem(value: 'BKASH', child: Text('BKASH MFS GATEWAY')),
-                  DropdownMenuItem(value: 'NAGAD', child: Text('NAGAD ROUTING')),
-                  DropdownMenuItem(value: 'ROCKET', child: Text('ROCKET VALUE')),
+                  DropdownMenuItem(value: 'BANK', child: Text('BANK TRANSFER')),
+                  DropdownMenuItem(value: 'CARD', child: Text('CARD')),
+                  DropdownMenuItem(value: 'BKASH', child: Text('BKASH')),
                 ],
-                onChanged: (v) => setState(() => _paymentMethod = v ?? 'CASH'),
+                onChanged: (val) => setState(() => _paymentMethod = val ?? 'CASH'),
               ),
-              const SizedBox(height: 16),
-
-              _buildStepHeader('Step 9', 'Transaction Reference String'),
-              const SizedBox(height: 6),
+              const SizedBox(height: 12),
               TextFormField(
                 controller: _txnRefController,
                 decoration: const InputDecoration(
-                  labelText: 'Txn Reference String',
-                  hintText: 'e.g., CHK-99210, MFS-TxnID',
+                  labelText: 'Transaction Reference',
+                  hintText: 'e.g. TXN-12345',
                   border: OutlineInputBorder(),
                   filled: true,
                   fillColor: Colors.white,
                 ),
               ),
-              const SizedBox(height: 16),
-
-              _buildStepHeader('Step 10', 'Invoice Pipeline Status'),
-              const SizedBox(height: 6),
-              DropdownButtonFormField<String>(
-                initialValue: _invoiceStatus,
-                decoration: const InputDecoration(
-                  labelText: 'Invoice Pipeline Status *',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-                items: const [
-                  DropdownMenuItem(value: 'DRAFT', child: Text('📁 DRAFT MODE (Under Review)')),
-                  DropdownMenuItem(value: 'ISSUED', child: Text('🚀 ISSUED MODE (Commit & Dispatch)')),
-                  DropdownMenuItem(value: 'CANCELLED', child: Text('❌ CANCELLED MODE (Revoke Ledger)')),
-                ],
-                onChanged: (v) => setState(() => _invoiceStatus = v ?? 'DRAFT'),
-              ),
-              const SizedBox(height: 16),
-
-              // ── Step 11: Target Delivery Date ──
-              _buildStepHeader('Step 11', 'Target Delivery Date'),
-              const SizedBox(height: 6),
+              const SizedBox(height: 12),
               TextFormField(
                 controller: _deliveryDateController,
                 readOnly: true,
@@ -461,16 +438,12 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
                   fillColor: Colors.white,
                 ),
               ),
-              const SizedBox(height: 16),
-
-              _buildStepHeader('Step 12', 'Consignment Destination Address'),
-              const SizedBox(height: 6),
+              const SizedBox(height: 12),
               TextFormField(
                 controller: _deliveryAddressController,
                 maxLines: 2,
                 decoration: const InputDecoration(
-                  labelText: 'Consignment Shipping Address *',
-                  hintText: 'Input physical destination drop coordinates...',
+                  labelText: 'Delivery Address *',
                   border: OutlineInputBorder(),
                   filled: true,
                   fillColor: Colors.white,
@@ -479,30 +452,42 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 16),
 
+              _buildStepHeader('Step 4', 'Status & Notes'),
+              const SizedBox(height: 6),
+              DropdownButtonFormField<String>(
+                initialValue: _invoiceStatus,
+                decoration: const InputDecoration(
+                  labelText: 'Invoice Status',
+                  border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+                items: const [
+                  DropdownMenuItem(value: 'DRAFT', child: Text('DRAFT')),
+                  DropdownMenuItem(value: 'SENT', child: Text('SENT')),
+                  DropdownMenuItem(value: 'CANCELLED', child: Text('CANCELLED')),
+                ],
+                onChanged: (val) => setState(() => _invoiceStatus = val ?? 'DRAFT'),
+              ),
+              const SizedBox(height: 12),
               if (_invoiceStatus == 'CANCELLED') ...[
-                _buildStepHeader('Step 13', 'Revocation / Cancellation Reason'),
-                const SizedBox(height: 6),
                 TextFormField(
                   controller: _cancelledReasonController,
                   decoration: const InputDecoration(
-                    labelText: 'Audit Interruption / Cancellation Reason *',
+                    labelText: 'Cancellation Reason *',
                     border: OutlineInputBorder(),
                     filled: true,
                     fillColor: Colors.white,
                   ),
                   validator: (val) => _invoiceStatus == 'CANCELLED' && (val == null || val.trim().isEmpty) ? 'Cancellation reason is required' : null,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
               ],
-
-              _buildStepHeader(_invoiceStatus == 'CANCELLED' ? 'Step 14' : 'Step 13', 'Internal Accounting Notes'),
-              const SizedBox(height: 6),
               TextFormField(
                 controller: _notesController,
                 maxLines: 2,
                 decoration: const InputDecoration(
-                  labelText: 'Notes & Accounting Instructions',
-                  hintText: 'Log terms, bank details, or internal notes...',
+                  labelText: 'Internal Notes',
                   border: OutlineInputBorder(),
                   filled: true,
                   fillColor: Colors.white,
