@@ -25,12 +25,8 @@ public class LogisticsOfficerSecurity {
     }
 
     private boolean matches(Logistics_Officer officer, String loginIdentifier) {
-        // TODO: same unresolved question as Driver/Customer — wire to the real
-        // login-credential field once confirmed:
-        // return loginIdentifier.equalsIgnoreCase(officer.getEmail());
-        // return officer.getUser() != null
-        //         && loginIdentifier.equalsIgnoreCase(officer.getUser().getUsername());
+      //gfhjtfrg
 
-        return false; // safe default until wired up
+        return false;
     }
 }

@@ -28,20 +28,7 @@ public class DriverSecurity {
     }
 
     private boolean matches(Driver driver, String loginIdentifier) {
-        // TODO: replace this with whatever field actually links Driver -> login identity.
-        // Pick ONE of the following depending on your entity design:
-
-        // Option A — Driver has its own email field used for login:
-        // return loginIdentifier.equalsIgnoreCase(driver.getEmail());
-
-        // Option B — Driver has its own phone field used for login:
-        // return loginIdentifier.equals(driver.getPhone());
-
-        // Option C — Driver has a @ManyToOne/@OneToOne link to a User entity:
-        // return driver.getUser() != null
-        //         && loginIdentifier.equalsIgnoreCase(driver.getUser().getUsername());
-
-        // Placeholder (INCORRECT for most schemas — driverName is a display name, not credential):
+        ///jdasdhjfh
         return loginIdentifier != null && loginIdentifier.equals(driver.getDriverName());
     }
 }

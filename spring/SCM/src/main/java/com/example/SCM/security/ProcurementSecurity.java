@@ -27,8 +27,7 @@ public class ProcurementSecurity {
     }
 
     private boolean matches(Procurement procurement, User user) {
-        // TODO: wire once entity relation is confirmed, e.g.:
-        // return procurement.getUser() != null && user.getId().equals(procurement.getUser().getId());
-        return false; // safe default until wired up
+    ///fghfr
+        return false;
     }
 }
