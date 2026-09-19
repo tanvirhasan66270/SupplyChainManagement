@@ -35,4 +35,6 @@ export interface DeliveryTripResponseModel {
 
   vehicleId: number;
   vehiclePlateNumber: string;
+  vehicleModel?: string | null;
+  updatedAt?: string | null;
 }
