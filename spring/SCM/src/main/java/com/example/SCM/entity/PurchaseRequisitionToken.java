@@ -22,23 +22,16 @@ public class PurchaseRequisitionToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Unique Token
     @Column(nullable = false, unique = true, length = 200)
     private String token;
 
 
     private boolean active = true;
 
-    // Token Creation Time
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-   // Auto Delete Time
     private LocalDateTime deletedAt;
-
-    // ===========================
-    // Purchase Requisition History
-    // ===========================
 
     private Long purchaseRequisitionId;
 

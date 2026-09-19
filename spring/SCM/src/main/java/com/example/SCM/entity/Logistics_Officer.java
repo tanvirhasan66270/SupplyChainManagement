@@ -22,7 +22,6 @@ public class Logistics_Officer {
     private Long id;
 
 
-    // Auth account — Source of truth for name, phone, email, password, role
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

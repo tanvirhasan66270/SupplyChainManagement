@@ -47,7 +47,6 @@ public class GoodsReceivedNote {
 
     private LocalDateTime updatedAt;
 
-    // ── System Core / Warehouse Relations ────────────────────────
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "po_id", nullable = false)
     private PurchaseOrder purchaseOrder;

@@ -18,10 +18,7 @@ import java.util.List;
 public class ProductRequirementController {
     private final ProductRequirementService service;
 
-    // ─────────────────────────────────────────────────────
-    // CREATE — ADMIN + LOGISTICS_OFFICER
-    // LOGISTICS_OFFICER: status APPROVED হলে service layer-এ block হবে
-    // ─────────────────────────────────────────────────────
+
     @PreAuthorize("hasAnyRole('ADMIN', 'LOGISTICS_OFFICER')")
     @PostMapping
     public ResponseEntity<ProductRequirementResponseDTO> create(
@@ -29,9 +26,7 @@ public class ProductRequirementController {
         return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
     }
 
-    // ─────────────────────────────────────────────────────
-    // GET ALL — ADMIN, MANAGER, LOGISTICS_OFFICER, PROCUREMENT
-    // ─────────────────────────────────────────────────────
+
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'LOGISTICS_OFFICER', 'PROCUREMENT')")
     @GetMapping
     public ResponseEntity<List<ProductRequirementResponseDTO>> getAll() {
@@ -40,9 +35,7 @@ public class ProductRequirementController {
         return ResponseEntity.ok(list);
     }
 
-    // ─────────────────────────────────────────────────────
-    // GET BY ID — ADMIN, MANAGER, LOGISTICS_OFFICER, PROCUREMENT
-    // ─────────────────────────────────────────────────────
+
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'LOGISTICS_OFFICER', 'PROCUREMENT')")
     @GetMapping("/{id}")
     public ResponseEntity<ProductRequirementResponseDTO> getById(@PathVariable Long id) {
@@ -51,10 +44,7 @@ public class ProductRequirementController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // ─────────────────────────────────────────────────────
-    // UPDATE — ADMIN + LOGISTICS_OFFICER
-    // LOGISTICS_OFFICER: status = APPROVED হলে service layer-এ block হবে
-    // ─────────────────────────────────────────────────────
+
     @PreAuthorize("hasAnyRole('ADMIN', 'LOGISTICS_OFFICER')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductRequirementResponseDTO> update(
@@ -63,9 +53,7 @@ public class ProductRequirementController {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
-    // ─────────────────────────────────────────────────────
-    // UPDATE STATUS — ADMIN + PROCUREMENT
-    // ─────────────────────────────────────────────────────
+
     @PreAuthorize("hasAnyRole('ADMIN', 'PROCUREMENT')")
     @PatchMapping("/{id}/status")
     public ResponseEntity<ProductRequirementResponseDTO> updateStatus(
@@ -74,9 +62,7 @@ public class ProductRequirementController {
         return ResponseEntity.ok(service.updateStatus(id, status));
     }
 
-    // ─────────────────────────────────────────────────────
-    // DELETE — শুধু ADMIN
-    // ─────────────────────────────────────────────────────
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {

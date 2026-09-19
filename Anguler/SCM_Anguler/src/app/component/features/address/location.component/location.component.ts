@@ -57,7 +57,6 @@ countries: any[] = [];
 
     if (!this.selectedCountryId) return;
 
-    // আপনার DivisionService-এ getByCountryId মেথডটি থাকতে হবে
     this.divisionService.getByCountryId(this.selectedCountryId).subscribe({
       next: (res) => {
         this.divisions = res;

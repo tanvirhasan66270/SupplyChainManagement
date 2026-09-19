@@ -1,4 +1,3 @@
-/* --- SLIDE DRAWER CONTAINER (RIGHT SIDE) --- */
 .slide-drawer {
   position: fixed;
   top: 0;
@@ -17,7 +16,6 @@
   right: 0;
 }
 
-/* --- BACKDROP EFFECT --- */
 .drawer-backdrop {
   position: fixed;
   top: 0;
@@ -29,7 +27,6 @@
   z-index: 1050;
 }
 
-/* --- UI modern details --- */
 .avatar-sm {
   width: 38px;
   height: 38px;

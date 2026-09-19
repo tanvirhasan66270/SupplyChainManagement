@@ -18,7 +18,6 @@ public class InventoryController {
 
     private final InventoryService inventoryService;
 
-    // 1. Save/Create New Inventory Stock (POST)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'LOGISTICS_OFFICER')")
     @PostMapping
@@ -27,7 +26,6 @@ public class InventoryController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // 2. Update Existing Inventory Stock (PUT)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'LOGISTICS_OFFICER', 'SALES_OFFICER')")
     @PutMapping("/{id}")
@@ -38,7 +36,6 @@ public class InventoryController {
         return ResponseEntity.ok(response);
     }
 
-    //3. Get All Inventory Records (GET)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'LOGISTICS_OFFICER', 'SALES_OFFICER', 'PROCUREMENT', 'COMMERCIAL_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'CUSTOMER', 'SUPPLIER')")
     @GetMapping
@@ -51,7 +48,6 @@ public class InventoryController {
         return ResponseEntity.ok(list);
     }
 
-    //4. Get Inventory Record By ID (GET)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'LOGISTICS_OFFICER', 'SALES_OFFICER', 'PROCUREMENT', 'COMMERCIAL_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'CUSTOMER', 'SUPPLIER')")
     @GetMapping("/{id}")
@@ -62,7 +58,6 @@ public class InventoryController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 5. Delete Inventory Record (DELETE)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'LOGISTICS_OFFICER', 'SALES_OFFICER')")
     @DeleteMapping("/{id}")

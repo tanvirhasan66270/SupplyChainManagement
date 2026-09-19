@@ -1,18 +1,17 @@
-/* --- CENTER VIEW DRAWER --- */
 .custom-drawer {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.95);
-  width: 950px;           /* 🌟 চওড়া বড় করা হলো */
-  max-width: 95vw;        /* রেস্পন্সিভ রাখার জন্য */
-  height: 90vh;           /* 🌟 উচ্চতা বড় করা হলো */
+  width: 950px;          
+  max-width: 95vw;        
+  height: 90vh;           
   max-height: 95vh;
   background-color: #ffffff;
   z-index: 1060;
   box-shadow: 0 15px 40px rgba(15, 23, 42, 0.25);
-  border-radius: 16px;    /* চারপাশের কর্নার রাউন্ড করা */
-  overflow: hidden;       /* হেডার যাতে বর্ডার ক্রস না করে */
+  border-radius: 16px;    
+  overflow: hidden;      
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
@@ -26,7 +25,6 @@
   visibility: visible;
 }
 
-/* --- 🌟 কালারফুল এবং রাউন্ড হেডার ডিজাইন --- */
 .reg-modal-header, .drawer-header {
   background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
   color: #ffffff;
@@ -46,7 +44,6 @@
   color: rgba(255, 255, 255, 0.85) !important;
 }
 
-/* ক্লোজ বাটন সাদা করার জন্য */
 .reg-modal-header .btn-close, .drawer-header .btn-close {
   filter: brightness(0) invert(1);
   opacity: 0.8;
@@ -56,7 +53,6 @@
   opacity: 1;
 }
 
-/* --- বাকি কোড --- */
 .container-fluid { background-color: #f8fafc; min-height: 100vh; }
 .bg-white { background-color: #ffffff !important; }
 

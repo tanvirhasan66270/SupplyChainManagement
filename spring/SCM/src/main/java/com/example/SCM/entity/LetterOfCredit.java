@@ -22,7 +22,6 @@ public class LetterOfCredit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // LC number unique
     @Column(nullable = false, unique = true)
     private String lcNumber;
 

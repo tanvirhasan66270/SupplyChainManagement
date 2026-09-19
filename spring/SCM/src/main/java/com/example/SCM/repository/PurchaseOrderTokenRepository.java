@@ -11,22 +11,16 @@ import java.util.Optional;
 @Repository
 public interface PurchaseOrderTokenRepository extends JpaRepository<PurchaseOrderToken, Long> {
 
-    // Find token by Purchase Order ID
     Optional<PurchaseOrderToken> findByPurchaseOrderId(Long purchaseOrderId);
 
-    // Find active token by token string
     Optional<PurchaseOrderToken> findByTokenAndActiveTrue(String token);
 
-    // Find all active tokens that have expired
     List<PurchaseOrderToken> findByActiveTrueAndExpiryDateLessThanEqual(LocalDate expiryDate);
 
-    // Optional: Find token only by token
     Optional<PurchaseOrderToken> findByToken(String token);
 
-    // Optional: Check token exists
     boolean existsByToken(String token);
 
-    // Optional: Find all active tokens
     List<PurchaseOrderToken> findByActiveTrue();
 
 }

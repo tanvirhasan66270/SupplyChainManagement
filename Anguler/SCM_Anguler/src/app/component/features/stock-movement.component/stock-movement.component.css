@@ -46,21 +46,20 @@
   transform: translateY(-1px);
 }
 
-/* --- 🌟 বড় সাইজ এবং গাঢ় কালারফুল রাউন্ড হেডার যুক্ত সেন্ট্রাল মোডাল/ড্রয়ার --- */
 .custom-drawer {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.95);
-  width: 950px;           /* ফর্মের চওড়া বড় করা হলো */
+  width: 950px;          
   max-width: 95vw;
-  height: 90vh;           /* ফর্মের উচ্চতা বড় করা হলো */
+  height: 90vh;           
   max-height: 95vh;
   background-color: #ffffff;
   z-index: 1050;
   box-shadow: 0 15px 40px rgba(15, 23, 42, 0.25);
-  border-radius: 16px;    /* চারপাশের কর্নার রাউন্ড করার জন্য */
-  overflow: hidden;       /* ভেতরের হেডার যাতে বর্ডার ক্রস না করে */
+  border-radius: 16px;    
+  overflow: hidden;     
   display: flex;
   flex-direction: column;
   opacity: 0;
@@ -74,9 +73,8 @@
   visibility: visible;
 }
 
-/* --- 🌟 গাঢ় (Dark) গ্রেডিয়েন্ট হেডার ডিজাইন --- */
 .reg-modal-header, .drawer-header {
-  background: linear-gradient(135deg, #312e81 0%, #4338ca 100%); /* গাঢ় ডার্ক ইনডিগো টোন */
+  background: linear-gradient(135deg, #312e81 0%, #4338ca 100%); 
   color: #ffffff;
   padding: 20px 24px;
   display: flex;
@@ -103,14 +101,12 @@
   opacity: 1;
 }
 
-/* ড্রয়ার বা মোডালের বডি স্ক্রোলএবল এবং সঠিক প্যাডিংয়ের জন্য */
 .drawer-body {
   padding: 24px !important;
   overflow-y: auto;
   flex-grow: 1;
 }
 
-/* ফুটার বাটনগুলোর নিচে ও উপরে পর্যাপ্ত গ্যাপ রাখার জন্য */
 .drawer-footer {
   padding: 16px 24px !important;
   background-color: #ffffff;

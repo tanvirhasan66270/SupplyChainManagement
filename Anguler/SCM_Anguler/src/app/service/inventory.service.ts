@@ -8,7 +8,7 @@ import { InventoryRequestModel, InventoryResponseModel } from '../component/shar
   providedIn: 'root',
 })
 export class InventoryService {
-  private apiUrl = environment.apiUrl + "inventories"; // Sync with @RequestMapping("/api/inventories")
+  private apiUrl = environment.apiUrl + "inventories"; 
 
   constructor(private http: HttpClient) { }
 

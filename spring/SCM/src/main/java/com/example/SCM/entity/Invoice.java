@@ -68,13 +68,11 @@ public class Invoice {
     @Column(nullable = false)
     private InvoiceStatus invoiceStatus = InvoiceStatus.DRAFT;
 
-    // Logistics Fields
     private LocalDate deliveryDate;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String deliveryAddress;
 
-    // Audit Logs & Notes
     @Column(columnDefinition = "TEXT")
     private String notes;
 
@@ -83,7 +81,7 @@ public class Invoice {
 
     private LocalDate issuedAt;
 
-    @Column(updatable = false) // making time lock
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

@@ -58,7 +58,6 @@ public class Driver {
 
     private LocalDateTime updatedAt;
 
-    // ── Warehouse / Auth Management ──────────────────────────────
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     // unique = true add for data safety
     @JoinColumn(name = "user_id", nullable = false, unique = true)

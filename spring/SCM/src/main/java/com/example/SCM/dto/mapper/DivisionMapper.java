@@ -21,22 +21,19 @@ public class DivisionMapper {
         dto.setNameBn(entity.getNameBn());
         dto.setActive(entity.getActive());
 
-        // Country Mapping
         if (entity.getCountry() != null) {
             dto.setCountryId(entity.getCountry().getId());
             dto.setCountryName(entity.getCountry().getName());
         }
 
-        // Child Districts Mapping
         if (entity.getDistricts() != null) {
             dto.setDistricts(entity.getDistricts().stream()
-                    .map(District::getName) // আপনার District এনটিটির নাম ফিল্ড অনুযায়ী
+                    .map(District::getName)
                     .collect(Collectors.toList()));
         }
         return dto;
     }
 
-    // Request DTO -> Entity
 
     public Division toEntity(DivisionRequestDTO dto, Country country) {
 
@@ -51,7 +48,6 @@ public class DivisionMapper {
     }
 
 
-    // Update Existing Entity
 
     public void updateEntity(DivisionRequestDTO dto, Division entity, Country country) {
 

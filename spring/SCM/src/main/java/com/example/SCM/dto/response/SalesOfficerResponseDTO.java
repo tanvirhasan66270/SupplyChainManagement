@@ -31,7 +31,6 @@ public class SalesOfficerResponseDTO {
     private String districtName;
     private String policeStationName;
 
-    // Flattened Security Core User Details
     private Long userId;
     private String name;
     private String email;

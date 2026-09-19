@@ -19,7 +19,6 @@ public class WarehouseResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Location/PoliceStation Details (Data Flattening)
     private Long policeStationId;
     private String policeStationName;
     private String districtName;

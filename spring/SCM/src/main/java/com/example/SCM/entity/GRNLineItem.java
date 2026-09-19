@@ -16,13 +16,11 @@ public class GRNLineItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // FK → GoodsReceivedNote (Parent)
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grn_id", nullable = false)
     private GoodsReceivedNote goodsReceivedNote;
 
-    // FK → Product
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)

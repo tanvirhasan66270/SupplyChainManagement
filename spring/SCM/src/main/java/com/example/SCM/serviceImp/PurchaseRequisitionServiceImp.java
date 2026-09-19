@@ -68,9 +68,7 @@ public class PurchaseRequisitionServiceImp implements PurchaseRequisitionService
 
         PurchaseRequisition savedPr = requisitionRepository.save(pr);
 
-        // ==========================================
-        //  Token Generation Log Matrix
-        // ==========================================
+
         PurchaseRequisitionToken token = new PurchaseRequisitionToken();
         token.setToken(UUID.randomUUID().toString());
         token.setActive(true);
@@ -98,7 +96,6 @@ public class PurchaseRequisitionServiceImp implements PurchaseRequisitionService
 
 
         try {
-            // 1️ just system manager APPROVAL alert
             List<User> managers = userRepository.findByRole(Role.MANAGER);
             for (User manager : managers) {
                 notificationService.send(
@@ -109,7 +106,6 @@ public class PurchaseRequisitionServiceImp implements PurchaseRequisitionService
                 );
             }
 
-            // 2 just requisition assain supplier inbox notification
             if (savedPr.getSuppliers() != null && !savedPr.getSuppliers().isEmpty()) {
                 for (Supplier supplier : savedPr.getSuppliers()) {
                     if (supplier.getUser() != null && supplier.getUser().getId() != null) {
@@ -392,7 +388,6 @@ public class PurchaseRequisitionServiceImp implements PurchaseRequisitionService
             }
         }
 
-        // if user ADMIN, MANAGER or PROCUREMENT is officer, global return all requisition
         return requisitionRepository.findAllWithDetails().stream()
                 .map(requisitionMapper::convertTOResponseDTO)
                 .collect(Collectors.toList());

@@ -33,9 +33,7 @@ export class CategoryComponent implements OnInit {
     this.loadCategories();
   }
 
-  // =====================================================
-  // DRAWER CORE CONTROLS
-  // =====================================================
+  
   openDrawer() {
     this.reset();
     this.isEdit = false;
@@ -49,9 +47,6 @@ export class CategoryComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  // =====================================================
-  // DATA LOADERS
-  // =====================================================
   loadCategories() {
     this.service.getAll().subscribe({
       next: (data) => {
@@ -61,9 +56,6 @@ export class CategoryComponent implements OnInit {
     });
   }
 
-  // =====================================================
-  // CRUD ACTIONS
-  // =====================================================
   save() {
     if (!this.category.categoryName || this.category.categoryName.trim().length === 0) {
       alert("Please provide a valid category name.");

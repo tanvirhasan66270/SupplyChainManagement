@@ -27,7 +27,6 @@ public class JwtUtil {
 
 
 
-    // Generate token from email
     public String generateToken(String email, String role) {
         return Jwts.builder()
                 .subject(email)
@@ -39,7 +38,6 @@ public class JwtUtil {
     }
 
 
-    // ── Password reset token (short-lived, single purpose) ─────────
     public String generateResetToken(String email) {
         return Jwts.builder()
                 .subject(email)
@@ -50,7 +48,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    // ── Email verification token (short-lived, single purpose) ────
     public String generateVerificationToken(String email) {
         return Jwts.builder()
                 .subject(email)
@@ -64,7 +61,6 @@ public class JwtUtil {
 
 
 
-    // Validate token — checks signature + expiry
     public boolean isValid(String token) {
         try {
             getClaims(token);
@@ -81,14 +77,9 @@ public class JwtUtil {
 
 
 
-    // Extract role claim from token
-    public String extractRole(String token) {
-        return (String) getClaims(token).get("role");
-    }
 
 
 
-    // Extract email (subject) from token
     public String extractEmail(String token) {
         return getClaims(token).getSubject();
     }
@@ -102,9 +93,6 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    public String extractPurpose(String token) {
-        return (String) getClaims(token).get("purpose");
-    }
 
     public boolean isValidForPurpose(String token, String expectedPurpose) {
         try {

@@ -1,5 +1,4 @@
 <div class="procurement-dashboard px-3 py-4">
-  <!-- ───────────────── TOP BAR ───────────────── -->
   <div class="dashboard-header bg-white p-4 rounded-4 shadow-sm border mb-4 d-flex justify-content-between align-items-center">
     <div>
       <div class="d-flex align-items-center gap-2 mb-1">
@@ -16,7 +15,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── KPI GRID ───────────────── -->
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3 mb-4">
     <div class="col" *ngFor="let kpi of kpis">
       <div
@@ -47,7 +45,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── SECONDARY KPI ROW ───────────────── -->
   <div class="row g-3 mb-4">
     <!-- 1: Total Spend -->
     <div class="col-lg-2 col-md-4 col-sm-6">
@@ -161,7 +158,6 @@
   </div>
 
 
-  <!-- ───────────────── QUICK ACTIONS ───────────────── -->
   <div class="row g-2 mb-4">
     <div class="col-md-4 col-lg-2">
       <a
@@ -237,7 +233,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── RFQ, PO & SHIPMENT LOG TABS ───────────────── -->
   <div class="row g-3 mb-4 row-cols-1 row-cols-md-3 row-cols-lg-6">
     <!-- Button 1: RFQ Log -->
     <div class="col">
@@ -346,7 +341,6 @@
       <app-poline-item [isEmbedded]="false"></app-poline-item>
   </div>
 
-  <!-- ───────────────── RFQ TRACTION LOG ───────────────── -->
   <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4" *ngIf="activeRfqTab === 'RFQ' || activeRfqTab === 'ALL'">
     <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
       <h6 class="mb-0 fw-bold text-dark text-uppercase">
@@ -419,7 +413,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── APPROVED PURCHASE ORDER LOG ───────────────── -->
   <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 border-top border-success border-4" *ngIf="activeRfqTab === 'APPROVED' || activeRfqTab === 'ALL'">
     <div class="card-header bg-white py-3 border-0">
       <h6 class="mb-0 fw-bold text-success text-uppercase">
@@ -458,7 +451,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── REJECTED PURCHASE ORDER LOG ───────────────── -->
   <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 border-top border-danger border-4" *ngIf="activeRfqTab === 'REJECTED' || activeRfqTab === 'ALL'">
     <div class="card-header bg-white py-3 border-0">
       <h6 class="mb-0 fw-bold text-danger text-uppercase">
@@ -497,7 +489,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── CARGO SHIPMENT LOG ───────────────── -->
   <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4" *ngIf="activeRfqTab === 'SHIPMENT' || activeRfqTab === 'ALL'">
     <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
       <h6 class="mb-0 fw-bold text-dark text-uppercase">
@@ -554,7 +545,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── MIDDLE LAYOUT: SHORTAGE ALERTS & COST ───────────────── -->
   <div class="row g-4 mb-4">
     <div class="col-md-5">
       <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
@@ -635,7 +625,6 @@
         <div class="d-flex align-items-center justify-content-around mt-4">
           <div *ngFor="let category of costCategories" class="d-flex flex-column align-items-center">
             <svg viewBox="0 0 100 55" style="width: 110px; height: 60px; overflow: visible;">
-              <!-- Background Arc -->
               <path d="M 18.17 50 A 31.83 31.83 0 0 1 81.83 50" fill="none" stroke="#f1f5f9" stroke-width="8" stroke-linecap="round" />
               <!-- Foreground Arc -->
               <path d="M 18.17 50 A 31.83 31.83 0 0 1 81.83 50" fill="none" [attr.stroke]="category.color" stroke-width="8" stroke-linecap="round" [attr.stroke-dasharray]="category.pct + ', 100'" />
@@ -653,7 +642,6 @@
 
  
 
-  <!-- ───────────────── NOTIFICATIONS & SPEND CATEGORY ───────────────── -->
   <div class="row g-4 mb-4">
     <!-- Spend by Category -->
     <div class="col-md-6">
@@ -750,7 +738,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── NEW CARDS: DEADLINES, SUPPLIERS, INSIGHTS ───────────────── -->
   <div class="row g-4 mb-4">
     
     <!-- Upcoming Deadlines -->
@@ -824,7 +811,6 @@
     
   </div>
 
-  <!-- ───────────────── LOADING STATE ───────────────── -->
   <div *ngIf="loading" class="text-center py-5">
     <div class="spinner-border text-teal" role="status">
       <span class="visually-hidden">Loading...</span>
@@ -832,13 +818,11 @@
     <p class="text-muted mt-2 mb-0">Loading procurement data...</p>
   </div>
 
-  <!-- ───────────────── SETTINGS PANEL ───────────────── -->
   <app-dashboard-settings
     [isOpen]="showSettings"
     (close)="showSettings = false"
   ></app-dashboard-settings>
 
-  <!-- ───────────────── VIEW ALL MODAL (CARD VIEW) ───────────────── -->
   <div class="modal-backdrop fade show" *ngIf="isViewAllModalOpen"></div>
   <div class="modal fade show d-block" tabindex="-1" *ngIf="isViewAllModalOpen" role="dialog" aria-labelledby="viewAllModalLabel" aria-modal="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -1062,7 +1046,6 @@
 }
 </style>
 
-<!--  MODAL: DIRECTORY DETAILS (POPUP OVERLAY) -->
 <div *ngIf="activeDirectoryModal" style="position:fixed;inset:0;z-index:1055;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,0.4);backdrop-filter:blur(4px);">
   <div style="width:100%;max-width:960px;max-height:85vh;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);background:#fff;animation: zoomIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
     
@@ -1255,7 +1238,6 @@
   </div>
 </div>
 
-<!-- ================= MODAL: CREATE REQUISITION (LC STYLE) ================= -->
 <div *ngIf="isPrModalOpen" style="position:fixed;inset:0;z-index:1055;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,0.4);backdrop-filter:blur(4px);">
   <div style="width:100%;max-width:850px;max-height:90vh;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);background:#fff;animation: zoomIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
     
@@ -1364,7 +1346,6 @@
   </div>
 </div>
 
-<!-- ================= MODAL: CREATE PURCHASE ORDER (LC STYLE) ================= -->
 <div *ngIf="isPoModalOpen" style="position:fixed;inset:0;z-index:1055;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,0.4);backdrop-filter:blur(4px);">
   <div style="width:100%;max-width:850px;max-height:90vh;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);background:#fff;animation: zoomIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
     
@@ -1452,7 +1433,6 @@
   </div>
 </div>
 
-<!-- ================= MODAL: TRACK PURCHASE ORDER ================= -->
 <div *ngIf="isTrackingModalOpen" style="position:fixed;inset:0;z-index:1055;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,0.4);backdrop-filter:blur(4px);">
   <div style="width:100%;max-width:900px;max-height:95vh;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);background:#ffffff;animation: zoomIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);">
     
@@ -1472,7 +1452,6 @@
 
     <!-- BODY -->
     <div style="padding:32px;background:#f8fafc;flex:1;overflow-y:auto;box-sizing:border-box;">
-      <!-- Search input card (matches "Quick Add Payment" style) -->
       <div class="card border-0 shadow-sm p-4 bg-white rounded-3 mb-4">
         <div class="row">
           <div class="col-md-10 mx-auto">

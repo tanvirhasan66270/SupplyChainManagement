@@ -41,32 +41,28 @@ public class StockMovementMapper {
         dto.setId(entity.getId());
         dto.setQuantity(entity.getQuantity());
         dto.setReferenceId(entity.getReferenceId());
-        dto.setMovedAt(entity.getMovedAt()); // @PrePersist/@PreUpdate অটো জেনারেটেড টাইমস্ট্যাম্প
+        dto.setMovedAt(entity.getMovedAt());
         dto.setRemarks(entity.getRemarks());
 
         if (entity.getMovementType() != null) {
             dto.setMovementType(entity.getMovementType().name());
         }
 
-        //  Product Details Flattening
         if (entity.getProduct() != null) {
             dto.setProductId(entity.getProduct().getId());
             dto.setProductName(entity.getProduct().getName());
         }
 
-        //  Target/Destination Warehouse Details Flattening
         if (entity.getWarehouse() != null) {
             dto.setWarehouseId(entity.getWarehouse().getId());
             dto.setWarehouseName(entity.getWarehouse().getName());
         }
 
-        //  Source Warehouse Details Flattening (Only for TRANSFER type)
         if (entity.getSourceWarehouse() != null) {
             dto.setSourceWarehouseId(entity.getSourceWarehouse().getId());
             dto.setSourceWarehouseName(entity.getSourceWarehouse().getName());
         }
 
-        //  Performed By Personnel Details Flattening
         if (entity.getPerformedBy() != null) {
             dto.setPerformedBy(entity.getPerformedBy().getId());
             dto.setPerformedByName(entity.getPerformedBy().getName());

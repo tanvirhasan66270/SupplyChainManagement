@@ -1,8 +1,7 @@
-/* --- SLIDE DRAWER CONTAINER (RIGHT SIDE) --- */
 .slide-drawer {
   position: fixed;
   top: 0;
-  right: -420px; /* ডিফল্ট অবস্থায় স্ক্রিনের বাইরে থাকবে */
+  right: -420px;
   width: 400px;
   height: 100vh;
   background-color: #ffffff;
@@ -14,10 +13,9 @@
 }
 
 .slide-drawer.show {
-  right: 0; /* ওপেন হলে ডান প্রান্তে এলাইনড হবে */
+  right: 0;
 }
 
-/* --- BACKDROP EFFECT --- */
 .drawer-backdrop {
   position: fixed;
   top: 0;
@@ -29,7 +27,6 @@
   z-index: 1050;
 }
 
-/* --- MODERN STYLING DETAILS --- */
 .avatar-sm {
   width: 38px;
   height: 38px;

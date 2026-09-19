@@ -130,7 +130,6 @@ export class StockMovementComponent implements OnInit {
   }
 
   onMovementTypeChange() {
-    // No longer clearing sourceWarehouseId, as it's visible and available for all transaction types
   }
 
   getTargetWarehouseName(): string {

@@ -25,7 +25,6 @@ public class CustomerSecurity {
     }
 
     private boolean matches(Customer customer, String loginIdentifier) {
-        // কাস্টমার টেবিলের ইমেইল অথবা এর সাথে যুক্ত User একাউন্টের ইউজারনেম/ইমেইলের সাথে মিলিয়ে দেখা
         boolean emailMatch = customer.getEmail() != null && loginIdentifier.equalsIgnoreCase(customer.getEmail());
 
         boolean userMatch = customer.getUser() != null &&

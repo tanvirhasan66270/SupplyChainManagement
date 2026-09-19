@@ -6,8 +6,8 @@ export interface DeliveryTripRequestModel {
   driverId: number;
   status: 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'CANCELLED' | string;
   customerAddress: string;
-  recipientSignature?: string | null; // ফাইল আপলোডের পর জেনারেট হওয়া স্ট্রিং পাথ
-  deliveryPhotoUrl?: string | null;   // ফাইল আপলোডের পর জেনারেট হওয়া স্ট্রিং পাথ
+  recipientSignature?: string | null; 
+  deliveryPhotoUrl?: string | null;   
   remarks?: string | null;
 }
 
@@ -16,18 +16,17 @@ export interface DeliveryTripResponseModel {
   id: number;
   dispatcherId: number;
   status: 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'CANCELLED' | string;
-  startedAt?: string | null;       // ISO Date-Time String (LocalDateTime)
-  completedAt?: string | null;     // ISO Date-Time String (LocalDateTime)
+  startedAt?: string | null;       
+  completedAt?: string | null;    
   recipientSignature?: string | null;
   deliveryPhotoUrl?: string | null;
   customerAddress: string;
   remarks?: string | null;
-  createdAt: string;               // ISO Date-Time String
-  updatedAt: string;               // ISO Date-Time String
+  createdAt: string;               
 
   //Flattened Relations for UI Table Maps ──
   customerId: number;
-  recipientName: string;           // Maps directly with customer.name
+  recipientName: string;           
 
   driverId: number;
   driverName: string;
@@ -36,5 +35,4 @@ export interface DeliveryTripResponseModel {
 
   vehicleId: number;
   vehiclePlateNumber: string;
-  vehicleModel?: string | null;    // ওআরএম অবজেক্ট থেকে ম্যাপড ভেহিকল স্পেক্স
 }

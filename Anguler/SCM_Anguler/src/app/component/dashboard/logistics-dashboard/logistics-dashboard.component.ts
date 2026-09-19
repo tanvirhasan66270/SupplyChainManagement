@@ -73,12 +73,10 @@ export class LogisticsDashboardComponent implements OnInit {
   totalInventoryCount = 0;
   totalAvailableQuantity = 0;
 
-  // Grid Data
   dispatchSchedule: any[] = [];
   liveTimeline: any[] = [];
   dispatchQueue: any[] = [];
   
-  // Quick Nav Modal States & Data
   showStockNavModal = false;
   showStockMovementNavModal = false;
   showGRNNavModal = false;
@@ -99,7 +97,6 @@ export class LogisticsDashboardComponent implements OnInit {
   productList: any[] = [];
   customerList: any[] = [];
 
-  // Form Models for all 5 nav forms
   stockForm = {
     productId: 0,
     warehouseId: 0,
@@ -161,11 +158,9 @@ export class LogisticsDashboardComponent implements OnInit {
   selectedVehicleType = '';
   filteredVehicles: any[] = [];
   
-  // Chart Data
   fleetStats = { available: { val: 0, pct: 0, offset: 0, dash: '0 100' }, onRoute: { val: 0, pct: 0, offset: 0, dash: '0 100' }, maintenance: { val: 0, pct: 0, offset: 0, dash: '0 100' }, offline: { val: 0, pct: 0, offset: 0, dash: '0 100' } };
   inventoryStats = { in: { val: 0, pct: 0, offset: 0, dash: '0 100' }, out: { val: 0, pct: 0, offset: 0, dash: '0 100' }, transfer: { val: 0, pct: 0, offset: 0, dash: '0 100' } };
   
-  // Shipment Performance Line Chart Data
   shipmentPerformancePoints = "M 0 140 L 500 140";
   shipmentPerformanceFill = "M 0 140 L 500 140 Z";
   shipmentDataPoints: any[] = [];
@@ -674,8 +669,8 @@ export class LogisticsDashboardComponent implements OnInit {
   }
 
   private generatePerformanceChartData(shipments: any[]) {
-      const xSpacing = 500 / 5; // 5 segments for 6 points
-      const yMax = 120; // max height (lower is higher on SVG)
+      const xSpacing = 500 / 5;
+      const yMax = 120; 
       
       const year = this.selectedPerformanceYear;
       const month = this.selectedPerformanceMonth;
@@ -749,7 +744,6 @@ export class LogisticsDashboardComponent implements OnInit {
 
   const usedByWarehouse: Record<number, number> = {};
   inventories.forEach((inv: any) => {
-    // ইনভেন্টরি থেকে ওয়্যারহাউস আইডি এবং পরিমাণ বের করা
     const whId = inv.warehouseId || (inv.warehouse ? inv.warehouse.id : 0);
     if (whId) {
       if (!usedByWarehouse[whId]) usedByWarehouse[whId] = 0;
@@ -761,7 +755,7 @@ export class LogisticsDashboardComponent implements OnInit {
   let totalCap = 0;
   
   this.warehouses = this.warehouses.map((w) => {
-    totalCap += Number(w.capacity) || 1000; // ডিফল্ট ক্যাপাসিটি ১০০০ ধরা যেতে পারে যদি না থাকে
+    totalCap += Number(w.capacity) || 1000; 
     const used = usedByWarehouse[w.id] || 0;
     const usedPercent = w.capacity > 0 ? Math.min(100, Math.round((used / w.capacity) * 100)) : 0;
     
@@ -820,7 +814,6 @@ export class LogisticsDashboardComponent implements OnInit {
     this.showMapModal = false;
   }
 
-  // ───────────────── QUICK NAV CARD MODALS ─────────────────
   openStockNavModal(event?: Event): void {
     if (event) event.preventDefault();
     this.showStockNavModal = true;

@@ -8,7 +8,7 @@ import { VehicleRequestModel, VehicleResponseModel } from '../component/shared/m
   providedIn: 'root',
 })
 export class VehicleService {
-  private apiUrl = environment.apiUrl + 'vehicles'; // Synced with @RequestMapping("/api/vehicles")
+  private apiUrl = environment.apiUrl + 'vehicles'; 
 
   constructor(private http: HttpClient) { }
 

@@ -1,7 +1,6 @@
 <nav class="public-navbar sticky-top shadow-sm">
   <div class="container-fluid px-4 py-2 d-flex align-items-center justify-content-between">
     
-    <!-- BRAND LOGO & TAGLINE -->
     <a routerLink="/" class="brand-link d-flex align-items-center gap-2.5 text-decoration-none">
       <div class="logo-box">SCM</div>
       <div class="brand-meta">
@@ -10,11 +9,9 @@
       </div>
     </a>
 
-    <!-- CENTER NAVIGATION (DESKTOP) -->
     <ul class="nav-links-menu d-none d-lg-flex list-unstyled m-0 p-0 gap-4">
       <li><a routerLink="/" class="nav-item-link">Home</a></li>
       
-      <!-- About Us Dropdown -->
       <li class="dropdown-wrap" (mouseenter)="toggleDropdown('about')" (mouseleave)="toggleDropdown('')">
         <span class="nav-item-link">About Us <i class="bi bi-chevron-down ms-0.5"></i></span>
         <div class="dropdown-panel rounded-3 border p-2" *ngIf="activeDropdown === 'about'">
@@ -25,7 +22,6 @@
         </div>
       </li>
 
-      <!-- Global Coverage Dropdown -->
       <li class="dropdown-wrap" (mouseenter)="toggleDropdown('coverage')" (mouseleave)="toggleDropdown('')">
         <span class="nav-item-link">Global Network <i class="bi bi-chevron-down ms-0.5"></i></span>
         <div class="dropdown-panel rounded-3 border p-2" *ngIf="activeDropdown === 'coverage'">
@@ -36,34 +32,27 @@
         </div>
       </li>
 
-      <!-- Our Products Direct Link (No Dropdown) -->
       <li><a routerLink="/products" class="nav-item-link">Our Products</a></li>
     </ul>
 
-    <!-- RIGHT CONTROLS & CTA (DESKTOP) -->
     <div class="d-none d-lg-flex align-items-center gap-3">
-      <!-- Search Trigger -->
       <button class="btn btn-light rounded-circle p-2 d-flex" (click)="showSearchModal = true">
         <i class="bi bi-search"></i>
       </button>
 
-      <!-- Theme Switcher -->
       <button class="btn btn-light rounded-circle p-2 d-flex" (click)="toggleTheme()">
         <i class="bi" [ngClass]="themeMode === 'light' ? 'bi-moon-stars' : 'bi-sun'"></i>
       </button>
 
-      <!-- Action CTAs -->
       <a routerLink="/login" class="btn btn-outline-primary px-3 fw-bold rounded-pill">Sign In</a>
       <a routerLink="/join-us" class="btn btn-warning px-3.5 fw-bold rounded-pill text-dark">Join Us</a>
     </div>
 
-    <!-- HAMBURGER BUTTON (MOBILE) -->
     <button class="btn btn-light d-lg-none rounded" (click)="toggleMobileMenu()">
       <i class="bi" [ngClass]="mobileMenuOpen ? 'bi-x-lg' : 'bi-list'"></i>
     </button>
   </div>
 
-  <!-- MOBILE DRAWER & ACCORDIONS -->
   <div class="mobile-drawer border-top p-3 d-lg-none" *ngIf="mobileMenuOpen">
     <div class="d-flex flex-column gap-2">
       <a routerLink="/" class="btn btn-light text-start py-2.5" (click)="mobileMenuOpen = false">Home</a>
@@ -87,7 +76,6 @@
 
       <a routerLink="/products" class="btn btn-light text-start py-2.5" (click)="mobileMenuOpen = false">Our Products</a>
 
-      <!-- Quick CTAs at bottom of Mobile Menu -->
       <hr class="my-3">
       <div class="row g-2">
         <div class="col-6"><a routerLink="/login" class="btn btn-outline-primary w-100 py-2" (click)="mobileMenuOpen = false">Sign In</a></div>
@@ -97,9 +85,7 @@
   </div>
 </nav>
 
-<!-- ───────────────── DIALOGS / MODALS ───────────────── -->
 
-<!-- Quotation Request Modal -->
 <div class="modal-backdrop-glass fade-in" *ngIf="showQuoteModal">
   <div class="modal-wrap p-4 bg-white rounded-4 border shadow-lg">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -149,7 +135,6 @@
   </div>
 </div>
 
-<!-- Global Search Modal -->
 <div class="modal-backdrop-glass fade-in" *ngIf="showSearchModal">
   <div class="modal-wrap p-4 bg-white rounded-4 border shadow-lg" style="max-width: 450px;">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -163,7 +148,6 @@
   </div>
 </div>
 
-<!-- Tracking Result Modal Overlay -->
 <div class="modal-backdrop-glass fade-in" *ngIf="showTrackingResult">
   <div class="modal-wrap p-4 bg-white rounded-4 border shadow-lg" style="max-width: 480px;">
     <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">

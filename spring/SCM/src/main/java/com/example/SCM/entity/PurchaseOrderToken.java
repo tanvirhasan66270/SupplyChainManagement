@@ -33,7 +33,6 @@ public class PurchaseOrderToken {
 
     private LocalDateTime deletedAt;
 
-    // Purchase Order History
     private Long purchaseOrderId;
 
     private String poNumber;

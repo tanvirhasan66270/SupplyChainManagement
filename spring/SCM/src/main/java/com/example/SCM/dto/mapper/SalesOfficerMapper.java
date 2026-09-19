@@ -52,9 +52,7 @@ public class SalesOfficerMapper {
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
 
-        // =========================
-        // LOCATION INFORMATION
-        // =========================
+
         if (entity.getPoliceStation() != null) {
 
             PoliceStation ps = entity.getPoliceStation();

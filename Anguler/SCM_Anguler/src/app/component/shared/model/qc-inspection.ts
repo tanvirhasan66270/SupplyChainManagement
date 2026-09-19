@@ -1,6 +1,6 @@
 
 export interface QCChecklistRequestModel {
-  inspectionId?: number; // Parent FK Link Vector
+  inspectionId?: number; 
   checkpointName: string;
   isPassed: boolean;
   remarks: string;
@@ -8,11 +8,11 @@ export interface QCChecklistRequestModel {
 
 
 export interface QCChecklistResponseModel {
-  id: number; // Database Generated PK
+  id: number; 
   checkpointName: string;
   isPassed: boolean;
   remarks: string;
-  createdAt: string; // Temporal DateTime ISO ISOString
+  createdAt: string; 
   updatedAt: string;
   inspectionId: number;
   inspectionType: string;
@@ -20,7 +20,7 @@ export interface QCChecklistResponseModel {
 
 
 export interface QCInspectionRequestModel {
-  id?: number; // নতুন ডাটার ক্ষেত্রে অপশনাল, আপডেটের ক্ষেত্রে এটি প্রাইমারি কি হিসেবে ব্যবহৃত হবে
+  id?: number; 
   grnId: number;
   productId: number;
   inspectionType: string; // e.g., 'VISUAL', 'LAB_TEST'
@@ -31,8 +31,8 @@ export interface QCInspectionRequestModel {
   result: 'GOOD' | 'VERY_GOOD' | 'AVERAGE' | 'BAD' | string;
   certificateRef: string;
   labTestReport: string;
-  inspectedAt: string; // Format Pattern: YYYY-MM-DD
-  checklists: QCChecklistRequestModel[]; // চাইল্ড কালেকশন চেইন
+  inspectedAt: string; 
+  checklists: QCChecklistRequestModel[]; 
 }
 
 
@@ -49,7 +49,7 @@ export interface QCInspectionResponseModel {
   createdAt: string;
   updatedAt: string;
   
-  // --- Flattened Relations for UI Layout ---
+  
   grnId: number;
   grnNumber: string;
   productId: number;
@@ -57,5 +57,5 @@ export interface QCInspectionResponseModel {
   inspectedBy: number;
   inspectedByName: string;
   
-  checklists: QCChecklistResponseModel[]; //  ফিক্সড টাইমস্ট্যাম্প সহ চাইল্ড রেসপন্স লিস্ট
+  checklists: QCChecklistResponseModel[]; 
 }

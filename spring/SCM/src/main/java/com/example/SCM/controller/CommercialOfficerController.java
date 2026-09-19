@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/commercial-officer")
 @RequiredArgsConstructor
-//@PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
 public class CommercialOfficerController {
 
     private final CommercialOfficerService officerService;

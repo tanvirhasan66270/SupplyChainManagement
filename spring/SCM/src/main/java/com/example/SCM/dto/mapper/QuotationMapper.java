@@ -83,7 +83,6 @@ public class QuotationMapper {
         dto.setAttachmentUrl(quotation.getAttachmentUrl());
         dto.setCreatedAt(quotation.getCreatedAt());
 
-        // Supplier Flattening
         if (quotation.getSupplier() != null) {
             dto.setSupplierId(quotation.getSupplier().getId());
             dto.setSupplierName(quotation.getSupplier().getName());
@@ -92,7 +91,7 @@ public class QuotationMapper {
 
         if (quotation.getPurchaseRequisition() != null) {
             dto.setPurchaseRequisitionId(quotation.getPurchaseRequisition().getId());
-            dto.setProductName(quotation.getProductName()); // ডাটাবেজে স্টোর হওয়া নামের স্ন্যাপশট
+            dto.setProductName(quotation.getProductName());
         }
 
         return dto;

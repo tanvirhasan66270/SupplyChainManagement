@@ -8,7 +8,7 @@ import { InvoiceRequestModel, InvoiceResponseModel } from '../component/shared/m
   providedIn: 'root',
 })
 export class InvoiceService {
-  private apiUrl = environment.apiUrl + 'invoices'; // Synced with @RequestMapping("/api/invoices")
+  private apiUrl = environment.apiUrl + 'invoices'; 
 
   constructor(private http: HttpClient) { }
 

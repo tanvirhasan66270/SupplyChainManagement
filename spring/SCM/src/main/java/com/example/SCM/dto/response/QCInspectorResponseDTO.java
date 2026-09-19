@@ -24,7 +24,6 @@ public class QCInspectorResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Flattened User (Source of Truth) Details ---
     private Long userId;
     private String name;
     private String email;

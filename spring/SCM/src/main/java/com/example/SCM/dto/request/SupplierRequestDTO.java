@@ -6,14 +6,12 @@ import lombok.Data;
 public class SupplierRequestDTO {
 
 
-    // User fields (auth account)
     private String name;
     private String email;
     private String phone;
     private String password;
 
 
-    // Supplier profile fields
 
     private String contactPerson;
     private String address;
@@ -26,7 +24,6 @@ public class SupplierRequestDTO {
     private int averageLeadTimeDays;
 
 
-    // policeStation where customer lives (optional)
     private Long policeStationId;
 
 

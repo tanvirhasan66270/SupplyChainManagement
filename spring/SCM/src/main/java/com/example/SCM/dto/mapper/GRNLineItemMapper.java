@@ -18,13 +18,11 @@ public class GRNLineItemMapper {
         dto.setQuantityOrdered(item.getQuantityOrdered());
         dto.setQuantityReceived(item.getQuantityReceived());
 
-        // Parent GRN Details Flattening
         if (item.getGoodsReceivedNote() != null) {
             dto.setGrnId(item.getGoodsReceivedNote().getId());
             dto.setGrnNumber(item.getGoodsReceivedNote().getGrnNumber());
         }
 
-        // Product Details Flattening
         if (item.getProduct() != null) {
             dto.setProductId(item.getProduct().getId());
             dto.setProductName(item.getProduct().getName());
@@ -41,7 +39,6 @@ public class GRNLineItemMapper {
         item.setQuantityOrdered(dto.getQuantityOrdered());
         item.setQuantityReceived(dto.getQuantityReceived());
 
-        // সার্ভিস লেয়ার থেকে লোড হওয়া অবজেক্ট রিলেশন রিলিংকিং
         item.setGoodsReceivedNote(grn);
         item.setProduct(product);
 

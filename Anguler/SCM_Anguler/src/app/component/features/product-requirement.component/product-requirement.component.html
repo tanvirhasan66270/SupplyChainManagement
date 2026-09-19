@@ -16,7 +16,6 @@
     </div>
   </div>
 
-  <!-- Error Alert -->
   @if (errorMessage) {
   <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
     <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>Error:</strong> {{ errorMessage }}
@@ -24,7 +23,6 @@
   </div>
   }
 
-  <!-- Table Card -->
   <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -86,12 +84,10 @@
               <td class="text-end px-4">
                 <div class="d-flex justify-content-end gap-1">
 
-                  <!-- 📄 PDF — View document -->
                   <button class="btn btn-icon btn-light text-danger border-0" title="View PDF" (click)="openPdfModal(r)">
                     <i class="bi bi-file-earmark-pdf-fill fs-6"></i>
                   </button>
 
-                  <!-- 🛡️ Status Update — ADMIN + PROCUREMENT -->
                   @if (canUpdateStatus()) {
                   <button class="btn btn-icon btn-light text-success border-0 shadow-sm" title="Update Status"
                     (click)="openStatusModal(r)">
@@ -99,14 +95,12 @@
                   </button>
                   }
 
-                  <!-- ✏️ Edit — ADMIN সবসময়, LOGISTICS_OFFICER শুধু APPROVED ছাড়া -->
                   @if (canEdit(r)) {
                   <button class="btn btn-icon btn-light text-warning border-0" title="Edit" (click)="edit(r)">
                     <i class="bi bi-pencil-square"></i>
                   </button>
                   }
 
-                  <!-- 🗑️ Delete — শুধু ADMIN -->
                   @if (canDelete()) {
                   <button class="btn btn-icon btn-light text-danger border-0" title="Delete" (click)="delete(r.id)">
                     <i class="bi bi-trash-fill"></i>
@@ -131,14 +125,11 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-        MODAL CARD FORM: RECORD / EDIT PRODUCT REQUIREMENT
-  ════════════════════════════════════════════════════════════════ -->
+  
   <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(15, 23, 42, 0.65);" *ngIf="isDrawerOpen">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content border-0 rounded-4 shadow-2xl overflow-hidden" style="background: #ffffff;">
 
-        <!-- Dark Gradient Top Header -->
         <div class="modal-header px-4 py-3 border-0 d-flex justify-content-between align-items-center"
           style="background: linear-gradient(135deg, #1e1b4b 0%, #2e2870 50%, #3730a3 100%);">
           <div class="d-flex align-items-center gap-3">
@@ -158,12 +149,10 @@
           <button type="button" class="btn-close btn-close-white" style="opacity: 0.8;" (click)="closeDrawer()"></button>
         </div>
 
-        <!-- Form Body -->
         <div class="modal-body p-4 bg-white" style="max-height: 70vh; overflow-y: auto;">
           <form #reqForm="ngForm" (ngSubmit)="reqForm.valid && save()" id="productReqForm">
 
             <div class="row g-3 mb-3">
-              <!-- Product Name -->
               <div class="col-md-6">
                 <label class="form-label fw-bold small text-secondary">Product Item Name <span class="text-danger">*</span></label>
                 <div class="input-group">
@@ -178,7 +167,6 @@
                 }
               </div>
 
-              <!-- Customer Order Number -->
               <div class="col-md-6">
                 <label class="form-label fw-bold small text-secondary">Customer Order Number</label>
                 <div class="input-group">
@@ -191,7 +179,6 @@
             </div>
 
             <div class="row g-3 mb-3">
-              <!-- Quantity -->
               <div class="col-md-6">
                 <label class="form-label fw-bold small text-secondary">Movement Quantity <span class="text-danger">*</span></label>
                 <div class="input-group">
@@ -206,7 +193,6 @@
                 }
               </div>
 
-              <!-- Unit -->
               <div class="col-md-6">
                 <label class="form-label fw-bold small text-secondary">Packaging Unit</label>
                 <select class="form-select bg-light fs-7" [(ngModel)]="form.unit" name="unit">
@@ -216,7 +202,6 @@
             </div>
 
             <div class="row g-3 mb-3">
-              <!-- Urgency Level -->
               <div class="col-md-6">
                 <label class="form-label fw-bold small text-secondary">Urgency Priority Level</label>
                 <select class="form-select bg-light fs-7 fw-bold" [(ngModel)]="form.urgencyLevel" name="urgencyLevel">
@@ -224,7 +209,6 @@
                 </select>
               </div>
 
-              <!-- Target Price Range -->
               <div class="col-md-6">
                 <label class="form-label fw-bold small text-secondary">Target Price Range</label>
                 <div class="input-group">
@@ -236,7 +220,6 @@
               </div>
             </div>
 
-            <!-- Officer Name (Single field kept for requesting officer display) -->
             <div class="mb-3">
               <label class="form-label fw-bold small text-secondary">
                 Requesting Officer Name <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-1" style="font-size: 10px;">Auto-filled</span>
@@ -249,7 +232,6 @@
               </div>
             </div>
 
-            <!-- Description -->
             <div class="mb-3">
               <label class="form-label fw-bold small text-secondary">Product Specification & Details</label>
               <textarea class="form-control bg-light fs-7" rows="2"
@@ -257,7 +239,6 @@
                 placeholder="Product technical specifications, grade, measurements, brand requirements..."></textarea>
             </div>
 
-            <!-- Remarks & Audit Notes -->
             <div class="mb-2">
               <label class="form-label fw-bold small text-secondary">Remarks & Audit Notes</label>
               <textarea class="form-control bg-light fs-7" rows="2"
@@ -274,7 +255,6 @@
           </form>
         </div>
 
-        <!-- Modal Footer -->
         <div class="modal-footer bg-light px-4 py-3 border-top d-flex justify-content-end align-items-center gap-2">
           <button type="button" class="btn btn-light px-4 fw-semibold text-secondary rounded-pill border-0" (click)="closeDrawer()">
             Cancel
@@ -292,9 +272,7 @@
   </div>
   <div class="modal-backdrop fade show" *ngIf="isDrawerOpen"></div>
 
-  <!-- ═══════════════════════════════════════════════════
-        PDF Preview Modal
-  ═══════════════════════════════════════════════════ -->
+ 
   <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.65);"
     *ngIf="isPdfModalOpen">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -308,11 +286,9 @@
         </div>
 
         <div class="modal-body bg-light p-4 d-flex justify-content-center">
-          <!-- Printable Document -->
           <div #pdfContainer class="bg-white p-5 shadow-sm rounded-3 border"
             style="width: 794px; font-family: Arial, sans-serif; color: #000; line-height: 1.7;">
 
-            <!-- Company Header -->
             <div class="text-center mb-4 pb-3 border-bottom">
               <h1 class="fw-bold mb-0"
                 style="letter-spacing: 3px; font-size: 34px; font-family: 'Segoe UI', sans-serif;">
@@ -332,7 +308,6 @@
               </div>
             </div>
 
-            <!-- Document Title -->
             <div class="text-center mb-4">
               <h3 class="fw-bold text-dark mb-1" style="letter-spacing: 1px;">PRODUCT REQUIREMENT REQUEST</h3>
               <p class="text-muted small mb-0">
@@ -341,7 +316,6 @@
               </p>
             </div>
 
-            <!-- Info Grid -->
             <div class="row g-3 mb-4 fs-7 bg-light p-3 rounded border border-secondary-subtle">
               <div class="col-6">
                 <span class="text-uppercase font-monospace text-secondary fs-8 d-block fw-bold mb-2">Request Details</span>
@@ -371,7 +345,6 @@
               </div>
             </div>
 
-            <!-- Description -->
             <div class="mb-4">
               <h6 class="fw-bold text-dark border-bottom pb-2 mb-2" style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
                 Product Description / Specification
@@ -381,7 +354,6 @@
               </p>
             </div>
 
-            <!-- Procurement Remarks -->
             @if (selectedForPdf?.procurementRemarks) {
             <div class="mb-4">
               <h6 class="fw-bold text-dark border-bottom pb-2 mb-2" style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
@@ -393,7 +365,6 @@
             </div>
             }
 
-            <!-- Signature Section -->
             <div style="display: flex; justify-content: space-between; margin-top: 60px; padding-top: 20px; border-top: 1px solid #ddd;">
               <div style="width: 30%; text-align: center;">
                 <div style="border-top: 1px solid #000; width: 90%; margin: 0 auto 5px;"></div>
@@ -412,7 +383,6 @@
               </div>
             </div>
 
-            <!-- Footer -->
             <div class="text-center mt-4 pt-3 border-top text-muted" style="font-size: 10px;">
               <p class="mb-0">This is a system-generated Product Requirement document from SCM Enterprise Logistics Node.</p>
             </div>
@@ -432,9 +402,7 @@
   </div>
   <div class="modal-backdrop fade show" *ngIf="isPdfModalOpen"></div>
 
-  <!-- ═══════════════════════════════════════════════════
-        Status Update Modal
-  ═══════════════════════════════════════════════════ -->
+  
   <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);"
     *ngIf="isStatusModalOpen">
     <div class="modal-dialog modal-dialog-centered">

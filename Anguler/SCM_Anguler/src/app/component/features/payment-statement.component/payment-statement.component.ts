@@ -183,9 +183,7 @@ export class PaymentStatementComponent implements OnInit {
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     } else {
-      // Backend expects 'image' part. We provide an empty blob if optional in edit, but for ADD it might be required.
-      // The controller says @RequestPart("image") without required=false for ADD, so it might fail if null.
-      // We'll append an empty blob if no file to avoid bad request, though user should really select a file.
+    
       formData.append('image', new Blob([], { type: 'application/octet-stream' }), 'empty.png');
     }
 

@@ -66,7 +66,6 @@ public class GoodsReceivedNoteMapper {
 
     public GoodsReceivedNote toEntity(GoodsReceivedNoteRequestDTO dto, PurchaseOrder po, Product product, User receivedBy, Warehouse warehouse, User inspectedBy) {
 
-        // Create Note Entity
         GoodsReceivedNote grn = new GoodsReceivedNote();
 
         grn.setReceivedQuantity(dto.getReceivedQuantity());

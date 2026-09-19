@@ -23,15 +23,12 @@ public class QuotationResponseDTO {
     private String attachmentUrl;
     private LocalDateTime createdAt;
 
-    // Flattened Supplier Details
     private Long supplierId;
     private String supplierName;
     private String email;
 
-    // Auto-loaded via Purchase Requisition Framework
     private Long productIds;
     private String productName;
 
-    // Flattened Purchase Requisition Details
     private Long purchaseRequisitionId;
 }

@@ -95,7 +95,6 @@ export class CustomerOrderComponent implements OnInit {
     }
 
     this.loadOrders();
-    // this.loadCustomers();
     this.loadProducts();
 
     setTimeout(() => {
@@ -137,7 +136,7 @@ export class CustomerOrderComponent implements OnInit {
     });
   }
 
-  // Live Calculation Helpers
+  // Calculation Helper
   calculateItemSubtotal(): number {
     let subtotal = 0;
     for (let item of this.order.items) {
@@ -270,8 +269,6 @@ export class CustomerOrderComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  // Role-based filtered orders:
-  // MANAGER এবং LOGISTICS_OFFICER PENDING orders দেখতে পাবে না
   get filteredOrders(): CustomerOrderResponseModel[] {
     const restrictedRoles = ['MANAGER', 'LOGISTICS_OFFICER'];
     if (restrictedRoles.includes(this.userRole)) {

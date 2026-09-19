@@ -28,7 +28,6 @@ public class ShipmentMapper {
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
 
-        // PurchaseOrder Fields mapping
         if (entity.getPurchaseOrder() != null) {
             PurchaseOrder po = entity.getPurchaseOrder();
             dto.setPoId(po.getId());
@@ -36,7 +35,6 @@ public class ShipmentMapper {
             dto.setPoTotalAmount(po.getTotalAmount());
         }
 
-        // Supplier Fields mapping
         if (entity.getSupplier() != null) {
             Supplier s = entity.getSupplier();
             dto.setSupplierId(s.getId());

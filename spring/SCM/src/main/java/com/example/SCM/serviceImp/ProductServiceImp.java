@@ -52,7 +52,6 @@ public class ProductServiceImp implements ProductService {
         return "UNKNOWN_USER";
     }
 
-    // from application.properties upload deractory path loaded
     @Value("${image.upload.dir}")
     private String uploadDir;
 
@@ -64,7 +63,6 @@ public class ProductServiceImp implements ProductService {
             throw new IllegalArgumentException("Product request data cannot be null");
         }
 
-        // duplicate product check
         if (dto.getProductCode() != null && !dto.getProductCode().trim().isEmpty()) {
             Optional<Product> existingProduct = productRepository.findByProductCode(dto.getProductCode());
             if (existingProduct.isPresent()) {
@@ -72,7 +70,6 @@ public class ProductServiceImp implements ProductService {
             }
         }
 
-        // finding relasional catagory from database
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found with ID: " + dto.getCategoryId()));
 
@@ -82,11 +79,9 @@ public class ProductServiceImp implements ProductService {
             dto.setImage(uploadedFileName);
         }
 
-        //Mapper from Entity- convert and database save (with weight )
         Product product = productMapper.toEntity(dto, category);
         Product savedProduct = productRepository.save(product);
 
-       //Activity log
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -196,7 +191,6 @@ public class ProductServiceImp implements ProductService {
 
         productRepository.delete(product);
 
-        //Activity log
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -220,7 +214,6 @@ public class ProductServiceImp implements ProductService {
                 Files.createDirectories(path);
             }
 
-            //  (.png, .jpg etc) extract
             String ext = "";
             String original = file.getOriginalFilename();
             if (original != null && original.contains(".")) {

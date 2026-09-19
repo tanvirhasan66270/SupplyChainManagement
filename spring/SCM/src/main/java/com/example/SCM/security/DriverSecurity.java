@@ -14,11 +14,7 @@ public class DriverSecurity {
 
     private final DriverRepository driverRepository;
 
-    /**
-     * Returns true only if the currently authenticated user IS the driver
-     * identified by requestedId. Used to let a driver view/edit their own
-     * profile without granting access to other drivers' records.
-     */
+
     public boolean isSelf(Long requestedId, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated() || requestedId == null) {
             return false;

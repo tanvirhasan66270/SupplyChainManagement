@@ -47,7 +47,6 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     @Value("${image.upload.dir}")
     private String uploadDir;
 
-    // Dynamically resolves current active user or system actor
 
     private String resolveCurrentUserId() {
         String userId = request.getHeader("X-User-Id");
@@ -94,7 +93,6 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
             sendInitPaymentVerificationEmail(savedOrder, inputPaid);
         }
 
-        //  ACTIVITY LOG: CREATE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -131,7 +129,6 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
 
         sendOrderConfirmationEmail(updatedOrder);
 
-        //  ACTIVITY LOG: PAYMENT_CONFIRMATION
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -176,7 +173,6 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
         order.executeCalculations();
         CustomerOrder updatedOrder = orderRepository.save(order);
 
-        //  ACTIVITY LOG: UPDATE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -206,10 +202,8 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
             order.setStatus(newStatus);
 
             if (newStatus == CustomerOrderStatus.DELIVERED) {
-                // if paid full amount than Paid Amount update
                 double total = order.getTotalAmount();
                 order.setPaidAmount(String.valueOf(total));
-                // executeCalculations() if call it automatic Paid, Due = 0 and PaymentStatus = PAID that
                 order.executeCalculations();
             }
             else if (newStatus == CustomerOrderStatus.CANCELLED) {
@@ -228,7 +222,6 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
 
         CustomerOrder updatedOrder = orderRepository.save(order);
 
-        //  ACTIVITY LOG: STATUS_UPDATE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -252,12 +245,10 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
 
     @Override
     public List<CustomerOrderResponseDTO> findByCustomerUsername(String username) {
-        // 1. রিপোজিটরি থেকে ইউজারের নাম দিয়ে অর্ডারগুলো কুয়েরি করে আনা
         List<CustomerOrder> orders = orderRepository.findByCustomerEmail(username);
 
-        // 2. অর্ডার লিস্টকে DTO-তে রূপান্তর করে রিটার্ন করা
         return orders.stream()
-                .map(orderMapper::convertTOResponseDTO) // আপনার প্রজেক্টের সঠিক ম্যাপার মেথড এখানে ব্যবহার করবেন
+                .map(orderMapper::convertTOResponseDTO)
                 .toList();
     }
 
@@ -275,7 +266,6 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
 
         orderRepository.delete(order);
 
-        //  ACTIVITY LOG: DELETE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,

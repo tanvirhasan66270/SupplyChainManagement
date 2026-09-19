@@ -85,35 +85,29 @@ export class CommercialDashboardComponent implements OnInit {
   paymentStatusMessage: string | null = null;
   imgUrl = environment.imgUrl;
 
-  // Customer Orders Master View Modal States
   isCustomerOrderModalOpen = false;
   customerOrdersList: CustomerOrderResponseModel[] = [];
   customerOrderMasterSearchTerm = '';
   customerOrderMasterLoading = false;
 
-  // Commercial Invoices Master View Modal States
   isInvoiceModalOpen = false;
   invoicesList: InvoiceResponseModel[] = [];
   invoiceMasterSearchTerm = '';
   invoiceMasterLoading = false;
 
-  // Shipping & Cargo Master View Modal States
   isShippingModalOpen = false;
   shipmentsMasterList: ShipmentResponseModel[] = [];
   shipmentMasterSearchTerm = '';
   shipmentMasterLoading = false;
 
-  // LC Registry Master View Modal States
   isLcRegistryModalOpen = false;
   lcRegistrySearchTerm = '';
 
-  // PO Line Items Modal States
   isLineItemsModalOpen = false;
   lineItemsList: POLineItemResponseDTO[] = [];
   lineItemsLoading = false;
   lineItemsSearchTerm = '';
 
-  // Add New LC Modal States
   isAddLcModalOpen = false;
   lcPurchaseOrders: any[] = [];
   lcSuppliers: any[] = [];
@@ -364,7 +358,6 @@ export class CommercialDashboardComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  // Payment Verification Modal Methods
   openPaymentModal(): void {
     this.isPaymentModalOpen = true;
     this.paymentStatusMessage = null;
@@ -404,7 +397,6 @@ export class CommercialDashboardComponent implements OnInit {
     });
   }
 
-  // Customer Orders Master View Modal Methods
   openCustomerOrdersModal(): void {
     this.isCustomerOrderModalOpen = true;
     this.customerOrderMasterSearchTerm = '';
@@ -442,7 +434,6 @@ export class CommercialDashboardComponent implements OnInit {
     );
   }
 
-  // Commercial Invoices Master View Modal Methods
   openInvoiceModal(): void {
     this.isInvoiceModalOpen = true;
     this.invoiceMasterSearchTerm = '';
@@ -480,7 +471,6 @@ export class CommercialDashboardComponent implements OnInit {
     );
   }
 
-  // Shipping & Cargo Master View Modal Methods
   openShippingModal(): void {
     this.isShippingModalOpen = true;
     this.shipmentMasterSearchTerm = '';
@@ -656,7 +646,6 @@ export class CommercialDashboardComponent implements OnInit {
     URL.revokeObjectURL(url);
   }
 
-  // Add New LC Modal Methods
   openAddLcModal(): void {
     this.isAddLcModalOpen = true;
     this.lcFormSuccessMessage = null;
@@ -737,7 +726,6 @@ export class CommercialDashboardComponent implements OnInit {
     });
   }
 
-  // LC Registry Master View Modal Methods
   openLcRegistryModal(): void {
     this.isLcRegistryModalOpen = true;
     this.lcRegistrySearchTerm = '';
@@ -764,7 +752,6 @@ export class CommercialDashboardComponent implements OnInit {
     );
   }
 
-  // PO Line Items Modal Methods
   openLineItemsModal(): void {
     this.isLineItemsModalOpen = true;
     this.lineItemsLoading = true;

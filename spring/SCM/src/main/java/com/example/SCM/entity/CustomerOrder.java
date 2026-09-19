@@ -74,7 +74,6 @@ public class CustomerOrder {
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    // ── Zone management / Object Relations ───────────────────────
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
@@ -83,7 +82,6 @@ public class CustomerOrder {
     @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderLineItem> lineItems = new ArrayList<>();
 
-    // List of payment statements to track multiple payments
     @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PaymentStatement> paymentStatements = new ArrayList<>();
 

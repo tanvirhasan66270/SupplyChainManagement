@@ -1,6 +1,5 @@
 <div class="container-fluid py-4 px-4 bg-light min-vh-100">
 
-  <!-- Hub Management Headliner Banner -->
   <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
     <div>
       <h4 class="text-dark fw-bold mb-1"><i class="bi bi-journal-check text-primary me-2"></i>SCM EOD Operational Logs</h4>
@@ -11,14 +10,12 @@
     </button>
   </div>
 
-  <!-- Error Message Banner -->
   @if (errorMessage) {
     <div class="alert alert-danger shadow-sm mb-4 fs-7 font-monospace border-0 border-start border-danger border-3">
       <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
     </div>
   }
 
-  <!-- Data Frame Grid Table -->
   <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -105,7 +102,6 @@
     </div>
   </div>
 
-  <!-- Compose/Update Slide Drawer -->
   <div class="custom-drawer shadow-lg" [class.open]="isDrawerOpen">
     <div class="drawer-header bg-primary text-white p-4 d-flex justify-content-between align-items-center">
       <h5 class="fw-bold mb-0"><i class="bi bi-pencil-square me-2"></i>{{ isEdit ? 'Mutate Operation Log' : 'Deploy EOD Dispatch' }}</h5>
@@ -143,7 +139,6 @@
           <input type="number" class="form-control fs-7" [(ngModel)]="formModel.issuesLogged" name="issuesLogged" min="0" required>
         </div>
 
-        <!-- কাস্টমার স্টাইল ফাইল আপলোডার এবং ইমেজ লাইভ প্রিভিউ সেকশন -->
         <div class="mb-3">
           <label class="form-label fw-bold text-secondary text-uppercase fs-8">Attachment Proof Image</label>
           <div class="input-group">
@@ -178,6 +173,5 @@
     </div>
   </div>
 
-  <!-- Backdrop overlay -->
   @if (isDrawerOpen) { <div class="drawer-backdrop" (click)="closeDrawer()"></div> }
 </div>

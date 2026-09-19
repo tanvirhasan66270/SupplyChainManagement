@@ -44,19 +44,16 @@ public class PurchaseOrder {
     @Column(nullable = false)
     private PurchaseOrderStatus status = PurchaseOrderStatus.DRAFT;
 
-    // FK → Supplier ( auto Load from Quotation)
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id", nullable = false)
     private Supplier supplier;
 
-    // FK → PurchaseRequisition (auto Load from Quotation)
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "purchase_requisition_id", nullable = false)
     private PurchaseRequisition purchaseRequisition;
 
-    // FK → Quotation
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quotation_id", nullable = false)

@@ -86,7 +86,7 @@ public class QuotationServiceImp implements QuotationService {
 
             Quotation savedQuotation = quotationRepository.save(quotation);
 
-            // Send Notification to Procurement Managers
+
             try {
                 List<User> managers = userRepository.findByRole(Role.MANAGER);
                 for (User manager : managers) {
@@ -201,7 +201,6 @@ public class QuotationServiceImp implements QuotationService {
 
         Quotation updatedQuotation = quotationRepository.save(existingQuotation);
 
-        // Send Notification to Supplier
         try {
             if (updatedQuotation.getSupplier() != null && updatedQuotation.getSupplier().getUser() != null) {
                 notificationService.send(

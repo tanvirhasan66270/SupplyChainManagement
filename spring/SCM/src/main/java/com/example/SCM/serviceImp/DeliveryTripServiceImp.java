@@ -51,7 +51,6 @@ public class DeliveryTripServiceImp implements DeliveryTripService {
 
         sendTripAssignmentEmail(driver, savedTrip);
 
-        // Send notification to the driver
         try {
             if (driver.getUser() != null && driver.getUser().getId() != null) {
                 String recipientId = driver.getUser().getId().toString();
@@ -67,7 +66,6 @@ public class DeliveryTripServiceImp implements DeliveryTripService {
             System.err.println("Driver Notification Error: " + e.getMessage());
         }
 
-        // Send notification to the customer
         try {
             if (customer.getUser() != null && customer.getUser().getId() != null) {
                 String recipientId = customer.getUser().getId().toString();

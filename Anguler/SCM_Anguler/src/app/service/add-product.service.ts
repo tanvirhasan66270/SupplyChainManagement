@@ -22,7 +22,6 @@ export class AddProductService {
 
   save(product: ProductRequestModel, file: File | null): Observable<ProductResponseModel> {
     const formData = new FormData();
-    // ব্যাকএন্ডের @RequestPart("productJson") ম্যাচ করানোর জন্য JSON Blob তৈরি
     formData.append(
       "productJson",
       new Blob([JSON.stringify(product)], { type: "application/json" })

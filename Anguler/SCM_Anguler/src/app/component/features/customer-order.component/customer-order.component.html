@@ -45,7 +45,7 @@
                       'text-success': o.priority === 'NORMAL',
                       'text-warning': o.priority === 'HIGH',
                       'text-danger fw-bolder': o.priority === 'URGENT'
-                    }">⚡ {{ o.priority || 'NORMAL' }}</span>
+                    }"> {{ o.priority || 'NORMAL' }}</span>
               </td>
               <td>
                 <div class="fw-bold text-dark mb-0.5">{{ o.customerName }}</div>
@@ -81,7 +81,6 @@
                   </button>
 
                   @if (userRole !== 'CUSTOMER' && userRole !== 'LOGISTICS_OFFICER') {
-                  <!-- Status Update Icon Button -->
                   <button class="btn btn-icon btn-light text-success border-0 shadow-sm" title="Update Lifecycle Status"
                     (click)="openStatusModal(o)">
                     <i class="bi bi-shield-check fs-6"></i>
@@ -114,8 +113,7 @@
       </div>
     </div>
   </div>
-
-  <!-- PDF Preview Modal Window -->
+//PDF
   <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);"
     *ngIf="isPdfModalOpen">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -213,7 +211,6 @@
               </tbody>
             </table>
 
-            <!-- পেমেন্ট ও সামারি সেকশন -->
             <div class="row fs-8 mb-4 pt-2">
               <div class="col-6">
                 <p class="mb-2">Priority: <b class="text-uppercase text-danger">{{ selectedOrderForPdf?.priority }}</b>
@@ -322,7 +319,6 @@
   </div>
   <div class="modal-backdrop fade show" *ngIf="isPdfModalOpen"></div>
 
-  <!-- Status Update Modal Window -->
   <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);"
     *ngIf="isStatusModalOpen">
     <div class="modal-dialog modal-dialog-centered">
@@ -367,7 +363,6 @@
   </div>
   <div class="modal-backdrop fade show" *ngIf="isStatusModalOpen"></div>
 
-  <!-- Drawer Form -->
   <div class="custom-drawer shadow" [class.open]="isDrawerOpen">
     <div
       class="drawer-header d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-dark text-white">
@@ -380,7 +375,6 @@
     <div class="drawer-body px-4 py-3" style="overflow-y: auto; height: calc(100vh - 110px);">
       <form #orderForm="ngForm" (ngSubmit)="orderForm.valid && save()">
 
-        <!-- Target Customer Profile -->
         <div class="mb-3">
           <label class="form-label fw-bold small text-uppercase text-secondary">Target Customer Profile</label>
 
@@ -646,7 +640,6 @@
           </ul>
         </div>
 
-        <!-- Live Financial Calculation Summary Card -->
         <div class="card bg-light border p-3 mb-4 rounded-3 font-monospace">
           <h6 class="fw-bold text-dark small text-uppercase mb-2 pb-1 border-bottom">
             <i class="bi bi-calculator me-1 text-primary"></i> Order Financial Summary

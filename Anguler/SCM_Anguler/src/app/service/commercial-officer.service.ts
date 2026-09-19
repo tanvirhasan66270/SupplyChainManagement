@@ -27,7 +27,6 @@ export class CommercialOfficerService {
   save(officer: CommercialOfficerRequestModel, file: File | null): Observable<CommercialOfficerResponseModel> {
     const formData = new FormData();
     
-    // কন্ট্রোলারের String টাইপ রিকোয়েস্ট পার্টের জন্য সরাসরি স্ট্রিংফাই করে পাঠানো হলো
     formData.append("commercialOfficer", JSON.stringify(officer));
 
     if (file) {
@@ -40,7 +39,6 @@ export class CommercialOfficerService {
   update(id: number, officer: CommercialOfficerRequestModel, file: File | null): Observable<CommercialOfficerResponseModel> {
     const formData = new FormData();
     
-    // কন্ট্রোলারের String টাইপ রিকোয়েস্ট পার্টের জন্য সরাসরি স্ট্রিংফাই করে পাঠানো হলো
     formData.append("officer", JSON.stringify(officer));
 
     if (file) {

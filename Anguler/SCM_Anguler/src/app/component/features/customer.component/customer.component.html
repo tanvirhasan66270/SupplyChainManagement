@@ -1,6 +1,5 @@
 <div class="container-fluid py-4 px-4 bg-light min-vh-100">
 
-  <!-- Core Page Header Banner -->
   <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
     <div>
       <h4 class="text-dark fw-bold mb-1"><i class="bi bi-people-fill text-primary me-2"></i>Customer Registry Node</h4>
@@ -11,7 +10,6 @@
     </button>
   </div>
 
-  <!-- Data Display Frame Grid -->
   <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -83,10 +81,8 @@
     </div>
   </div>
 
-  <!-- Registration Modal -->
   <div class="registration-modal-overlay" [class.open]="isDrawerOpen">
     <div class="registration-modal">
-      <!-- Modal Header -->
       <div class="reg-modal-header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
           <div class="reg-modal-header-icon">
@@ -104,10 +100,8 @@
       </div>
 
       <form #customerForm="ngForm" (ngSubmit)="customerForm.valid && save()" class="d-flex flex-column" style="flex: 1; min-height: 0;">
-        <!-- Modal Body (Sidebar + Content) -->
         <div class="reg-modal-body">
           
-          <!-- Sidebar -->
           <div class="reg-sidebar d-none d-md-flex">
             <div class="stepper-item" [class.active]="currentStep === 1" [class.completed]="isStep1Complete()" (click)="setStep(1)">
               <div class="stepper-icon stepper-icon-1"><i class="bi" [class.bi-check-lg]="isStep1Complete() && currentStep !== 1" [class.bi-person-fill]="!(isStep1Complete() && currentStep !== 1)"></i></div>
@@ -146,16 +140,13 @@
             </div>
           </div>
 
-          <!-- Content Area -->
           <div class="reg-content">
-            <!-- Alerts -->
             <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm border-2 mb-4" role="alert">
               <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
               <div class="fs-7 fw-semibold">{{ errorMessage }}</div>
               <button type="button" class="btn-close small" (click)="errorMessage = null" aria-label="Close"></button>
             </div>
 
-            <!-- STEP 1: PERSONAL INFORMATION -->
             <div [class.d-none]="currentStep !== 1">
               <h6 class="section-title"><i class="bi bi-person-fill"></i> PERSONAL INFORMATION</h6>
 
@@ -244,7 +235,6 @@
             </div>
             </div>
 
-            <!-- STEP 2: GEOGRAPHIC NODE MAPPING -->
             <div [class.d-none]="currentStep !== 2">
             <h6 class="section-title pt-2"><i class="bi bi-map"></i> GEOGRAPHIC NODE MAPPING</h6>
 
@@ -302,7 +292,6 @@
               </div>
             </div>
 
-            <!-- STREET / AREA ADDRESS -->
             <h6 class="section-title border-top pt-4 mt-2"><i class="bi bi-house-door"></i> STREET / AREA ADDRESS</h6>
             <div class="mb-4">
               <div class="input-group reg-input-group">
@@ -317,7 +306,6 @@
             </div>
             </div>
 
-            <!-- STEP 3: PROFILE ATTACHMENT PROOF -->
             <div [class.d-none]="currentStep !== 3">
             <h6 class="section-title pt-2"><i class="bi bi-file-earmark-text"></i> PROFILE ATTACHMENT PROOF</h6>
             
@@ -350,7 +338,6 @@
           </div>
         </div>
         
-        <!-- Modal Footer -->
         <div class="reg-footer">
           <button type="button" class="btn btn-outline-secondary px-4 fs-7 bg-white me-auto" (click)="closeDrawer()">
             <i class="bi bi-x me-1"></i> Cancel

@@ -178,7 +178,6 @@ filteredRequisitions: any[] = [];
   loadAllData(): void {
     this.isLoading = true;
     let completed = 0;
-    // 🎯 টোটাল কল ১৪ করা হলো (Supplier সহ)
     const totalCalls = 14;
     const checkDone = () => {
       completed++;
@@ -203,7 +202,6 @@ filteredRequisitions: any[] = [];
     this.loadDailyReports(checkDone);
     this.loadSuppliers(checkDone);
     
-    // 🎯 পাইপলাইনে নতুন মেথডটি সেন্ট্রাললি এক্সিকিউট করা হলো
     this.loadPendingPurchaseOrders(checkDone);
   }
 
@@ -212,7 +210,6 @@ filteredRequisitions: any[] = [];
       next: (data) => {
         const invs = data || [];
         this.allInventory = invs;
-        // Define low stock as available quantity less than 50 (or any threshold)
         this.lowStockItems = invs.filter((i: any) => (i.availableQuantity || 0) < 50);
         
         const now = new Date();
@@ -351,7 +348,6 @@ filteredRequisitions: any[] = [];
     this.dailyReportService.approve(id).subscribe({
       next: () => {
         alert('Daily Report approved successfully!');
-        // Update local state to APPROVED
         const idx = this.dailyReports.findIndex(r => r.id === id);
         if (idx !== -1) {
             this.dailyReports[idx].reportStatus = 'APPROVED';
@@ -432,18 +428,15 @@ filteredRequisitions: any[] = [];
     });
   }
 
-  // 🎯 ড্রাফট ও পেন্ডিং পারচেজ অর্ডার ম্যাট্রিক্স লোডার
   loadPendingPurchaseOrders(done?: () => void) {
     this.poService.findAll().subscribe({
       next: (data) => {
         const allOrders = data || [];
         
-        // DRAFT বা PENDING স্ট্যাটাসের অর্ডার ফিল্টারিং
         const filteredPOs = allOrders.filter(
           po => po.status === 'DRAFT' || po.status === 'PENDING'
         );
 
-        // নাল সেফটিসহ ফিল্ড ম্যাপিং আর্কিটেকচার
         this.pendingPOs = filteredPOs.map((po: any) => ({
           id: po.id,
           poNumber: po.poNumber || `PO-#${po.id}`,
@@ -467,7 +460,6 @@ filteredRequisitions: any[] = [];
     this.poService.approve(id).subscribe({
       next: () => {
         alert('Purchase Order authorized successfully!');
-        // লাইভ ডাটা প্যানেল রিফ্রেশ
         this.pendingPOs = this.pendingPOs.filter(po => po.id !== id);
         this.cdr.markForCheck();
       },
@@ -843,7 +835,6 @@ filteredRequisitions: any[] = [];
       case 'INVENTORY': data = this.allInventory; break;
     }
 
-    // Apply specific Date and Month filters for PR and REPORT
     if (this.activeShortcut === 'PR' || this.activeShortcut === 'REPORT') {
       if (this.monthQuery && this.monthQuery !== 'All Months') {
         const monthIndex = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(this.monthQuery);
@@ -856,13 +847,10 @@ filteredRequisitions: any[] = [];
         }
       }
       if (this.dateQuery) {
-        // dateQuery comes from <input type="date"> which is YYYY-MM-DD
         data = data.filter(item => {
           const dateStr = this.activeShortcut === 'PR' ? (item.createdAt || item.requiredByDate) : item.reportDate;
           if (!dateStr) return false;
-          // compare local date string slice
           const itemDate = new Date(dateStr);
-          // adjust for timezone to get local YYYY-MM-DD
           const localISO = new Date(itemDate.getTime() - (itemDate.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
           return localISO === this.dateQuery;
         });

@@ -59,12 +59,10 @@ public class Supplier {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Auth account — source of truth for name, phone, email, password, role
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Where the supplier lives / prefers pickup
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "police_station_id")
     private PoliceStation policeStation;

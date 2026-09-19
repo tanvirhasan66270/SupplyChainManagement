@@ -47,7 +47,6 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
   vehicle: VehicleResponseModel | null = null;
   notifications: NotificationModel[] = [];
 
-  // Tracker Modal State
   showTrackerModal = false;
   searchTripId: string = '';
   searchedTrip: DeliveryTripResponseModel | null = null;
@@ -60,7 +59,6 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
   trackerSearchError: string | null = null;
   trackerContext: 'START' | 'COMPLETE' | null = null;
 
-  // --- VEHICLE SEARCH MODAL STATE ---
   showVehicleModal = false;
   vehicleSearchQuery = '';
   searchedVehicle: any = null;
@@ -68,7 +66,6 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
   vehicleSearchError: string | null = null;
   isSearchingVehicle = false;
 
-  // --- DRIVER VEHICLE STATUS MODAL ---
   isVehicleStatusModalOpen = false;
   driverVehicleStatusUpdateValue = 'AVAILABLE';
 
@@ -183,7 +180,6 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
     this.searchedTrip = null;
     this.trackerSearchError = null;
     
-    // Auto-select status based on what button they clicked
     this.trackerStatus = context === 'START' ? 'IN_TRANSIT' : 'DELIVERED';
     
     this.trackerSignatureFile = null;
@@ -203,7 +199,6 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
     this.trackerSearchError = null;
     this.searchedTrip = null;
     
-    // Extract only digits from the input (e.g. "TRIP-#2" -> "2")
     const numericStr = this.searchTripId.replace(/\D/g, '');
     const id = parseInt(numericStr, 10);
     
@@ -214,7 +209,6 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
 
     this.tripService.getById(id).subscribe({
       next: (trip) => {
-        // Relaxed validation for testing purposes: allow any found trip to be updated.
         if (trip) {
           if (trip.status === 'DELIVERED') {
             this.trackerSearchError = 'This trip is already DELIVERED and cannot be modified.';
@@ -281,9 +275,9 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
         this.searchedTrip = updatedTrip;
         alert('Trip status updated successfully!');
         if (this.driver) {
-          this.loadTrips(this.driver.id); // Reload background KPIs
+          this.loadTrips(this.driver.id); 
         }
-        this.closeTrackerModal(); // Auto close the modal
+        this.closeTrackerModal();
       },
       error: (err) => {
         this.isUpdatingTrip = false;
@@ -317,17 +311,14 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
     
     const query = this.vehicleSearchQuery.trim().toLowerCase();
 
-    // First fetch all vehicles
     this.vehicleService.findAll().subscribe({
       next: (vehicles) => {
-        // Try to match by plate number directly
         let foundVehicle = (vehicles || []).find(v => v.plateNumber?.toLowerCase() === query);
         
         if (foundVehicle) {
           this.searchedVehicle = foundVehicle;
           this.fetchDriverForSearchedVehicle(foundVehicle.driverId);
         } else {
-          // If not found by plate, try to find by driver email
           this.driverService.findAll().subscribe({
             next: (drivers) => {
               const matchingDriver = (drivers || []).find(d => d.email?.toLowerCase() === query);
@@ -384,12 +375,10 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
       }
     });
   }
-  // --------------------------------------
 
   loadTrips(driverId: number) {
     this.tripService.findAll().subscribe({
       next: (data) => {
-        // Relaxed validation for testing: Load all trips in the system instead of filtering by driverId
         this.driverAllTrips = data || [];
         this.calculateSummary();
 
@@ -466,7 +455,6 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
       createdAt: t.createdAt,
     }));
 
-    // Independent of TODAY/ALL mode, always show the latest 4 trips globally
     this.recentTrips = this.driverAllTrips.slice(0, 4).map((t: any) => ({
       destination: t.customerAddress || 'Unknown',
       load: t.remarks || 'Standard Load',

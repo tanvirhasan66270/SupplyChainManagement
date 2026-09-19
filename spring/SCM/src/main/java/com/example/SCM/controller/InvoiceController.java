@@ -18,7 +18,6 @@ public class InvoiceController {
 
     private final InvoiceService service;
 
-    // 1. Create New Invoice Ledger Node (POST)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'COMMERCIAL_OFFICER', 'SALES_OFFICER')")
     @PostMapping
@@ -27,7 +26,6 @@ public class InvoiceController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    //Mutate/Update Existing Invoice State Matrix (PUT)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'COMMERCIAL_OFFICER', 'SALES_OFFICER')")
     @PutMapping("/{id}")
@@ -35,7 +33,6 @@ public class InvoiceController {
         InvoiceResponseDTO response = service.update(id, dto);
         return ResponseEntity.ok(response);
     }
-    // Fetch All Invoices Register Dataset (GET)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'COMMERCIAL_OFFICER', 'SALES_OFFICER', 'CUSTOMER', 'PROCUREMENT')")
     @GetMapping
@@ -47,7 +44,6 @@ public class InvoiceController {
         return ResponseEntity.ok(list);
     }
 
-    // Fetch Invoice Instance Details By Unique Record ID (GET)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'COMMERCIAL_OFFICER', 'SALES_OFFICER', 'CUSTOMER', 'PROCUREMENT')")
     @GetMapping("/{id}")
@@ -58,7 +54,6 @@ public class InvoiceController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Wipe/Drop Invoice Lifecycle Instance Pointer (DELETE)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'COMMERCIAL_OFFICER', 'SALES_OFFICER')")
     @DeleteMapping("/{id}")

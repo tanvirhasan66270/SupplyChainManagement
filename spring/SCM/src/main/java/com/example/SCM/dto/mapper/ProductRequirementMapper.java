@@ -15,7 +15,6 @@ public class ProductRequirementMapper {
         if (dto == null) return null;
 
         ProductRequirement entity = new ProductRequirement();
-        // Auto-generate unique reference number
         entity.setRequestReferenceNo("PRQ-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         entity.setCustomerOrderNumber(dto.getCustomerOrderNumber());
         entity.setProductName(dto.getProductName());

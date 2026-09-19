@@ -5,7 +5,7 @@ export interface PurchaseOrderRequestModel {
   issuedBy: number;
   issuedByName?: string;
   totalAmount: number;
-  quantity: number; // এটি যোগ করুন
+  quantity: number; 
   currency: string;
   expectedDeliveryDate: string;
   status: string;

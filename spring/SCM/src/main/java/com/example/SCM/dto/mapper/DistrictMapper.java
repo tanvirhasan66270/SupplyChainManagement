@@ -22,7 +22,6 @@ public class DistrictMapper {
         dto.setDistrictCode(entity.getDistrictCode());
         dto.setActive(entity.getActive());
 
-        // Division & Country Flattening
         if (entity.getDivision() != null) {
             dto.setDivisionId(entity.getDivision().getId());
             dto.setDivisionName(entity.getDivision().getName());
@@ -31,10 +30,9 @@ public class DistrictMapper {
             }
         }
 
-        // Child Police Stations Mapping
         if (entity.getPoliceStations() != null) {
             dto.setPoliceStations(entity.getPoliceStations().stream()
-                    .map(PoliceStation::getName) // আপনার PoliceStation এনটিটির নাম ফিল্ড অনুযায়ী
+                    .map(PoliceStation::getName)
                     .collect(Collectors.toList()));
         }
         return dto;

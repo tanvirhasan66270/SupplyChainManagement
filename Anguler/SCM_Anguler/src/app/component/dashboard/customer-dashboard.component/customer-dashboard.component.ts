@@ -48,13 +48,11 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
   showSettings = false;
   loading = true;
 
-  // Track Product Modal States
   isTrackModalOpen = false;
   searchTrackingCode = '';
   trackedResult: CustomerOrderResponseModel | null = null;
   trackSearched = false;
 
-  // Quick Invoice Search Modal States
   isInvoiceModalOpen: boolean = false;
   searchInvoiceOrderNumber: string = '';
   invoiceSearchResult: InvoiceResponseModel | null = null;
@@ -63,7 +61,6 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
   invoiceSearchLoading: boolean = false;
   invoiceSearchError: string | null = null;
 
-  // Invoice History & Statement States
   isStatementCardOpen: boolean = false;
   searchStatementOrderId: string = ''; 
   statementData: any = null;
@@ -73,7 +70,6 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
   isImageModalOpen = false;
   selectedPaymentForImage: PaymentStatementResponse | null = null;
 
-  // Add Payment Modal States
   isPaymentModalOpen = false;
   paymentSearchOrderNumber = '';
   paymentOrderDetails: CustomerOrderResponseModel | null = null;
@@ -82,7 +78,6 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
   paymentFile: File | null = null;
   paymentErrorMessage: string | null = null;
 
-  // Place New Order Inline Form States
   showOrderFormOnly = false;
   products: any[] = [];
   currentProduct: any = null;
@@ -178,7 +173,6 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Track Product Modal Methods
   openTrackModal(): void {
     this.isTrackModalOpen = true;
     this.searchTrackingCode = '';
@@ -202,7 +196,6 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
   billingSearchResult: any = null;
   billingSearched = false;
 
-  // Billing Ledger Modal Methods
   openBillingModal(): void {
     this.isBillingModalOpen = true;
     this.searchBillingCode = '';
@@ -307,11 +300,9 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
     this.invoiceSearchResult = null;
     this.invoiceSearchOrder = null;
 
-    // First try tracking the order by orderNumber
     this.orderService.trackOrder(queryTerm).subscribe({
       next: (order) => {
         this.invoiceSearchOrder = order;
-        // Fetch all invoices to match exact backend invoice entity
         this.invoiceService.findAll().subscribe({
           next: (invoices) => {
             const foundInvoice = (invoices || []).find(
@@ -383,7 +374,6 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
         });
       },
       error: () => {
-        // Fallback: search invoices directly by queryTerm
         this.invoiceService.findAll().subscribe({
           next: (invoices) => {
             const foundInvoice = (invoices || []).find(
@@ -618,7 +608,6 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Fetch Invoice & Order details
     this.invoiceService.findAll().subscribe({
       next: (invoices) => {
         this.orderService.findAll().subscribe({

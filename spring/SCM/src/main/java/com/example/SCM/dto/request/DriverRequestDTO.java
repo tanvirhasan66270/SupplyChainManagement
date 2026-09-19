@@ -20,7 +20,6 @@ public class DriverRequestDTO {
     private Double totalEarnings = 0.0;
        private String image;
 
-    // Auth Platform Security
     private String password;
 
     private Long policeStationId;

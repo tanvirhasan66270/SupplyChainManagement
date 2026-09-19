@@ -39,13 +39,12 @@ export class DeliveryTripComponent implements OnInit {
 
   userRole: string = '';
 
-  // PDF Preview States
+  // PDF 
   isPdfModalOpen = false;
   selectedTripForPdf: DeliveryTripResponseModel | null = null;
   @ViewChild('pdfPreviewContainer') pdfPreviewContainer!: ElementRef;
   readonly imageBaseUrl = environment.imgUrl;
 
-  // Missing Document Upload Modal States
   isUploadModalOpen = false;
   selectedTripForUpload: DeliveryTripResponseModel | null = null;
 

@@ -19,7 +19,6 @@
   </div>
   }
 
-  <!-- Order Selection & Search Filter -->
   <div class="card mb-4 shadow-sm border-0 bg-light">
     <div class="card-body">
       <div class="row align-items-center g-3">
@@ -130,7 +129,6 @@
     </div>
   </div>
 
-  <!-- Status Update Modal -->
   <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);" *ngIf="isStatusModalOpen">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content shadow-lg border-0 rounded-4">
@@ -166,7 +164,6 @@
   </div>
   <div class="modal-backdrop fade show" *ngIf="isStatusModalOpen"></div>
 
-  <!-- Drawer Form for Add/Edit -->
   <div class="offcanvas offcanvas-end shadow" [class.show]="isDrawerOpen" [style.visibility]="isDrawerOpen ? 'visible' : 'hidden'" style="width: 520px;">
     <div class="offcanvas-header bg-dark text-white px-4 py-3 border-bottom">
       <h5 class="offcanvas-title fw-bold mb-0">
@@ -225,7 +222,6 @@
   <div class="offcanvas-backdrop fade show" (click)="closeDrawer()"></div>
   }
 
-  <!-- Image Card View Modal -->
   <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);" *ngIf="isImageModalOpen">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden">

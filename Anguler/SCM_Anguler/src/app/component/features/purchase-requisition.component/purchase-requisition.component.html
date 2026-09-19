@@ -44,14 +44,12 @@
 
   </div>
 
-  <!-- Global Exception/Error Logger Alerts -->
   @if (errorMessage) {
     <div class="alert alert-danger shadow-sm border-2 mb-4 fs-7" role="alert">
       <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>Core Fault:</strong> {{ errorMessage }}
     </div>
   }
 
-  <!-- (filteredRequisitions)-->
   <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -145,7 +143,6 @@
     </div>
   </div>
 
-  <!-- Sliding Input Drawer Framework -->
   @if (userRole !== 'SUPPLIER') {
     <div class="slide-drawer shadow" [class.show]="isDrawerOpen">
       <div class="drawer-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
@@ -275,7 +272,7 @@
     }
   }
 
-  <!-- PDF Preview Modal -->
+  <!-- PDF  Modal -->
   <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);" *ngIf="isPdfModalOpen">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content shadow-lg border-0 rounded-4">

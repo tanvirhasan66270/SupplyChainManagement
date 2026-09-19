@@ -10,5 +10,5 @@ export interface ActivityLogModel {
   newValue?: string;
   actionStatus: 'SUCCESS' | 'FAILED' | string;
   ipAddress?: string;
-  performedAt: string; // ISO DateTime String
+  performedAt: string; 
 }

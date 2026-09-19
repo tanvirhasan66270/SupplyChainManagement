@@ -4,7 +4,6 @@
     <div class="brand-title">
       <span class="scm-blue">S</span><span class="scm-green">C</span><span class="scm-blue">M</span>
     </div>
-    <!-- এসসিএম লেখার ঠিক মাঝ বরাবর এবং সুন্দর সাইজের এন্টারপ্রাইজ টেক্সট -->
     <div class="brand-subtitle">
       <span class="line"></span>
       <span class="text">ENTERPRISE</span>
@@ -15,19 +14,15 @@
   
 </div>
 
-  <!-- Navigation -->
   <div class="sidebar-nav">
-    <!-- Dashboard -->
     <div class="nav-section">
       <div class="nav-section-label">Main</div>
       
-      <!-- Normal Dashboard Link for Non-Admin -->
       <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" *ngIf="activeRole !== 'ADMIN'">
         <i class="bi bi-grid-1x2-fill"></i>
         <span>Dashboard</span>
       </a>
 
-      <!-- Dashboards Menu for Admin -->
       <ng-container *ngIf="activeRole === 'ADMIN'">
         <button type="button" class="nav-item nav-toggle" (click)="toggleDashboardsMenu()">
           <i class="bi bi-grid-1x2-fill"></i>

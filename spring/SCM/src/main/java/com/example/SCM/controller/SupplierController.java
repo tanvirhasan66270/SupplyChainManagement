@@ -53,8 +53,6 @@ public class SupplierController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SUPPLIER', 'PROCUREMENT', 'COMMERCIAL_OFFICER', 'SALES_OFFICER', 'LOGISTICS_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'CUSTOMER')")
     @GetMapping
-//    @PreAuthorize("hasRole('ADMIN') or @supplierSecurity.isSelfUser(#id, authentication)")
-
     public ResponseEntity<List<SupplierResponseDTO>> getAll() {
         List<SupplierResponseDTO> list = supplierService.findAll();
         if (list.isEmpty()) {

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class InvoiceResponseDTO {
     private Long id;
     private String invoiceNumber;
-    private Long customerOrderId;      // TS: CustomerOrderId
+    private Long customerOrderId;
     private String customerEmail;
     private Long salesOfficerId;
     private String issuedToName;

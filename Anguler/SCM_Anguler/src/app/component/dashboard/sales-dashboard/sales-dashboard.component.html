@@ -1,6 +1,5 @@
 <div class="dashboard-container bg-light min-vh-100 p-4 font-sans">
   
-  <!-- 1. Header Section -->
   <div class="dashboard-header bg-white p-4 rounded-4 shadow-sm border mb-4 d-flex justify-content-between align-items-center">
     <div>
       <div class="d-flex align-items-center gap-2 mb-1">
@@ -17,9 +16,7 @@
     </div>
   </div>
 
-  <!-- 2. KPI 6 Cards Row -->
   <div class="row g-3 mb-4">
-    <!-- Total Revenue -->
     <div class="col-xl-2 col-md-4 col-sm-6">
       <div class="card border-0 shadow-sm p-3 rounded-4 bg-white h-100 d-flex flex-column justify-content-between">
         <div>
@@ -141,7 +138,7 @@
     </div>
   </div>
 
-  <!-- 3. Quick Action Cards Row -->
+  <!-- Quick Action Cards Row -->
   <div class="row g-3 mb-4">
     <div class="col-xl-2 col-md-4 col-sm-6">
       <a href="javascript:void(0);" (click)="openModal('quotations')" class="card border-0 shadow-sm px-2 py-2 rounded-4 bg-white text-decoration-none h-100 d-flex flex-row align-items-center gap-2 cursor-pointer">
@@ -278,7 +275,7 @@
     </div>
   </div>
 
-  <!-- 4. Charts & Monthly Target Row -->
+  <!--  Charts & Monthly Target Row -->
   <div class="row g-4 mb-4 align-items-stretch">
     <!-- Sales Overview Chart Card -->
     <div class="col-lg-7 col-md-12">
@@ -342,7 +339,7 @@
     </div>
   </div>
 
-  <!-- 5. Top Product Sales & Pending Tasks Row -->
+  <!--  Top Product Sales & Pending Tasks Row -->
   <div class="row g-4 mb-4 align-items-stretch">
     <!-- Top Product Sales -->
     <div class="col-lg-6 col-md-12">
@@ -423,7 +420,7 @@
     </div>
   </div>
 
-  <!-- 6. Tables Row (Recent Orders, Recent Quotations, Top Customers) -->
+  <!--  Tables Row (Recent Orders, Recent Quotations, Top Customers) -->
   <div class="row g-4 mb-4">
     <!-- Recent Orders -->
     <!-- <div class="col-lg-4">
@@ -517,7 +514,7 @@
     </div>
   </div>
 
-  <!-- 7. Footer Row (Sales Pipeline, Shipment Info, Notifications) -->
+  <!--  Footer Row (Sales Pipeline, Shipment Info, Notifications) -->
   <div class="row g-4">
     <!-- Sales Pipeline -->
     <div class="col-lg-4">
@@ -708,7 +705,7 @@
     <!-- Modal Body -->
     <div class="p-4 overflow-auto flex-grow-1" style="max-height: 60vh;">
       
-      <!-- 1. Orders Modal Content -->
+      <!--  Orders Modal Content -->
       <div *ngIf="activeModal === 'orders'" class="table-responsive">
         <table class="table table-hover align-middle fs-8 mb-0">
           <thead class="table-light text-uppercase text-muted fs-9">
@@ -757,7 +754,7 @@
         </table>
       </div>
 
-      <!-- 2. Quotations Modal Content -->
+      <!--  Quotations Modal Content -->
       <div *ngIf="activeModal === 'quotations'" class="table-responsive">
         <table class="table table-hover align-middle fs-8 mb-0">
           <thead class="table-light text-uppercase text-muted fs-9">
@@ -784,7 +781,7 @@
         </table>
       </div>
 
-      <!-- 3. Customers Modal Content -->
+      <!--  Customers Modal Content -->
       <div *ngIf="activeModal === 'customers'" class="table-responsive">
         <table class="table table-hover align-middle fs-8 mb-0">
           <thead class="table-light text-uppercase text-muted fs-9">
@@ -811,7 +808,7 @@
         </table>
       </div>
 
-      <!-- 4. Shipments Modal Content -->
+      <!--  Shipments Modal Content -->
       <div *ngIf="activeModal === 'shipments'" class="table-responsive">
         <table class="table table-hover align-middle fs-8 mb-0">
           <thead class="table-light text-uppercase text-muted fs-9">
@@ -836,7 +833,7 @@
         </table>
       </div>
 
-      <!-- 5. Notifications Modal Content -->
+      <!--  Notifications Modal Content -->
       <div *ngIf="activeModal === 'notifications'">
         <div class="list-group list-group-flush">
           <div *ngFor="let n of filteredModalNotifications" class="list-group-item p-3 d-flex align-items-start gap-3 border-bottom">
@@ -855,7 +852,7 @@
         </div>
       </div>
 
-      <!-- 6. Target Modal Content -->
+      <!--  Target Modal Content -->
       <div *ngIf="activeModal === 'target'">
         <div class="row g-3 mb-4 text-center">
           <div class="col-md-3 col-6">
@@ -928,7 +925,7 @@
         </div>
       </div>
 
-      <!-- 7. Purchase Orders Modal Content -->
+      <!--  Purchase Orders Modal Content -->
       <div *ngIf="activeModal === 'purchase'" class="table-responsive">
         <table class="table table-hover align-middle fs-8 mb-0">
           <thead class="table-light text-uppercase text-muted fs-9">
@@ -964,7 +961,7 @@
         </table>
       </div>
 
-      <!-- 8. Sales Invoices Modal Content -->
+      <!--  Sales Invoices Modal Content -->
       <div *ngIf="activeModal === 'invoices'" class="table-responsive">
         <table class="table table-hover align-middle fs-8 mb-0">
           <thead class="table-light text-uppercase text-muted fs-9">
@@ -1008,7 +1005,7 @@
         </table>
       </div>
 
-      <!-- 9. Payments Modal Content -->
+      <!--  Payments Modal Content -->
       <div *ngIf="activeModal === 'payments'" class="table-responsive">
         <table class="table table-hover align-middle fs-8 mb-0">
           <thead class="table-light text-uppercase text-muted fs-9">
@@ -1043,7 +1040,7 @@
         </table>
       </div>
 
-      <!-- 10. Customer Directory Modal Content -->
+      <!--  Customer Directory Modal Content -->
       <div *ngIf="activeModal === 'directory'" class="table-responsive">
         <table class="table table-hover align-middle fs-8 mb-0">
           <thead class="table-light text-uppercase text-muted fs-9">

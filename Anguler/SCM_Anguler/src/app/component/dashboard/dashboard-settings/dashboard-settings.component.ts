@@ -20,7 +20,7 @@ import { AuthService } from '../../../auth/auth_service/auth-service';
 export class DashboardSettingsComponent implements OnInit {
   @Input() isOpen = false;
   @Output() close = new EventEmitter<void>();
-  @Output() onEditProfile = new EventEmitter<void>(); // 🎯 প্যারেন্ট ড্যাশবোর্ডকে রাউটিং ট্রিগার পাঠানোর গেটওয়ে
+  @Output() onEditProfile = new EventEmitter<void>(); 
 
   user: LoginResponse | null = null;
   activeTab = 'profile';
@@ -37,7 +37,6 @@ export class DashboardSettingsComponent implements OnInit {
   notifications: NotificationModel[] = [];
   unreadCount = 0;
 
-  // ❌ লোকাল এডিট মোড ও ফর্মের ভ্যারিয়েবলসমূহ সম্পূর্ণ বাদ দেওয়া হয়েছে
 
   changePasswordMode = false;
   currentPassword = '';
@@ -137,7 +136,6 @@ export class DashboardSettingsComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  // "Edit Profile" বাটনে ক্লিক করলে প্যারেন্টকে সিগন্যাল পাঠানোর মেথড
   triggerEditProfileRouting(): void {
     this.onEditProfile.emit();
   }
@@ -145,7 +143,7 @@ export class DashboardSettingsComponent implements OnInit {
   currentPasswordError: string | null = null;
 
   changePassword(): void {
-    this.currentPasswordError = null; // reset error
+    this.currentPasswordError = null; 
 
     if (this.newPassword !== this.confirmPassword) {
       alert('Passwords do not match');

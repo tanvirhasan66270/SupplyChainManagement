@@ -29,7 +29,6 @@ public class WarehouseServiceImp implements WarehouseService {
     public WarehouseResponseDTO save(WarehouseRequestDTO dto) {
         if (dto == null) throw new IllegalArgumentException("Request data cannot be null");
 
-        // Unique Constraint Validations (Name & Email)
         if (warehouseRepository.findByName(dto.getName()).isPresent()) {
             throw new RuntimeException("Warehouse name '" + dto.getName() + "' already exists!");
         }
@@ -55,14 +54,12 @@ public class WarehouseServiceImp implements WarehouseService {
         Warehouse warehouse = warehouseRepository.findByIdWithLocationDetails(id)
                 .orElseThrow(() -> new RuntimeException("Warehouse not found with ID: " + id));
 
-        // Name Conflict Verification
         if (dto.getName() != null && !dto.getName().equals(warehouse.getName())) {
             if (warehouseRepository.findByName(dto.getName()).isPresent()) {
                 throw new RuntimeException("Warehouse name '" + dto.getName() + "' is already taken!");
             }
         }
 
-        // Email Conflict Verification
         if (dto.getEmail() != null && !dto.getEmail().equals(warehouse.getEmail())) {
             if (warehouseRepository.findByEmail(dto.getEmail()).isPresent()) {
                 throw new RuntimeException("Warehouse email '" + dto.getEmail() + "' is already taken!");

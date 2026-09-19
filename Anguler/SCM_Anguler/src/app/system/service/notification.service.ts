@@ -16,9 +16,7 @@ export class NotificationService {
     private storage: StorageService,
   ) {}
 
-  /**
-   * 🎯 ইউজার আইডির কাস্টম হেডার মেথড
-   */
+  
   private getHeaders(): HttpHeaders {
     const user = this.storage.getUser();
     const userId = user?.userId?.toString() ?? '';
@@ -41,7 +39,6 @@ export class NotificationService {
 
   getUnreadCount(): Observable<number> {
     const headers = this.getHeaders();
-    // 🎯 হেডার ভ্যালিডেশন সেফগার্ড (400 Bad Request আটকাতে)
     if (!headers.get('X-User-Id')) {
       console.warn('SCM Warning: User context missing. Aborting getUnreadCount pipeline.');
       return new Observable<number>(obs => obs.next(0));

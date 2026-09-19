@@ -8,7 +8,7 @@ import { LCBankRequestModel, LCBankResponseModel } from '../component/shared/mod
   providedIn: 'root',
 })
 export class LcbankService {
-  private apiUrl = environment.apiUrl + "banks"; // Sync with @RequestMapping("/api/banks")
+  private apiUrl = environment.apiUrl + "banks"; 
 
   constructor(private http: HttpClient) { }
 

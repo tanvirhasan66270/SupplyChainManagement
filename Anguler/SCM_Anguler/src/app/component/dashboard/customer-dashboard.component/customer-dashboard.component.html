@@ -1,9 +1,7 @@
 <div class="customer-dashboard px-4 py-4" style="background-color: #f8fafc; min-height: 100vh;">
 
-  <!-- showOrderFormOnly check -->
   <ng-container *ngIf="!showOrderFormOnly">
     
-    <!-- LOADING SKELETON -->
     <ng-container *ngIf="loading">
       <div class="row g-4 mb-4"></div>
       <div class="row row-cols-2 row-cols-md-5 g-3 mb-4">
@@ -16,7 +14,6 @@
 
     <!-- DASHBOARD MAIN CONTENT -->
     <ng-container *ngIf="!loading && !isChildRouteActive()">
-          <!-- HERO WELCOME BANNER + HIGHLIGHT FINANCE CARDS -->
       <div class="row g-3 mb-4 align-items-stretch">
         
         <!-- Welcome Banner -->

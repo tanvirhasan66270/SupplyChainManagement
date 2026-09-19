@@ -354,7 +354,6 @@ filteredLineItems: POLineItemResponseDTO[] = [];
   saveStatusUpdate() {
     if (!this.statusUpdateItem) return;
     
-    // We update the item with the new status
     const updatePayload = {
       ...this.statusUpdateItem,
       status: this.statusUpdateValue

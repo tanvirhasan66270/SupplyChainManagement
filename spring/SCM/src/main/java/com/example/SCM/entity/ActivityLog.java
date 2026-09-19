@@ -32,7 +32,6 @@ public class ActivityLog {
     @Column(nullable = false)
     private String referenceId;
 
-    // বড় ডেটার জন্য TEXT অবশ্যই থাকবে
     @Column(columnDefinition = "TEXT")
     private String description;
 

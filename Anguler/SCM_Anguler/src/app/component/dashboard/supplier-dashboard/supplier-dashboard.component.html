@@ -1,9 +1,5 @@
 <div class="supplier-dashboard px-3 py-4">
-  <!-- =========================================================================
-       1. LOADING SKELETON
-       When the page is fetching data from the server, 'loading' is true.
-       *ngIf="loading" tells Angular to only show this section when loading is true.
-       ========================================================================= -->
+ 
   <div *ngIf="loading">
     <div class="skeleton skeleton-card h-100 mb-4" style="height: 100px"></div>
     <div class="row row-cols-1 row-cols-md-4 g-3 mb-4">
@@ -24,11 +20,7 @@
     </div>
   </div>
 
-  <!-- =========================================================================
-       2. DASHBOARD MAIN CONTENT
-       When the data is fully loaded, 'loading' becomes false.
-       *ngIf="!loading" tells Angular to show the real dashboard now.
-       ========================================================================= -->
+
   <div *ngIf="!loading">
     
     <!-- TOP BAR -->
@@ -48,22 +40,13 @@
       </div>
     </div>
 
-    <!-- =========================================================================
-         3. MAIN DASHBOARD PANELS (Cards & KPIs)
-         CONDITION: isChildRouteActive() checks if the user is looking at their profile.
-         If they are NOT looking at their profile (!isChildRouteActive), show the dashboard.
-         ========================================================================= -->
+ 
     <div *ngIf="!isChildRouteActive()" class="animate-fade">
       
-      <!-- ---------------------------------------------------------
-           A. KPI (Key Performance Indicator) GRID
-           *ngFor="let kpi of kpis" loops through the 'kpis' array in our TS file
-           and creates one card for every item in the array.
-           --------------------------------------------------------- -->
+   
       <div class="row row-cols-1 row-cols-md-4 g-4 mb-4">
         <div class="col" *ngFor="let kpi of kpis">
           <div class="card border-0 shadow-sm p-4 rounded-4 bg-white h-100 hover-elevate transition-all position-relative overflow-hidden">
-            <!-- Modern Accent Border -->
             <div class="position-absolute top-0 start-0 h-100 bg-{{ kpi.color }}" style="width: 4px;"></div>
             
             <div class="d-flex justify-content-between align-items-start mb-3">
@@ -87,9 +70,7 @@
           </div>
         </div>
       </div>
-      <!-- NEW ACTION BUTTONS -->
       <div class="row g-3 mb-4">
-        <!-- Add Quotation -->
         <div class="col-md">
           <div class="card border-0 shadow-sm p-3 rounded-4 hover-elevate transition-all bg-white" style="cursor: pointer;" (click)="openQuotationForm()">
             <div class="d-flex align-items-center gap-3">
@@ -104,7 +85,6 @@
           </div>
         </div>
         
-        <!-- Add PO Line Item -->
         <div class="col-md">
           <div class="card border-0 shadow-sm p-3 rounded-4 hover-elevate transition-all bg-white" style="cursor: pointer;" (click)="openPoLineItemForm()">
             <div class="d-flex align-items-center gap-3">
@@ -247,13 +227,8 @@
         </div>
       </div>
 
-      <!-- ---------------------------------------------------------
-           B. QUICK SHORTCUTS ROW
-           These buttons let the user open different modals.
-           Notice the (click)="showShortcut('...')" event bindings!
-           --------------------------------------------------------- -->
+      
       <div class="row g-3 mb-4">
-        <!-- Issued POs -->
         <div class="col-xl-2 col-lg-4 col-md-6">
           <div class="card border rounded-3 p-3 shadow-sm h-100" style="cursor: pointer; transition: all 0.2s;"
                [ngClass]="activeTableTab === 'ISSUED_POS' ? 'border-primary bg-primary-subtle' : 'bg-white border-light-subtle hover-elevate'"
@@ -701,9 +676,7 @@
 
     </div>
 
-    <!-- =========================================================================
-         CONDITION 2: 🎯 চাইল্ড রুট একটিভ হলে প্রোফাইল কম্পোনেন্ট ড্যাশবোর্ডের ভেতরেই লোড হবে
-         ========================================================================= -->
+    
     <div *ngIf="isChildRouteActive()" class="animate-fade mt-2">
       <div class="card border-0 shadow-sm p-2 rounded-4 bg-white">
         <router-outlet></router-outlet>
@@ -859,7 +832,6 @@
   </div>
 </div>
 
-<!-- RFQ QUOTATIONS MODAL (Mockup Implementation) -->
 <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);" *ngIf="isRfqModalOpen">
   <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content border-0 shadow-lg rounded-4">

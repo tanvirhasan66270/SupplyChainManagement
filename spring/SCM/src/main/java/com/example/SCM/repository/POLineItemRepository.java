@@ -15,7 +15,6 @@ public interface POLineItemRepository extends JpaRepository<POLineItem, Long> {
 
 
 
-    // ৩. ইউনিক ট্র্যাকিং নাম্বার (trackingNumber) দিয়ে নির্দিষ্ট আইটেম খুঁজে বের করা (Optional টাইপ-সেফ সেটিং)
     Optional<POLineItem> findByTrackingNumber(String trackingNumber);
 
 

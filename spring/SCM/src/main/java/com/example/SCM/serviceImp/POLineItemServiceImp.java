@@ -73,7 +73,6 @@ public class POLineItemServiceImp implements POLineItemService {
         poLineItemMapper.updateEntity(dto, item, product);
         POLineItemStatus newStatus = item.getStatus();
 
-        // (PENDING -> SHIPPED)
         if (oldStatus != POLineItemStatus.SHIPPED && newStatus == POLineItemStatus.SHIPPED) {
             if (item.getTrackingNumber() == null) {
                 item.setTrackingNumber(trackingCodeGenerator.generateTrackingCode());
@@ -86,7 +85,6 @@ public class POLineItemServiceImp implements POLineItemService {
 
         POLineItem updatedItem = poLineItemRepository.save(item);
         
-        // Notify Supplier if status changed
         if (oldStatus != newStatus) {
             try {
                 if (order != null && order.getSupplier() != null && order.getSupplier().getUser() != null) {

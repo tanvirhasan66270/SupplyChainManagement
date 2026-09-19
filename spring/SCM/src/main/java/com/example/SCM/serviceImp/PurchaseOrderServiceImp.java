@@ -40,7 +40,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
-    // Activity Log & Request Context Dependencies
     private final ActivityLogService activityLogService;
     private final HttpServletRequest request;
 
@@ -48,7 +47,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
     private static final int RECEIVE_LINK_VALID_DAYS = 30;
 
 
-     // Dynamically resolves the current logged-in user or system actor
 
     private String resolveCurrentUserId() {
         String userId = request.getHeader("X-User-Id");
@@ -122,7 +120,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
 
         sendPoApprovalMailToManager(savedPo, savedToken);
 
-        //  ACTIVITY LOG: CREATE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -168,7 +165,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
 
         sendPoIssuedMailToSupplier(issuedPo, receiveToken);
 
-        //  ACTIVITY LOG: TOKEN ISSUED BY MANAGER
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -211,7 +207,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
         poToken.setPurchaseUpdatedAt(receivedPo.getUpdatedAt());
         tokenRepository.save(poToken);
 
-        //  ACTIVITY LOG: SUPPLIER ACKNOWLEDGEMENT
         activityLogService.log(
                 "SUPPLIER_PORTAL",
                 null,
@@ -254,7 +249,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
             sendPoIssuedMailToSupplier(issuedPo, poToken);
         }
 
-        //  ACTIVITY LOG: MANUAL APPROVAL
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -288,7 +282,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
 
         PurchaseOrder updatedPo = purchaseOrderRepository.save(po);
 
-        //  ACTIVITY LOG: SHIPMENT UPDATE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -335,7 +328,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
             tokenRepository.save(poToken);
         }
 
-        //  ACTIVITY LOG: STATUS UPDATE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -401,7 +393,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
             tokenRepository.save(token);
         }
 
-        //  ACTIVITY LOG: UPDATE METADATA
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -433,7 +424,6 @@ public class PurchaseOrderServiceImp implements PurchaseOrderService {
         String poNumber = po.getPoNumber();
         purchaseOrderRepository.deleteById(id);
 
-        //  ACTIVITY LOG: DELETE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,

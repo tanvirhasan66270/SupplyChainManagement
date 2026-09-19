@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { RouterModule, Router } from '@angular/router';
 import { StorageService } from '../../../auth/auth_service/storage.service';
-import { LoginResponse } from '../../../auth/Model/authModel';
 import { DashboardService } from '../../../service/dashboard.service';
 import { CustomerService } from '../../../service/customer.service';
 import { SupplierService } from '../../../service/supplier.service';
@@ -60,7 +59,6 @@ export class AdminDashboardComponent implements OnInit {
   notifications: any[] = [];
   activities: any[] = [];
 
-  // ── Activity Search ──
   allActivities: any[] = [];
   filteredActivities: any[] = [];
   activitySearchText = '';
@@ -72,7 +70,6 @@ export class AdminDashboardComponent implements OnInit {
   totalExpenses = 0;
   totalOrders = 0;
 
-  // ── Role-Based User Search ──
   selectedRole = '';
   searchText = '';
   allUsers: any[] = [];

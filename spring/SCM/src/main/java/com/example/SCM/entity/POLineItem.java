@@ -33,7 +33,7 @@ public class POLineItem {
 
     private double unitPrice;
 
-    private double lineTotal; // calculate field
+    private double lineTotal;
 
     private String quotationRef;
 

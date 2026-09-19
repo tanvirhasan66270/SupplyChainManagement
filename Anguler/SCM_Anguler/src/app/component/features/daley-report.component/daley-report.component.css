@@ -3,15 +3,15 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.95);
-  width: 950px;           /* 🌟 চওড়া বাড়িয়ে 950px করা হলো */
-  max-width: 98vw;        /* স্ক্রিনের সাথে সামঞ্জস্য রাখতে */
-  height: 90vh;           /* 🌟 উচ্চতা বাড়িয়ে স্ক্রিনের প্রায় পুরোটা (90vh) করা হলো */
+  width: 950px;          
+  max-width: 98vw;        
+  height: 90vh;          
   max-height: 95vh;
   background-color: #ffffff;
   z-index: 1050;
   box-shadow: 0 15px 40px rgba(15, 23, 42, 0.25);
-  border-radius: 16px;    /* চারপাশের কর্নার রাউন্ড করার জন্য */
-  overflow: hidden;       /* ভেতরের হেডার বা কন্টেন্ট যাতে বাইরে না যায় */
+  border-radius: 16px;    
+  overflow: hidden;       
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   display: flex;
   flex-direction: column;
@@ -25,7 +25,6 @@
   visibility: visible;
 }
 
-/* --- 🌟 কালারফুল এবং রাউন্ড হেডার ডিজাইন --- */
 .reg-modal-header, .drawer-header {
   background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
   color: #ffffff;

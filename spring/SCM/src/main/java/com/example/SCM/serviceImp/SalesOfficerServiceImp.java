@@ -62,7 +62,6 @@ public class SalesOfficerServiceImp implements SalesOfficerService {
 
     private final SalesOfficerMapper officerMapper;
 
-    private final MailService mailService;
 
     private final PasswordEncoder passwordEncoder;
 

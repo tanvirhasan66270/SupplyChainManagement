@@ -22,7 +22,6 @@ public class Category {
 
     private String description;
 
-    // ── Product Relationship ─────────────────────────────────────
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> products;
 

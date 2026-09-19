@@ -58,7 +58,6 @@ public class ShipmentServiceImp implements ShipmentService {
 
         Shipment savedShipment = shipmentRepository.save(shipment);
 
-        // Send alert notifications to PROCUREMENT, LOGISTICS_OFFICER, and MANAGER
         try {
             String title = "New Cargo Shipment Dispatched: " + savedShipment.getShipmentNumber();
             String message = String.format(
@@ -70,12 +69,10 @@ public class ShipmentServiceImp implements ShipmentService {
                     savedShipment.getSendByAddress()
             );
 
-            // 1. Dispatch to role-level targets
             notificationService.send("PROCUREMENT", "SHIPMENT", title, message);
             notificationService.send("LOGISTICS_OFFICER", "SHIPMENT", title, message);
             notificationService.send("MANAGER", "SHIPMENT", title, message);
 
-            // 2. Dispatch to specific user IDs
             List<Role> targetRoles = List.of(Role.PROCUREMENT, Role.LOGISTICS_OFFICER, Role.MANAGER);
             List<User> targetUsers = userRepository.findUsersByRoles(targetRoles);
             if (targetUsers != null) {

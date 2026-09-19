@@ -62,7 +62,7 @@ export class PurchaseOrderService {
       `${this.apiUrl}/${id}/status`, 
       {}, 
       { 
-        headers: this.getAuthHeaders(), // ইন্টারসেপ্টর ব্যাকআপ হিসেবে হেডার যুক্ত রাখা সেফ
+        headers: this.getAuthHeaders(), 
         params: { status: status } 
       }
     );

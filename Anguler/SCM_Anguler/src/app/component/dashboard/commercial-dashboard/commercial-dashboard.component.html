@@ -1,6 +1,5 @@
 <div class="commercial-dashboard px-3 px-md-4 py-4">
   
-  <!-- ───────────────── TOP BAR / WELCOME BANNER ───────────────── -->
   <div class="dashboard-header bg-white p-4 rounded-4 shadow-sm border mb-4 d-flex justify-content-between align-items-center">
     <div>
       <div class="d-flex align-items-center gap-2 mb-1">
@@ -22,7 +21,6 @@
     <app-dashboard-settings (closeSettings)="closeSettings()"></app-dashboard-settings>
   }
 
-  <!-- ───────────────── KPI STATS GRID ───────────────── -->
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3 mb-4">
     <div class="col" *ngFor="let kpi of kpis">
       <div class="card kpi-card border-0 shadow-sm p-3.5 rounded-4 bg-white border-start border-4 border-{{ kpi.color }} h-100">
@@ -47,7 +45,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── QUICK ACTIONS GRID ───────────────── -->
   <div class="card border-0 shadow-sm p-4 bg-white rounded-4 mb-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
@@ -69,7 +66,7 @@
         </div>
       </div>
 
-      <!-- Letter of Credit Registry -->
+      <!-- Letter of Creit Registry -->
       <div class="col">
         <div (click)="openLcRegistryModal()" class="quick-action-card p-3.5 rounded-4 text-center h-100 d-flex flex-column align-items-center justify-content-center" style="cursor: pointer;">
           <div class="action-icon-wrapper rounded-circle d-flex align-items-center justify-content-center mb-2 text-indigo bg-indigo bg-opacity-10" style="width: 50px; height: 50px; background-color: rgba(99, 102, 241, 0.12) !important;">
@@ -127,10 +124,8 @@
     </div>
   </div>
 
-  <!-- ───────────────── LC REGISTRY & SHIPPING DOCUMENTS ───────────────── -->
   <div class="row g-4 mb-4">
     
-    <!-- Active Letters of Credit Registry (Left Column) -->
     <div class="col-lg-7">
       <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
         
@@ -192,7 +187,6 @@
       </div>
     </div>
 
-    <!-- Shipping Documents Manifest Vault (Right Column) -->
     <div class="col-lg-5">
       <div class="card border-0 shadow-sm p-4 bg-white rounded-4 h-100">
         <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
@@ -235,7 +229,6 @@
 
   </div>
 
-  <!-- ───────────────── ROW 4: COMMERCIAL INVOICES & SHIPPING CONSIGNMENTS CARDS ───────────────── -->
   <div class="row g-4 mb-4">
     
     <!-- CARD for Button 3: Commercial Invoice -->
@@ -330,7 +323,6 @@
 
   </div>
 
-  <!-- ───────────────── ROW 5: CUSTOMER PAYMENTS & PO LINE ITEMS CARDS ───────────────── -->
   <div class="row g-4 mb-4">
     
     <!-- CARD for Button 5: Customer Payment -->
@@ -427,7 +419,6 @@
 
   </div>
 
-  <!-- ───────────────── ROW 6: COMMERCIAL PARAMETERS & ANALYTICS CARDS ───────────────── -->
   <div class="row g-4 mb-4">
     
     <!-- Parameter Card 1: Currency & Capital Quotas -->
@@ -527,7 +518,6 @@
 
   </div>
 
-  <!-- ───────────────── ROW 4: ENTERPRISE FINANCIAL BANKS & TARIFF CLEARANCE CARDS ───────────────── -->
   <div class="row g-4 mb-4">
     
     <!-- CARD 1: LC Issuing Bank Terminals & SWIFT Quotas (col-lg-7) -->
@@ -661,7 +651,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── MODAL: ACCEPT & VERIFY PAYMENTS ───────────────── -->
   <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isPaymentModalOpen">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
@@ -744,7 +733,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── MODAL: COMMERCIAL INVOICE MASTER REGISTRY ───────────────── -->
   <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isInvoiceModalOpen">
     <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1140px;">
       <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
@@ -851,7 +839,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── MODAL: SHIPPING & CARGO MASTER REGISTRY ───────────────── -->
   <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isShippingModalOpen">
     <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1140px;">
       <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
@@ -949,7 +936,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── MODAL: ISSUE NEW LETTER OF CREDIT (LC) (FIRST MODERN DESIGN) ───────────────── -->
   <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isAddLcModalOpen">
     <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 850px;">
       <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
@@ -1117,7 +1103,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── MODAL: LC REGISTRY MASTER VIEW CARD ───────────────── -->
   <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isLcRegistryModalOpen">
     <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1140px;">
       <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
@@ -1226,7 +1211,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── MODAL: PO LINE ITEMS & MANIFEST AUDIT (MATCH SCREENSHOT) ───────────────── -->
   <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isLineItemsModalOpen">
     <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 920px;">
       <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
@@ -1314,7 +1298,6 @@
     </div>
   </div>
 
-  <!-- ───────────────── MODAL: CUSTOMER ORDERS MASTER REGISTRY ───────────────── -->
   <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px);" *ngIf="isCustomerOrderModalOpen">
     <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 1140px;">
       <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">

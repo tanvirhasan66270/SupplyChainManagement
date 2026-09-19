@@ -81,25 +81,20 @@ export class InvoiceComponent implements OnInit {
     if (!selectedOrderId) return;
     const selectedOrder = this.orders.find(o => o.id == selectedOrderId);
     if (selectedOrder) {
-      // Auto-fill Financial Subtotal field with order total cost
       this.formModel.subtotal = Number(selectedOrder.totalAmount || selectedOrder.itemSubtotal) || 0;
 
-      // Auto-fill shipping fees if available
       if (selectedOrder.deliveryCharge !== undefined && selectedOrder.deliveryCharge !== null) {
         this.formModel.shippingFees = Number(selectedOrder.deliveryCharge) || 0;
       }
 
-      // Auto-fill delivery address if available
       if (selectedOrder.deliveryAddress && (!this.formModel.deliveryAddress || this.formModel.deliveryAddress.trim() === '')) {
         this.formModel.deliveryAddress = selectedOrder.deliveryAddress;
       }
 
-      // Auto-fill payment method if available
       if (selectedOrder.paymentMethod) {
         this.formModel.paymentMethod = selectedOrder.paymentMethod;
       }
 
-      // Auto-fill paid amount if available
       if (selectedOrder.codAmount !== undefined || selectedOrder.paidAmount !== undefined) {
         this.formModel.paidAmount = Number(selectedOrder.codAmount || selectedOrder.paidAmount) || 0;
       }

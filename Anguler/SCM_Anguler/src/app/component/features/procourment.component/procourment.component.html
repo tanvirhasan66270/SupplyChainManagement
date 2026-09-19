@@ -1,17 +1,18 @@
 <div class="container-fluid py-4 px-4 bg-light min-vh-100">
 
-  <!-- Core Page Header Banner -->
-  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+  <div
+    class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
     <div>
-      <h4 class="text-dark fw-bold mb-1"><i class="bi bi-briefcase-fill text-primary me-2"></i>Procurement Officer Workspace</h4>
-      <p class="text-muted mb-0 small">Initialize tracking profiles, control organizational matrices, and manage active procurement terminals.</p>
+      <h4 class="text-dark fw-bold mb-1"><i class="bi bi-briefcase-fill text-primary me-2"></i>Procurement Officer
+        Workspace</h4>
+      <p class="text-muted mb-0 small">Initialize tracking profiles, control organizational matrices, and manage active
+        procurement terminals.</p>
     </div>
     <button class="btn btn-primary px-4 py-2 fw-bold shadow-sm text-white fs-7" (click)="openDrawer()">
       <i class="bi bi-person-plus-fill me-2"></i>Deploy New Officer
     </button>
   </div>
 
-  <!-- Data Display Frame Grid Table -->
   <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -28,54 +29,59 @@
           </thead>
           <tbody>
             @for (o of procurements; track o.id) {
-              <tr>
-                <td class="ps-4">
-  @if (o.image && o.image.trim() !== '') {
-    <div class="avatar-wrapper shadow-xs border rounded-circle" style="width: 42px; height: 42px; overflow: hidden;">
-      <img [src]="getImageUrl(o.image)" (error)="onImageError($event)" alt="Profile" class="w-100 h-100 object-fit-cover">
-    </div>
-  } @else {
-    <div class="avatar-placeholder bg-secondary-subtle text-secondary font-monospace fw-bold rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-      {{ o.name.substring(0, 2).toUpperCase() }}
-    </div>
-  }
-</td>
-                <td>
-                  <div class="fw-bold text-dark">{{ o.name }}</div>
-                  <span class="badge bg-primary-subtle text-primary font-monospace fs-9">ID: #{{ o.id }}</span>
-                </td>
-                <td>
-                  <div class="small text-dark"><i class="bi bi-envelope-fill text-muted me-1"></i>{{ o.email }}</div>
-                  <div class="small text-muted"><i class="bi bi-telephone-fill text-muted me-1"></i>{{ o.phone }}</div>
-                </td>
-                <td>
-                  <div class="fw-semibold text-dark">{{ o.designation || 'Officer' }}</div>
-                  <div class="small text-muted font-monospace fs-9">NID: {{ o.nidNumber }}</div>
-                </td>
-                <td>
-                  <div class="small fw-bold text-dark" [title]="o.address">
-                    <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ o.policeStationName || 'N/A' }}
-                  </div>
-                  <small class="text-muted d-block text-truncate" style="max-width: 220px;">{{ o.address }}</small>
-                </td>
-                <td class="text-center pe-4">
-                  <div class="d-flex justify-content-center gap-2">
-                    <button class="btn btn-sm btn-action-edit fs-8 px-2.5" (click)="edit(o)">
-                      <i class="bi bi-pencil-square me-1"></i>Modify
-                    </button>
-                    <button class="btn btn-sm btn-action-delete fs-8 px-2.5" (click)="delete(o.id)">
-                      <i class="bi bi-trash3 me-1"></i>Purge
-                    </button>
-                  </div>
-                </td>
-              </tr>
+            <tr>
+              <td class="ps-4">
+                @if (o.image && o.image.trim() !== '') {
+                <div class="avatar-wrapper shadow-xs border rounded-circle"
+                  style="width: 42px; height: 42px; overflow: hidden;">
+                  <img [src]="getImageUrl(o.image)" (error)="onImageError($event)" alt="Profile"
+                    class="w-100 h-100 object-fit-cover">
+                </div>
+                } @else {
+                <div
+                  class="avatar-placeholder bg-secondary-subtle text-secondary font-monospace fw-bold rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 42px; height: 42px;">
+                  {{ o.name.substring(0, 2).toUpperCase() }}
+                </div>
+                }
+              </td>
+              <td>
+                <div class="fw-bold text-dark">{{ o.name }}</div>
+                <span class="badge bg-primary-subtle text-primary font-monospace fs-9">ID: #{{ o.id }}</span>
+              </td>
+              <td>
+                <div class="small text-dark"><i class="bi bi-envelope-fill text-muted me-1"></i>{{ o.email }}</div>
+                <div class="small text-muted"><i class="bi bi-telephone-fill text-muted me-1"></i>{{ o.phone }}</div>
+              </td>
+              <td>
+                <div class="fw-semibold text-dark">{{ o.designation || 'Officer' }}</div>
+                <div class="small text-muted font-monospace fs-9">NID: {{ o.nidNumber }}</div>
+              </td>
+              <td>
+                <div class="small fw-bold text-dark" [title]="o.address">
+                  <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ o.policeStationName || 'N/A' }}
+                </div>
+                <small class="text-muted d-block text-truncate" style="max-width: 220px;">{{ o.address }}</small>
+              </td>
+              <td class="text-center pe-4">
+                <div class="d-flex justify-content-center gap-2">
+                  <button class="btn btn-sm btn-action-edit fs-8 px-2.5" (click)="edit(o)">
+                    <i class="bi bi-pencil-square me-1"></i>Modify
+                  </button>
+                  <button class="btn btn-sm btn-action-delete fs-8 px-2.5" (click)="delete(o.id)">
+                    <i class="bi bi-trash3 me-1"></i>Purge
+                  </button>
+                </div>
+              </td>
+            </tr>
             }
             @empty {
-              <tr>
-                <td colspan="6" class="text-center py-5 text-muted font-monospace fs-8">
-                  <i class="bi bi-folder-x fs-1 d-block mb-2 text-secondary"></i>No matching procurement records resolved on active terminals.
-                </td>
-              </tr>
+            <tr>
+              <td colspan="6" class="text-center py-5 text-muted font-monospace fs-8">
+                <i class="bi bi-folder-x fs-1 d-block mb-2 text-secondary"></i>No matching procurement records resolved
+                on active terminals.
+              </td>
+            </tr>
             }
           </tbody>
         </table>
@@ -83,70 +89,76 @@
     </div>
   </div>
 
-  <!-- Slide Compose Drawer Panel -->
   <div class="custom-drawer shadow-lg" [class.open]="isDrawerOpen">
     <div class="drawer-header bg-primary text-white p-4 d-flex justify-content-between align-items-center">
       <h5 class="fw-bold mb-0">
-        <i class="bi bi-person-lines-fill me-2"></i>{{ isEdit ? 'Modify Procurement Core' : 'Deploy Procurement Officer' }}
+        <i class="bi bi-person-lines-fill me-2"></i>{{ isEdit ? 'Modify Procurement Core' : 'Deploy Procurement Officer'
+        }}
       </h5>
       <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
     </div>
 
-    <!-- Scrollable Form Body Container -->
     <div class="drawer-body bg-white p-4" style="overflow-y: auto; height: calc(100vh - 100px);">
-      
-      <!-- Fault Validation Engine Interceptor Alerts -->
-      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm border-2 mb-4" role="alert">
+
+      <div *ngIf="errorMessage"
+        class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm border-2 mb-4"
+        role="alert">
         <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
         <div class="fs-7 fw-semibold">{{ errorMessage }}</div>
         <button type="button" class="btn-close small" (click)="errorMessage = null" aria-label="Close"></button>
       </div>
 
       <form #procurementForm="ngForm" (ngSubmit)="procurementForm.valid && save()">
-        
-        <!-- Profile Matrix Avatar Image Upload -->
+
         <div class="mb-3 text-center p-3 bg-light rounded-3 border">
-          <label class="form-label fw-semibold text-secondary small text-uppercase d-block mb-2">Officer Matrix Avatar</label>
+          <label class="form-label fw-semibold text-secondary small text-uppercase d-block mb-2">Officer Matrix
+            Avatar</label>
           <div class="position-relative d-inline-block mb-2">
-            <div class="bg-white rounded-circle d-flex align-items-center justify-content-center overflow-hidden border" style="width: 85px; height: 85px; margin: 0 auto;">
+            <div class="bg-white rounded-circle d-flex align-items-center justify-content-center overflow-hidden border"
+              style="width: 85px; height: 85px; margin: 0 auto;">
               <img *ngIf="imagePreview" [src]="imagePreview" class="w-100 h-100 object-fit-cover">
               <i *ngIf="!imagePreview" class="bi bi-person-badge text-secondary fs-2"></i>
             </div>
-            <button *ngIf="imagePreview" type="button" class="btn btn-danger btn-sm rounded-circle position-absolute bottom-0 end-0" (click)="removeSelectedFile(fileInput)"><i class="bi bi-x-lg"></i></button>
+            <button *ngIf="imagePreview" type="button"
+              class="btn btn-danger btn-sm rounded-circle position-absolute bottom-0 end-0"
+              (click)="removeSelectedFile(fileInput)"><i class="bi bi-x-lg"></i></button>
           </div>
-          <input #fileInput type="file" class="form-control form-control-sm" accept="image/*" (change)="onFileSelected($event)">
+          <input #fileInput type="file" class="form-control form-control-sm" accept="image/*"
+            (change)="onFileSelected($event)">
         </div>
 
-        <!-- Row 1: Primary Fields -->
         <div class="mb-3">
           <label class="form-label fw-bold text-secondary text-uppercase fs-8">Officer Name</label>
-          <input type="text" class="form-control fs-7" [(ngModel)]="procurement.name" name="name" placeholder="Ahsan Habib" required>
+          <input type="text" class="form-control fs-7" [(ngModel)]="procurement.name" name="name"
+            placeholder="Ahsan Habib" required>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Email Identity</label>
-            <input type="email" class="form-control fs-7" [(ngModel)]="procurement.email" name="email" placeholder="officer@scm.com" required email>
+            <input type="email" class="form-control fs-7" [(ngModel)]="procurement.email" name="email"
+              placeholder="officer@scm.com" required email>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Contact Vector (Phone)</label>
-            <input type="text" class="form-control fs-7" [(ngModel)]="procurement.phone" name="phone" placeholder="017XXXXXXXX" required>
+            <input type="text" class="form-control fs-7" [(ngModel)]="procurement.phone" name="phone"
+              placeholder="017XXXXXXXX" required>
           </div>
         </div>
 
-        <!-- Password Validation Stack -->
         <div class="row mb-3" *ngIf="!isEdit">
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Administrative Password</label>
-            <input type="password" class="form-control fs-7" [(ngModel)]="procurement.password" name="password" placeholder="••••••••" required minlength="6">
+            <input type="password" class="form-control fs-7" [(ngModel)]="procurement.password" name="password"
+              placeholder="••••••••" required minlength="6">
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Confirm Core Password</label>
-            <input type="password" class="form-control fs-7" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="••••••••" required>
+            <input type="password" class="form-control fs-7" [(ngModel)]="confirmPassword" name="confirmPassword"
+              placeholder="••••••••" required>
           </div>
         </div>
 
-        <!-- Row 3: Demographics -->
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Gender Vector</label>
@@ -162,54 +174,59 @@
           </div>
         </div>
 
-        <!-- Row 4: Identity Keys -->
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Identity Key (NID)</label>
-            <input type="text" class="form-control fs-7" [(ngModel)]="procurement.nidNumber" name="nidNumber" placeholder="199XXXXXXXXXXXXXX" required>
+            <input type="text" class="form-control fs-7" [(ngModel)]="procurement.nidNumber" name="nidNumber"
+              placeholder="199XXXXXXXXXXXXXX" required>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Passport Key</label>
-            <input type="text" class="form-control fs-7" [(ngModel)]="procurement.passportNumber" name="passportNumber" placeholder="AXXXXXXXX">
+            <input type="text" class="form-control fs-7" [(ngModel)]="procurement.passportNumber" name="passportNumber"
+              placeholder="AXXXXXXXX">
           </div>
         </div>
 
-        <!-- Row 5: Corporate Details -->
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Designation</label>
-            <input type="text" class="form-control fs-7" [(ngModel)]="procurement.designation" name="designation" placeholder="e.g., Procurement Manager" required>
+            <input type="text" class="form-control fs-7" [(ngModel)]="procurement.designation" name="designation"
+              placeholder="e.g., Procurement Manager" required>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Joining Date</label>
-            <input type="date" class="form-control fs-7" [(ngModel)]="procurement.joiningDate" name="joiningDate" required>
+            <input type="date" class="form-control fs-7" [(ngModel)]="procurement.joiningDate" name="joiningDate"
+              required>
           </div>
         </div>
 
         <div class="mb-3">
           <label class="form-label fw-bold text-secondary text-uppercase fs-8">Linguistic Parameter</label>
-          <input type="text" class="form-control fs-7" [(ngModel)]="procurement.language" name="language" placeholder="e.g., Bengali, English">
+          <input type="text" class="form-control fs-7" [(ngModel)]="procurement.language" name="language"
+            placeholder="e.g., Bengali, English">
         </div>
 
-        <!-- Geographic Node Mapping Section -->
-        <h6 class="fs-8 fw-bold text-primary text-uppercase mt-4 mb-2 pb-1 border-bottom"><i class="bi bi-map me-1"></i> Geographic Node Mapping</h6>
-        
+        <h6 class="fs-8 fw-bold text-primary text-uppercase mt-4 mb-2 pb-1 border-bottom"><i class="bi bi-map me-1"></i>
+          Geographic Node Mapping</h6>
+
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Country</label>
-            <select class="form-select fs-7" [(ngModel)]="selectedCountryId" name="selectedCountryId" (change)="onCountryChange()" required>
+            <select class="form-select fs-7" [(ngModel)]="selectedCountryId" name="selectedCountryId"
+              (change)="onCountryChange()" required>
               <option [ngValue]="null">-- Select Country --</option>
               @for (co of countries; track co.id) {
-                <option [value]="co.id">{{ co.name }}</option>
+              <option [value]="co.id">{{ co.name }}</option>
               }
             </select>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Division</label>
-            <select class="form-select fs-7" [(ngModel)]="selectedDivisionId" name="selectedDivisionId" (change)="onDivisionChange()" [disabled]="!divisions.length" required>
+            <select class="form-select fs-7" [(ngModel)]="selectedDivisionId" name="selectedDivisionId"
+              (change)="onDivisionChange()" [disabled]="!divisions.length" required>
               <option [ngValue]="null">-- Select Division --</option>
               @for (div of divisions; track div.id) {
-                <option [value]="div.id">{{ div.name }}</option>
+              <option [value]="div.id">{{ div.name }}</option>
               }
             </select>
           </div>
@@ -218,44 +235,49 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">District</label>
-            <select class="form-select fs-7" [(ngModel)]="selectedDistrictId" name="selectedDistrictId" (change)="onDistrictChange()" [disabled]="!districts.length" required>
+            <select class="form-select fs-7" [(ngModel)]="selectedDistrictId" name="selectedDistrictId"
+              (change)="onDistrictChange()" [disabled]="!districts.length" required>
               <option [ngValue]="null">-- Select District --</option>
               @for (dis of districts; track dis.id) {
-                <option [value]="dis.id">{{ dis.name }}</option>
+              <option [value]="dis.id">{{ dis.name }}</option>
               }
             </select>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold text-secondary text-uppercase fs-8">Police Station (Thana)</label>
-            <select class="form-select fs-7" [(ngModel)]="procurement.policeStationId" name="policeStationId" (change)="generateFullAddress()" [disabled]="!policeStations.length" required>
+            <select class="form-select fs-7" [(ngModel)]="procurement.policeStationId" name="policeStationId"
+              (change)="generateFullAddress()" [disabled]="!policeStations.length" required>
               <option value="0">-- Select Station --</option>
               @for (ps of policeStations; track ps.id) {
-                <option [value]="ps.id">{{ ps.name }}</option>
+              <option [value]="ps.id">{{ ps.name }}</option>
               }
             </select>
           </div>
         </div>
 
-        <!-- Street & Auto compiled layout -->
         <div class="mb-3">
           <label class="form-label fw-bold text-secondary text-uppercase fs-8">Street / Area Address</label>
-          <input type="text" class="form-control fs-7" [(ngModel)]="streetAddress" name="streetAddress" (input)="generateFullAddress()" placeholder="Terminal 4, Road 2, Block C" required>
+          <input type="text" class="form-control fs-7" [(ngModel)]="streetAddress" name="streetAddress"
+            (input)="generateFullAddress()" placeholder="Terminal 4, Road 2, Block C" required>
         </div>
 
         <div class="mb-4 bg-primary-subtle border border-primary-subtle p-3 rounded-3">
-          <label class="form-label fw-bold text-primary small text-uppercase mb-2"><i class="bi bi-cpu-fill me-1"></i>Aggregated Address Manifest String</label>
-          <textarea class="form-control fs-7 text-dark bg-white font-monospace border shadow-xs" rows="2" [value]="procurement.address" readonly></textarea>
+          <label class="form-label fw-bold text-primary small text-uppercase mb-2"><i
+              class="bi bi-cpu-fill me-1"></i>Aggregated Address Manifest String</label>
+          <textarea class="form-control fs-7 text-dark bg-white font-monospace border shadow-xs" rows="2"
+            [value]="procurement.address" readonly></textarea>
         </div>
 
-        <!-- Active Node Status -->
         <div class="mb-4 form-check form-switch" *ngIf="isEdit">
-          <input class="form-check-input" type="checkbox" id="isActiveSwitch" [(ngModel)]="procurement.isActive" name="isActive">
-          <label class="form-check-label fw-bold text-secondary text-uppercase fs-8" for="isActiveSwitch">Workstation Active Status</label>
+          <input class="form-check-input" type="checkbox" id="isActiveSwitch" [(ngModel)]="procurement.isActive"
+            name="isActive">
+          <label class="form-check-label fw-bold text-secondary text-uppercase fs-8" for="isActiveSwitch">Workstation
+            Active Status</label>
         </div>
 
-        <!-- Drawer Action Controls Footer -->
         <div class="drawer-footer d-flex gap-2 pt-3 border-top bg-white sticky-bottom">
-          <button class="btn btn-primary text-white flex-grow-1 py-2 fw-bold text-uppercase fs-7" type="submit" [disabled]="procurementForm.invalid">
+          <button class="btn btn-primary text-white flex-grow-1 py-2 fw-bold text-uppercase fs-7" type="submit"
+            [disabled]="procurementForm.invalid">
             {{ isEdit ? 'Update Profile' : 'Initialize Officer Node' }}
           </button>
           <button type="button" class="btn btn-outline-secondary px-3 fs-7" (click)="closeDrawer()">Cancel</button>
@@ -264,6 +286,5 @@
     </div>
   </div>
 
-  <!-- Transparent Backdrop Mask Overlay -->
   <div class="drawer-backdrop" *ngIf="isDrawerOpen" (click)="closeDrawer()"></div>
 </div>

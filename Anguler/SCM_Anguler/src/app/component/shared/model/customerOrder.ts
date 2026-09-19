@@ -22,10 +22,10 @@ export interface CustomerOrderRequestModel {
   deliveryPhone: string;
   estimatedDelivery: string; 
   serviceType: 'STANDARD' | 'EXPRESS' | 'OVERNIGHT' | 'SAME_DAY' | string; 
-  priority: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT' | string;  // LOW, NORMAL, HIGH, URGENT
+  priority: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT' | string; 
   currency: string;
   codAmount: number;
-  paymentMethod: 'CASH' | 'BANK' | 'BKASH' | 'NAGAD' | 'ROCKET' | string;  // CASH, BANK, BKASH, NAGAD, ROCKET
+  paymentMethod: 'CASH' | 'BANK' | 'BKASH' | 'NAGAD' | 'ROCKET' | string;  
   customerAccountNumber?: string;
   paymentCheckImage?: string;
   status: 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | 'OUT_FOR_DELIVERY' |'DELIVERED' |'CANCELLED' | string;

@@ -1,12 +1,11 @@
-/* --- CENTER VIEW MODAL / DRAWER --- */
 .slide-drawer {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.95);
-  width: 750px;           /* ফর্মের চওড়া বড় করার জন্য */
-  max-width: 95vw;        /* ছোট স্ক্রিনে রেস্পন্সিভ রাখার জন্য */
-  height: 85vh;           /* উচ্চতা বড় করার জন্য */
+  width: 750px;           
+  max-width: 95vw;        
+  height: 85vh;           
   max-height: 90vh;
   background-color: #ffffff;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
@@ -36,7 +35,6 @@
   z-index: 1050;
 }
 
-/* --- THEME SPECIFICS --- */
 .avatar-sm {
   width: 38px;
   height: 38px;

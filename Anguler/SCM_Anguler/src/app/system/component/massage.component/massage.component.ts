@@ -66,7 +66,6 @@ export class MassageComponent implements OnInit, OnDestroy {
 
     this.loadChatHistory();
 
-    // Poll every 3 seconds for new messages
     this.pollInterval = setInterval(() => {
       this.loadChatHistory(true);
     }, 3000);
@@ -103,7 +102,7 @@ export class MassageComponent implements OnInit, OnDestroy {
     };
 
     const textToSend = this.messageText;
-    this.messageText = ''; // Clear text immediately for snappy UI
+    this.messageText = ''; 
     this.cdr.markForCheck();
 
     this.service.send(req).subscribe({
@@ -112,7 +111,7 @@ export class MassageComponent implements OnInit, OnDestroy {
       },
       error: (err: any) => {
         alert(err.error?.message || 'Failed to deliver message.');
-        this.messageText = textToSend; // Restore text in case of failure
+        this.messageText = textToSend; 
         this.cdr.markForCheck();
       }
     });

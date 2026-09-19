@@ -39,21 +39,20 @@
   transform: translateY(-1px);
 }
 
-/* --- 🌟 বড় সাইজ এবং কালারফুল রাউন্ড হেডার যুক্ত কাস্টম ড্রয়ার --- */
 .custom-drawer {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.95);
-  width: 950px;           /* 🌟 ফর্মের চওড়া বড় করা হলো */
-  max-width: 98vw;        /* রেস্পন্সিভ রাখার জন্য */
-  height: 90vh;           /* 🌟 ফর্মের উচ্চতা স্ক্রিনের প্রায় পুরোটা করা হলো */
+  width: 950px;          
+  max-width: 98vw;        
+  height: 90vh;          
   max-height: 95vh;
   background-color: #ffffff;
   z-index: 1050;
   box-shadow: 0 15px 40px rgba(15, 23, 42, 0.25);
-  border-radius: 16px;    /* চারপাশের কর্নার রাউন্ড করার জন্য */
-  overflow: hidden;       /* ভেতরের হেডার যাতে বর্ডার ক্রস না করে */
+  border-radius: 16px;    
+  overflow: hidden;       
   transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   display: flex;
   flex-direction: column;
@@ -67,7 +66,6 @@
   visibility: visible;
 }
 
-/* --- 🌟 কালারফুল এবং রাউন্ড হেডার ডিজাইন --- */
 .reg-modal-header, .drawer-header {
   background: linear-gradient(135deg, #2196F3 0%, #1e88e5 100%);
   color: #ffffff;
@@ -126,7 +124,6 @@
   z-index: 1040;
 }
 
-/* Status Change Modal Overlay CSS */
 .modal-overlay {
   position: fixed;
   top: 0;

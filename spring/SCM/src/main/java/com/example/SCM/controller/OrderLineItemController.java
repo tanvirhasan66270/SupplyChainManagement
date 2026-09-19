@@ -16,7 +16,6 @@ public class OrderLineItemController {
 
     private final OrderLineItemService lineItemService;
 
-    //  Get All Items Under a Specific Order ID
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES_OFFICER', 'CUSTOMER', 'PROCUREMENT', 'LOGISTICS_OFFICER', 'COMMERCIAL_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'SUPPLIER')")
     @GetMapping("/order/{orderId}")
@@ -26,7 +25,6 @@ public class OrderLineItemController {
         return list.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(list);
     }
 
-    //Get Single Line Item Specifications By ID
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES_OFFICER', 'CUSTOMER', 'PROCUREMENT', 'LOGISTICS_OFFICER', 'COMMERCIAL_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'SUPPLIER')")
     @GetMapping("/{id}")
@@ -37,7 +35,6 @@ public class OrderLineItemController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Remove/Delete Single Item from Order Cart Node
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES_OFFICER', 'CUSTOMER')")
     @DeleteMapping("/{id}")

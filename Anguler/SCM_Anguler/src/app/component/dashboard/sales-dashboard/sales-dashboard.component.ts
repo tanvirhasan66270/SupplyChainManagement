@@ -82,7 +82,6 @@ export class SalesDashboardComponent implements OnInit, AfterViewInit {
   activeModal: 'orders' | 'quotations' | 'customers' | 'shipments' | 'notifications' | 'target' | 'purchase' | 'invoices' | 'payments' | 'directory' | null = null;
   modalSearchText = '';
   
-  // Dashboard Order Table Search Properties
   dashboardOrderSearchText = '';
   dashboardOrderSearchDate = '';
   dashboardOrderStatusSearch = 'ALL';
@@ -118,7 +117,7 @@ export class SalesDashboardComponent implements OnInit, AfterViewInit {
   invoiceSelectedMonth: number | 'ALL' = 'ALL';
   invoiceSelectedDate: string = '';
 
-  selectedOverviewMonth: number | 'ALL' = 7; // Default August
+  selectedOverviewMonth: number | 'ALL' = 7; 
   selectedOverviewYear: number = 2026;
 
   yearsList: number[] = [2026, 2025, 2024, 2023];

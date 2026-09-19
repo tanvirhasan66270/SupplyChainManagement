@@ -6,14 +6,12 @@ import java.time.LocalDateTime;
 @Data
 public class ShipmentResponseDTO {
     private Long id;
-    private String shipmentNumber;      // Auto generated
+    private String shipmentNumber;
 
-    //  Purchase Order Auto-loads ---
     private Long poId;
     private Integer poQuantity;
     private Double poTotalAmount;
 
-    //  Supplier Auto-loads ---
     private Long supplierId;
     private String supplierName;
     private String supplierContactPerson;
@@ -21,7 +19,6 @@ public class ShipmentResponseDTO {
     private String supplierPhone;
     private String supplierAddress;
 
-    //  Logistics Matrix ---
     private String vehicleNumber;
     private String captainRegistrationNumber;
     private String assignedByEmail;

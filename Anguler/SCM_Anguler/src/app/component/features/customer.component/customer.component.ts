@@ -37,7 +37,7 @@ export class CustomerComponent implements OnInit {
   streetAddress: string = '';
   confirmPassword = '';
   errorMessage: string | null = null;
-  userRole: string = ''; // 🌟 ইউজার রোল রাখার জন্য ভ্যারিয়েবল
+  userRole: string = ''; 
 
   customer: CustomerRequestModel = {
     name: '',
@@ -75,7 +75,6 @@ export class CustomerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // 🌟 ইউজারের রোল রিড করা হচ্ছে
     try {
       const user = this.storage.getUser();
       if (user) {

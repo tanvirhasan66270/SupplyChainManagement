@@ -48,7 +48,6 @@ public class CommercialOfficer {
     @Enumerated(EnumType.STRING)
     private LanguageStatus language;
 
-    // ── Zone management / Station Relations ──────────────────────
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "police_station_id")
     private PoliceStation policeStation;

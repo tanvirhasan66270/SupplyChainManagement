@@ -120,7 +120,6 @@ public class DailyReportController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES_OFFICER', 'PROCUREMENT', 'LOGISTICS_OFFICER', 'COMMERCIAL_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'CUSTOMER', 'SUPPLIER')")
     @GetMapping("uploads/reports/{filename:.+}")
-//    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'QC_INSPECTOR', 'LOGISTICS_OFFICER')")
     public ResponseEntity<Resource> viewReportImage(@PathVariable String filename) {
         try {
             Path fileStorageLocation = Paths.get(uploadDir).resolve("reports").normalize();

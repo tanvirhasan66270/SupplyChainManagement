@@ -1,6 +1,4 @@
-/* ==========================================
-   SCM Layout Basics & Typography
-   ========================================== */
+
 .container-fluid {
   background-color: #f8fafc;
   min-height: 100vh;
@@ -14,9 +12,7 @@
 .btn-outline-teal { color: #0d9488; border-color: #0d9488; }
 .btn-outline-teal:hover { background-color: #0d9488; color: white; }
 
-/* ==========================================
-   Data Registry Table Grid Styles
-   ========================================== */
+
 .table-responsive {
   border-radius: 8px;
   overflow: hidden;
@@ -56,20 +52,19 @@
   transform: translateY(-1px);
 }
 
-/* --- 🌟 বড় সাইজ এবং গাঢ় কালারফুল রাউন্ড হেডার যুক্ত সেন্ট্রাল ড্রয়ার --- */
 .slide-drawer {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.95);
-    width: 950px;           /* ফর্মের চওড়া বড় করা হলো */
-    max-width: 95vw;        /* ছোট স্ক্রিনে রেস্পন্সিভ রাখার জন্য */
-    height: 90vh;           /* উচ্চতা বড় করা হলো */
+    width: 950px;           
+    max-width: 95vw;        
+    height: 90vh;          
     max-height: 95vh;
     background: #fff;
     box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-    border-radius: 16px;    /* চারপাশের কর্নার রাউন্ড করার জন্য */
-    overflow: hidden;       /* ভেতরের হেডার যাতে বর্ডার ক্রস না করে */
+    border-radius: 16px;    
+    overflow: hidden;       
     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 1060;
     display: flex;
@@ -84,7 +79,6 @@
     visibility: visible;
 }
 
-/* --- 🌟 ড্রয়ারের ভেতরের বডি অংশ (스크োল করার জন্য) --- */
 .drawer-body {
     flex: 1;
     overflow-y: auto;
@@ -92,9 +86,8 @@
     background-color: #ffffff;
 }
 
-/* --- 🌟 গাঢ় (Dark) গ্রেডিয়েন্ট হেডার ডিজাইন --- */
 .reg-modal-header, .drawer-header {
-    background: linear-gradient(135deg, #312e81 0%, #4338ca 100%); /* গাঢ় ডার্ক ইনডিগো টোন */
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 100%); 
     color: #ffffff;
     padding: 20px 24px;
     display: flex;
@@ -121,7 +114,6 @@
     opacity: 1;
 }
 
-/* --- BACKDROP BLUR BLIND --- */
 .drawer-backdrop {
   position: fixed;
   top: 0;
@@ -133,9 +125,7 @@
   z-index: 1050;
 }
 
-/* ==========================================
-   Utility Typography Matrices
-   ========================================== */
+
 .border-dashed { border-style: dashed !important; }
 .fs-7 { font-size: 13px !important; }
 .fs-8 { font-size: 11px !important; }

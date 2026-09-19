@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    // Fetch only the messages targeted for this specific logged-in user
     List<Message> findByRecipientIdOrderByCreatedAtDesc(String recipientId);
 
     @Query("SELECT m FROM Message m WHERE " +

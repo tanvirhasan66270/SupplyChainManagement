@@ -52,12 +52,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
  
  showPoLineItemMenu(): boolean {
-  // ১. যদি ইউজার PROCUREMENT অথবা COMMERCIAL_OFFICER হয়, তবে মেনুটি সব সময় দেখাবে
   if (this.activeRole === 'PROCUREMENT' ) {
     return true;
   }
 
-  // ২. অন্য রোলের ক্ষেত্রে আগের কন্ডিশন (localStorage) কাজ করবে
   return localStorage.getItem('hasReceivedPO') === 'true';
 }
 }

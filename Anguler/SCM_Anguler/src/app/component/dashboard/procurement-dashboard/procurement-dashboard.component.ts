@@ -14,7 +14,6 @@ import { PurchaseOrderService } from '../../../service/purchase-orde.service';
 import { PoLineItemService } from '../../../service/po-line-item.service';
 import { InvoiceService } from '../../../service/invoice.service';
 import { NotificationService } from '../../../system/service/notification.service';
-import { NotificationModel } from '../../../system/NotificationModel';
 import { PurchaseOrderResponseModel, PurchaseOrderRequestModel } from '../../shared/model/purchaseOrderModel';
 import { purchaseRequisitionRequestModel, purchaseRequisitionResponseModel } from '../../shared/model/purchase-requisionModel';
 import { QuotationRequestModel, QuotationResponseModel } from '../../shared/model/quatationModel';
@@ -75,7 +74,6 @@ export class ProcurementDashboardComponent implements OnInit {
   }
 
   get displayRfqs() {
-    // Bypass monthly filter: "no change monthly data"
     let filtered = (this.rawRFQs || []).filter(q => q.status !== 'APPROVED' && q.status !== 'REJECTED');
     
     if (this.rfqSearchText && this.rfqSearchText.trim() !== '') {
@@ -146,7 +144,6 @@ export class ProcurementDashboardComponent implements OnInit {
   userRole: string = '';
 
 
-  // MODAL STATES & FORM DATA
   isPrModalOpen = false;
   isPoModalOpen = false;
   isQuotationModalOpen = false;
@@ -180,7 +177,6 @@ export class ProcurementDashboardComponent implements OnInit {
         this.selectedPrRequirements.push(req);
       }
     }
-    // reset selection
     event.target.value = '';
   }
 
@@ -467,7 +463,6 @@ export class ProcurementDashboardComponent implements OnInit {
     this.loadNotifications();
   }
 
-  // Opens the View All Modal with specific data
   openViewAllModal(title: string, type: string, data: any[]): void {
     this.viewAllModalTitle = title;
     this.viewAllModalType = type;
@@ -477,37 +472,30 @@ export class ProcurementDashboardComponent implements OnInit {
     this.isViewAllModalOpen = true;
   }
 
-  // Closes the View All Modal
   closeViewAllModal(): void {
     this.isViewAllModalOpen = false;
     this.modalSearchText = '';
     this.modalSearchDate = '';
   }
 
-  // Dynamic filter for modal data
   get filteredModalData(): any[] {
     if (!this.viewAllModalData) return [];
     
     let filtered = this.viewAllModalData;
     
-    // Filter by text search
     if (this.modalSearchText && this.modalSearchText.trim() !== '') {
       const searchLower = this.modalSearchText.toLowerCase().trim();
       filtered = filtered.filter(item => {
-        // Deep stringify search across all object values
         const values = Object.values(item).join(' ').toLowerCase();
         return values.includes(searchLower);
       });
     }
 
-    // Filter by date
     if (this.modalSearchDate) {
       filtered = filtered.filter(item => {
-        // Check known date fields
         const dateStr = item.createdAt || item.date || item.createdAtDate || '';
         if (!dateStr) return false;
         
-        // Match standard format YYYY-MM-DD
         return String(dateStr).startsWith(this.modalSearchDate);
       });
     }
@@ -592,7 +580,6 @@ export class ProcurementDashboardComponent implements OnInit {
       }
     });
 
-    // Dummy Data Initializations
     this.supplierService.findAll().subscribe({ next: (data) => { this.activeSuppliers = (data || []).length; }});
     this.allActiveSuppliersData = [
       { name: 'TechCorp Industries', rating: '4.8', activePOs: 3 },
@@ -756,7 +743,6 @@ export class ProcurementDashboardComponent implements OnInit {
     return `${Math.floor(hrs / 24)}d ago`;
   }
 
-  // ================= SEARCH FILTERS FOR QUICK ACTION CARD TABLES =================
   get filteredQuotationsList(): any[] {
     if (!this.rawRFQs) return [];
     if (!this.directorySearchQuery || this.directorySearchQuery.trim() === '') return this.rawRFQs;
@@ -804,7 +790,6 @@ export class ProcurementDashboardComponent implements OnInit {
     });
   }
 
-  // ================= MODAL LOGIC =================
   loadModalData() {
     this.productService.findAll().subscribe((d: any) => this.prProducts = d || []);
     this.reqService.findAll().subscribe((d: any) => this.prRequirements = d || []);
@@ -899,7 +884,6 @@ export class ProcurementDashboardComponent implements OnInit {
       this.newPo.supplierName = selectedQ.supplierName || 'N/A';
       this.newPo.currency = (selectedQ.currency as string) || 'USD';
 
-      // Try email from quotation first, fall back to prSuppliers list
       if (selectedQ.supplierEmail && selectedQ.supplierEmail.trim() !== '') {
         this.newPo.supplierEmail = selectedQ.supplierEmail;
       } else {

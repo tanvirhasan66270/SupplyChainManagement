@@ -26,7 +26,6 @@ public class GRNLineItemController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // Update Existing GRN Line Item (PUT)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'QC_INSPECTOR', 'LOGISTICS_OFFICER')")
     @PutMapping("/{id}")
@@ -51,7 +50,6 @@ public class GRNLineItemController {
         return ResponseEntity.ok(list);
     }
 
-    // 4. Get GRN Line Item By ID (GET)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'QC_INSPECTOR', 'LOGISTICS_OFFICER', 'SALES_OFFICER', 'COMMERCIAL_OFFICER', 'DRIVER', 'CUSTOMER', 'SUPPLIER')")
     @GetMapping("/{id}")
@@ -61,7 +59,6 @@ public class GRNLineItemController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Delete GRN Line Item By ID (DELETE)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'QC_INSPECTOR', 'LOGISTICS_OFFICER')")
     @DeleteMapping("/{id}")

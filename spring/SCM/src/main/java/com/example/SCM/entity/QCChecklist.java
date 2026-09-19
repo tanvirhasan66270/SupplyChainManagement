@@ -17,7 +17,6 @@ public class QCChecklist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // FK → QCInspection (Parent Relationship)
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inspection_id", nullable = false)

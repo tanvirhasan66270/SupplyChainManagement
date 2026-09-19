@@ -13,7 +13,7 @@ import {
 export class ProcurementService {
   private apiUrl = environment.apiUrl + 'procurements';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   findAll(): Observable<ProcurementResponseDTO[]> {
     return this.http.get<ProcurementResponseDTO[]>(this.apiUrl);
@@ -33,7 +33,7 @@ export class ProcurementService {
       new Blob([JSON.stringify(procurement)], { type: 'application/json' }),
     );
     if (file) {
-      formData.append('file', file); // ব্যাকএন্ড রিকোয়েস্ট পার্ট নেম "file"
+      formData.append('file', file);
     }
     return this.http.post<ProcurementResponseDTO>(this.apiUrl, formData);
   }

@@ -12,22 +12,18 @@ export class ActivityLogService {
 
   constructor(private http: HttpClient) { }
 
-  // 🔍 অল লগ ফেচ করা
   findAll(): Observable<ActivityLogModel[]> {
     return this.http.get<ActivityLogModel[]>(this.apiUrl);
   }
 
-  // 📦 মডিউল বেসড ফিল্টারিং
   findByModule(moduleName: string): Observable<ActivityLogModel[]> {
     return this.http.get<ActivityLogModel[]>(`${this.apiUrl}/module/${moduleName}`);
   }
 
-  // 👤 ইউজার আইডি ট্র্যাক লুপ
   findByUserId(userId: string): Observable<ActivityLogModel[]> {
     return this.http.get<ActivityLogModel[]>(`${this.apiUrl}/user/${userId}`);
   }
 
-  // 🚦 এনাম স্ট্যাটাস ফিল্টারিং (SUCCESS/FAILED)
   findByStatus(status: string): Observable<ActivityLogModel[]> {
     return this.http.get<ActivityLogModel[]>(`${this.apiUrl}/status/${status}`);
   }

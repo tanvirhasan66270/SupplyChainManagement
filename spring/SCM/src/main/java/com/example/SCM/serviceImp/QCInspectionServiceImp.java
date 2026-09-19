@@ -38,14 +38,14 @@ public class QCInspectionServiceImp implements QCInspectionService {
     private final QCInspectionMapper qcInspectionMapper;
     private final NotificationService notificationService;
 
-    // Activity Log & Request Context Dependencies
+
     private final ActivityLogService activityLogService;
     private final HttpServletRequest request;
 
     @Value("${image.upload.dir}")
     private String uploadDir;
 
-    // Dynamically resolves current active user or system actor
+
 
     private String resolveCurrentUserId() {
         String userId = request.getHeader("X-User-Id");
@@ -99,11 +99,11 @@ public class QCInspectionServiceImp implements QCInspectionService {
                     saved.getSampleSize()
             );
 
-            // 1. Dispatch to role-level targets
+
             notificationService.send("LOGISTICS_OFFICER", "QC_INSPECTION", title, message);
             notificationService.send("MANAGER", "QC_INSPECTION", title, message);
 
-            // 2. Dispatch to specific user IDs
+
             List<Role> targetRoles = List.of(Role.LOGISTICS_OFFICER, Role.MANAGER);
             List<User> targetUsers = userRepository.findUsersByRoles(targetRoles);
             if (targetUsers != null) {
@@ -122,7 +122,7 @@ public class QCInspectionServiceImp implements QCInspectionService {
             System.err.println("QC Inspection Notification Error: " + e.getMessage());
         }
 
-        //  ACTIVITY LOG: CREATE
+
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -170,7 +170,7 @@ public class QCInspectionServiceImp implements QCInspectionService {
 
         QCInspection updated = qcInspectionRepository.saveAndFlush(inspection);
 
-        //  ACTIVITY LOG: UPDATE
+
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -211,7 +211,7 @@ public class QCInspectionServiceImp implements QCInspectionService {
 
         qcInspectionRepository.delete(inspection);
 
-        //  ACTIVITY LOG: DELETE
+
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,

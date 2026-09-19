@@ -34,11 +34,9 @@ public class InventoryServiceImp implements InventoryService {
     private final InventoryMapper inventoryMapper;
     private final com.example.SCM.service.NotificationService notificationService;
 
-    // Activity Log & Request Context Dependencies
     private final ActivityLogService activityLogService;
     private final HttpServletRequest request;
 
-    // Dynamically resolves current active user or system actor
 
     private String resolveCurrentUserId() {
         String userId = request.getHeader("X-User-Id");
@@ -104,7 +102,6 @@ public class InventoryServiceImp implements InventoryService {
             notificationService.send("LOGISTICS_OFFICER", "WARNING", "Low Stock Alert", "Stock for product " + product.getName() + " is critically low at warehouse " + warehouse.getName());
         }
 
-        //  ACTIVITY LOG: CREATE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -157,7 +154,6 @@ public class InventoryServiceImp implements InventoryService {
             notificationService.send("LOGISTICS_OFFICER", "WARNING", "Low Stock Alert", "Stock for product " + product.getName() + " has reached low levels at warehouse " + warehouse.getName());
         }
 
-        //  ACTIVITY LOG: UPDATE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -200,7 +196,6 @@ public class InventoryServiceImp implements InventoryService {
 
         inventoryRepository.delete(inventory);
 
-        // ACTIVITY LOG: DELETE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,

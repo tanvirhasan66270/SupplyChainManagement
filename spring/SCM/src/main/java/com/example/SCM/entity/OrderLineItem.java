@@ -19,12 +19,12 @@ public class OrderLineItem {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
-    private CustomerOrder customerOrder; // FK → CustomerOrder
+    private CustomerOrder customerOrder;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private Product product; // FK → Product
+    private Product product;
 
 
     private int quantity;

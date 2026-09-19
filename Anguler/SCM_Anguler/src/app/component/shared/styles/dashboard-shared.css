@@ -1,9 +1,4 @@
-/* =====================================================
-   SCM Unified Dashboard Design System
-   Eye-friendly, clean, modern design for all dashboards
-   ===================================================== */
 
-/* ── Welcome Cards ── */
 .welcome-card {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   border: 1px solid #e2e8f0;
@@ -16,7 +11,6 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
 }
 
-/* ── KPI Cards ── */
 .kpi-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -60,7 +54,6 @@
   font-size: 1.1rem;
 }
 
-/* ── Module Cards ── */
 .module-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -93,7 +86,6 @@
   font-size: 0.85rem;
 }
 
-/* ── Action Cards / Buttons ── */
 .action-card,
 .action-btn {
   background: #ffffff;
@@ -110,7 +102,6 @@
   border-color: var(--primary-300);
 }
 
-/* ── Quick Action Buttons ── */
 .quick-action-btn {
   border: 1px solid #f0f0f0;
   border-radius: 12px;
@@ -124,7 +115,6 @@
   border-color: rgba(99, 102, 241, 0.2);
 }
 
-/* ── Summary Cards ── */
 .summary-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -138,7 +128,6 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
 }
 
-/* ── Finance Stats ── */
 .finance-stat {
   transition: transform 0.3s ease;
   border-radius: 12px;
@@ -148,7 +137,6 @@
   transform: scale(1.02);
 }
 
-/* ── Section Headers ── */
 .section-header {
   font-size: 1rem;
   font-weight: 700;
@@ -164,7 +152,6 @@
   color: var(--primary-500);
 }
 
-/* ── Status Dot ── */
 .status-dot {
   width: 8px;
   height: 8px;
@@ -187,7 +174,6 @@
   box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
 }
 
-/* ── Notification Items ── */
 .notification-item {
   background: transparent;
   border: 1px solid transparent;
@@ -222,7 +208,6 @@
   font-size: 0.9rem;
 }
 
-/* ── Activity Items ── */
 .activity-item {
   background: transparent;
   border: 1px solid transparent;
@@ -250,7 +235,6 @@
   font-size: 0.9rem;
 }
 
-/* ── Notification / Activity Lists ── */
 .notification-list,
 .activity-list {
   max-height: 360px;
@@ -273,7 +257,6 @@
   border-radius: 2px;
 }
 
-/* ── User Row ── */
 .user-row {
   transition: all 0.2s ease;
   border-radius: 10px;
@@ -290,7 +273,6 @@
   border-radius: 50%;
 }
 
-/* ── User Detail Modal ── */
 .user-detail-backdrop {
   position: fixed;
   top: 0;
@@ -359,7 +341,6 @@
   color: #1e293b;
 }
 
-/* ── Empty State ── */
 .empty-state {
   text-align: center;
   padding: 2.5rem 1rem;
@@ -385,7 +366,6 @@
   color: #94a3b8;
 }
 
-/* ── Progress Bar ── */
 .progress {
   border-radius: 6px;
   background-color: #f1f5f9;
@@ -398,14 +378,12 @@
   transition: width 0.6s ease;
 }
 
-/* ── Chart Container ── */
 .chart-container {
   position: relative;
   overflow: hidden;
   border-radius: 12px;
 }
 
-/* ── Loading Skeleton ── */
 .skeleton {
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
   background-size: 200% 100%;
@@ -442,18 +420,15 @@
   100% { background-position: -200% 0; }
 }
 
-/* ── Spinner ── */
 .spinner-border {
   width: 2.5rem;
   height: 2.5rem;
 }
 
-/* ── Font Size Utility ── */
 .fs-8 {
   font-size: 0.785rem !important;
 }
 
-/* ── Recommendation Items ── */
 .recommendation-item {
   border: 1px solid #e2e8f0;
   border-radius: 10px;
@@ -601,7 +576,6 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-/* ── Responsive Adjustments ── */
 @media (max-width: 768px) {
   .welcome-card {
     padding: 1.25rem 1rem;

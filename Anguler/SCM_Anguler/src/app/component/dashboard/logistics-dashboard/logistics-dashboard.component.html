@@ -1,5 +1,4 @@
 <div class="logistics-dashboard p-4 bg-light min-vh-100" style="background-color: #f8f9fa !important;">
-  <!-- ───────────────── TOP BAR ───────────────── -->
   <div class="dashboard-header bg-white p-4 rounded-4 shadow-sm border mb-4 d-flex justify-content-between align-items-center">
     <div>
       <div class="d-flex align-items-center gap-2 mb-1">
@@ -24,7 +23,6 @@
   </div>
   }
 
-  <!-- ───────────────── KPI GRID (6 Cards) ───────────────── -->
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-3 mb-4">
     <!-- Outbound Shipments -->
     <div class="col">
@@ -187,7 +185,6 @@
     </div>
   </div>
 
-          <!-- ───────────────── QUICK NAVIGATION CARDS ───────────────── -->
           <div class="mb-4">
             <div class="d-flex align-items-center gap-2 mb-3 ps-1">
               <i class="bi bi-grid-1x2-fill text-primary fs-5"></i>
@@ -318,7 +315,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── ROW 1: SCHEDULE, FLEET, TIMELINE ───────────────── -->
           <div class="row g-4 mb-4">
             <!-- Today's Dispatch Schedule -->
             <div class="col-lg-5">
@@ -453,7 +449,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── ROW 2: PERFORMANCE, WAREHOUSE, INVENTORY ───────────────── -->
           <div class="row g-4 mb-4">
             <!-- Shipment Performance -->
             <div class="col-lg-5">
@@ -626,7 +621,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── ROW 3: DISPATCH QUEUE, MAP, ACTIVITY ───────────────── -->
           <div class="row g-4 mb-4">
             <!-- Dispatch Queue -->
             <div class="col-lg-6">
@@ -750,7 +744,6 @@
 
           </div>
 
-          <!-- ───────────────── FOOTER ALERTS ───────────────── -->
           <h6 class="fw-bold mb-3 text-dark mt-2">Alerts & Notifications</h6>
 
           <div class="row g-3">
@@ -770,7 +763,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── WAREHOUSE MODAL ───────────────── -->
           <div class="modal fade" [class.show]="showWarehouseModal"
             [style.display]="showWarehouseModal ? 'block' : 'none'" tabindex="-1"
             style="background-color: rgba(0,0,0,0.5);">
@@ -806,7 +798,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── SHIPMENT MODAL ───────────────── -->
           <div class="modal fade" [class.show]="showShipmentModal"
             [style.display]="showShipmentModal ? 'block' : 'none'" tabindex="-1"
             style="background-color: rgba(0,0,0,0.5);">
@@ -849,7 +840,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── DISPATCH QUEUE MODAL ───────────────── -->
           <div class="modal fade" [class.show]="showDispatchModal"
             [style.display]="showDispatchModal ? 'block' : 'none'" tabindex="-1"
             style="background-color: rgba(0,0,0,0.5);">
@@ -915,7 +905,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── DISPATCH SCHEDULE MODAL ───────────────── -->
           <div class="modal fade" [class.show]="showScheduleModal"
             [style.display]="showScheduleModal ? 'block' : 'none'" tabindex="-1"
             style="background-color: rgba(0,0,0,0.5);">
@@ -962,7 +951,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── MAP MODAL ───────────────── -->
           <div class="modal fade" [class.show]="showMapModal" [style.display]="showMapModal ? 'block' : 'none'"
             tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
             <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -1040,7 +1028,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── 1. STOCK NAV MODAL (FORM + DATA) ───────────────── -->
           <div class="modal fade" [class.show]="showStockNavModal"
             [style.display]="showStockNavModal ? 'block' : 'none'" tabindex="-1"
             style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px);">
@@ -1133,9 +1120,7 @@
               </div>
             </div>
           </div>
-
-          <!-- ───────────────── 2. STOCK MOVEMENT NAV MODAL (FORM + DATA) ───────────────── -->
-          <div class="modal fade" [class.show]="showStockMovementNavModal"
+         <div class="modal fade" [class.show]="showStockMovementNavModal"
             [style.display]="showStockMovementNavModal ? 'block' : 'none'" tabindex="-1"
             style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px);">
             <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
@@ -1174,8 +1159,7 @@
                       <select class="form-select custom-form-control" [(ngModel)]="movementForm.productId"
                         name="productId" (change)="onMovementProductChange()" required>
                         <option [value]="0">-- Select Product --</option>
-                        <option *ngFor="let p of availableProductsForMovement" [value]="p.id">{{ p.name }} (Code: {{
-                          p.productCode }})</option>
+                        <option *ngFor="let p of availableProductsForMovement" [value]="p.id">{{ p.name }} (Code: {{                          p.productCode }})</option>
                       </select>
                     </div>
 
@@ -1187,7 +1171,6 @@
                         placeholder="Select a product to view available stock...">
                     </div>
 
-                    <!-- SOURCE WAREHOUSE NODE (FROM) (Wrapped in light-blue alert card/box) -->
                     <div *ngIf="movementForm.movementType === 'TRANSFER'"
                       class="mb-3 bg-info-subtle p-3 rounded border border-info-subtle">
                       <label class="custom-form-label fw-bold text-info-emphasis text-uppercase"
@@ -1230,7 +1213,6 @@
                       <input type="text" class="form-control custom-form-control bg-light fw-bold text-dark"
                         [value]="getTargetWarehouseName()" readonly placeholder="Warehouse facility...">
 
-                      <!-- ব্যাকএন্ডে আইডি পাঠানোর জন্য হিডেন ফিল্ড -->
                       <input type="hidden" [(ngModel)]="movementForm.warehouseId" name="warehouseId" required>
                     </div>
 
@@ -1268,7 +1250,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── 3. GOODS RECEIVED NOTE NAV MODAL (FORM + DATA) ───────────────── -->
           <div class="modal fade" [class.show]="showGRNNavModal" [style.display]="showGRNNavModal ? 'block' : 'none'"
             tabindex="-1" style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px);">
             <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
@@ -1301,7 +1282,6 @@
                       </select>
                     </div>
 
-                    <!-- DESTINATION VAULT (WAREHOUSE ALLOCATION) -->
                     <div class="mb-3">
                       <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">DESTINATION VAULT
                         (WAREHOUSE ALLOCATION) *</label>
@@ -1313,7 +1293,6 @@
                       </select>
                     </div>
 
-                    <!-- TOTAL RECEIVED VOLUME & ARRIVAL LOG DATE -->
                     <div class="row g-3 mb-3">
                       <div class="col-md-6">
                         <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">TOTAL RECEIVED
@@ -1329,7 +1308,6 @@
                       </div>
                     </div>
 
-                    <!-- Quality Assurance Checks (Screenshot Style) -->
                     <div class="card border border-info-subtle mb-3 p-3"
                       style="background-color: #f8fafc; border-radius: 10px;">
                       <h6 class="fw-bold small text-primary mb-3">
@@ -1425,7 +1403,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── 4. DELIVERY TRIP NAV MODAL (FORM + DATA) ───────────────── -->
           <div class="modal fade" [class.show]="showDeliveryTripNavModal"
             [style.display]="showDeliveryTripNavModal ? 'block' : 'none'" tabindex="-1"
             style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px);">
@@ -1448,7 +1425,6 @@
 
                 <div class="modal-body p-4 bg-white">
                   <form #fTrip="ngForm" (ngSubmit)="fTrip.valid && submitTripForm()">
-                    <!-- TARGET CUSTOMER ACCOUNT -->
                     <div class="mb-3">
                       <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">TARGET CUSTOMER
                         ACCOUNT *</label>
@@ -1460,7 +1436,6 @@
                       </select>
                     </div>
 
-                    <!-- SELECT VEHICLE MODE -->
                     <div class="mb-3">
                       <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">SELECT VEHICLE MODE
                         *</label>
@@ -1475,15 +1450,12 @@
                       </select>
                     </div>
 
-                    <!-- ASSIGN CAPTAIN & FLEET ASSET -->
                     <div class="mb-3">
-                      <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">ASSIGN CAPTAIN &amp;
-                        FLEET ASSET</label>
+                      <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">ASSIGN CAPTAIN &amp;        FLEET ASSET</label>
                       <select class="form-select custom-form-control" [(ngModel)]="tripForm.vehicleId" name="vehicleId"
                         [disabled]="filteredVehicles.length === 0" required>
                         <option [value]="0">
-                          {{ filteredVehicles.length === 0 ? '-- Choose Fleet Mode First / No Driver Available --' : '--
-                          Choose Captain (Vehicle Number) --' }}
+                          {{ filteredVehicles.length === 0 ? '-- Choose Fleet Mode First / No Driver Available --' : '-- Choose Captain (Vehicle Number) --' }}
                         </option>
                         <option *ngFor="let v of filteredVehicles" [value]="v.id">
                           👤 {{ v.driverName }} (🚗 {{ v.vehicleNumber || v.plateNumber }})
@@ -1491,7 +1463,6 @@
                       </select>
                     </div>
 
-                    <!-- INITIAL OPERATIONAL STATE -->
                     <div class="mb-3">
                       <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">INITIAL OPERATIONAL
                         STATE</label>
@@ -1502,7 +1473,6 @@
                       </select>
                     </div>
 
-                    <!-- CONSIGNMENT DROP COORDINATE ADDRESS -->
                     <div class="mb-3">
                       <label class="custom-form-label text-uppercase text-secondary fw-bold fs-7">CONSIGNMENT DROP
                         COORDINATE ADDRESS *</label>
@@ -1533,7 +1503,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── 5. VEHICLE NAV MODAL (FORM + DATA) ───────────────── -->
           <div class="modal fade" [class.show]="showVehicleNavModal"
             [style.display]="showVehicleNavModal ? 'block' : 'none'" tabindex="-1"
             style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px);">
@@ -1617,7 +1586,6 @@
             </div>
           </div>
 
-          <!-- ───────────────── 6. QC INSPECTION NAV MODAL (READ-ONLY DATA TABLE) ───────────────── -->
           <div class="modal fade" [class.show]="showQCInspectionNavModal"
             [style.display]="showQCInspectionNavModal ? 'block' : 'none'" tabindex="-1"
             style="background-color: rgba(15,23,42,0.65); backdrop-filter: blur(4px); z-index: 1050;">

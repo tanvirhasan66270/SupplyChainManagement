@@ -59,7 +59,6 @@ public class CommercialOfficerServiceImp implements CommercialOfficerService {
             throw new RuntimeException("This NID number is already registered under another commercial officer!");
         }
 
-        // 1. Save associated user identity profile
         User user = new User();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
@@ -75,7 +74,6 @@ public class CommercialOfficerServiceImp implements CommercialOfficerService {
                     .orElseThrow(() -> new RuntimeException("Police Station not resolved with ID: " + dto.getPoliceStationId()));
         }
 
-        // 2. Map DTO descriptors onto core Entity infrastructure
         CommercialOfficer officer = officerMapper.toOfficerEntity(dto, savedUser, policeStation);
 
         if (file != null && !file.isEmpty()) {
@@ -183,7 +181,6 @@ public class CommercialOfficerServiceImp implements CommercialOfficerService {
                 ext = original.substring(original.lastIndexOf("."));
             }
 
-            // উইন্ডোজ ফাইল সিস্টেমের অবৈধ ক্যারেক্টার ক্লিনআপ
             String cleanedName = name.trim()
                     .replaceAll("[\\\\/:*?\"<>|]", "_")
                     .replaceAll("\\s+", "_");

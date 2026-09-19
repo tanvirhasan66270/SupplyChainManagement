@@ -23,7 +23,6 @@ export class QcInspectionService {
     return this.http.get<QCInspectionResponseModel>(`${this.apiUrl}/${id}`);
   }
 
-  // 🧪 Multipart/Form-Data পোস্ট মেকানিজম (জ্যাকসন পার্সার সেফটি সহ)
   save(
     inspection: QCInspectionRequestModel,
     file: File | null,

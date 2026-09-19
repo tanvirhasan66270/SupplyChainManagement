@@ -14,7 +14,6 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class POLineItemMapper {
 
-    //"YYYY-MM-DD"
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
@@ -38,7 +37,7 @@ public class POLineItemMapper {
         if (dto.getStatus() != null && !dto.getStatus().trim().isEmpty()) {
             item.setStatus(POLineItemStatus.valueOf(dto.getStatus().toUpperCase()));
         } else {
-            item.setStatus(POLineItemStatus.PENDING); // ডিফল্ট স্ট্যাটাস PENDING সেট হবে
+            item.setStatus(POLineItemStatus.PENDING);
         }
 
         item.setPurchaseOrder(purchaseOrder);
@@ -55,7 +54,7 @@ public class POLineItemMapper {
         dto.setId(item.getId());
         dto.setQuantity(item.getQuantity());
         dto.setUnitPrice(item.getUnitPrice());
-        dto.setLineTotal(item.getLineTotal()); // এনটিটি লেভেলের অটো ক্যালকুলেটেড ভ্যালু (@PrePersist/PreUpdate থেকে)
+        dto.setLineTotal(item.getLineTotal());
         dto.setQuotationRef(item.getQuotationRef());
         dto.setPoNumber(item.getPoNumber());
         dto.setDeliveryDate(item.getDeliveryDate());
@@ -65,7 +64,6 @@ public class POLineItemMapper {
         dto.setStatus(item.getStatus());
         dto.setCreatedAt(item.getCreatedAt());
 
-        // Parent PurchaseOrder Details Flattening
         if (item.getPurchaseOrder() != null) {
             PurchaseOrder po = item.getPurchaseOrder();
             dto.setPoId(po.getId());
@@ -74,7 +72,6 @@ public class POLineItemMapper {
             dto.setTotalAmount(po.getTotalAmount());
         }
 
-        // Product Details Flattening
         if (item.getProduct() != null) {
             Product prod = item.getProduct();
             dto.setProductId(prod.getId());

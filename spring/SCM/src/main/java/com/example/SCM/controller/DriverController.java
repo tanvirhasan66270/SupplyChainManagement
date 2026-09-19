@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/drivers")
 @RequiredArgsConstructor
-//@PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'LOGISTICS_OFFICER')")
 public class DriverController {
 
     private final DriverService driverService;

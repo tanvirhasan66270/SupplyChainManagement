@@ -13,7 +13,6 @@
   overflow: hidden;
 }
 
-/* ── Modern Unique Brand Styling ─────────────────── */
 
 .sidebar-brand {
   display: flex;
@@ -126,7 +125,6 @@
   font-weight: bold;
 }
 
-/* ── Navigation Scroll ───────────────────────────── */
 
 .sidebar-nav {
   flex: 1;
@@ -147,7 +145,6 @@
   background: transparent;
 }
 
-/* ── Section ─────────────────────────────────────── */
 
 .nav-section {
   margin-bottom: 0.5rem;
@@ -162,7 +159,6 @@
   padding: 0.75rem 0.75rem 0.375rem;
 }
 
-/* ── Nav Item ────────────────────────────────────── */
 
 .nav-item {
   display: flex;
@@ -224,7 +220,6 @@
   color: var(--gray-400, #9ca3af);
 }
 
-/* ── Submenu ─────────────────────────────────────── */
 
 .nav-submenu {
   padding-left: 0.5rem;
@@ -269,7 +264,6 @@
   font-weight: 600;
 }
 
-/* ── Sidebar Footer ──────────────────────────────── */
 
 .sidebar-footer {
   flex-shrink: 0;

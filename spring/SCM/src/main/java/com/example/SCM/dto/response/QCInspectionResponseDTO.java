@@ -19,7 +19,6 @@ public class QCInspectionResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // --- Flattened Relations for UI ---
     private Long grnId;
     private String grnNumber;
 

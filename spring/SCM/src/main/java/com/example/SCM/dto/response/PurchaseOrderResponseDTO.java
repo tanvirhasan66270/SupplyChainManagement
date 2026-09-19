@@ -19,12 +19,10 @@ public class PurchaseOrderResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    //Auto Loaded Supplier Details
     private Long supplierId;
     private String supplierName;
     private String supplierEmail;
 
-    //Auto Loaded Purchase Requisition Details
     private Long purchaseRequisitionId;
 
     //Quotation Connection Details

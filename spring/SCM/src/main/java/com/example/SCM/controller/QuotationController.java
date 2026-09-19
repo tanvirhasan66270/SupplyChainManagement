@@ -27,7 +27,6 @@ public class QuotationController {
     private final QuotationService quotationService;
     private final SupplierRepository supplierRepository;
 
-    // 1. Create New Quotation (POST Multipart)
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'SUPPLIER', 'COMMERCIAL_OFFICER', 'SALES_OFFICER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<QuotationResponseDTO> createQuotation(
@@ -43,7 +42,6 @@ public class QuotationController {
         );
     }
 
-    // 2. Get Quotation By ID (GET)
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'SUPPLIER', 'COMMERCIAL_OFFICER', 'SALES_OFFICER', 'LOGISTICS_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'CUSTOMER')")
     @GetMapping("/{id}")
     public ResponseEntity<QuotationResponseDTO> getQuotationById(@PathVariable Long id) {
@@ -52,7 +50,6 @@ public class QuotationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 3. Get All Quotations (GET)
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'SUPPLIER', 'COMMERCIAL_OFFICER', 'SALES_OFFICER', 'LOGISTICS_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'CUSTOMER')")
     @GetMapping
     public ResponseEntity<List<QuotationResponseDTO>> getAllQuotations() {
@@ -77,7 +74,6 @@ public class QuotationController {
         return ResponseEntity.ok(list);
     }
 
-    // 4. Update Existing Quotation (PUT)
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'SUPPLIER', 'COMMERCIAL_OFFICER')")
     @PutMapping("/{id}")
     public ResponseEntity<QuotationResponseDTO> updateQuotation(
@@ -88,14 +84,11 @@ public class QuotationController {
         return ResponseEntity.ok(response);
     }
 
-    // 5. Delete Quotation (DELETE)
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'SUPPLIER', 'COMMERCIAL_OFFICER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuotation(@PathVariable Long id) {
         quotationService.delete(id);
         return ResponseEntity.noContent().build();
     }
-    // 6. Update Quotation Status (PATCH)
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'SUPPLIER', 'COMMERCIAL_OFFICER')")
     @PatchMapping("/{id}/status")
     public ResponseEntity<QuotationResponseDTO> updateStatus(

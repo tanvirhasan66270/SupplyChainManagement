@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/managers")
 @RequiredArgsConstructor
-//@PreAuthorize("hasRole('ADMIN')")
 public class ManagerController {
 
     private final ManagerService managerService;
@@ -51,7 +50,7 @@ public class ManagerController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES_OFFICER', 'PROCUREMENT', 'LOGISTICS_OFFICER', 'COMMERCIAL_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'CUSTOMER', 'SUPPLIER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES_OFFICER', 'PROCUREMENT', 'LOGISTICS_OFFICER', 'COMMERCIAL_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'SUPPLIER')")
     @GetMapping
     public ResponseEntity<List<ManagerResponseDTO>> findAll() {
         return ResponseEntity.ok(managerService.findAll());

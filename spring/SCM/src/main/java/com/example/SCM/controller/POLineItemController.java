@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/po-line-items")
 @RequiredArgsConstructor
-//@PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT')")
 public class POLineItemController {
 
     private final POLineItemService poLineItemService;
@@ -60,7 +59,6 @@ public class POLineItemController {
         return ResponseEntity.ok("Purchase Order Line Item deleted and parent order total amount updated successfully!");
     }
 
-    // Track Purchase Order Line Item Status (GET)
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'PROCUREMENT', 'SUPPLIER', 'SALES_OFFICER', 'LOGISTICS_OFFICER', 'COMMERCIAL_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'CUSTOMER')")
     @GetMapping("/track/{trackingNumber}")

@@ -26,7 +26,6 @@ public class CustomerOrderController {
     private final CustomerOrderRepository orderRepository;
     private final CustomerOrderMapper orderMapper;
 
-    // 1. Place a New Order
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CUSTOMER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CustomerOrderResponseDTO> createOrder(
@@ -37,7 +36,6 @@ public class CustomerOrderController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // 2. General Update Order Metadata
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES_OFFICER') or @customerOrderSecurity.isOwner(#id, authentication)")
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CustomerOrderResponseDTO> updateOrder(
@@ -78,7 +76,6 @@ public class CustomerOrderController {
     }
 
 
-    // 4. Find Single Order Context By ID
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES_OFFICER', 'LOGISTICS_OFFICER', 'COMMERCIAL_OFFICER', 'PROCUREMENT', 'DRIVER', 'QC_INSPECTOR', 'CUSTOMER', 'SUPPLIER') or @customerOrderSecurity.isOwner(#id, authentication)")
     @GetMapping("/{id}")
     public ResponseEntity<CustomerOrderResponseDTO> getOrderById(@PathVariable Long id) {
@@ -87,7 +84,6 @@ public class CustomerOrderController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // 5. Delete Order Record
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOrder(@PathVariable Long id) {
@@ -95,7 +91,6 @@ public class CustomerOrderController {
         return ResponseEntity.ok("Customer order instance purged successfully from cluster cache mapping.");
     }
 
-    // 6. Live Track Package via Order Number
     @PreAuthorize("permitAll()")
     @GetMapping("/track")
     public ResponseEntity<CustomerOrderResponseDTO> trackOrderByNumber(@RequestParam String orderNumber) {
@@ -104,7 +99,6 @@ public class CustomerOrderController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // 8. Dedicated Status Lifecycle Update Endpoint
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES_OFFICER') or @customerOrderSecurity.isOwner(#id, authentication)")
     @PatchMapping("/{id}/status")
     public ResponseEntity<CustomerOrderResponseDTO> updateOrderStatus(
@@ -115,7 +109,6 @@ public class CustomerOrderController {
         return ResponseEntity.ok(response);
     }
 
-    // 7. Two-Step Email Link Verification Webhook
     @PreAuthorize("permitAll()")
     @GetMapping("/verify-link")
     public ResponseEntity<String> executeVerificationAndTriggerEmail(

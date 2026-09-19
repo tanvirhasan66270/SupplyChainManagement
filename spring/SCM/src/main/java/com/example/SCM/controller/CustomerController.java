@@ -55,7 +55,6 @@ public class CustomerController {
         return ResponseEntity.ok(list);
     }
 
-    //  এখানে @customerSecurity.isSelf যোগ করা হলো, যাতে কাস্টমার শুধু নিজের আইডি দিয়ে দেখতে পারে
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES_OFFICER', 'LOGISTICS_OFFICER', 'PROCUREMENT', 'COMMERCIAL_OFFICER', 'DRIVER', 'QC_INSPECTOR', 'CUSTOMER', 'SUPPLIER') or @customerSecurity.isSelf(#id, authentication)")
     @GetMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> getById(@PathVariable Long id) {

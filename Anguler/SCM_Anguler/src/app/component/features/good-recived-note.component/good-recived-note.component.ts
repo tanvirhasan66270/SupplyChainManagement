@@ -41,14 +41,13 @@ export class GoodRecivedNoteComponent implements OnInit {
   currentEditId: number | null = null;
   currentUserId: number = 0;
 
-  // যুক্ত করা হয়েছে: ইউজার রোল যা এইচটিএমএল-এ *ngIf এর জন্য ব্যবহৃত হবে
   userRole: string = 'CUSTOMER';
 
   statusEditId: number | null = null;
   statusEditValue: string = '';
   statusSaving = false;
 
-  // PDF Preview States
+  // PDF 
   @ViewChild('pdfPreviewContainer') pdfPreviewContainer!: ElementRef;
   isPdfModalOpen = false;
   selectedGrnForPdf: GoodsReceivedNoteResponseModel | null = null;
@@ -80,7 +79,6 @@ export class GoodRecivedNoteComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // রোল এবং ইউজার আইডি ইনিশিয়ালাইজ করা হচ্ছে
     this.userRole = this.storage.getActiveRole()?.toUpperCase() || 'CUSTOMER';
 
     const user = this.storage.getUser();

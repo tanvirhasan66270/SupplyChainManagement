@@ -23,41 +23,6 @@ public class CustomerOrderMapper {
 
     private final OrderLineItemMapper lineItemMapper;
 
-    public CustomerOrder toEntity(CustomerOrderRequestDTO dto, User customer) {
-        CustomerOrder order = new CustomerOrder();
-        order.setCustomer(customer);
-        order.setCustomerName(customer != null ? customer.getName() : null);
-        order.setCustomerEmail(customer != null ? customer.getEmail() : null);
-        order.setDeliveryAddress(dto.getDeliveryAddress());
-        order.setDeliveryPhone(dto.getDeliveryPhone());
-        order.setRemarks(dto.getRemarks());
-        order.setCodAmount(dto.getCodAmount());
-        order.setCurrency(dto.getCurrency() != null ? dto.getCurrency().toUpperCase() : "BDT");
-        order.setServiceType(dto.getServiceType() != null && !dto.getServiceType().isBlank() ?
-                ServiceType.valueOf(dto.getServiceType().toUpperCase()) : ServiceType.STANDARD);
-        order.setPaymentMethod(dto.getPaymentMethod() != null && !dto.getPaymentMethod().isBlank() ?
-                PaymentMethod.valueOf(dto.getPaymentMethod().toUpperCase()) : null);
-        order.setCustomerAccountNumber(dto.getCustomerAccountNumber());
-        order.setPaymentCheckImage(dto.getPaymentCheckImage());
-        order.setStatus(dto.getStatus() != null && !dto.getStatus().isBlank() ?
-                CustomerOrderStatus.valueOf(dto.getStatus().toUpperCase()) : CustomerOrderStatus.PENDING);
-        order.setEstimatedDelivery(dto.getEstimatedDelivery() != null && !dto.getEstimatedDelivery().isBlank() ?
-                LocalDate.parse(dto.getEstimatedDelivery()) : null);
-        order.setLineItems(new ArrayList<>());
-
-
-
-        if (dto.getItems() != null) {
-            dto.getItems().forEach(itemDto -> {
-                OrderLineItem item = lineItemMapper.toEntity(itemDto);
-                if (item != null) {
-                    order.addLineItem(item);
-                }
-            });
-        }
-
-        return order;
-    }
 
     public CustomerOrderResponseDTO convertTOResponseDTO(CustomerOrder entity) {
         CustomerOrderResponseDTO dto = new CustomerOrderResponseDTO();
@@ -99,4 +64,42 @@ public class CustomerOrderMapper {
 
         return dto;
     }
+
+    public CustomerOrder toEntity(CustomerOrderRequestDTO dto, User customer) {
+        CustomerOrder order = new CustomerOrder();
+        order.setCustomer(customer);
+        order.setCustomerName(customer != null ? customer.getName() : null);
+        order.setCustomerEmail(customer != null ? customer.getEmail() : null);
+        order.setDeliveryAddress(dto.getDeliveryAddress());
+        order.setDeliveryPhone(dto.getDeliveryPhone());
+        order.setRemarks(dto.getRemarks());
+        order.setCodAmount(dto.getCodAmount());
+        order.setCurrency(dto.getCurrency() != null ? dto.getCurrency().toUpperCase() : "BDT");
+        order.setServiceType(dto.getServiceType() != null && !dto.getServiceType().isBlank() ?
+                ServiceType.valueOf(dto.getServiceType().toUpperCase()) : ServiceType.STANDARD);
+        order.setPaymentMethod(dto.getPaymentMethod() != null && !dto.getPaymentMethod().isBlank() ?
+                PaymentMethod.valueOf(dto.getPaymentMethod().toUpperCase()) : null);
+        order.setCustomerAccountNumber(dto.getCustomerAccountNumber());
+        order.setPaymentCheckImage(dto.getPaymentCheckImage());
+        order.setStatus(dto.getStatus() != null && !dto.getStatus().isBlank() ?
+                CustomerOrderStatus.valueOf(dto.getStatus().toUpperCase()) : CustomerOrderStatus.PENDING);
+        order.setEstimatedDelivery(dto.getEstimatedDelivery() != null && !dto.getEstimatedDelivery().isBlank() ?
+                LocalDate.parse(dto.getEstimatedDelivery()) : null);
+        order.setLineItems(new ArrayList<>());
+
+
+
+        if (dto.getItems() != null) {
+            dto.getItems().forEach(itemDto -> {
+                OrderLineItem item = lineItemMapper.toEntity(itemDto);
+                if (item != null) {
+                    order.addLineItem(item);
+                }
+            });
+        }
+
+        return order;
+    }
+
+
 }

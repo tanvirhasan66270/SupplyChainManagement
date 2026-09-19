@@ -52,7 +52,7 @@ export class LetterOfCreditComponent implements OnInit, OnDestroy {
     private service: LetterOfCreditService,
     private poService: PurchaseOrderService,
     private supplierService: SupplierService,
-    private bankService: LcbankService, // 🎯 ইনজেক্ট করা হলো
+    private bankService: LcbankService, 
     private storage: StorageService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -68,7 +68,7 @@ export class LetterOfCreditComponent implements OnInit, OnDestroy {
     this.loadLCs();
     this.loadPurchaseOrders();
     this.loadSuppliers();
-    this.loadRealBanks(); // 🎯 মকিং বাদ দিয়ে রিয়েল ডাটা লোড
+    this.loadRealBanks();
   }
 
   loadLCs() {
@@ -84,7 +84,6 @@ export class LetterOfCreditComponent implements OnInit, OnDestroy {
   }
 
   loadRealBanks() {
-    // 🏦 আপনার তৈরি করা /api/banks এপিআই থেকে ডাটা সরাসরি লোড হবে
     this.bankService.findAll().subscribe({
       next: (res) => { this.banks = res || []; this.cdr.markForCheck(); },
       error: () => { this.banks = []; }
@@ -95,7 +94,6 @@ export class LetterOfCreditComponent implements OnInit, OnDestroy {
     if (event.target.files && event.target.files.length > 0) {
       this.selectedFile = event.target.files[0];
       
-      // 🎯 লোকাল লাইভ ইমেজ প্রিভিউ
       if (this.selectedFile && this.selectedFile.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = () => {
@@ -120,7 +118,6 @@ export class LetterOfCreditComponent implements OnInit, OnDestroy {
   save() {
     this.errorMessage = null;
 
-    // 🎯 ১. ড্রপডাউন আইডি ভ্যালিডেশন চেক (Strict Type Cast)
     if (!this.lc.purchaseOrderId || +this.lc.purchaseOrderId === 0 ||
         !this.lc.supplierId || +this.lc.supplierId === 0 ||
         !this.lc.issuingBankId || +this.lc.issuingBankId === 0) {
@@ -129,14 +126,12 @@ export class LetterOfCreditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // 🎯 ২. ক্রনিকাল ডেট চেক
     if (!this.lc.latestShipmentDate || !this.lc.expiryDate) {
       this.errorMessage = "Validation Fault: Latest Shipment Date and Expiry Date are mandatory parameters.";
       this.cdr.markForCheck();
       return;
     }
 
-    // 🎯 ৩. ডাটা স্যানিটাইজেশন এবং পেলোড প্রিপারেশন
     const cleanedPayload: LetterOfCreditRequestModel = {
       ...this.lc,
       lcStatus: this.lc.lcStatus ? this.lc.lcStatus.toUpperCase() : 'DRAFT',
@@ -146,7 +141,6 @@ export class LetterOfCreditComponent implements OnInit, OnDestroy {
     };
 
     if (this.isAmendMode && this.currentEditId !== null) {
-      // 🚀 PATCH: অ্যামেন্ডমেন্ট ট্রানজেকশন
       const patchData = {
         amount: cleanedPayload.amount,
         expiryDate: cleanedPayload.expiryDate,
@@ -157,13 +151,11 @@ export class LetterOfCreditComponent implements OnInit, OnDestroy {
         error: (err: any) => this.handleErrorLog(err)
       });
     } else if (this.isEdit && this.currentEditId !== null) {
-      // 📝 PUT: মেটাডাটা আপডেট
       this.service.update(this.currentEditId, cleanedPayload, this.selectedFile).subscribe({
         next: () => { alert("Letter of Credit updated successfully."); this.closeDrawer(); this.loadLCs(); },
         error: (err: any) => this.handleErrorLog(err)
       });
     } else {
-      // ➕ POST: নতুন এলসি রেজিস্টার
       this.service.save(cleanedPayload, this.selectedFile).subscribe({
         next: () => { alert("New Letter of Credit registered successfully into cluster registry."); this.closeDrawer(); this.loadLCs(); },
         error: (err: any) => this.handleErrorLog(err)
@@ -256,7 +248,6 @@ export class LetterOfCreditComponent implements OnInit, OnDestroy {
 
   getFileUrl(url: string | undefined): string {
     if (!url) return '';
-    // DB stores 'uploads/lc/...', but Spring Boot serves via '/images/lc/...'
     const correctedPath = url.startsWith('uploads/') ? url.replace('uploads/', 'images/') : url;
     return 'http://localhost:8085/' + correctedPath;
   }

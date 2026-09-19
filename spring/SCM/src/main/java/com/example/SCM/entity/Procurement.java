@@ -24,7 +24,6 @@ public class Procurement {
 
 
 
-    // password , name ,phone,Email this all object save in user
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id", nullable = false, unique = true)

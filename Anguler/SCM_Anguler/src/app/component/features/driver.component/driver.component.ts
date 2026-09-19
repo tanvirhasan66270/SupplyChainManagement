@@ -231,7 +231,6 @@ export class DriverComponent implements OnInit {
     }
   }
 
-  // ব্যাকএন্ড এরর মেসেজ পার্স করার মেথড
   private handleBackendError(err: any) {
     console.error('Raw Server Error:', err);
     this.errorMessage = null;

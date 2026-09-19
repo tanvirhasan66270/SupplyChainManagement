@@ -55,7 +55,7 @@ public class DeliveryTripController {
         List<DeliveryTripResponseDTO> list = tripService.findAll();
 
         if (list.isEmpty()) {
-            return ResponseEntity.noContent().build(); // 204
+            return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.ok(list);

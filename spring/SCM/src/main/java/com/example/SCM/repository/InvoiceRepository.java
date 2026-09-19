@@ -16,7 +16,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     List<Invoice> findByCustomerEmail(String customerEmail);
 
-    // 5. Custom JPQL Query: Fetch pending due invoices
     @Query("SELECT i FROM Invoice i WHERE i.dueAmount > 0 AND i.invoiceStatus = com.example.SCM.enumClass.InvoiceStatus.ISSUED")
     List<Invoice> findPendingDueInvoices();
 

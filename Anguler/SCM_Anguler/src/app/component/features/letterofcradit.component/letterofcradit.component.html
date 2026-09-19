@@ -201,13 +201,11 @@
         <div class="mb-4" *ngIf="!isAmendMode">
           <label class="form-label fw-bold small text-uppercase text-secondary">Official SWIFT Letter Document Copy</label>
           
-          <!-- Show LIVE PREVIEW of newly selected image (Create or Update) -->
           <div *ngIf="selectedFilePreview" class="mb-3 p-3 bg-light border border-primary border-2 rounded text-center shadow-sm">
             <h6 class="fs-7 text-primary fw-bold mb-2 text-start"><i class="bi bi-eye me-2"></i>New File Selected (Live Preview):</h6>
             <img [src]="selectedFilePreview" alt="New SWIFT Document Preview" class="img-thumbnail" style="max-height: 180px; object-fit: contain;">
           </div>
 
-          <!-- Show existing document link or preview if available AND no new file is selected -->
           <div *ngIf="isEdit && lc.documentVaultUrl && !selectedFilePreview" class="mb-3 p-3 bg-light border rounded text-center">
             <h6 class="fs-7 text-dark fw-bold mb-2 text-start">Existing Document:</h6>
             

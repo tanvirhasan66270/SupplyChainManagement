@@ -47,7 +47,6 @@ public class Product {
     @Column(columnDefinition = "LONGTEXT")
     private String image; // Base64
 
-    // Relationship mapping with category
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)

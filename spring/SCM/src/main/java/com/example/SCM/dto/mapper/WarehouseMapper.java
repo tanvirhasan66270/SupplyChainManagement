@@ -13,7 +13,7 @@ public class    WarehouseMapper {
 
         Warehouse warehouse = new Warehouse();
         warehouse.setName(dto.getName());
-        warehouse.setEmail(dto.getEmail()); // 🔗 Mapping Email
+        warehouse.setEmail(dto.getEmail());
         warehouse.setLocation(dto.getLocation());
         warehouse.setCapacity(dto.getCapacity());
         warehouse.setManagerId(dto.getManagerId());
@@ -69,7 +69,7 @@ public class    WarehouseMapper {
     public void updateEntity(WarehouseRequestDTO dto, Warehouse warehouse, PoliceStation policeStation) {
 
         if (dto.getName() != null) warehouse.setName(dto.getName());
-        if (dto.getEmail() != null) warehouse.setEmail(dto.getEmail()); // 🔗 Updating Email
+        if (dto.getEmail() != null) warehouse.setEmail(dto.getEmail());
         if (dto.getLocation() != null) warehouse.setLocation(dto.getLocation());
 
         warehouse.setCapacity(dto.getCapacity());

@@ -5,5 +5,5 @@ export interface NotificationModel {
   title: string;
   message: string;
   isRead: boolean;
-  createdAt: string; // ISO Date String
+  createdAt: string; 
 }

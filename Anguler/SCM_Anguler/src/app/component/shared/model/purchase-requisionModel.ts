@@ -5,8 +5,8 @@ export interface purchaseRequisitionRequestModel {
   supplierIds: number[];
   currency: string;
   quantityRequired: number;
-  urgencyLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'; // Java UrgencyLevel Enum
-  requiredByDate: string; // Format: YYYY-MM-DD
+  urgencyLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'; 
+  requiredByDate: string; 
   remarks: string;
 }
 
@@ -16,13 +16,13 @@ export interface purchaseRequisitionResponseModel {
   requestedBy: number;
   currency: string;
   quantityRequired: number;
-  urgencyLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'; // Java UrgencyLevel Enum
-  requiredByDate: string; // Jackson কাস্টিং ডেটা (YYYY-MM-DD)
-  approvalStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED'; // Java PurchaseRequisitionStatus Enum
+  urgencyLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'; 
+  requiredByDate: string; 
+  approvalStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
   approvedBy: number | null; 
   approvedByName: string | null;
   remarks: string | null;
-  createdAt: string; // ISO String format
+  createdAt: string; 
   
   productIds: number[];
   productNames: string[];

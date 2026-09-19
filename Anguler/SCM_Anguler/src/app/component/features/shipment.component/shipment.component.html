@@ -1,6 +1,5 @@
 <div class="container-fluid py-4 px-4 text-dark" *ngIf="!isEmbedded">
 
-  <!-- হেডার এবং ডুয়াল সার্চ বার প্যানেল -->
   <div
     class="d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-3 mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
     <div>
@@ -35,7 +34,6 @@
   </div>
   }
 
-  <!-- শিপমেন্ট ডাটা লেজার টেবিল -->
   <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -111,7 +109,6 @@
     </div>
   </div>
 
-  <!-- Sliding Form Drawer Framework -->
   <div class="custom-drawer shadow" [class.open]="isDrawerOpen" *ngIf="!isEmbedded">
     <div class="drawer-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
       <h5 class="fw-bold mb-0">{{ isEdit ? 'Mutate Freight Parameters' : 'Authorize Freight Node' }}</h5>
@@ -140,11 +137,9 @@
         </div>
 
         <div class="modal-body bg-light p-4 d-flex justify-content-center">
-          <!-- ওয়ার্ড পেজ স্টাইল প্রিভিউ কন্টেইনার -->
           <div #pdfPreviewContainer class="bg-white p-5 shadow-sm rounded-3 border"
             style="width: 100%; max-width: 700px; font-family: Arial, sans-serif; color: #000;">
 
-            <!--  SCM Enterprise Exact Logo Header with Supplier Name -->
             <div class="text-center mb-4 pb-3 border-bottom">
               <h1 class="fw-bold mb-0"
                 style="letter-spacing: 3px; font-size: 38px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
@@ -170,7 +165,6 @@
                 </span>
               </div>
 
-              <!--  Supplier Name Display Bar -->
               <div class="mt-3 pt-2">
                 <span class="badge bg-light text-dark border px-3 py-2 fw-bold fs-7 font-monospace">
                   <i class="bi bi-building me-1 text-secondary"></i> Supplier: {{ selectedShipmentForPdf?.supplierName
@@ -270,7 +264,6 @@
 
               </tbody>
             </table>
-            <!--  Employee & Authorized Signature Section  -->
             <div class="row pt-5 border-top text-center"
               style="display: flex; justify-content: space-between; margin-top: 90px !important; padding-top: 30px !important;">
               <div style="width: 40%; display: inline-block;">
@@ -422,12 +415,10 @@
       </form>
 </ng-template>
 
-<!-- MODAL: ADD SHIPMENT (LC STYLE) -->
 <div class="modal fade show d-block" tabindex="-1" style="background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(8px); z-index: 1055;" *ngIf="isEmbedded">
   <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 850px;">
     <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden bg-white animate-fade-in">
       
-      <!-- Header -->
       <div class="modal-header px-4 py-3.5 border-0 d-flex justify-content-between align-items-center text-white" style="background: linear-gradient(135deg, #312e81 0%, #4338ca 60%, #6366f1 100%);">
         <div class="d-flex align-items-center gap-3">
           <div class="p-2.5 rounded-3 bg-white bg-opacity-20 backdrop-blur shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
@@ -441,7 +432,6 @@
         <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
       </div>
 
-      <!-- Form Body -->
       <div class="modal-body p-4 bg-light custom-scroll overflow-auto" style="max-height: 580px;">
          <ng-container *ngTemplateOutlet="shipmentFormTemplate"></ng-container>
       </div>

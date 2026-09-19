@@ -41,7 +41,6 @@
   transform: translateY(-1px);
 }
 
-/* --- 🌟 বড় সাইজ এবং আরও গাঢ় (Darker) কালারফুল রাউন্ড হেডার যুক্ত সেন্ট্রাল ড্রয়ার --- */
 .custom-drawer {
   position: fixed;
   top: 50%;
@@ -69,9 +68,8 @@
   visibility: visible;
 }
 
-/* --- 🌟 আরও গাঢ় (Darker) গ্রেডিয়েন্ট হেডার ডিজাইন --- */
 .reg-modal-header, .drawer-header {
-  background: linear-gradient(135deg, #312e81 0%, #4338ca 100%); /* আরও গাঢ় ডার্ক ইনডিগো টোন */
+  background: linear-gradient(135deg, #312e81 0%, #4338ca 100%); 
   color: #ffffff;
   padding: 20px 24px;
   display: flex;

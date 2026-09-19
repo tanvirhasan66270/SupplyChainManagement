@@ -31,7 +31,6 @@
   border-color: #4f63f0 !important; 
 }
 
-/* Grid Table Elements Profile Styling */
 .table th { 
   padding: 14px 12px; 
   border-bottom: 2px solid #e2e8f0; 
@@ -43,7 +42,6 @@
   border-bottom: 1px solid #edf2f7; 
 }
 
-/* Avatar Profile Circular Wrappers */
 .avatar-wrapper {
   width: 44px; 
   height: 44px; 
@@ -70,7 +68,6 @@
   letter-spacing: 0.5px;
 }
 
-/* Action Utilities Matrix Mapping Buttons */
 .btn-action-edit {
   color: #3b82f6; 
   background-color: #eff6ff; 
@@ -97,7 +94,6 @@
   border-color: #ef4444;
 }
 
-/* Registration Modal Layout */
 .registration-modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -162,7 +158,6 @@
   overflow: hidden;
 }
 
-/* Sidebar Stepper */
 .reg-sidebar {
   width: 240px;
   background-color: #f8fafc;
@@ -221,7 +216,6 @@
 .stepper-item.active .stepper-icon-3 { background-color: #10b981; color: #fff; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
 .stepper-item.active .stepper-text-3 h6 { color: #10b981; font-weight: 700; }
 
-/* Completed State */
 .stepper-item.completed:not(.active) .stepper-icon {
   background-color: #6254e8;
   color: #fff;
@@ -232,7 +226,6 @@
   font-weight: 700;
 }
 
-/* Sidebar Illustration Placeholder */
 .sidebar-illustration {
   margin-top: auto;
   text-align: center;
@@ -265,7 +258,6 @@
   opacity: 0.5;
 }
 
-/* Content Area */
 .reg-content {
   flex: 1;
   padding: 30px;
@@ -289,7 +281,6 @@
   font-size: 14px;
 }
 
-/* Input Groups */
 .reg-input-group .input-group-text {
   background-color: #ffffff;
   border-right: none;
@@ -317,7 +308,6 @@
   border-color: #8c52ff;
 }
 
-/* File Upload Box */
 .file-upload-box {
   border: 2px dashed #cbd5e1;
   border-radius: 8px;
@@ -348,7 +338,6 @@
   flex-shrink: 0;
 }
 
-/* Footer */
 .reg-footer {
   padding: 16px 24px;
   border-top: 1px solid #e2e8f0;
@@ -368,7 +357,6 @@
   color: white;
 }
 
-/* Typography Matrix Resizers (Fixed Overlap) */
 .fs-7 { font-size: 13px !important; }
 .fs-7\.5 { font-size: 12px !important; }
 .fs-8 { font-size: 11px !important; }

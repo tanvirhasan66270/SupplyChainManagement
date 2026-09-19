@@ -35,12 +35,10 @@ public class InvoiceServiceImp implements InvoiceService {
     private final TrackingCodeGenerator codeGenerator;
     private final MailService mailService;
 
-    // Activity Log & Request Context Dependencies
     private final ActivityLogService activityLogService;
     private final HttpServletRequest request;
     private final NotificationService notificationService;
 
-    // Dynamically resolves current active user or system actor
 
     private String resolveCurrentUserId() {
         String userId = request.getHeader("X-User-Id");
@@ -75,7 +73,6 @@ public class InvoiceServiceImp implements InvoiceService {
 
         Invoice savedInvoice = repository.save(invoice);
 
-        // Send notification to the customer
         try {
             if (order.getCustomer() != null && order.getCustomer().getId() != null) {
                 String recipientId = order.getCustomer().getId().toString();
@@ -97,7 +94,6 @@ public class InvoiceServiceImp implements InvoiceService {
             sendInvoiceEmail(savedInvoice, savedInvoice.getCustomerEmail());
         }
 
-        //  ACTIVITY LOG: CREATE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -126,7 +122,6 @@ public class InvoiceServiceImp implements InvoiceService {
 
         mapper.updateEntityFromDTO(dto, invoice);
 
-        // customer repository method vereficasion
         CustomerOrder order = orderRepository.findByIdWithDetails(dto.getCustomerOrderId())
                 .orElseThrow(() -> new RuntimeException("Customer Order node structural integrity broken."));
 
@@ -140,12 +135,10 @@ public class InvoiceServiceImp implements InvoiceService {
 
         Invoice updatedInvoice = repository.save(invoice);
 
-        // if ISSUE realtime mail notification is treggred
         if (updatedInvoice.getInvoiceStatus() == InvoiceStatus.ISSUED && !updatedInvoice.getCustomerEmail().contains("no-email")) {
             sendInvoiceEmail(updatedInvoice, updatedInvoice.getCustomerEmail());
         }
 
-        //  ACTIVITY LOG: UPDATE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,
@@ -211,7 +204,6 @@ public class InvoiceServiceImp implements InvoiceService {
 
         repository.delete(invoice);
 
-        //  ACTIVITY LOG: DELETE
         activityLogService.log(
                 resolveCurrentUserId(),
                 null,

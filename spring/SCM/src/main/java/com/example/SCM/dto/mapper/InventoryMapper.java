@@ -27,7 +27,7 @@ public class InventoryMapper {
         if (dto.getStockStatus() != null && !dto.getStockStatus().trim().isEmpty()) {
             inventory.setStockStatus(StockStatus.valueOf(dto.getStockStatus().toUpperCase()));
         } else {
-            inventory.setStockStatus(StockStatus.IN_STOCK); // Fallback Default
+            inventory.setStockStatus(StockStatus.IN_STOCK);
         }
 
         if (dto.getExpiryDate() != null && !dto.getExpiryDate().trim().isEmpty()) {

@@ -186,7 +186,6 @@
     </div>
   </div>
 
-  <!-- Status Patch Modal -->
   @if (isStatusModalOpen) {
     <div class="modal-overlay d-flex align-items-center justify-content-center">
       <div class="modal-window bg-white rounded shadow-lg p-4 animate-scale-in">
@@ -223,7 +222,6 @@
     </div>
   }
 
-  <!-- Missing Document Upload Modal -->
   @if (isUploadModalOpen) {
     <div class="modal-overlay d-flex align-items-center justify-content-center" style="z-index: 1080;">
       <div class="modal-window bg-white rounded shadow-lg p-4 animate-scale-in" style="width: 400px;">
@@ -246,7 +244,7 @@
     </div>
   }
 
-  <!-- PDF Preview Modal -->
+  // PDF 
   <div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.6);" *ngIf="isPdfModalOpen">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content shadow-lg border-0 rounded-4">
@@ -353,7 +351,6 @@
                   </td>
                 </tr>
 
-                <!-- Proof of Delivery (POD) Photo -->
                 <tr>
                   <td class="fw-bold bg-light">Proof of Delivery (POD) Photo</td>
                   <td>
@@ -383,7 +380,6 @@
               </tbody>
             </table>
 
-            <!-- Signature Section -->
             <div class="row pt-5 border-top text-center" style="display: flex; justify-content: space-between; margin-top: 90px !important; padding-top: 30px !important;">
               <div style="width: 40%; display: inline-block;">
                 <div style="border-top: 1px solid #000; margin-bottom: 5px; width: 80%; margin-left: auto; margin-right: auto;"></div>

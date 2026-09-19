@@ -3,16 +3,15 @@ export interface LetterOfCreditRequestModel {
   purchaseOrderId: number;
   issuingBankId: number;
   shipmentIncoTerms: string;
-  latestShipmentDate: string; // Formatting Pattern: YYYY-MM-DD
+  latestShipmentDate: string; 
   portOfLoading: string;
   portOfDischarge: string;
   amount: number;
   supplierId: number;
   currency: string;
-  expiryDate: string;         // Formatting Pattern: YYYY-MM-DD
+  expiryDate: string;        
   lcStatus: 'DRAFT' | 'OPENED' | 'AMENDED' | 'EXPIRED' | 'CANCELLED' | string;
-  documentVaultUrl: string;   // Image/PDF Vault String Path References
-}
+  documentVaultUrl: string;  }
 
 
 export interface LetterOfCreditResponseModel {

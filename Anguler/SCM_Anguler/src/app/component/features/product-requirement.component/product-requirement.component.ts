@@ -40,7 +40,6 @@ export class ProductRequirementComponent implements OnInit {
   urgencyLevels: string[] = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
   units: string[] = ['Pcs', 'Kg', 'Box', 'Ltr', 'Meter', 'Set', 'Pack'];
 
-  // 🌟 ফিক্সড: প্রথমে ফাঁকা বা ডিফল্ট মান রাখা হলো যাতে ইন্সট্যান্স ইনিশিয়ালাইজেশনের সময় ক্র্যাশ না করে
   form: ProductRequirementRequest = {
     customerOrderNumber: '',
     productName: '',
@@ -71,7 +70,6 @@ export class ProductRequirementComponent implements OnInit {
       console.warn('Could not retrieve user role from storage', e);
     }
 
-    // 🌟 সার্ভিস সম্পূর্ণ রেডি হওয়ার পর ফর্ম ভ্যালু সেট করা হলো
     this.form = this.emptyForm();
     this.loadAll();
   }
@@ -118,7 +116,6 @@ export class ProductRequirementComponent implements OnInit {
     });
   }
 
-  // ─── Role Checks ──────────────────────────────────────────────────────────
 
   isAdmin(): boolean { return this.userRole === 'ADMIN'; }
 
@@ -140,7 +137,6 @@ export class ProductRequirementComponent implements OnInit {
 
   canDelete(): boolean { return this.isAdmin(); }
 
-  // ─── Drawer ───────────────────────────────────────────────────────────────
 
   openDrawer(): void {
     this.form = this.emptyForm();
@@ -204,7 +200,6 @@ export class ProductRequirementComponent implements OnInit {
     }
   }
 
-  // ─── Status Modal ─────────────────────────────────────────────────────────
 
   openStatusModal(r: ProductRequirementResponse): void {
     this.selectedForStatus = r;
@@ -227,8 +222,7 @@ export class ProductRequirementComponent implements OnInit {
     });
   }
 
-  // ─── PDF Modal ────────────────────────────────────────────────────────────
-
+  //  PDF Modal
   openPdfModal(r: ProductRequirementResponse): void {
     this.selectedForPdf = r;
     this.isPdfModalOpen = true;
@@ -264,7 +258,6 @@ export class ProductRequirementComponent implements OnInit {
     });
   }
 
-  // ─── Helpers ──────────────────────────────────────────────────────────────
 
   getStatusClass(status: string): string {
     switch (status) {

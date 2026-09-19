@@ -14,7 +14,6 @@ public class SalesOfficerRequestDTO {
     private String language; // BANGLA, ENGLISH
     private Long policeStationId;
 
-    // Auth User Shared Fields
     private String name;
     private String email;
     private String phone;

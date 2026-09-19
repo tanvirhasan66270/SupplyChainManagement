@@ -11,8 +11,8 @@ export interface InvoiceRequestModel {
   paidAmount: number;
   paymentMethod?: 'CASH' | 'BANK' | 'BKASH' | 'NAGAD' | 'ROCKET' | string | null;
   transactionReference?: string | null;
-  invoiceStatus: 'DRAFT' | 'ISSUED' | 'CANCELLED' | string; // DRAFT, ISSUED, CANCELLED
-  deliveryDate?: string | null;      // ফ্রন্টএন্ড থেকে "YYYY-MM-DD" ফরম্যাটে স্ট্রিং ইনপুট আসবে
+  invoiceStatus: 'DRAFT' | 'ISSUED' | 'CANCELLED' | string; 
+  deliveryDate?: string | null;     
   deliveryAddress: string;
   notes?: string | null;
   cancelledReason?: string | null;
@@ -21,14 +21,13 @@ export interface InvoiceRequestModel {
 
 export interface InvoiceResponseModel {
   id: number;
-  invoiceNumber: string; // অটো-জেনারেটেড ইউনিক ইনভয়েস কোড
+  invoiceNumber: string;
   customerOrderId?: number | null;
-  customerEmail: string; // অটো-জেনারেটেড ইমেইল ফিল্ড রেসপন্স নোড
+  customerEmail: string; 
   salesOfficerId?: number | null;
   issuedToName: string;
-  currency: string;      // যেমন: "BDT"
+  currency: string;     
   
-  // Financial Breakdown
   subtotal: number;
   taxRate: number;
   taxAmount: number;
@@ -39,19 +38,16 @@ export interface InvoiceResponseModel {
   paidAmount: number;
   dueAmount: number;
   
-  // Status Matrix (আপনার কাস্টম স্টাইল সিঙ্কড)
   paymentStatus: 'UNPAID' | 'PARTIALLY_PAID' | 'PAID' | 'REFUNDED' | string;
   paymentMethod?:'CASH' | 'BANK' | 'BKASH' | 'NAGAD' | 'ROCKET' | string | null;
   transactionReference?: string | null;
   invoiceStatus: 'DRAFT' | 'ISSUED' | 'CANCELLED' | string;
   
-  // Logistics & Logs
   deliveryDate?: string | null; // "YYYY-MM-DD"
   deliveryAddress: string;
   notes?: string | null;
   cancelledReason?: string | null;
   
-  // Auditing Timestamps (ISO Date Strings)
   issuedAt?: string | null;
   createdAt: string;
   updatedAt: string;

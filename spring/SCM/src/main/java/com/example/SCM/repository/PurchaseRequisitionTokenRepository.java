@@ -9,15 +9,11 @@ import java.util.Optional;
 
 public interface PurchaseRequisitionTokenRepository extends JpaRepository<PurchaseRequisitionToken, Long> {
 
-    // Token
     Optional<PurchaseRequisitionToken> findByToken(String token);
 
-    // Purchase Requisition ID
     Optional<PurchaseRequisitionToken> findByPurchaseRequisitionId(Long purchaseRequisitionId);
 
-    // Required token
     List<PurchaseRequisitionToken> findByRequiredByDateLessThanEqual(LocalDate date);
 
-    // Active এবং Required token
     List<PurchaseRequisitionToken> findByActiveTrueAndRequiredByDateLessThanEqual(LocalDate date);
 }

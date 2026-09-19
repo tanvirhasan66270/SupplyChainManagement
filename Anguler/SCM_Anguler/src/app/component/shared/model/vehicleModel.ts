@@ -5,9 +5,9 @@ export interface VehicleRequestModel {
   type: 'TRUCK' | 'VAN' | 'BIKE' | 'AIR' | 'RIVER_SHIP' | string;
   capacity: number;
   status: 'AVAILABLE' | 'ON_TRIP' | 'MAINTENANCE' | 'OUT_OF_SERVICE' | string;
-  lastServiceDate?: string | null;  // "YYYY-MM-DD" ফরম্যাটে স্ট্রিং ইনপুট আসবে
+  lastServiceDate?: string | null;  
   fuelLevel: number;
-  driverId?: number | null;         // FK Driver ID (Optional, ড্রাইভারে অ্যাসাইন না থাকলে null যাবে)
+  driverId?: number | null;        
 }
 
 export interface VehicleResponseModel {
@@ -16,10 +16,9 @@ export interface VehicleResponseModel {
   type: 'TRUCK' | 'VAN' | 'BIKE' | 'AIR' | 'RIVER_SHIP' | string;
   capacity: number;
   status: 'AVAILABLE' | 'ON_TRIP' | 'MAINTENANCE' | 'OUT_OF_SERVICE' | string;
-  lastServiceDate?: string | null;   // "YYYY-MM-DD" বা ISO ডেট স্ট্রিং
+  lastServiceDate?: string | null;  
   fuelLevel: number;
 
-  // Flattened Driver Metadata ──
   driverId?: number | null;
   driverName?: string | null;
   driverPhone?: string | null;

@@ -3,12 +3,12 @@ export interface CustomerRequestModel {
   name: string;
   email: string;
   phone: string;
-  password?: string;         // এডিট মোডে পাসওয়ার্ড অপশনাল হতে পারে, তাই '?' দেওয়া হয়েছে
-  address: string;           // অটো-কম্পাইল্ড ফুল অ্যাড্রেস স্ট্রিং
+  password?: string;         
+  address: string;           
   gender: string;
-  dob: string;               // "YYYY-MM-DD" ফরম্যাট স্ট্রিং
+  dob: string;              
   nidNumber: string;
-  policeStationId: number;   // লোকেশন হায়ারার্কির শেষ নোড আইডি
+  policeStationId: number;   
 }
 export interface CustomerResponseModel {
   id: number;
@@ -19,10 +19,10 @@ export interface CustomerResponseModel {
   role: string;
   address: string;
   gender: string;
-  dob: string;               // "YYYY-MM-DD" ফরম্যাট স্ট্রিং
+  dob: string;               
   nidNumber: string;
   image: string ; 
-  createdAt: string;         // ISO Date-Time String
+  createdAt: string;         
 
   countryId: number ;
   divisionId: number ;

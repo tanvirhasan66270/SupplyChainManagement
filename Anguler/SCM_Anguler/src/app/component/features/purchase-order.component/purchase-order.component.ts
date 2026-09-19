@@ -7,7 +7,6 @@ import { QuotationService } from '../../../service/quatation.service';
 import { SupplierService } from '../../../service/supplier.service';
 import { StorageService, KEYS } from '../../../auth/auth_service/storage.service';
 
-// jsPDF এবং html2canvas ইমপোর্ট
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -35,7 +34,6 @@ export class PurchaseOrderComponent implements OnInit {
   searchSupplier: string = '';    
   searchDate: string = '';        
 
-  // PDF প্রিভিউ মডালের জন্য ভেরিয়েবল
   isPdfModalOpen = false;
   selectedOrderForPdf: PurchaseOrderResponseModel | null = null;
   @ViewChild('pdfPreviewContainer') pdfPreviewContainer!: ElementRef;
@@ -139,7 +137,6 @@ export class PurchaseOrderComponent implements OnInit {
       }
     } 
     else if (this.activeRole === 'LOGISTICS_OFFICER') {
-      // লজিস্টিকস অফিসারদের জন্য ফিল্টার লজিক
     }
     else if (!this.isManagementUser()) {
       ordersPipe = []; 
@@ -256,21 +253,18 @@ export class PurchaseOrderComponent implements OnInit {
     }
   }
 
-  // PDF প্রিভিউ মডাল ওপেন করার ফাংশন
   openPdfModal(o: PurchaseOrderResponseModel) {
     this.selectedOrderForPdf = o;
     this.isPdfModalOpen = true;
     this.cdr.markForCheck();
   }
 
-  // PDF প্রিভিউ মডাল বন্ধ করার ফাংশন
   closePdfModal() {
     this.isPdfModalOpen = false;
     this.selectedOrderForPdf = null;
     this.cdr.markForCheck();
   }
 
-  // প্রিভিউ মডাল থেকে ওয়ার্ড পেজ আকারে পিডিএফ ডাউনলোড করার ফাংশন
   downloadPdfFromModal() {
     if (!this.selectedOrderForPdf) return;
 

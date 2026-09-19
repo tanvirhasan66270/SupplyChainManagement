@@ -9,7 +9,6 @@
 .text-indigo { color: #4f46e5 !important; }
 .bg-indigo-subtle { background-color: #e0e7ff !important; }
 
-/* Timeline Styles */
 .timeline-container {
   padding-left: 0.5rem;
 }
@@ -21,7 +20,6 @@
   z-index: 2;
 }
 
-/* Donut Chart Styles */
 .donut-chart {
   transform: rotate(-90deg);
 }
@@ -29,7 +27,6 @@
   transition: stroke-dashoffset 0.5s ease-in-out;
 }
 
-/* Custom Table Styles */
 .table th {
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -42,7 +39,6 @@
   background-color: #f8fafc;
 }
 
-/* Card Enhancements */
 .card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -50,7 +46,6 @@
   box-shadow: 0 .5rem 1rem rgba(0,0,0,.08)!important;
 }
 
-/* SVG Line Chart animation */
 svg path {
   animation: drawLine 1.5s ease-out forwards;
 }
@@ -60,12 +55,10 @@ svg path {
   to { stroke-dasharray: 1000; stroke-dashoffset: 0; }
 }
 
-/* Progress bar thickness */
 .progress {
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
 }
 
-/* ── Quick Navigation Buttons ── */
 .logi-quick-btn {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
@@ -91,7 +84,6 @@ svg path {
   color: #2563eb;
 }
 
-/* Featured / Outlined state (like Goods Received Note in screenshot) */
 .logi-quick-btn--highlight {
   background: #eff6ff;
   border: 1.5px solid #3b82f6;
@@ -101,7 +93,6 @@ svg path {
   color: #2563eb;
 }
 
-/* Active solid pill state (like Delivery Trip in screenshot) */
 .logi-quick-btn--active {
   background: #5046e6 !important;
   border-color: #5046e6 !important;
@@ -118,7 +109,6 @@ svg path {
   box-shadow: 0 6px 18px rgba(80, 70, 230, 0.45);
 }
 
-/* ── Modal Design matching screenshot ── */
 .custom-modal-header {
   background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%);
   color: #ffffff;

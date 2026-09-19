@@ -6,14 +6,11 @@ import java.util.List;
 
 public class ExecuteCalculations {
 
-    // ইনস্ট্যান্স তৈরি করা বন্ধ করার জন্য প্রাইভেট কনস্ট্রাক্টর (Utility Class Best Practice)
     private ExecuteCalculations() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    /**
-     * ওয়ান-টাইম ওজন, সার্ভিসের ধরন এবং সিওডি অ্যামাউন্টের ওপর ভিত্তি করে ডেলিভারি চার্জ হিসাব করার মেথড
-     */
+
     public static double calculateDeliveryCharge(double weight, ServiceType serviceType, double codAmount) {
         double base = 0;
         double perKg = 0;
@@ -41,16 +38,12 @@ public class ExecuteCalculations {
         return charge;
     }
 
-    /**
-     * পণ্যের মোট দাম (Line Total) হিসাব করার মেথড
-     */
+
     public static double calculateLineTotal(int quantity, double unitPrice) {
         return quantity * unitPrice;
     }
 
-    /**
-     * অর্ডারের সব আইটেমগুলোর দাম যোগ করে itemSubtotal বের করার মেথড
-     */
+
     public static double calculateItemSubtotal(List<OrderLineItem> lineItems) {
         if (lineItems == null) return 0.0;
         return lineItems.stream()
@@ -58,9 +51,7 @@ public class ExecuteCalculations {
                 .sum();
     }
 
-    /**
-     * সব আইটেমের মোট ওজনের যোগফল থেকে পুরো পার্সেলের মোট ওজন বের করার মেথড
-     */
+
     public static double calculateTotalOrderWeight(List<OrderLineItem> lineItems) {
         if (lineItems == null) return 0.0;
         return lineItems.stream()
@@ -68,10 +59,7 @@ public class ExecuteCalculations {
                 .sum();
     }
 
-    /**
-     *  টোটাল অ্যামাউন্ট থেকে সিওডি অ্যামাউন্ট বাদ দিয়ে পেইড অ্যামাউন্ট স্ট্রিং বের করার মেথড
-     * paidAmount = totalAmount - codAmount
-     */
+
     public static String calculatePaidAmount(double totalAmount, double codAmount) {
         double calculatedPaid = totalAmount - codAmount;
         return String.format("%.2f", calculatedPaid); // e.g., "8182.50"

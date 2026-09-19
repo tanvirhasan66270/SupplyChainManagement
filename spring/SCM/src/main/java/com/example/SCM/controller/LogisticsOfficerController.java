@@ -75,7 +75,6 @@ public class LogisticsOfficerController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'LOGISTICS_OFFICER')")
     @GetMapping("/user/{id}")
-//    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER') or @logisticsOfficerSecurity.isSelf(#id, authentication)")
     public ResponseEntity<LogisticsOfficerResponseDTO> getByUserId(@PathVariable Long id) {
         return officerService.findUserById(id)
                 .map(ResponseEntity::ok)

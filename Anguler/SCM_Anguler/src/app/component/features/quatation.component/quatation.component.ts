@@ -9,7 +9,6 @@ import { PurchaseRequisitionService } from '../../../service/purchase-requisitio
 import { StorageService, KEYS } from '../../../auth/auth_service/storage.service';
 import { environment } from '../../../../environment/environment';
 
-// jsPDF এবং html2canvas ইমপোর্ট
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 

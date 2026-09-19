@@ -3,9 +3,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.95);
-  width: 950px;       /* 🌟 ফর্মের চওড়া আরও বাড়িয়ে 950px বা 1000px করা হলো */
-  max-width: 98vw;    /* স্ক্রিনের সাথে সামঞ্জস্য রাখতে */
-  height: 92vh;       /* 🌟 ফর্মের উচ্চতা স্ক্রিনের প্রায় পুরোটা (92vh) করা হলো */
+  width: 950px;       
+  max-width: 98vw;  
+  height: 92vh;       
   max-height: 95vh;
   background-color: #ffffff;
   z-index: 1050;
@@ -25,7 +25,6 @@
   visibility: visible;
 }
 
-/* --- 🌟 কালারফুল এবং রাউন্ড হেডার ডিজাইন --- */
 .reg-modal-header, .drawer-header {
   background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
   color: #ffffff;

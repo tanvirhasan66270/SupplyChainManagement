@@ -19,7 +19,6 @@ export class SupplierProfileComponent implements OnInit {
 
   supplierData: SupplierResponseDTO | null = null;
   
-  // 🎯 SupplierRequestDTO অনুযায়ী ফর্ম মডেল বাফার
   editModel: SupplierRequestDTO = {
     name: '',
     email: '',
@@ -41,12 +40,11 @@ export class SupplierProfileComponent implements OnInit {
   errorMessage: string | null = null;
   imageLoadError: boolean = false;
 
-  // 📊 ডাইনামিক কমপ্লিশন ভ্যারিয়েবলস
   profileCompletion: number = 0;
   hasGeneralInfo: boolean = false;
   hasContactInfo: boolean = false;
   hasPhoto: boolean = false;
-  hasBin: boolean = false; // আপনার প্রজেক্টের রুলস অনুযায়ী চেক থাকবে
+  hasBin: boolean = false; 
 
   constructor(
     private supplierService: SupplierService,
@@ -186,7 +184,6 @@ export class SupplierProfileComponent implements OnInit {
     if (!this.supplierData) return;
     this.errorMessage = null;
 
-    // ফাইল ছাড়া শুধুমাত্র টেক্সট DTO ডেটা মেকানিজম আপডেট পাঠানো হচ্ছে
     this.supplierService.update(this.supplierData.id, this.editModel, null).subscribe({
       next: (updatedData: SupplierResponseDTO) => {
         alert("Supplier profile credentials updated successfully!");

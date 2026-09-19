@@ -108,7 +108,6 @@ export class PurchaseRequisitionComponent implements OnInit {
     this.service.findAll().subscribe({ next: (data) => {
         let allRequisitions = data || [];
 
-        // ENHANCE: Parse Remarks to extract Product Requirements and push to productNames for UI display
         allRequisitions = allRequisitions.map((pr: any) => {
           if (pr.remarks && pr.remarks.includes('[Fulfilling Requirements: ')) {
             const match = pr.remarks.match(/\[Fulfilling Requirements:\s*(.*?)\]/);
@@ -125,7 +124,6 @@ export class PurchaseRequisitionComponent implements OnInit {
                                 (pr.suppliers && pr.suppliers.some((s: any) => s.id === this.currentSupplierId));
             return hasSupplier && pr.approvalStatus === 'APPROVED' });
         } else {
-          // ADMIN/MANAGER/PROCUREMENT 
           this.requisitions = allRequisitions;
         }
 

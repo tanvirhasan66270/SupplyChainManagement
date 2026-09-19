@@ -1,6 +1,6 @@
 
 export interface GRNLineItemRequestModel {
-  id?: number; // Optional: নতুন আইটেম তৈরির সময় লাগবে না, আপডেটের সময় লাগবে
+  id?: number;
   grnId?: number;
   productId: number;
   quantityOrdered: number;
@@ -23,13 +23,13 @@ export interface GoodsReceivedNoteRequestModel {
   poId: number;
   productId: number | null;
   receivedQuantity: number;
-  receivedBy: number; // লগইন করা ইউজারের আইডি
+  receivedBy: number;
   warehouseId: number;
-  receivedAt: string; // Format Pattern: YYYY-MM-DD
+  receivedAt: string; 
   status: 'PENDING' | 'RECEIVED' | 'APPROVED' | 'REJECTED' | string;
   remarks: string;
-  inspectedBy?: number | null; // Optional/Nullable
-  inspectionDate?: string | null; // Format Pattern: YYYY-MM-DD (Optional)
+  inspectedBy?: number | null; 
+  inspectionDate?: string | null;
   lineItems: GRNLineItemRequestModel[]; 
 }
 
@@ -38,7 +38,7 @@ export interface GoodsReceivedNoteResponseModel {
   grnNumber: string;
   quantity: number;
   receivedQuantity: number;
-  receivedAt: string; // Temporal String Format
+  receivedAt: string; 
   status: 'PENDING' | 'RECEIVED' | 'APPROVED' | 'REJECTED' | string;
   remarks: string;
   inspectionDate: string | null;

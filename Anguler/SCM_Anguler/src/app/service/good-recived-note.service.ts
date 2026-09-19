@@ -8,7 +8,7 @@ import { GoodsReceivedNoteRequestModel, GoodsReceivedNoteResponseModel } from '.
   providedIn: 'root',
 })
 export class GoodRecivedNoteService {
-  private apiUrl = environment.apiUrl + "goods-received-notes"; // Sync with @RequestMapping("/api/goods-received-notes")
+  private apiUrl = environment.apiUrl + "goods-received-notes"; 
 
   constructor(private http: HttpClient) { }
 

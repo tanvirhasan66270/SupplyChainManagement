@@ -20,13 +20,11 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //many-one relation with product
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    // many-one relation with warehouse
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id", nullable = false)
@@ -36,7 +34,7 @@ public class Inventory {
 
     private int quantityReserved;
 
-    private String locationStatus; // যেমন: "Rack-A, Row-3"
+    private String locationStatus;
 
     private LocalDate expiryDate;
 

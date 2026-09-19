@@ -19,7 +19,6 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
 
     Optional<Warehouse> findByEmail(String email);
 
-    // Performance Optimization: Fetch location graphs eagerly to solve N+1 query problem
     @Query("SELECT DISTINCT w FROM Warehouse w " +
             "LEFT JOIN FETCH w.policeStation ps " +
             "LEFT JOIN FETCH ps.district d " +

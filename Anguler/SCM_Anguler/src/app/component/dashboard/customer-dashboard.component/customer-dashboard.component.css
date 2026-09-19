@@ -1,4 +1,3 @@
-/* Premium Enterprise SaaS Dashboard Styles */
 
 .customer-dashboard {
   --primary-color: #2563eb;
@@ -14,10 +13,9 @@
   --slate-800: #1e293b;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   font-family: var(--font-sans);
-  padding-bottom: 70px !important; /* Spacing for mobile footer nav */
+  padding-bottom: 70px !important; 
 }
 
-/* Typography & Layout helpers */
 .font-sans {
   font-family: var(--font-sans);
 }
@@ -57,7 +55,6 @@
   background-color: #f8fafc;
 }
 
-/* Welcome Hero Card styling */
 .welcome-hero-card {
   background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
   border: 1px solid #bfdbfe !important;
@@ -101,7 +98,6 @@
   border-color: var(--danger-color);
 }
 
-/* Finance KPI Cards */
 .finance-kpi-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -126,7 +122,6 @@
   pointer-events: none;
 }
 
-/* KPI Metric Cards styling */
 .kpi-metric-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-left-width: 5px !important;
@@ -157,7 +152,6 @@
   font-weight: 600;
 }
 
-/* Quick Action Cards */
 .quick-action-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid var(--slate-100) !important;
@@ -170,7 +164,6 @@
   border-color: rgba(37, 99, 235, 0.15) !important;
 }
 
-/* Table styling */
 .table-responsive {
   border-radius: 0 0 16px 16px;
 }
@@ -193,7 +186,6 @@
   background-color: #f8fafc !important;
 }
 
-/* Timeline Activity */
 .timeline-container {
   border-left: 2px dashed #e2e8f0;
   position: relative;
@@ -210,7 +202,6 @@
   background: white;
 }
 
-/* Skeleton Loading styles */
 .skeleton {
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
   background-size: 200% 100%;
@@ -231,7 +222,6 @@
   background-color: #f1f5f9;
 }
 
-/* General Animations */
 .animate-fade-in {
   animation: fadeIn 0.35s ease-out forwards;
 }
@@ -247,7 +237,6 @@
   }
 }
 
-/* Person with Headset Illustration (pure CSS vector) */
 .support-illustration-wrapper {
   position: absolute;
   top: 15px;
@@ -328,7 +317,6 @@
   right: -3px;
 }
 
-/* Stock Status Pulse Green Dot */
 .pulse-dot-green {
   width: 8px;
   height: 8px;
@@ -353,7 +341,6 @@
   }
 }
 
-/* Recommended items styling */
 .recommendation-card {
   border: 1px solid #f1f5f9 !important;
 }
@@ -362,7 +349,6 @@
   border-color: rgba(37, 99, 235, 0.15) !important;
 }
 
-/* Mobile responsive navigation overrides */
 @media (max-width: 768px) {
   .welcome-hero-card {
     flex-direction: column;
