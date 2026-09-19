@@ -205,11 +205,9 @@ class _ProcurementProfileScreenState extends ConsumerState<ProcurementProfileScr
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Header Avatar Section ──────────────────
           _buildHeader(user),
           const SizedBox(height: 20),
 
-          // ── Action Buttons for Avatar ─────────────
           Row(
             children: [
               Expanded(
@@ -244,11 +242,9 @@ class _ProcurementProfileScreenState extends ConsumerState<ProcurementProfileScr
           ],
           const SizedBox(height: 24),
 
-          // ── Completion Section ──────────────────────
           _buildCompletionSection(completion),
           const SizedBox(height: 24),
 
-          // ── Personal Settings Form / List ──────────
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -264,7 +260,6 @@ class _ProcurementProfileScreenState extends ConsumerState<ProcurementProfileScr
           _buildSettingsForm(user),
           const SizedBox(height: 24),
 
-          // ── Logistics & Location Metadata ───────────
           const Text('LOGISTICS & LOCATION METADATA', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87)),
           const SizedBox(height: 12),
           _buildLocationSection(user),
@@ -288,7 +283,6 @@ class _ProcurementProfileScreenState extends ConsumerState<ProcurementProfileScr
           ),
           const SizedBox(height: 24),
 
-          // ── Save/Update Button ──────────────────────
           ElevatedButton.icon(
             onPressed: _isUpdating ? null : () => _updateProfile(user),
             icon: _isUpdating
@@ -304,7 +298,6 @@ class _ProcurementProfileScreenState extends ConsumerState<ProcurementProfileScr
           ),
           const SizedBox(height: 20),
 
-          // ── Logout Action Button ────────────────────
           OutlinedButton.icon(
             onPressed: () => _confirmLogout(context),
             icon: const Icon(Icons.logout, size: 18, color: AppTheme.danger),

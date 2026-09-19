@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:scm_flutter/entity/customerOrderModel.dart';
 import 'package:scm_flutter/them/allAppThim.dart';
 
-/// Mirrors the `<button [disabled]="loading"><spinner/></button>` pattern
-/// used across nearly every Angular form (login, register, book parcel...).
+
 class LoadingButton extends StatelessWidget {
   const LoadingButton({
     super.key,
@@ -54,7 +53,6 @@ class LoadingButton extends StatelessWidget {
   }
 }
 
-/// Mirrors the Bootstrap badge classes driven by PARCEL_STATUS_META.
 class StatusBadge extends StatelessWidget {
   const StatusBadge({super.key, required this.status});
 
@@ -82,8 +80,6 @@ class StatusBadge extends StatelessWidget {
   }
 }
 
-/// Mirrors the small uppercase section headers used in the multi-section
-/// forms (Account Details / Location / Address / Photo).
 class SectionHeader extends StatelessWidget {
   const SectionHeader({super.key, required this.title, required this.icon});
 

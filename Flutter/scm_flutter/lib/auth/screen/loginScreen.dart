@@ -44,11 +44,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (!mounted) return;
       Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
     } catch (e) {
-      if (!mounted) return; // এখানে চেক করা হয়েছে
+      if (!mounted) return;
       setState(() => _errorMessage = apiErrorMessage(e));
     } finally {
       if (mounted) {
-        setState(() => _loading = false); // এখানেও mounted চেক করা হয়েছে
+        setState(() => _loading = false);
       }
     }
   }
@@ -72,7 +72,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // ── Header ──────────────────────────────
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
@@ -117,7 +116,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
 
-                  // ── Form ────────────────────────────────
                   Padding(
                     padding: const EdgeInsets.all(28),
                     child: Form(

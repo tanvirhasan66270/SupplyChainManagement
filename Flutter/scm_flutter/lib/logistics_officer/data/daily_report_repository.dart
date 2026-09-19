@@ -11,7 +11,6 @@ class DailyReportRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  //(GET /api/reports)
   Future<List<DailyReportResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.reports);
@@ -22,7 +21,6 @@ class DailyReportRepository {
     }
   }
 
-  //  (GET /api/reports/{id})
   Future<DailyReportResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.reportById(id));
@@ -32,7 +30,6 @@ class DailyReportRepository {
     }
   }
 
-  // (POST /api/reports with multipart attachment)
   Future<DailyReportResponseModel> create(DailyReportRequestModel request, XFile? attachment) async {
     try {
       FormData formData = FormData.fromMap({
@@ -59,7 +56,6 @@ class DailyReportRepository {
     }
   }
 
-  // (PUT /api/reports/{id} with multipart attachment)
   Future<DailyReportResponseModel> update(int id, DailyReportRequestModel request, XFile? attachment) async {
     try {
       FormData formData = FormData.fromMap({
@@ -86,7 +82,6 @@ class DailyReportRepository {
     }
   }
 
-  //  (PATCH /api/reports/approve/{id})
   Future<DailyReportResponseModel> approve(int id) async {
     try {
       final response = await _dio.patch(ApiConstants.approveReport(id));
@@ -96,7 +91,6 @@ class DailyReportRepository {
     }
   }
 
-  // (DELETE /api/reports/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.reportById(id));

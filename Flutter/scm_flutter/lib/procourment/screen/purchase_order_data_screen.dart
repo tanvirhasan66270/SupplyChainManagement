@@ -193,7 +193,6 @@ class _PurchaseOrderDataScreenState extends ConsumerState<PurchaseOrderDataScree
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── 1. Metrics Summary Banner ─────────────────
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -256,7 +255,6 @@ class _PurchaseOrderDataScreenState extends ConsumerState<PurchaseOrderDataScree
                   ),
                   const SizedBox(height: 16),
 
-                  // ── 2. Search & Filter Controls ────────────────
                   TextField(
                     controller: _searchController,
                     onChanged: (val) => setState(() => _searchQuery = val.trim()),
@@ -315,7 +313,6 @@ class _PurchaseOrderDataScreenState extends ConsumerState<PurchaseOrderDataScree
                   ),
                   const SizedBox(height: 16),
 
-                  // ── 3. Data Cards List ───────────────────
                   if (filtered.isEmpty)
                     Container(
                       width: double.infinity,
@@ -381,7 +378,6 @@ class _PurchaseOrderDataScreenState extends ConsumerState<PurchaseOrderDataScree
                                         ),
                                       ],
                                     ),
-                                    // Interactive Status Selector Dropdown for Management, Static Badge for Supplier
                                     if (isManagementRole)
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
@@ -438,7 +434,6 @@ class _PurchaseOrderDataScreenState extends ConsumerState<PurchaseOrderDataScree
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Row 1: Expected Delivery Date & Volume
                                     Row(
                                       children: [
                                         Expanded(
@@ -533,7 +528,6 @@ class _PurchaseOrderDataScreenState extends ConsumerState<PurchaseOrderDataScree
 
                                     const Divider(height: 16),
 
-                                    // ── Action Buttons Row ──
                                     Wrap(
                                       spacing: 8,
                                       runSpacing: 8,

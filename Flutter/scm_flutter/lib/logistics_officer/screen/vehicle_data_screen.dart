@@ -163,7 +163,6 @@ class _VehicleDataScreenState extends ConsumerState<VehicleDataScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ১. Summary Metrics Banner
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -208,7 +207,6 @@ class _VehicleDataScreenState extends ConsumerState<VehicleDataScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // ২. Search Field
                   TextField(
                     controller: _searchController,
                     onChanged: (val) => setState(() => _searchQuery = val.trim()),
@@ -234,7 +232,6 @@ class _VehicleDataScreenState extends ConsumerState<VehicleDataScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // ৩. Status Filter Chips
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -253,7 +250,6 @@ class _VehicleDataScreenState extends ConsumerState<VehicleDataScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // ৪. Data List Cards
                   if (filteredList.isEmpty)
                     Container(
                       width: double.infinity,
@@ -295,7 +291,6 @@ class _VehicleDataScreenState extends ConsumerState<VehicleDataScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Top Row: FLEET ID & Status Badge
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [

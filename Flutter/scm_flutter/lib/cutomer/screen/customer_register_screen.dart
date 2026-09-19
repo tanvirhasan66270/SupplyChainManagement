@@ -19,7 +19,6 @@ class CustomerRegisterScreen extends ConsumerStatefulWidget {
 class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // Controllers
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -231,7 +230,6 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // ── Header Banner ──
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(18),
@@ -275,7 +273,6 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
               ),
               const SizedBox(height: 16),
 
-              // ── Error Banner ──
               if (_errorMessage != null) ...[
                 Container(
                   width: double.infinity,
@@ -307,13 +304,11 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
                 const SizedBox(height: 16),
               ],
 
-              // ── Form Container ──
               Form(
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Section 1: Account Credentials
                     _buildSectionCard(
                       title: '1. ACCOUNT & CONTACT CREDENTIALS',
                       icon: Icons.badge_outlined,
@@ -399,14 +394,12 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
                     ),
                     const SizedBox(height: 16),
 
-                    // Section 2: Personal Information & Avatar
                     _buildSectionCard(
                       title: '2. PERSONAL DETAILS & PROFILE AVATAR',
                       icon: Icons.account_circle_outlined,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Profile Image Picker
                           Center(
                             child: Column(
                               children: [
@@ -448,7 +441,6 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
                           ),
                           const SizedBox(height: 16),
 
-                          // Gender Selector
                           const Text('Gender *', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.dark)),
                           const SizedBox(height: 6),
                           Row(
@@ -475,7 +467,6 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
                           ),
                           const SizedBox(height: 14),
 
-                          // Date of Birth & NID Number
                           Row(
                             children: [
                               Expanded(
@@ -508,7 +499,6 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
                     ),
                     const SizedBox(height: 16),
 
-                    // Section 3: Location Cascade & Shipping Address
                     _buildSectionCard(
                       title: '3. REGIONAL MATRIX BASE & FULL ADDRESS',
                       icon: Icons.location_on_outlined,
@@ -521,7 +511,6 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
                           ),
                           const SizedBox(height: 8),
 
-                          // Reusable Cascaded Location Picker
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
@@ -541,7 +530,6 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
                           ),
                           const SizedBox(height: 14),
 
-                          // Local Street Address Vector Input
                           _buildTextField(
                             controller: _streetAddressController,
                             label: 'Local Street Vector / House / Road *',
@@ -552,7 +540,6 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
                           ),
                           const SizedBox(height: 14),
 
-                          // Auto-Generated Full Address Field & Live Manifest Box
                           const Text(
                             'Aggregated Manifest Full Address (Auto-Filled) *',
                             style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.primary),
@@ -598,7 +585,6 @@ class _CustomerRegisterScreenState extends ConsumerState<CustomerRegisterScreen>
                     ),
                     const SizedBox(height: 24),
 
-                    // Action Submit Button
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(

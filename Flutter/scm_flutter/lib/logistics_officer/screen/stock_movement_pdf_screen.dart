@@ -112,7 +112,6 @@ class StockMovementPDFScreen extends StatelessWidget {
             ),
             pw.SizedBox(height: 16),
 
-            // Section 1: Movement Parameters Table
             pw.Text('I. Movement Transaction Specifications', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColor.fromHex('#212529'))),
             pw.SizedBox(height: 6),
             pw.Table(
@@ -141,7 +140,6 @@ class StockMovementPDFScreen extends StatelessWidget {
             ),
             pw.SizedBox(height: 16),
 
-            // Section 2: Origin & Destination Routing
             pw.Text('II. Storage Node Origin & Destination Routing', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColor.fromHex('#212529'))),
             pw.SizedBox(height: 6),
             pw.Container(
@@ -181,7 +179,6 @@ class StockMovementPDFScreen extends StatelessWidget {
             ),
             pw.SizedBox(height: 16),
 
-            // Section 3: Audit Remarks
             if (movement.remarks.isNotEmpty) ...[
               pw.Text('III. System Audit Remarks & Operator Log', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColor.fromHex('#212529'))),
               pw.SizedBox(height: 6),

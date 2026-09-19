@@ -6,19 +6,16 @@ import 'package:scm_flutter/entity/massage_model.dart';
 import 'package:scm_flutter/system/massage/message_repository.dart';
 
 
-/// ১. MessageRepository
 final messageRepositoryProvider = Provider<MessageRepository>((ref) {
   return MessageRepository(ref.watch(apiClientProvider));
 });
 
-/// (GET /api/messages/inbox)
 final inboxProvider = FutureProvider.autoDispose<List<MessageResponseModel>>((ref) async {
   final user = ref.watch(currentUserProvider);
   final repository = ref.watch(messageRepositoryProvider);
   return repository.getInbox(userId: user?.userId.toString());
 });
 
-/// (GET /api/messages/chatlist)
 final chatlistProvider = FutureProvider.autoDispose<List<ChatContactModel>>((ref) async {
   final user = ref.watch(currentUserProvider);
   final repository = ref.watch(messageRepositoryProvider);
@@ -30,7 +27,6 @@ final chatlistProvider = FutureProvider.autoDispose<List<ChatContactModel>>((ref
   }
 });
 
-/// (GET /api/messages/history)
 final chatHistoryProvider = FutureProvider.autoDispose.family<List<MessageResponseModel>, String>((ref, contactId) async {
   final user = ref.watch(currentUserProvider);
   final repository = ref.watch(messageRepositoryProvider);

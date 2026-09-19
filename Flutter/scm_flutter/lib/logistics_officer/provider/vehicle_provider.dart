@@ -4,18 +4,15 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/entity/vehicle_model.dart';
 import 'package:scm_flutter/logistics_officer/data/vehicle_repository.dart';
 
-// ১. Repository Provider
 final vehicleRepositoryProvider = Provider<VehicleRepository>((ref) {
   return VehicleRepository(ref.watch(apiClientProvider));
 });
 
-// ২. List Provider
 final vehicleListProvider = FutureProvider.autoDispose<List<VehicleResponseModel>>((ref) async {
   final repo = ref.watch(vehicleRepositoryProvider);
   return await repo.findAll();
 });
 
-// ৩. Controller / Notifier (Create, Update, Delete)
 final vehicleControllerProvider = StateNotifierProvider<VehicleController, AsyncValue<void>>((ref) {
   final repo = ref.watch(vehicleRepositoryProvider);
   return VehicleController(repo, ref);

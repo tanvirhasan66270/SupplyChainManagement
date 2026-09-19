@@ -1,4 +1,3 @@
-// ── PO Line Item Status Constants ──────────────────────────────────────
 class POLineItemStatus {
   static const pending = 'PENDING';
   static const approved = 'APPROVED';
@@ -14,7 +13,6 @@ class POLineItemStatus {
   ];
 }
 
-/// UI badge/label metadata for PO Line Item Status.
 class POLineItemStatusMeta {
   static const Map<String, String> label = {
     POLineItemStatus.pending: 'Pending',
@@ -27,7 +25,6 @@ class POLineItemStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── PO Line Item Request DTO ───────────────────────────────────────────
 class POLineItemRequestDTO {
   POLineItemRequestDTO({
     required this.poId,
@@ -67,7 +64,6 @@ class POLineItemRequestDTO {
   };
 }
 
-// ── PO Line Item Response DTO ──────────────────────────────────────────
 class POLineItemResponseDTO {
   POLineItemResponseDTO({
     required this.id,

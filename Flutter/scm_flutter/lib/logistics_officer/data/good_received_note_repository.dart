@@ -9,7 +9,6 @@ class GoodReceivedNoteRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  //  (GET /api/goods-received-notes)
   Future<List<GoodsReceivedNoteResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.goodsReceivedNotes);
@@ -21,7 +20,6 @@ class GoodReceivedNoteRepository {
     }
   }
 
-  //(GET /api/goods-received-notes/{id})
   Future<GoodsReceivedNoteResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.goodsReceivedNoteById(id));
@@ -31,7 +29,6 @@ class GoodReceivedNoteRepository {
     }
   }
 
-  // (POST /api/goods-received-notes)
   Future<GoodsReceivedNoteResponseModel> save(GoodsReceivedNoteRequestModel request) async {
     try {
       final response = await _dio.post(ApiConstants.goodsReceivedNotes, data: request.toJson());
@@ -41,7 +38,6 @@ class GoodReceivedNoteRepository {
     }
   }
 
-  // (PUT /api/goods-received-notes/{id})
   Future<GoodsReceivedNoteResponseModel> update(int id, GoodsReceivedNoteRequestModel request) async {
     try {
       final response = await _dio.put(ApiConstants.goodsReceivedNoteById(id), data: request.toJson());
@@ -51,7 +47,6 @@ class GoodReceivedNoteRepository {
     }
   }
 
-  //  (DELETE /api/goods-received-notes/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.goodsReceivedNoteById(id));

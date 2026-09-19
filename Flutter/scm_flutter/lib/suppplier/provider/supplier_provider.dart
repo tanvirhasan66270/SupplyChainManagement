@@ -5,7 +5,6 @@ import 'package:scm_flutter/entity/supplier_model.dart';
 import 'package:scm_flutter/suppplier/data/supplier_repository.dart';
 import 'package:scm_flutter/auth/helperProvider.dart';
 
-//  Supplier Repository Provider
 final supplierRepositoryProvider = Provider<SupplierRepository>((ref) {
   return SupplierRepository(ref.watch(apiClientProvider));
 });
@@ -20,7 +19,6 @@ final supplierByUserIdProvider = FutureProvider.autoDispose.family<SupplierRespo
   return await repo.findByUserId(userId);
 });
 
-// Supplier Controller / Notifier (Create, Update, Delete)
 final supplierControllerProvider = StateNotifierProvider<SupplierController, AsyncValue<void>>((ref) {
   final repo = ref.watch(supplierRepositoryProvider);
   return SupplierController(repo, ref);

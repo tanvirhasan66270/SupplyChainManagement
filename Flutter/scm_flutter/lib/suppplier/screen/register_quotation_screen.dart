@@ -182,7 +182,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
               },
             ),
 
-            // ── 2. Error Banner ──
             if (errorMessage != null) ...[
               Container(
                 width: double.infinity,
@@ -203,7 +202,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
               ),
             ],
 
-            // ── 3. Scrollable Form Body ──
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -212,7 +210,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Step 1: LINKED PURCHASE REQUISITION VECTOR
                       _buildNumberedStepLabel(1, 'LINKED PURCHASE REQUISITION VECTOR *'),
                       DropdownButtonFormField<int>(
                         isExpanded: true,
@@ -234,7 +231,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 2: TARGET VENDOR NODE
                       _buildNumberedStepLabel(2, 'TARGET VENDOR NODE *'),
                       if (isSupplierRole)
                         TextFormField(
@@ -264,7 +260,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                         ),
                       const SizedBox(height: 14),
 
-                      // Step 3: UNIT BID COST ($)
                       _buildNumberedStepLabel(3, 'UNIT BID COST (\$) *'),
                       TextFormField(
                         controller: _unitPriceController,
@@ -275,7 +270,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 4: SUPPLY VOLUME (QTY)
                       _buildNumberedStepLabel(4, 'SUPPLY VOLUME (QTY) *'),
                       TextFormField(
                         controller: _quantityController,
@@ -308,7 +302,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                       ],
                       const SizedBox(height: 14),
 
-                      // Step 5: LEAD TIME (DAYS)
                       _buildNumberedStepLabel(5, 'LEAD TIME (DAYS) *'),
                       TextFormField(
                         controller: _leadTimeController,
@@ -319,7 +312,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 6: AUDITING STATE
                       _buildNumberedStepLabel(6, 'AUDITING STATE *'),
                       DropdownButtonFormField<String>(
                         initialValue: status,
@@ -331,7 +323,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 7: REQUISITION RECEIVED DATE
                       _buildNumberedStepLabel(7, 'REQUISITION RECEIVED DATE'),
                       TextFormField(
                         controller: _receivedAtController,
@@ -343,7 +334,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 8: ESTIMATED DELIVERY DATE
                       _buildNumberedStepLabel(8, 'ESTIMATED DELIVERY DATE'),
                       TextFormField(
                         controller: _deliveryTimeController,
@@ -355,7 +345,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 9: WARRANTY COVERAGE MATRIX
                       _buildNumberedStepLabel(9, 'WARRANTY COVERAGE MATRIX'),
                       TextFormField(
                         controller: _warrantyController,
@@ -365,7 +354,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 10: ATTACHMENT DOCUMENT ENVELOPE
                       _buildNumberedStepLabel(10, 'ATTACHMENT DOCUMENT ENVELOPE'),
                       InkWell(
                         onTap: _pickAttachment,
@@ -406,7 +394,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 11: PRODUCT NOMENCLATURE SPECIFICATIONS
                       _buildNumberedStepLabel(11, 'PRODUCT NOMENCLATURE SPECIFICATIONS'),
                       TextFormField(
                         controller: _descriptionController,
@@ -417,7 +404,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 12: SOURCING OPERATIONS NOTES
                       _buildNumberedStepLabel(12, 'SOURCING OPERATIONS NOTES'),
                       TextFormField(
                         controller: _notesController,
@@ -428,7 +414,6 @@ class _RegisterQuotationScreenState extends ConsumerState<RegisterQuotationScree
                       ),
                       const SizedBox(height: 24),
 
-                      // SUBMIT BUTTON
                       SizedBox(
                         width: double.infinity,
                         height: 44,

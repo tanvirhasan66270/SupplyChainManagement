@@ -14,7 +14,6 @@ class AppTheme
   static const Color dark = Color(0xFF212529);    // Dark text/bg
   static const Color light = Color(0xFFF8F9FA);   // Light background
 
-  // ── নতুন ও আধুনিক এন্টারপ্রাইজ কালার যোগ করা হলো ──
   static const Color teal = Color(0xFF20C997);      // Teal color for line items/reports
   static const Color tealDark = Color(0xFF0F766E);  // Dark Teal
   static const Color tealPrimary = Color(0xFF0D9488); // Primary Teal
@@ -136,7 +135,6 @@ class AppTheme
   }
 
 
-  // ── Dynamic Status Color Helper ────────────────────────
   static Color statusSupplierColor(String status) {
     switch (status.toUpperCase()) {
       case 'APPROVED':

@@ -11,7 +11,6 @@ class ShipmentRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  // (GET /api/shipments)
   Future<List<ShipmentResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.shipments);
@@ -22,7 +21,6 @@ class ShipmentRepository {
     }
   }
 
-  //  (GET /api/shipments/{id})
   Future<ShipmentResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.shipmentById(id));
@@ -32,7 +30,6 @@ class ShipmentRepository {
     }
   }
 
-  //  (Multipart Request podFile সহ)
   Future<ShipmentResponseModel> save(ShipmentRequestModel request, File? podFile) async {
     try {
       final form = await _buildForm(request, podFile);
@@ -43,7 +40,6 @@ class ShipmentRepository {
     }
   }
 
-  //  (PUT /api/shipments/{id})
   Future<ShipmentResponseModel> update(int id, ShipmentRequestModel request, File? podFile) async {
     try {
       final form = await _buildForm(request, podFile);
@@ -54,7 +50,6 @@ class ShipmentRepository {
     }
   }
 
-  //  (DELETE /api/shipments/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.shipmentById(id));

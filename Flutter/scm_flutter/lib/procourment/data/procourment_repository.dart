@@ -6,8 +6,7 @@ import 'package:scm_flutter/entity/procourment_model.dart';
 import 'package:scm_flutter/util/apiClint.dart';
 import 'package:scm_flutter/util/apiConstants.dart';
 
-/// Mirrors services/procourment.service.ts (multipart create/update, same as
-/// the Angular `FormData` approach).
+
 class ProcurementRepository {
   ProcurementRepository(this._apiClient);
 
@@ -47,8 +46,6 @@ class ProcurementRepository {
 
   Future<FormData> _buildForm(ProcurementRequestModel procurement, File? image) async {
     return FormData.fromMap({
-      // Backend reads this part as a raw JSON string (@RequestPart String)
-      // then parses it — mirrors `formData.append('procurement', JSON.stringify(customer))`.
       'procurement': jsonEncode(procurement.toJson()),
       if (image != null)
         'file': await MultipartFile.fromFile(

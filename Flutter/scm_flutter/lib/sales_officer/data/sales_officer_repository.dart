@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:scm_flutter/entity/sales_officer_model.dart';
 import 'package:scm_flutter/util/apiClint.dart';
 import 'package:scm_flutter/util/apiConstants.dart';
 
-/// Mirrors services/SalesOfficer.service.ts (multipart create/update, same as
-/// the Angular `FormData` approach).
 class SalesOfficerRepository {
   SalesOfficerRepository(this._apiClient);
 

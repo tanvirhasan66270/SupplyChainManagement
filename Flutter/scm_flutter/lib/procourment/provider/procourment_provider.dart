@@ -12,32 +12,27 @@ final apiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient(storageService);
 });
 
-// ২. Procurement Repository Provider
 final procurementRepositoryProvider = Provider<ProcurementRepository>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   return ProcurementRepository(apiClient);
 });
 
-// ৩. All Procurements Future Provider
 final procurementListProvider = FutureProvider.autoDispose<List<ProcurementResponseModel>>((ref) async {
   final repo = ref.watch(procurementRepositoryProvider);
   return await repo.getAll();
 });
 
-// ৪. Single Procurement by User ID Future Provider
 final procurementByUserIdProvider = FutureProvider.autoDispose.family<ProcurementResponseModel, int>((ref, userId) async {
   final repo = ref.watch(procurementRepositoryProvider);
   return await repo.findByUserId(userId);
 });
 
-// ৫. Current Logged-in Procurement Officer Profile
 final currentProcurementProvider = FutureProvider.autoDispose<ProcurementResponseModel?>((ref) async {
   final user = ref.watch(currentUserProvider);
   if (user == null) return null;
   return ref.watch(procurementRepositoryProvider).findByUserId(user.userId);
 });
 
-// ৬. Procurement Dashboard Summary Provider
 final procurementDashboardSummaryProvider = FutureProvider.autoDispose<({int totalPRs, int activeRfqs, int pendingPOs, List<dynamic> recentItems})>(
         (ref) async {
       final procurement = await ref.watch(currentProcurementProvider.future);
@@ -53,7 +48,6 @@ final procurementDashboardSummaryProvider = FutureProvider.autoDispose<({int tot
       );
     });
 
-// ৭. Procurement Controller / Notifier (Create & Update )
 final procurementControllerProvider = StateNotifierProvider<ProcurementController, AsyncValue<void>>((ref) {
   final repo = ref.watch(procurementRepositoryProvider);
   return ProcurementController(repo, ref);
@@ -65,7 +59,6 @@ class ProcurementController extends StateNotifier<AsyncValue<void>> {
 
   ProcurementController(this._repository, this._ref) : super(const AsyncValue.data(null));
 
-  // Create Procurement
   Future<bool> createProcurement(ProcurementRequestModel request, File? image) async {
     state = const AsyncValue.loading();
     try {
@@ -80,7 +73,6 @@ class ProcurementController extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  // Update Procurement
   Future<bool> updateProcurement(int id, ProcurementRequestModel request, File? image) async {
     state = const AsyncValue.loading();
     try {

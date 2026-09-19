@@ -1,4 +1,3 @@
-// ── Letter of Credit Status Constants ──────────────────────────────────
 class LCStatus {
   static const draft = 'DRAFT';
   static const opened = 'OPENED';
@@ -8,7 +7,6 @@ class LCStatus {
   static const values = [draft, opened, amended, expired, cancelled];
 }
 
-/// UI badge/label metadata for Letter of Credit Status.
 class LCStatusMeta {
   static const Map<String, String> label = {
     LCStatus.draft: 'Draft',
@@ -21,7 +19,6 @@ class LCStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Letter of Credit Request Model ─────────────────────────────────────
 class LetterOfCreditRequestModel {
   LetterOfCreditRequestModel({
     required this.purchaseOrderId,
@@ -67,7 +64,6 @@ class LetterOfCreditRequestModel {
   };
 }
 
-// ── Letter of Credit Response Model ────────────────────────────────────
 class LetterOfCreditResponseModel {
   LetterOfCreditResponseModel({
     required this.id,

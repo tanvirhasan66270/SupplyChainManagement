@@ -7,7 +7,6 @@ import 'package:scm_flutter/entity/customerModel.dart';
 import 'package:scm_flutter/entity/customerOrderModel.dart';
 
 
-// import 'package:scm_flutter/cutomer/data/customer_order_repository.dart';
 final customerRepositoryProvider = Provider<CustomerRepository>((ref) {
   return CustomerRepository(ref.watch(apiClientProvider));
 });
@@ -21,9 +20,7 @@ final customerListProvider = FutureProvider.autoDispose<List<CustomerResponseMod
   return await repo.getAll();
 });
 
-/// The logged-in customer's profile — keyed off the authenticated user's
-/// `userId`, mirroring `customerService.findByUserId(this.userId)` in
-/// customerdashboard.ts / customer-profile-component.ts.
+
 final currentCustomerProvider =
 FutureProvider.autoDispose<CustomerResponseModel?>((ref) async {
   final user = ref.watch(currentUserProvider);
@@ -35,7 +32,6 @@ FutureProvider.autoDispose<CustomerResponseModel?>((ref) async {
   }
 });
 
-/// Dashboard summary (stats + recent orders) for the current customer.
 final customerOrderSummaryProvider =
 FutureProvider.autoDispose<({int total, int pending, int active, int completed, int cancelled, List<CustomerOrderResponse> recent})>(
         (ref) async {
@@ -76,7 +72,6 @@ FutureProvider.autoDispose<({int total, int pending, int active, int completed, 
       );
     });
 
-/// Full order list for "My Orders" screen or staff Directory view.
 final myCustomerOrdersProvider =
 FutureProvider.autoDispose<List<CustomerOrderResponse>>((ref) async {
   final user = ref.watch(currentUserProvider);
@@ -88,7 +83,6 @@ FutureProvider.autoDispose<List<CustomerOrderResponse>>((ref) async {
   return ref.watch(customerOrderRepositoryProvider).getByCustomerEmail();
 });
 
-/// Get Single Order By ID (GET /api/customerOrders/{id})
 final singleOrderProvider = FutureProvider.autoDispose.family<CustomerOrderResponse, int>((ref, orderId) async {
   final repository = ref.watch(customerOrderRepositoryProvider);
   return repository.getById(orderId);

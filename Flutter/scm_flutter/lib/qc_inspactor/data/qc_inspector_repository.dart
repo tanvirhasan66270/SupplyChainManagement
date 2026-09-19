@@ -11,7 +11,6 @@ class QCInspectorRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  // (GET /api/qc-inspectors)
   Future<List<QCInspectorResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.qcInspectors);
@@ -22,7 +21,6 @@ class QCInspectorRepository {
     }
   }
 
-  //  (GET /api/qc-inspectors/{id})
   Future<QCInspectorResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.qcInspectorById(id));
@@ -32,7 +30,6 @@ class QCInspectorRepository {
     }
   }
 
-  //  (GET /api/qc-inspectors/user/{id})
   Future<QCInspectorResponseModel> getByUserId(int userId) async {
     try {
       final response = await _dio.get(ApiConstants.qcInspectorByUserId(userId));
@@ -42,7 +39,6 @@ class QCInspectorRepository {
     }
   }
 
-  //  (POST /api/qc-inspectors with multipart 'qcInspector' & 'image')
   Future<QCInspectorResponseModel> save(QCInspectorRequestModel request, XFile? image) async {
     try {
       FormData formData = FormData.fromMap({
@@ -69,7 +65,6 @@ class QCInspectorRepository {
     }
   }
 
-  //(PUT /api/qc-inspectors/{id} with multipart)
   Future<QCInspectorResponseModel> update(int id, QCInspectorRequestModel request, XFile? image) async {
     try {
       FormData formData = FormData.fromMap({
@@ -96,7 +91,6 @@ class QCInspectorRepository {
     }
   }
 
-  // (DELETE /api/qc-inspectors/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.qcInspectorById(id));

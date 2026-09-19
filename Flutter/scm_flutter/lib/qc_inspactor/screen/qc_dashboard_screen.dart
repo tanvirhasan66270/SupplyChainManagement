@@ -68,7 +68,6 @@ class _QCDashboardScreenState extends ConsumerState<QCDashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ১. Welcome Banner Card (Designed like CustomerDashboardScreen)
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -134,7 +133,6 @@ class _QCDashboardScreenState extends ConsumerState<QCDashboardScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ২. Top 4 Metric Cards Grid (Responsive 2 or 4 Columns)
                       GridView.count(
                         crossAxisCount: gridCrossAxisCount,
                         crossAxisSpacing: 12,
@@ -187,7 +185,6 @@ class _QCDashboardScreenState extends ConsumerState<QCDashboardScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // ৩. Action Banner Cards (3 Action Cards Row)
                       Row(
                         children: [
                           Expanded(
@@ -238,11 +235,9 @@ class _QCDashboardScreenState extends ConsumerState<QCDashboardScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // ৪. Quality Assurance Inspection Queue Table (Responsive Full Width)
                       _buildInspectionQueueTable(inspections),
                       const SizedBox(height: 16),
 
-                      // ৫. Bottom Two Cards (Quality Defect Types & QC Pass vs Fail Proportions)
                       screenWidth < 600
                           ? Column(
                               children: [

@@ -75,7 +75,6 @@ class PurchaseOrderPDFScreen extends ConsumerWidget {
   ) async {
     final pdf = pw.Document();
 
-    // ── Brand Colors (Matching User Template Image) ────────────────────
     final darkBlueHeader = PdfColor.fromHex('#002060');
     final primaryBlue = PdfColor.fromHex('#1E3A8A');
     final accentBlue = PdfColor.fromHex('#2563EB');
@@ -90,7 +89,6 @@ class PurchaseOrderPDFScreen extends ConsumerWidget {
     final textDark = PdfColor.fromHex('#1E293B');
     final textMuted = PdfColor.fromHex('#64748B');
 
-    // ── Resolved Data Formatting ───────────────────────────────────────
     final poNum = po.poNumber.isNotEmpty ? po.poNumber : 'PO-1783503003037';
     final poStatus = po.status.isNotEmpty ? po.status.toUpperCase() : 'APPROVED';
 
@@ -157,7 +155,6 @@ class PurchaseOrderPDFScreen extends ConsumerWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // ── 1. Top Header Banner ────────────────────────────────
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -314,7 +311,6 @@ class PurchaseOrderPDFScreen extends ConsumerWidget {
 
               pw.SizedBox(height: 10),
 
-              // Horizontal Divider line with Diamond Accent
               pw.Row(
                 children: [
                   pw.Expanded(child: pw.Container(height: 1.5, color: darkBlueHeader)),
@@ -328,7 +324,6 @@ class PurchaseOrderPDFScreen extends ConsumerWidget {
 
               pw.SizedBox(height: 10),
 
-              // ── 2. Party Cards (Vendor & Delivery Origin Side-by-Side) ──────
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
@@ -426,7 +421,6 @@ class PurchaseOrderPDFScreen extends ConsumerWidget {
 
               pw.SizedBox(height: 10),
 
-              // ── 3. LINKED AUDIT & TECHNICAL SPECIFICATION METADATA CARD ──
               pw.Container(
                 width: double.infinity,
                 padding: const pw.EdgeInsets.all(10),
@@ -438,7 +432,6 @@ class PurchaseOrderPDFScreen extends ConsumerWidget {
                 child: pw.Row(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    // Left Column: Audit & Requisition Metadata
                     pw.Expanded(
                       flex: 3,
                       child: pw.Row(
@@ -519,7 +512,6 @@ class PurchaseOrderPDFScreen extends ConsumerWidget {
 
               pw.SizedBox(height: 12),
 
-              // ── 4. ORDER ITEM SPECIFICATION MATRIX (TABLE) ────────────
               pw.Row(
                 children: [
                   pw.Text('[ITEMS]  ', style: const pw.TextStyle(fontSize: 9)),
@@ -580,7 +572,6 @@ class PurchaseOrderPDFScreen extends ConsumerWidget {
 
               pw.SizedBox(height: 12),
 
-              // ── 5. Bottom Financial & Directives Row ──────────────────
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
@@ -675,7 +666,6 @@ class PurchaseOrderPDFScreen extends ConsumerWidget {
 
               pw.Spacer(),
 
-              // ── 6. Footer Thank You Message & Security Features ───────
               pw.Center(
                 child: pw.Column(
                   children: [

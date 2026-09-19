@@ -4,18 +4,15 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/commercial_officer/data/invoice_repository.dart';
 import 'package:scm_flutter/entity/invoiceModel.dart';
 
-// ১. Repository Provider
 final invoiceRepositoryProvider = Provider<InvoiceRepository>((ref) {
   return InvoiceRepository(ref.watch(apiClientProvider));
 });
 
-// ২. List Provider
 final invoiceListProvider = FutureProvider.autoDispose<List<InvoiceResponseModel>>((ref) async {
   final repo = ref.watch(invoiceRepositoryProvider);
   return await repo.findAll();
 });
 
-// ৩. Controller / Notifier (Create, Update, Delete )
 final invoiceControllerProvider = StateNotifierProvider<InvoiceController, AsyncValue<void>>((ref) {
   final repo = ref.watch(invoiceRepositoryProvider);
   return InvoiceController(repo, ref);

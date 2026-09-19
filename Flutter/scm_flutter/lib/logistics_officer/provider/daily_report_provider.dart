@@ -5,18 +5,15 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/entity/daily_report_model.dart';
 import 'package:scm_flutter/logistics_officer/data/daily_report_repository.dart';
 
-// ১. Repository Provider
 final dailyReportRepositoryProvider = Provider<DailyReportRepository>((ref) {
   return DailyReportRepository(ref.watch(apiClientProvider));
 });
 
-// ২. List Provider
 final dailyReportListProvider = FutureProvider.autoDispose<List<DailyReportResponseModel>>((ref) async {
   final repo = ref.watch(dailyReportRepositoryProvider);
   return await repo.findAll();
 });
 
-// ৩. Controller / Notifier (Create, Update, Approve, Delete)
 final dailyReportControllerProvider = StateNotifierProvider<DailyReportController, AsyncValue<void>>((ref) {
   final repo = ref.watch(dailyReportRepositoryProvider);
   return DailyReportController(repo, ref);

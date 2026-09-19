@@ -4,18 +4,15 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/entity/inventory_model.dart';
 import 'package:scm_flutter/logistics_officer/data/inventory_repository.dart';
 
-// ১. Inventory Repository Provider
 final inventoryRepositoryProvider = Provider<InventoryRepository>((ref) {
   return InventoryRepository(ref.watch(apiClientProvider));
 });
 
-// ২. Inventory List Provider
 final inventoryListProvider = FutureProvider.autoDispose<List<InventoryResponseModel>>((ref) async {
   final repo = ref.watch(inventoryRepositoryProvider);
   return await repo.findAll();
 });
 
-// ৩. Inventory Controller / Notifier (Create, Update, Delete)
 final inventoryControllerProvider = StateNotifierProvider<InventoryController, AsyncValue<void>>((ref) {
   final repo = ref.watch(inventoryRepositoryProvider);
   return InventoryController(repo, ref);

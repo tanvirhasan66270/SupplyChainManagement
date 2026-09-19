@@ -46,7 +46,6 @@ class QuotationDataPDFScreen extends StatelessWidget {
         ),
         build: (pw.Context context) {
           return [
-            // Top Header Banner
             pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
@@ -84,7 +83,6 @@ class QuotationDataPDFScreen extends StatelessWidget {
             pw.Divider(color: PdfColors.grey300),
             pw.SizedBox(height: 12),
 
-            // Metadata Section
             pw.Row(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
@@ -116,7 +114,6 @@ class QuotationDataPDFScreen extends StatelessWidget {
             ),
             pw.SizedBox(height: 20),
 
-            // Product Specifications & Pricing Table
             pw.Text('PRODUCT SPECIFICATION & BID PRICE VECTOR', style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: PdfColor.fromHex('#0F172A'))),
             pw.SizedBox(height: 6),
             pw.TableHelper.fromTextArray(
@@ -137,7 +134,6 @@ class QuotationDataPDFScreen extends StatelessWidget {
             ),
             pw.SizedBox(height: 16),
 
-            // Total Summary Card
             pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.end,
               children: [
@@ -181,7 +177,6 @@ class QuotationDataPDFScreen extends StatelessWidget {
             ),
             pw.SizedBox(height: 30),
 
-            // Electronic Signature Footer
             pw.Divider(color: PdfColors.grey300),
             pw.SizedBox(height: 6),
             pw.Center(

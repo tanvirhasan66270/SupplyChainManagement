@@ -31,7 +31,6 @@ class LetterOfCreditPDFScreen extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // ── 1. CORPORATE SWIFT HEADER BANNER ────────────────────────
               pw.Container(
                 padding: const pw.EdgeInsets.all(14),
                 decoration: pw.BoxDecoration(
@@ -78,11 +77,9 @@ class LetterOfCreditPDFScreen extends StatelessWidget {
               ),
               pw.SizedBox(height: 12),
 
-              // ── 2. ISSUING BANK & ORDER CLUSTER DETAILS GRID ────────────
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  // Bank Terminal Info
                   pw.Expanded(
                     child: pw.Container(
                       padding: const pw.EdgeInsets.all(10),
@@ -106,7 +103,6 @@ class LetterOfCreditPDFScreen extends StatelessWidget {
                   ),
                   pw.SizedBox(width: 10),
 
-                  // Order & Beneficiary Info
                   pw.Expanded(
                     child: pw.Container(
                       padding: const pw.EdgeInsets.all(10),
@@ -132,7 +128,6 @@ class LetterOfCreditPDFScreen extends StatelessWidget {
               ),
               pw.SizedBox(height: 12),
 
-              // ── 3. FINANCIAL PARAMETERS & SHIPMENT MANIFEST ─────────────
               pw.Text('FINANCIAL & LOGISTICS PARAMETERS MANIFEST', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColor.fromHex('#0F172A'))),
               pw.SizedBox(height: 6),
               pw.Table(
@@ -158,7 +153,6 @@ class LetterOfCreditPDFScreen extends StatelessWidget {
               ),
               pw.SizedBox(height: 14),
 
-              // ── 4. LEGAL UCP 600 TERMS & BANK GUARANTEE ─────────────────
               pw.Container(
                 padding: const pw.EdgeInsets.all(8),
                 decoration: pw.BoxDecoration(
@@ -180,7 +174,6 @@ class LetterOfCreditPDFScreen extends StatelessWidget {
               ),
               pw.Spacer(),
 
-              // ── 5. OFFICIAL DUAL SIGNATURE & SEAL BLOCKS ────────────────
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [

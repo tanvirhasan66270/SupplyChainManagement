@@ -11,7 +11,6 @@ class QCInspectionRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  // GET /api/qc-inspections)
   Future<List<QCInspectionResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.qcInspections);
@@ -23,7 +22,6 @@ class QCInspectionRepository {
     }
   }
 
-  //  (GET /api/qc-inspections/{id})
   Future<QCInspectionResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.qcInspectionById(id));
@@ -33,7 +31,6 @@ class QCInspectionRepository {
     }
   }
 
-  //  (POST /api/qc-inspections with multipart 'inspection' & 'labTestReport')
   Future<QCInspectionResponseModel> save(QCInspectionRequestModel request, File? labTestReportFile) async {
     try {
       FormData formData = FormData.fromMap({
@@ -60,7 +57,6 @@ class QCInspectionRepository {
     }
   }
 
-  //  (PUT /api/qc-inspections/{id} with multipart)
   Future<QCInspectionResponseModel> update(int id, QCInspectionRequestModel request, File? labTestReportFile) async {
     try {
       FormData formData = FormData.fromMap({
@@ -87,7 +83,6 @@ class QCInspectionRepository {
     }
   }
 
-  // (DELETE /api/qc-inspections/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.qcInspectionById(id));

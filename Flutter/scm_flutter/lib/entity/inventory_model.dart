@@ -1,4 +1,3 @@
-// ── Stock Status Constants ─────────────────────────────────────────────
 class StockStatus {
   static const inStock = 'IN_STOCK';
   static const lowStock = 'LOW_STOCK';
@@ -6,7 +5,6 @@ class StockStatus {
   static const values = [inStock, lowStock, outOfStock];
 }
 
-/// UI badge/label metadata for Stock Status.
 class StockStatusMeta {
   static const Map<String, String> label = {
     StockStatus.inStock: 'In Stock',
@@ -17,7 +15,6 @@ class StockStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Inventory Request Model ────────────────────────────────────────────
 class InventoryRequestModel {
   InventoryRequestModel({
     required this.productId,
@@ -48,7 +45,6 @@ class InventoryRequestModel {
   };
 }
 
-// ── Inventory Response Model ───────────────────────────────────────────
 class InventoryResponseModel {
   InventoryResponseModel({
     required this.id,

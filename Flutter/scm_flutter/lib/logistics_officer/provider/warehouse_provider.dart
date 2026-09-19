@@ -4,18 +4,15 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/entity/warehouse_model.dart';
 import 'package:scm_flutter/logistics_officer/data/warehouse_repository.dart';
 
-// ১. Warehouse Repository Provider
 final warehouseRepositoryProvider = Provider<WarehouseRepository>((ref) {
   return WarehouseRepository(ref.watch(apiClientProvider));
 });
 
-// ২. Warehouse List Provider
 final warehouseListProvider = FutureProvider.autoDispose<List<WarehouseResponseModel>>((ref) async {
   final repo = ref.watch(warehouseRepositoryProvider);
   return await repo.findAll();
 });
 
-// ৩. Warehouse Controller / Notifier (Save, Update, Delete )
 final warehouseControllerProvider = StateNotifierProvider<WarehouseController, AsyncValue<void>>((ref) {
   final repo = ref.watch(warehouseRepositoryProvider);
   return WarehouseController(repo, ref);

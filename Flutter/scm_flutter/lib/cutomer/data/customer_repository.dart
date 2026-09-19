@@ -6,8 +6,7 @@ import 'package:scm_flutter/entity/customerModel.dart';
 import 'package:scm_flutter/util/apiClint.dart';
 import 'package:scm_flutter/util/apiConstants.dart';
 
-/// Mirrors services/customer.service.ts (multipart create/update, same as
-/// the Angular `FormData` approach).
+
 class CustomerRepository {
   CustomerRepository(this._apiClient);
 

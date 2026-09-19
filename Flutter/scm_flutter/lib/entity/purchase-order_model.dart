@@ -1,4 +1,3 @@
-// ── Purchase Order Status Constants ────────────────────────────────────
 class PurchaseOrderStatus {
   static const draft = 'DRAFT';
   static const issued = 'ISSUED';
@@ -14,7 +13,6 @@ class PurchaseOrderStatus {
   ];
 }
 
-/// UI badge/label metadata for Purchase Order Status.
 class PurchaseOrderStatusMeta {
   static const Map<String, String> label = {
     PurchaseOrderStatus.draft: 'Draft',
@@ -27,7 +25,6 @@ class PurchaseOrderStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Purchase Order Request ─────────────────────────────────────────────
 class PurchaseOrderRequest {
   PurchaseOrderRequest({
     required this.quotationId,
@@ -76,7 +73,6 @@ class PurchaseOrderRequest {
   };
 }
 
-// ── Purchase Order Response ────────────────────────────────────────────
 class PurchaseOrderResponse {
   PurchaseOrderResponse({
     required this.id,

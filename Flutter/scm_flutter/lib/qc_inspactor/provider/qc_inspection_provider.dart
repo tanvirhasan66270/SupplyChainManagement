@@ -6,12 +6,10 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/entity/qc_inspaction_model.dart';
 import 'package:scm_flutter/qc_inspactor/data/qc_inspection_repository.dart';
 
-// ১. Repository Provider
 final qcInspectionRepositoryProvider = Provider<QCInspectionRepository>((ref) {
   return QCInspectionRepository(ref.watch(apiClientProvider));
 });
 
-// ২. List Provider
 final qcInspectionListProvider = FutureProvider.autoDispose<List<QCInspectionResponseModel>>((ref) async {
   final user = ref.watch(currentUserProvider);
   if (user == null) return [];
@@ -23,7 +21,6 @@ final qcInspectionListProvider = FutureProvider.autoDispose<List<QCInspectionRes
   }
 });
 
-// ৩. Controller / Notifier (Save, Update, Delete )
 final qcInspectionControllerProvider = StateNotifierProvider<QCInspectionController, AsyncValue<void>>((ref) {
   final repo = ref.watch(qcInspectionRepositoryProvider);
   return QCInspectionController(repo, ref);

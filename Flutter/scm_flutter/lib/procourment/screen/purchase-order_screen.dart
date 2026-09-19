@@ -136,7 +136,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── 1. Top Header Bar (Fully Dynamic) ──
             DynamicScmTopNavBar(
               onRefresh: () {
                 ref.invalidate(purchaseRequisitionListProvider);
@@ -144,7 +143,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
               },
             ),
 
-            // ── 2. Blue Banner Header Card with View All Button ──
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(18),
@@ -230,7 +228,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
               ),
             ),
 
-            // ── 3. Form Content Scrollable Area ──
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -239,7 +236,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Step 1: Target Approved Quotation Slip Dropdown
                       _buildNumberedStepLabel(1, 'TARGET APPROVED QUOTATION SLIP *'),
                       quotationsAsync.when(
                         data: (quotations) {
@@ -289,7 +285,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 2: Financial Settlement Value ($)
                       _buildNumberedStepLabel(2, 'FINANCIAL SETTLEMENT VALUE (\$)'),
                       TextFormField(
                         controller: _amountController,
@@ -299,7 +294,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 3: Expected Delivery Date
                       _buildNumberedStepLabel(3, 'EXPECTED DELIVERY DATE *'),
                       TextFormField(
                         controller: _dateController,
@@ -309,7 +303,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 4: System Base Currency
                       _buildNumberedStepLabel(4, 'SYSTEM BASE CURRENCY'),
                       TextFormField(
                         initialValue: 'USD (\$) Fixed SCM',
@@ -319,7 +312,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Step 5: Supplier Name
                       _buildNumberedStepLabel(5, 'SUPPLIER NAME'),
                       TextFormField(
                         readOnly: true,
@@ -328,7 +320,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 6: Supplier Email
                       _buildNumberedStepLabel(6, 'SUPPLIER EMAIL'),
                       TextFormField(
                         readOnly: true,
@@ -337,7 +328,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 7: Created At
                       _buildNumberedStepLabel(7, 'CREATED AT'),
                       TextFormField(
                         readOnly: true,
@@ -346,7 +336,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 8: Issued By
                       _buildNumberedStepLabel(8, 'ISSUED BY (USER NAME)'),
                       TextFormField(
                         readOnly: true,
@@ -355,7 +344,6 @@ class _PurchaseOrderScreenState extends ConsumerState<PurchaseOrderScreen> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Action Buttons (Submit & Clear)
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(

@@ -9,7 +9,6 @@ class StockMovementRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  //  (GET /api/stock-movements)
   Future<List<StockMovementResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.stockMovements);
@@ -20,7 +19,6 @@ class StockMovementRepository {
     }
   }
 
-  // (GET /api/stock-movements/{id})
   Future<StockMovementResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.stockMovementById(id));
@@ -30,7 +28,6 @@ class StockMovementRepository {
     }
   }
 
-  // (POST /api/stock-movements)
   Future<StockMovementResponseModel> logMovement(StockMovementRequestModel request) async {
     try {
       final response = await _dio.post(ApiConstants.stockMovements, data: request.toJson());
@@ -40,7 +37,6 @@ class StockMovementRepository {
     }
   }
 
-  //  (DELETE /api/stock-movements/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.stockMovementById(id));

@@ -4,7 +4,6 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/entity/purchase-order_model.dart';
 import 'package:scm_flutter/procourment/data/purchase_order_repository.dart';
 
-// ১. Purchase Order Repository Provider
 final purchaseOrderRepositoryProvider = Provider<PurchaseOrderRepository>((ref) {
   return PurchaseOrderRepository(ref.watch(apiClientProvider));
 });
@@ -24,7 +23,6 @@ final purchaseOrdersBySupplierProvider = FutureProvider.autoDispose.family<List<
   return await repo.getBySupplier(supplierId);
 });
 
-//Purchase Order Controller / Notifier (Create, Update, Approve operation helder)
 final purchaseOrderControllerProvider = StateNotifierProvider<PurchaseOrderController, AsyncValue<void>>((ref) {
   final repo = ref.watch(purchaseOrderRepositoryProvider);
   return PurchaseOrderController(repo, ref);
@@ -36,7 +34,6 @@ class PurchaseOrderController extends StateNotifier<AsyncValue<void>> {
 
   PurchaseOrderController(this._repository, this._ref) : super(const AsyncValue.data(null));
 
-  // পারচেজ অর্ডার তৈরি করা
   Future<bool> createPurchaseOrder(PurchaseOrderRequest request) async {
     state = const AsyncValue.loading();
     try {

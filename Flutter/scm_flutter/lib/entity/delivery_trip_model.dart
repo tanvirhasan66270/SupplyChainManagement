@@ -1,4 +1,3 @@
-// ── Delivery Trip Status Constants ─────────────────────────────────────
 class DeliveryTripStatus {
   static const pending = 'PENDING';
   static const inTransit = 'IN_TRANSIT';
@@ -7,7 +6,6 @@ class DeliveryTripStatus {
   static const values = [pending, inTransit, delivered, cancelled];
 }
 
-/// UI badge/label metadata for Delivery Trip Status.
 class DeliveryTripStatusMeta {
   static const Map<String, String> label = {
     DeliveryTripStatus.pending: 'Pending',
@@ -19,7 +17,6 @@ class DeliveryTripStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Delivery Trip Request Model ────────────────────────────────────────
 class DeliveryTripRequestModel {
   DeliveryTripRequestModel({
     required this.dispatcherId,
@@ -56,7 +53,6 @@ class DeliveryTripRequestModel {
   };
 }
 
-// ── Delivery Trip Response Model ───────────────────────────────────────
 class DeliveryTripResponseModel {
   DeliveryTripResponseModel({
     required this.id,

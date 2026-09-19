@@ -39,11 +39,10 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
       boldFont = pw.Font.helveticaBold();
     }
 
-    // Excel Color Palette Definition
-    final excelGreen = PdfColor.fromHex('#107C41'); // Official MS Excel Green
+    final excelGreen = PdfColor.fromHex('#107C41');
     final excelDarkGreen = PdfColor.fromHex('#0E6B37');
     final excelLightGreen = PdfColor.fromHex('#E6F4EA');
-    final gridBorder = PdfColor.fromHex('#D1D5DB'); // Excel Cell Grid Line
+    final gridBorder = PdfColor.fromHex('#D1D5DB');
     final cellBgAlt = PdfColor.fromHex('#F9FAFB');
     final textDark = PdfColor.fromHex('#1F2937');
     final textMuted = PdfColor.fromHex('#6B7280');
@@ -51,18 +50,18 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
     PdfColor statusColor;
     switch (grn.status.toUpperCase()) {
       case 'APPROVED':
-        statusColor = PdfColor.fromHex('#107C41'); // Excel Green
+        statusColor = PdfColor.fromHex('#107C41');
         break;
       case 'RECEIVED':
       case 'INSPECTED':
-        statusColor = PdfColor.fromHex('#1D4ED8'); // Blue
+        statusColor = PdfColor.fromHex('#1D4ED8');
         break;
       case 'PENDING':
       case 'PARTIALLY_RECEIVED':
-        statusColor = PdfColor.fromHex('#D97706'); // Amber
+        statusColor = PdfColor.fromHex('#D97706');
         break;
       case 'REJECTED':
-        statusColor = PdfColor.fromHex('#DC2626'); // Red
+        statusColor = PdfColor.fromHex('#DC2626');
         break;
       default:
         statusColor = PdfColor.fromHex('#6B7280');
@@ -89,7 +88,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
         ),
         build: (pw.Context context) {
           return [
-            // 1. MS Excel Style Sheet Title Header Bar
             pw.Container(
               decoration: pw.BoxDecoration(
                 color: excelGreen,
@@ -167,7 +165,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  // Sheet Tab Bar Indicator
                   pw.Container(
                     width: double.infinity,
                     color: excelDarkGreen,
@@ -198,7 +195,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
             ),
             pw.SizedBox(height: 10),
 
-            // 2. Excel Formula Metric Cards Box (Spreadsheet Summary KPI Grid)
             pw.Table(
               border: pw.TableBorder.all(color: gridBorder, width: 0.8),
               children: [
@@ -215,14 +211,12 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
             ),
             pw.SizedBox(height: 12),
 
-            // 3. Excel Specific Metadata Grid Tables (Section A, B, C Spreadsheet Cells)
             pw.Text('EXCEL MASTER DATA SHEET CELLS', style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold, color: textDark)),
             pw.SizedBox(height: 4),
 
             pw.Table(
               border: pw.TableBorder.all(color: gridBorder, width: 0.6),
               children: [
-                // Excel Sheet Header Row
                 pw.TableRow(
                   decoration: pw.BoxDecoration(color: PdfColor.fromHex('#E5E7EB')),
                   children: [
@@ -240,7 +234,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                // Cell Rows 1
                 pw.TableRow(
                   decoration: pw.BoxDecoration(color: PdfColors.white),
                   children: [
@@ -249,7 +242,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
                     _buildExcelCellPair('Destination Terminal:', '${grn.warehouseName} (#${grn.warehouseId})'),
                   ],
                 ),
-                // Cell Rows 2
                 pw.TableRow(
                   decoration: pw.BoxDecoration(color: cellBgAlt),
                   children: [
@@ -258,7 +250,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
                     _buildExcelCellPair('PO Issued Officer:', poIssuedByStr),
                   ],
                 ),
-                // Cell Rows 3
                 pw.TableRow(
                   decoration: pw.BoxDecoration(color: PdfColors.white),
                   children: [
@@ -267,7 +258,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
                     _buildExcelCellPair('Expected Delivery Date:', expectedDeliveryStr),
                   ],
                 ),
-                // Cell Rows 4
                 pw.TableRow(
                   decoration: pw.BoxDecoration(color: cellBgAlt),
                   children: [
@@ -280,7 +270,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
             ),
             pw.SizedBox(height: 12),
 
-            // 4. Excel Data Grid Table (Cargo Allocation Ledger Spreadsheet)
             pw.Text('INBOUND CARGO ALLOCATION EXCEL SPREADSHEET GRID', style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold, color: textDark)),
             pw.SizedBox(height: 4),
 
@@ -288,7 +277,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
               pw.Table(
                 border: pw.TableBorder.all(color: gridBorder, width: 0.6),
                 children: [
-                  // Excel Table Header
                   pw.TableRow(
                     decoration: pw.BoxDecoration(color: excelGreen),
                     children: [
@@ -300,7 +288,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
                       _buildHeaderCell('AUDIT VERDICT'),
                     ],
                   ),
-                  // Excel Data Rows
                   ...grn.lineItems!.asMap().entries.map((entry) {
                     final idx = entry.key + 1;
                     final line = entry.value;
@@ -324,7 +311,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
                       ],
                     );
                   }),
-                  // Formula Total Footer Row (Excel Standard Double Bottom Border)
                   pw.TableRow(
                     decoration: pw.BoxDecoration(color: excelLightGreen),
                     children: [
@@ -383,7 +369,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
               ),
             pw.SizedBox(height: 10),
 
-            // 5. Excel Formula / Operational Remarks Box
             pw.Text('OPERATIONAL REMARKS & EXCEL AUDIT CELL LOG', style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold, color: textDark)),
             pw.SizedBox(height: 3),
             pw.Container(
@@ -401,7 +386,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
             ),
             pw.SizedBox(height: 16),
 
-            // 6. Dual Signature Spreadsheet Sign-Off Footer
             pw.Spacer(),
             pw.Container(
               padding: const pw.EdgeInsets.only(top: 8),
@@ -412,7 +396,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: pw.CrossAxisAlignment.end,
                 children: [
-                  // Receiver Signature
                   pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
@@ -425,7 +408,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
                       pw.Text('(${grn.receivedByName.isNotEmpty ? grn.receivedByName : "Store Operator"})', style: pw.TextStyle(fontSize: 6.5, color: textMuted)),
                     ],
                   ),
-                  // Excel Audit Stamp Badge
                   pw.Container(
                     padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: pw.BoxDecoration(
@@ -447,7 +429,6 @@ class GoodReceivedNotePDFScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  // QC Inspector Signature
                   pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.end,
                     children: [

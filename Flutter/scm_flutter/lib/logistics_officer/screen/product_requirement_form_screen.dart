@@ -107,7 +107,6 @@ class _ProductRequirementFormScreenState extends ConsumerState<ProductRequiremen
               ),
             ),
 
-            // ২. Scrollable Form Content
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -116,7 +115,6 @@ class _ProductRequirementFormScreenState extends ConsumerState<ProductRequiremen
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 1. Product Item Name
                       _buildNumberedStepLabel(1, 'Product Item Name *'),
                       TextFormField(
                         initialValue: productName,
@@ -128,7 +126,6 @@ class _ProductRequirementFormScreenState extends ConsumerState<ProductRequiremen
                       ),
                       const SizedBox(height: 16),
 
-                      // 2. Movement Quantity (Requested Quantity)
                       _buildNumberedStepLabel(2, 'Movement Quantity *'),
                       TextFormField(
                         initialValue: requestedQuantity.toString(),
@@ -145,7 +142,6 @@ class _ProductRequirementFormScreenState extends ConsumerState<ProductRequiremen
                       ),
                       const SizedBox(height: 16),
 
-                      // 3. Urgency Priority Level
                       _buildNumberedStepLabel(3, 'Urgency Priority Level *'),
                       DropdownButtonFormField<String>(
                         initialValue: urgencyLevel,
@@ -160,7 +156,6 @@ class _ProductRequirementFormScreenState extends ConsumerState<ProductRequiremen
                       ),
                       const SizedBox(height: 16),
 
-                      // 4. Customer Order Number
                       _buildNumberedStepLabel(4, 'Customer Order Number'),
                       TextFormField(
                         initialValue: customerOrderNumber,
@@ -172,7 +167,6 @@ class _ProductRequirementFormScreenState extends ConsumerState<ProductRequiremen
                       ),
                       const SizedBox(height: 16),
 
-                      // 5. Packaging Unit
                       _buildNumberedStepLabel(5, 'Packaging Unit *'),
                       DropdownButtonFormField<String>(
                         initialValue: unit,
@@ -185,7 +179,6 @@ class _ProductRequirementFormScreenState extends ConsumerState<ProductRequiremen
                       ),
                       const SizedBox(height: 16),
 
-                      // 6. Target Price Range
                       _buildNumberedStepLabel(6, 'Target Price Range'),
                       TextFormField(
                         initialValue: targetPriceRange,
@@ -197,7 +190,6 @@ class _ProductRequirementFormScreenState extends ConsumerState<ProductRequiremen
                       ),
                       const SizedBox(height: 16),
 
-                      // 7. Requesting Officer Name
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -224,7 +216,6 @@ class _ProductRequirementFormScreenState extends ConsumerState<ProductRequiremen
                       ),
                       const SizedBox(height: 16),
 
-                      // 8. Product Specification & Details
                       _buildNumberedStepLabel(8, 'Product Specification & Details'),
                       TextFormField(
                         initialValue: description,
@@ -239,7 +230,6 @@ class _ProductRequirementFormScreenState extends ConsumerState<ProductRequiremen
                       ),
                       const SizedBox(height: 16),
 
-                      // 9. Remarks & Audit Notes
                       _buildNumberedStepLabel(9, 'Remarks & Audit Notes'),
                       TextFormField(
                         initialValue: procurementRemarks,
@@ -261,7 +251,6 @@ class _ProductRequirementFormScreenState extends ConsumerState<ProductRequiremen
                       ),
                       const SizedBox(height: 24),
 
-                      // Footer Action Buttons (Cancel & Commit Requirement Ledger)
                       Row(
                         children: [
                           Expanded(

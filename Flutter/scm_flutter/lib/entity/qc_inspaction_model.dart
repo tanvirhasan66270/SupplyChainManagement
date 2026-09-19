@@ -1,4 +1,3 @@
-// ── QC Inspection Result Constants ─────────────────────────────────────
 class QCInspectionResult {
   static const good = 'GOOD';
   static const veryGood = 'VERY_GOOD';
@@ -7,7 +6,6 @@ class QCInspectionResult {
   static const values = [good, veryGood, average, bad];
 }
 
-/// UI badge/label metadata for QC Inspection Result.
 class QCInspectionResultMeta {
   static const Map<String, String> label = {
     QCInspectionResult.good: 'Good',
@@ -19,7 +17,6 @@ class QCInspectionResultMeta {
   static String labelFor(String result) => label[result] ?? result;
 }
 
-// ── QC Checklist Request Model ─────────────────────────────────────────
 class QCChecklistRequestModel {
   QCChecklistRequestModel({
     this.inspectionId,
@@ -41,7 +38,6 @@ class QCChecklistRequestModel {
   };
 }
 
-// ── QC Checklist Response Model ────────────────────────────────────────
 class QCChecklistResponseModel {
   QCChecklistResponseModel({
     required this.id,
@@ -79,7 +75,6 @@ class QCChecklistResponseModel {
   }
 }
 
-// ── QC Inspection Request Model ────────────────────────────────────────
 class QCInspectionRequestModel {
   QCInspectionRequestModel({
     this.id,
@@ -128,7 +123,6 @@ class QCInspectionRequestModel {
   };
 }
 
-// ── QC Inspection Response Model ───────────────────────────────────────
 class QCInspectionResponseModel {
   QCInspectionResponseModel({
     required this.id,

@@ -13,7 +13,6 @@ class PdfStatementGenerator {
   }) async {
     final pdf = pw.Document();
 
-    // Load fonts supporting Bengali Taka symbol ৳ and clean layout
     pw.Font? font;
     try {
       font = await PdfGoogleFonts.notoSansBengaliRegular();
@@ -89,7 +88,6 @@ class PdfStatementGenerator {
             ),
             pw.SizedBox(height: 16),
 
-            // Section 1: Transaction Log Header
             _buildSectionHeader('PAYMENT STATEMENT TRANSACTION LOG'),
 
             // Transaction Log Table
@@ -158,7 +156,6 @@ class PdfStatementGenerator {
             ),
             pw.SizedBox(height: 20),
 
-            // Section 2: Financial Breakdown Header
             _buildSectionHeader('FINANCIAL BREAKDOWN SUMMARY'),
 
             // Summary Table
@@ -282,7 +279,7 @@ class PdfStatementGenerator {
               pw.Text(label1, style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey800)),
               pw.SizedBox(width: 6),
               pw.SizedBox(
-                width: 140, // ফিক্সড উইথ দেওয়া হলো যাতে ফ্লেক্স ক্র্যাশ না করে
+                width: 140,
                 child: pw.Text(
                   val1,
                   style: pw.TextStyle(
@@ -302,7 +299,7 @@ class PdfStatementGenerator {
               pw.Text(label2, style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey800)),
               pw.SizedBox(width: 6),
               pw.SizedBox(
-                width: 130, // ফিক্সড উইথ দেওয়া হলো
+                width: 130,
                 child: pw.Text(
                   val2,
                   style: pw.TextStyle(

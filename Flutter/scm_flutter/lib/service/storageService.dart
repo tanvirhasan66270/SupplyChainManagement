@@ -22,7 +22,6 @@ class StorageService {
   final FlutterSecureStorage _storage;
 
 
-// ── Write ────────────────────────────────────────────
   Future<void> saveSession(LoginResponse data) async {
     await _storage.write(key: StorageKeys.token, value: data.token);
     await _storage.write(
@@ -32,7 +31,6 @@ class StorageService {
   }
 
 
-// ── Read ─────────────────────────────────────────────
   Future<String?> getToken() => _storage.read(key: StorageKeys.token);
 
   Future<LoginResponse?> getUser() async {
@@ -50,7 +48,6 @@ class StorageService {
   Future<bool> isLoggedIn() async => (await getToken()) != null;
 
 
-// ── Clear ────────────────────────────────────────────
   Future<void> clearSession() async {
     await _storage.delete(key: StorageKeys.token);
     await _storage.delete(key: StorageKeys.user);
@@ -61,7 +58,6 @@ class StorageService {
   }
 
 
-  // ── Generic (mirrors saveData/getData/removeData) ────
   Future<void> saveData(String key, Map<String, dynamic> data) =>
       _storage.write(key: key, value: jsonEncode(data));
 

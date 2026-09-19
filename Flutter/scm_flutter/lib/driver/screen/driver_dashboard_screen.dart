@@ -19,9 +19,8 @@ class DriverDashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
-  String _summaryMode = 'ALL'; // 'TODAY' or 'ALL'
+  String _summaryMode = 'ALL';
 
-  // Modal States
   final _searchTripController = TextEditingController();
   DeliveryTripResponseModel? _searchedTrip;
   String? _trackerSearchError;
@@ -31,7 +30,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
   bool _isUpdatingTrip = false;
   final ImagePicker _picker = ImagePicker();
 
-  // Vehicle Status Update State
   String _selectedVehicleStatus = 'AVAILABLE';
   bool _isUpdatingVehicle = false;
 
@@ -54,10 +52,9 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
 
     final userName = (currentUser != null && currentUser.name.isNotEmpty) ? currentUser.name : 'Driver';
 
-    // Filter trips strictly assigned to logged in driver (by driverId, driverEmail, or driverName)
     final isDriverRole = currentUser?.role.toUpperCase() == 'DRIVER' || currentUser?.role.toUpperCase() == 'ROLE_DRIVER';
     final myTrips = allTrips.where((t) {
-      if (!isDriverRole) return true; // Admins / Managers see all
+      if (!isDriverRole) return true;
       if (currentUser == null) return true;
       final matchId = t.driverId == currentUser.userId;
       final matchEmail = t.driverEmail.isNotEmpty && t.driverEmail.toLowerCase() == currentUser.email.toLowerCase();
@@ -65,7 +62,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
       return matchId || matchEmail || matchName;
     }).toList();
 
-    // Filter vehicle assigned to logged in driver or default to first
     final assignedVehicle = allVehicles.firstWhere(
       (v) => currentUser != null && v.driverId == currentUser.userId,
       orElse: () => allVehicles.isNotEmpty
@@ -80,7 +76,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
             ),
     );
 
-    // Calculate Summary Metrics
     List<DeliveryTripResponseModel> filteredTrips = myTrips;
     if (_summaryMode == 'TODAY') {
       final now = DateTime.now();
@@ -121,7 +116,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── 1. Top Header (Procurement Styled Dynamic Navigation Bar)
                 DynamicScmTopNavBar(
                   onRefresh: () {
                     ref.invalidate(deliveryTripListProvider);
@@ -135,23 +129,19 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ── 2. Welcome Banner (Procurement Styled Gradient Container)
                       _buildWelcomeBanner(userName),
                       const SizedBox(height: 20),
 
-                      // ── OVERVIEW Section (4 KPI Cards) ───────────────
                       _buildSectionHeader('OVERVIEW'),
                       const SizedBox(height: 10),
                       _buildKpiGrid(totalTrips, deliveredCount, inTransitCount, assignedVehicle, distanceCovered),
                       const SizedBox(height: 24),
 
-                      // ── QUICK ACTIONS Section ────────────────────────
                       _buildSectionHeader('QUICK ACTIONS'),
                       const SizedBox(height: 10),
                       _buildQuickActionsRow(context, assignedVehicle),
                       const SizedBox(height: 24),
 
-                      // ── TRIP SUMMARY & VEHICLE STATUS ────────────────
                       if (isMobile) ...[
                         _buildTripSummaryCard(totalTrips, deliveredCount, inTransitCount, pendingCount, cancelledCount),
                         const SizedBox(height: 16),
@@ -172,7 +162,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
                       ],
                       const SizedBox(height: 24),
 
-                      // ── RECENT DELIVERY TRIPS & DELIVERY PROGRESS ────
                       if (isMobile) ...[
                         _buildRecentTripsCard(myTrips),
                         const SizedBox(height: 16),
@@ -193,7 +182,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
                       ],
                       const SizedBox(height: 24),
 
-                      // ── ALERTS & NOTIFICATIONS Card ──────────────────
                       _buildAlertsSection(notifications),
                       const SizedBox(height: 30),
                     ],
@@ -208,7 +196,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── 1. WELCOME BANNER (Procurement Styled) ──────────────────────────
   Widget _buildWelcomeBanner(String userName) {
     return Container(
       width: double.infinity,
@@ -248,7 +235,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── SECTION HEADER HELPER ──────────────────────────────────────────
   Widget _buildSectionHeader(String title) {
     return Text(
       title,
@@ -256,7 +242,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── 2. OVERVIEW KPI GRID ───────────────────────────────────────────
   Widget _buildKpiGrid(int totalTrips, int delivered, int inTransit, VehicleResponseModel vehicle, int distance) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -402,7 +387,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── 3. QUICK ACTIONS ROW ───────────────────────────────────────────
   Widget _buildQuickActionsRow(BuildContext context, VehicleResponseModel vehicle) {
     final status = vehicle.status.toUpperCase();
     final isAvailableOrOnTrip = status == 'AVAILABLE' || status == 'ON_TRIP';
@@ -504,7 +488,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── 4. TRIP SUMMARY CARD ───────────────────────────────────────────
   Widget _buildTripSummaryCard(int total, int delivered, int inTransit, int pending, int cancelled) {
     String formatNum(int n) => n < 10 && n > 0 ? '0$n' : '$n';
 
@@ -577,7 +560,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── 5. VEHICLE STATUS CARD ─────────────────────────────────────────
   Widget _buildVehicleStatusCard(VehicleResponseModel vehicle) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -617,7 +599,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── 6. RECENT DELIVERY TRIPS CARD ──────────────────────────────────
   Widget _buildRecentTripsCard(List<DeliveryTripResponseModel> trips) {
     final recent = trips.take(3).toList();
 
@@ -709,7 +690,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── 7. DELIVERY PROGRESS CARD ──────────────────────────────────────
   Widget _buildDeliveryProgressCard(int progressPercent, int completed, int pending) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -786,7 +766,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── 8. ALERTS & NOTIFICATIONS SECTION ─────────────────────────────
   Widget _buildAlertsSection(List<dynamic> notifications) {
     return Container(
       width: double.infinity,
@@ -849,7 +828,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── 9. BOTTOM NAVIGATION BAR (Procurement Styled) ──────────────────
   Widget _buildBottomNavigationBar(VehicleResponseModel vehicle) {
     return Container(
       height: 65,
@@ -913,7 +891,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── 10. MODAL: TRIP TRACKER (Start / Complete Delivery) ─────────────
   void _openTrackerModal(String contextType) {
     _selectedTrackerStatus = contextType == 'START' ? 'IN_TRANSIT' : 'DELIVERED';
     _searchTripController.clear();
@@ -1129,7 +1106,6 @@ class _DriverDashboardScreenState extends ConsumerState<DriverDashboardScreen> {
     );
   }
 
-  // ── 11. MODAL: VEHICLE STATUS UPDATE ──────────────────────────────
   void _openVehicleStatusModal(VehicleResponseModel vehicle) {
     _selectedVehicleStatus = vehicle.status;
     final isAssigned = vehicle.id != 0 && vehicle.plateNumber.isNotEmpty;

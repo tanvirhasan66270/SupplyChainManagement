@@ -102,7 +102,6 @@ class _CommercialInvoiceDataScreenState extends ConsumerState<CommercialInvoiceD
             final paidBilling = invoices.fold<double>(0, (sum, inv) => sum + inv.paidAmount);
             final unpaidDues = invoices.fold<double>(0, (sum, inv) => sum + inv.dueAmount);
 
-            // Filter logic
             final filteredInvoices = invoices.where((inv) {
               final query = _searchQuery.toLowerCase();
               final matchesSearch = query.isEmpty ||
@@ -123,7 +122,6 @@ class _CommercialInvoiceDataScreenState extends ConsumerState<CommercialInvoiceD
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Top Metric Pipeline Banner ──
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -188,7 +186,6 @@ class _CommercialInvoiceDataScreenState extends ConsumerState<CommercialInvoiceD
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Search Bar ──
                   TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
@@ -225,7 +222,6 @@ class _CommercialInvoiceDataScreenState extends ConsumerState<CommercialInvoiceD
                   ),
                   const SizedBox(height: 12),
 
-                  // ── Status Filter Chips ──
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -241,7 +237,6 @@ class _CommercialInvoiceDataScreenState extends ConsumerState<CommercialInvoiceD
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Commercial Invoices Cards List ──
                   if (filteredInvoices.isEmpty)
                     Container(
                       width: double.infinity,
@@ -281,7 +276,6 @@ class _CommercialInvoiceDataScreenState extends ConsumerState<CommercialInvoiceD
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Header Row: Invoice Code, Recipient, Badges
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,7 +334,6 @@ class _CommercialInvoiceDataScreenState extends ConsumerState<CommercialInvoiceD
                                 ),
                                 const SizedBox(height: 8),
 
-                                // Order Ref Tag
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                   decoration: BoxDecoration(
@@ -354,7 +347,6 @@ class _CommercialInvoiceDataScreenState extends ConsumerState<CommercialInvoiceD
                                 ),
                                 const SizedBox(height: 10),
 
-                                // Financial Metrics Grid
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
@@ -398,7 +390,6 @@ class _CommercialInvoiceDataScreenState extends ConsumerState<CommercialInvoiceD
                                 ),
                                 const Divider(height: 16),
 
-                                // Action Buttons Row
                                 Wrap(
                                   spacing: 8,
                                   runSpacing: 8,

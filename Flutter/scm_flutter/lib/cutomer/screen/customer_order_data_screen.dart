@@ -201,7 +201,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
               orders = myOrders;
             }
 
-            // Apply filtering & searching
             final filteredOrders = orders.where((order) {
               final matchesSearch = _searchQuery.isEmpty ||
                   order.orderNumber.toLowerCase().contains(_searchQuery.toLowerCase()) ||
@@ -215,7 +214,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
               return matchesSearch && matchesStatus;
             }).toList();
 
-            // Calculate status metrics counts
             final int pendingCount = orders.where((o) => o.status.toUpperCase() == 'PENDING').length;
             final int confirmedCount = orders.where((o) => o.status.toUpperCase() == 'CONFIRMED').length;
             final int deliveredCount = orders.where((o) => o.status.toUpperCase() == 'DELIVERED').length;
@@ -226,7 +224,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Metrics Summary Banner ─────────────────
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -273,7 +270,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Search & Filter Controls ────────────────
                   TextField(
                     controller: _searchController,
                     onChanged: (val) => setState(() => _searchQuery = val.trim()),
@@ -299,7 +295,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                   ),
                   const SizedBox(height: 12),
 
-                  // Status Filter Chips
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -332,7 +327,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Order Cards Data List ───────────────────
                   if (filteredOrders.isEmpty)
                     Container(
                       width: double.infinity,
@@ -381,7 +375,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Order Header Bar
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                                 decoration: const BoxDecoration(
@@ -424,13 +417,11 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                                 ),
                               ),
 
-                              // Order Body Content
                               Padding(
                                 padding: const EdgeInsets.all(14),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Row 1: Date & Service Details
                                     Row(
                                       children: [
                                         Expanded(
@@ -477,7 +468,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                                     ),
                                     const SizedBox(height: 10),
 
-                                    // Line items list preview
                                     if (order.lineItems.isNotEmpty) ...[
                                       Container(
                                         padding: const EdgeInsets.all(8),
@@ -524,7 +514,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                                       const SizedBox(height: 10),
                                     ],
 
-                                    // Financial Amounts Row
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
@@ -553,14 +542,12 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                                     ),
                                     const Divider(height: 20),
 
-                                    // ── Data Row PDF Action & Extra Actions Row ──
                                     Wrap(
                                       spacing: 8,
                                       runSpacing: 8,
                                       alignment: WrapAlignment.spaceBetween,
                                       crossAxisAlignment: WrapCrossAlignment.center,
                                       children: [
-                                        // PDF View / Download Button for this order data row
                                         ElevatedButton.icon(
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: AppTheme.primaryDark,
@@ -583,7 +570,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                                         Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            // Track Order Button
                                             OutlinedButton.icon(
                                               style: OutlinedButton.styleFrom(
                                                 foregroundColor: AppTheme.primary,
@@ -603,7 +589,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                                             ),
                                             if (canUpdateStatus) ...[
                                               const SizedBox(width: 6),
-                                              // Update Status Button (Restricted to SALES_OFFICER, MANAGER, ADMIN)
                                               OutlinedButton.icon(
                                                 style: OutlinedButton.styleFrom(
                                                   foregroundColor: AppTheme.warning,
@@ -618,7 +603,6 @@ class _CustomerOrderDataScreenState extends ConsumerState<CustomerOrderDataScree
                                             ],
                                             if (due > 0) ...[
                                               const SizedBox(width: 6),
-                                              // Pay Due Button
                                               ElevatedButton.icon(
                                                 style: ElevatedButton.styleFrom(
                                                   backgroundColor: AppTheme.success,

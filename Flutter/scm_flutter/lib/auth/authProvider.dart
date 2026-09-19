@@ -60,9 +60,7 @@ StateNotifierProvider<AuthController, AsyncValue<LoginResponse?>>((ref) {
   return AuthController(ref);
 });
 
-/// Convenience: current user, or null. Returns null while loading too, so
-/// only use this where a brief null flash during startup is acceptable
-/// (e.g. UI that already handles a splash/loading state via the router).
+
 final currentUserProvider = Provider<LoginResponse?>((ref) {
   return ref.watch(authControllerProvider).value;
 });

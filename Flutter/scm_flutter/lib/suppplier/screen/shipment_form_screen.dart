@@ -197,7 +197,6 @@ class _ShipmentFormScreenState extends ConsumerState<ShipmentFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Step 1: TARGET PURCHASE ORDER VECTOR
                       _buildNumberedStepLabel(1, 'TARGET PURCHASE ORDER VECTOR *'),
                       DropdownButtonFormField<int>(
                         isExpanded: true,
@@ -231,7 +230,6 @@ class _ShipmentFormScreenState extends ConsumerState<ShipmentFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 2: ASSIGNED SUPPLIER VENDOR
                       _buildNumberedStepLabel(2, 'ASSIGNED SUPPLIER VENDOR *'),
                       if (isSupplierRole)
                         TextFormField(
@@ -261,7 +259,6 @@ class _ShipmentFormScreenState extends ConsumerState<ShipmentFormScreen> {
                         ),
                       const SizedBox(height: 14),
 
-                      // Step 3: VEHICLE FLEET PLATE NO
                       _buildNumberedStepLabel(3, 'VEHICLE FLEET PLATE NO *'),
                       TextFormField(
                         controller: _vehicleController,
@@ -271,7 +268,6 @@ class _ShipmentFormScreenState extends ConsumerState<ShipmentFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 4: CAPTAIN LICENSE REG NO
                       _buildNumberedStepLabel(4, 'CAPTAIN LICENSE REG NO *'),
                       TextFormField(
                         controller: _captainController,
@@ -281,7 +277,6 @@ class _ShipmentFormScreenState extends ConsumerState<ShipmentFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 5: FREIGHT SOURCING ORIGIN
                       _buildNumberedStepLabel(5, 'FREIGHT SOURCING ORIGIN *'),
                       TextFormField(
                         controller: _originController,
@@ -291,7 +286,6 @@ class _ShipmentFormScreenState extends ConsumerState<ShipmentFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 6: SHIPMENT QTY
                       _buildNumberedStepLabel(6, 'SHIPMENT QTY *'),
                       TextFormField(
                         controller: _quantityController,
@@ -323,7 +317,6 @@ class _ShipmentFormScreenState extends ConsumerState<ShipmentFormScreen> {
                       ],
                       const SizedBox(height: 14),
 
-                      // Step 7: EST COST ($)
                       _buildNumberedStepLabel(7, 'EST COST (\$) *'),
                       TextFormField(
                         controller: _costController,
@@ -334,7 +327,6 @@ class _ShipmentFormScreenState extends ConsumerState<ShipmentFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 8: TARGET EXPECTED DELIVERY DATE
                       _buildNumberedStepLabel(8, 'TARGET EXPECTED DELIVERY DATE *'),
                       TextFormField(
                         controller: _deliveryController,
@@ -347,7 +339,6 @@ class _ShipmentFormScreenState extends ConsumerState<ShipmentFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 9: ASSIGNED CONTROLLER EMAIL
                       _buildNumberedStepLabel(9, 'ASSIGNED CONTROLLER EMAIL'),
                       TextFormField(
                         readOnly: true,
@@ -357,7 +348,6 @@ class _ShipmentFormScreenState extends ConsumerState<ShipmentFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 10: CONSIGNMENT DESTINATION ADDRESS
                       _buildNumberedStepLabel(10, 'CONSIGNMENT TARGET DESTINATION ADDRESS *'),
                       TextFormField(
                         controller: _addressController,

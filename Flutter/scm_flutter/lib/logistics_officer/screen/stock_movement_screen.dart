@@ -128,7 +128,6 @@ class _StockMovementScreenState extends ConsumerState<StockMovementScreen> {
                   const SizedBox(height: 16),
                 ],
 
-                // 1. Movement Type Dropdown
                 _buildLabel('OPERATION PROCESS TYPE *'),
                 DropdownButtonFormField<String>(
                   initialValue: movementType,
@@ -143,7 +142,6 @@ class _StockMovementScreenState extends ConsumerState<StockMovementScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 2. Select Product Material
                 _buildLabel('SELECT PRODUCT MATERIAL *'),
                 productsAsync.when(
                   loading: () => const LinearProgressIndicator(),
@@ -173,7 +171,6 @@ class _StockMovementScreenState extends ConsumerState<StockMovementScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 3. Available Stock Quantity Display
                 _buildLabel('AVAILABLE STOCK QUANTITY'),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -195,7 +192,6 @@ class _StockMovementScreenState extends ConsumerState<StockMovementScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 4. Source Warehouse Node (Required for TRANSFER)
                 if (movementType == 'TRANSFER') ...[
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -245,7 +241,6 @@ class _StockMovementScreenState extends ConsumerState<StockMovementScreen> {
                   const SizedBox(height: 16),
                 ],
 
-                // 5. Target Destination Warehouse Node
                 _buildLabel(
                   movementType == 'OUTWARD'
                       ? 'EXTERNAL DESTINATION WAREHOUSE *'
@@ -271,7 +266,6 @@ class _StockMovementScreenState extends ConsumerState<StockMovementScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 6. Row: Movement Quantity & Reference Identifier
                 Row(
                   children: [
                     Expanded(
@@ -322,7 +316,6 @@ class _StockMovementScreenState extends ConsumerState<StockMovementScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // 8. Action Buttons
                 Row(
                   children: [
                     Expanded(

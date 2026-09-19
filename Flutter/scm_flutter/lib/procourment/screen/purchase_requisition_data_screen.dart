@@ -204,7 +204,6 @@ class _PurchaseRequisitionDataScreenState extends ConsumerState<PurchaseRequisit
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── 1. Metrics Summary Banner ─────────────────
                   if (userRole != 'SUPPLIER') ...[
                     Container(
                       width: double.infinity,
@@ -269,7 +268,6 @@ class _PurchaseRequisitionDataScreenState extends ConsumerState<PurchaseRequisit
                     const SizedBox(height: 16),
                   ],
 
-                  // ── 2. Search & Filter Controls ────────────────
                   TextField(
                     controller: _searchController,
                     onChanged: (val) => setState(() => _searchQuery = val.trim()),
@@ -330,7 +328,6 @@ class _PurchaseRequisitionDataScreenState extends ConsumerState<PurchaseRequisit
                     const SizedBox(height: 16),
                   ],
 
-                  // ── 3. Data Cards List ───────────────────
                   if (filtered.isEmpty)
                     Container(
                       width: double.infinity,
@@ -419,7 +416,6 @@ class _PurchaseRequisitionDataScreenState extends ConsumerState<PurchaseRequisit
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Row 1: Target Date, Urgency & Quantity
                                     Row(
                                       children: [
                                         Expanded(
@@ -521,7 +517,6 @@ class _PurchaseRequisitionDataScreenState extends ConsumerState<PurchaseRequisit
 
                                     const Divider(height: 16),
 
-                                    // ── Action Buttons Row ──
                                     Wrap(
                                       spacing: 8,
                                       runSpacing: 8,

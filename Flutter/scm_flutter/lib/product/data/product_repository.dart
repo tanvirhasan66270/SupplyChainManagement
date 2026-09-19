@@ -10,7 +10,6 @@ class ProductRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  ///  (GET /api/products)
   Future<List<ProductResponseModel>> getAll() async {
     final res = await _dio.get(ApiConstants.products);
     return (res.data as List)
@@ -18,7 +17,6 @@ class ProductRepository {
         .toList();
   }
 
-  /// (POST /api/products)
   Future<ProductResponseModel> addProduct(ProductRequestModel dto, {MultipartFile? imageFile}) async {
     FormData formData = FormData.fromMap({
       'product': MultipartFile.fromString(
@@ -34,7 +32,6 @@ class ProductRepository {
 
 
 
-  /// (PUT /api/products/{id})
   Future<ProductResponseModel> updateProduct(int id, ProductRequestModel dto, {MultipartFile? imageFile}) async {
     FormData formData = FormData.fromMap({
       'product': MultipartFile.fromString(
@@ -48,13 +45,11 @@ class ProductRepository {
     return ProductResponseModel.fromJson(res.data as Map<String, dynamic>);
   }
 
-  /// (DELETE /api/products/{id})
   Future<String> deleteProduct(int id) async {
     final res = await _dio.delete(ApiConstants.productById(id));
     return res.data.toString();
   }
 
-  /// Get Single Product By ID (GET /api/products/{id})
   Future<ProductResponseModel> getProductById(int id) async {
     final res = await _dio.get(ApiConstants.productById(id));
     return ProductResponseModel.fromJson(res.data as Map<String, dynamic>);

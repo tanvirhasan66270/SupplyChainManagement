@@ -9,7 +9,6 @@ class WarehouseRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  // (GET /api/warehouses)
   Future<List<WarehouseResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.warehouse);
@@ -20,7 +19,6 @@ class WarehouseRepository {
     }
   }
 
-  //  (GET /api/warehouses/{id})
   Future<WarehouseResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.warehouseById(id));
@@ -30,7 +28,6 @@ class WarehouseRepository {
     }
   }
 
-  //  (POST /api/warehouses)
   Future<WarehouseResponseModel> save(WarehouseRequestModel request) async {
     try {
       final response = await _dio.post(ApiConstants.warehouse, data: request.toJson());
@@ -40,7 +37,6 @@ class WarehouseRepository {
     }
   }
 
-  // (PUT /api/warehouses/{id})
   Future<WarehouseResponseModel> update(int id, WarehouseRequestModel request) async {
     try {
       final response = await _dio.put(ApiConstants.warehouseById(id), data: request.toJson());
@@ -50,7 +46,6 @@ class WarehouseRepository {
     }
   }
 
-  // (DELETE /api/warehouses/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.warehouseById(id));

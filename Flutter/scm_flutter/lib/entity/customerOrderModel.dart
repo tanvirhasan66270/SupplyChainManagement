@@ -1,4 +1,3 @@
-// ── Order Status Constants ─────────────────────────────────────────────
 class OrderStatus {
   static const pending = 'PENDING';
   static const confirmed = 'CONFIRMED';
@@ -18,7 +17,6 @@ class OrderStatus {
   ];
 }
 
-// ── Payment Status Constants ───────────────────────────────────────────
 class PaymentStatus {
   static const unpaid = 'UNPAID';
   static const partiallyPaid = 'PARTIALLY_PAID';
@@ -27,7 +25,6 @@ class PaymentStatus {
   static const values = [unpaid, partiallyPaid, paid, refunded];
 }
 
-// ── Service Type Constants ─────────────────────────────────────────────
 class ServiceType {
   static const standard = 'STANDARD';
   static const express = 'EXPRESS';
@@ -36,7 +33,6 @@ class ServiceType {
   static const values = [standard, express, overnight, sameDay];
 }
 
-// ── Priority Constants ─────────────────────────────────────────────────
 class Priority {
   static const low = 'LOW';
   static const normal = 'NORMAL';
@@ -45,7 +41,6 @@ class Priority {
   static const values = [low, normal, high, urgent];
 }
 
-// ── Payment Method Constants ───────────────────────────────────────────
 class PaymentMethod {
   static const cash = 'CASH';
   static const bank = 'BANK';
@@ -55,7 +50,6 @@ class PaymentMethod {
   static const values = [cash, bank, bkash, nagad, rocket];
 }
 
-/// UI badge/label metadata for Customer Orders.
 class CustomerOrderStatusMeta {
   static const Map<String, String> label = {
     OrderStatus.pending: 'Pending',
@@ -70,7 +64,6 @@ class CustomerOrderStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Order Line Item Request ───────────────────────────────────────────
 class OrderLineItemRequest {
   OrderLineItemRequest({
     required this.productId,
@@ -89,7 +82,6 @@ class OrderLineItemRequest {
   };
 }
 
-// ── Order Line Item Response ──────────────────────────────────────────
 class OrderLineItemResponse {
   OrderLineItemResponse({
     required this.id,
@@ -130,7 +122,6 @@ class OrderLineItemResponse {
   }
 }
 
-// ── Customer Order Request ────────────────────────────────────────────
 class CustomerOrderRequest {
   CustomerOrderRequest({
     required this.customerId,
@@ -182,7 +173,6 @@ class CustomerOrderRequest {
   };
 }
 
-// ── Customer Order Response ───────────────────────────────────────────
 class CustomerOrderResponse {
   CustomerOrderResponse({
     required this.id,

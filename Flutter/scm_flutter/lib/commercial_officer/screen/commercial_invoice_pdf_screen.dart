@@ -33,7 +33,6 @@ class CommercialInvoicePdfScreen extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // ── Corporate Header Banner ──
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
@@ -111,7 +110,6 @@ class CommercialInvoicePdfScreen extends StatelessWidget {
               pw.Divider(color: borderGrey, thickness: 1),
               pw.SizedBox(height: 12),
 
-              // ── Invoice Title & Meta Box ──
               pw.Container(
                 width: double.infinity,
                 padding: const pw.EdgeInsets.all(12),
@@ -155,7 +153,6 @@ class CommercialInvoicePdfScreen extends StatelessWidget {
               ),
               pw.SizedBox(height: 16),
 
-              // ── Financial Manifest Breakdown Table ──
               pw.Text('FINANCIAL BREAKDOWN MANIFEST', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: darkBlueHeader)),
               pw.SizedBox(height: 6),
               pw.Table(
@@ -194,7 +191,6 @@ class CommercialInvoicePdfScreen extends StatelessWidget {
 
               pw.Spacer(),
 
-              // ── Signature Seal Blocks ──
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [

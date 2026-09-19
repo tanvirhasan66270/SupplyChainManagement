@@ -11,7 +11,6 @@ class QuotationRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  //  (GET /api/quotations)
   Future<List<QuotationResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.quotations);
@@ -22,7 +21,6 @@ class QuotationRepository {
     }
   }
 
-  //  (GET /api/quotations/{id})
   Future<QuotationResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.quotationById(id));
@@ -32,7 +30,6 @@ class QuotationRepository {
     }
   }
 
-  //  (Multipart Request ছবি/ফাইলসহ)
   Future<QuotationResponseModel> save(QuotationRequestModel request, File? attachmentFile) async {
     try {
       final form = await _buildForm(request, attachmentFile);
@@ -43,7 +40,6 @@ class QuotationRepository {
     }
   }
 
-  // (PUT /api/quotations/{id})
   Future<QuotationResponseModel> update(int id, QuotationRequestModel request) async {
     try {
       final response = await _dio.put(
@@ -56,7 +52,6 @@ class QuotationRepository {
     }
   }
 
-  // (PUT /api/quotations/{id}/status)
   Future<QuotationResponseModel> updateStatus(int id, String status) async {
     try {
       final response = await _dio.put(
@@ -69,7 +64,6 @@ class QuotationRepository {
     }
   }
 
-  //  (DELETE /api/quotations/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.quotationById(id));

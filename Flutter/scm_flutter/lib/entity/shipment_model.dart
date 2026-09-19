@@ -1,4 +1,3 @@
-// ── Shipment Request Model ─────────────────────────────────────────────
 class ShipmentRequestModel {
   ShipmentRequestModel({
     required this.poId,
@@ -41,7 +40,6 @@ class ShipmentRequestModel {
   };
 }
 
-// ── Shipment Response Model ────────────────────────────────────────────
 class ShipmentResponseModel {
   ShipmentResponseModel({
     required this.id,

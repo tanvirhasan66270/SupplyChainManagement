@@ -41,33 +41,27 @@ class CustomerOrderScreen extends ConsumerStatefulWidget {
 class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  // State Lists & Data
   List<ProductResponseModel> _products = [];
   bool _isSubmitting = false;
   String? _errorMessage;
 
-  // Identity & Role
   String _userRole = '';
   String _loggedInCustomerName = '';
   String _loggedInCustomerEmail = '';
   String _loggedInCustomerPhone = '';
   int _customerId = 0;
 
-  // Item Allocation Inputs
   ProductResponseModel? _selectedProduct;
   int _allocationQuantity = 1;
   final TextEditingController _allocationNotesController = TextEditingController();
 
-  // Selected Allocated Product Items
   final List<CustomerOrderItemEntry> _allocatedItems = [];
 
-  // Order Settings
   String _selectedServiceType = ServiceType.standard;
   String _selectedPriority = Priority.normal;
   String _selectedPaymentMethod = PaymentMethod.cash;
   String _selectedEstimatedDelivery = 'Auto-Fixed by Priority Rule';
 
-  // Text Controllers
   late TextEditingController _phoneController;
   late TextEditingController _addressController;
   late TextEditingController _codController;
@@ -171,7 +165,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
     return '${ApiConstants.imgUrl}product/$trimmed';
   }
 
-  // Financial Calculations
   double _calculateItemSubtotal() {
     double subtotal = 0.0;
     for (var item in _allocatedItems) {
@@ -407,7 +400,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── Top Navigation Bar ──
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
@@ -494,7 +486,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
               ),
             ),
 
-            // ── Scrollable Form Area ──
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
@@ -540,7 +531,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                         const SizedBox(height: 16),
                       ],
 
-                      // ── Section 1: TARGET CUSTOMER PROFILE ──
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -611,7 +601,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // ── Section 2: ESTIMATED DELIVERY ROADMAP & PHONE ──
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -669,7 +658,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // ── Section 3: DELIVERY ADDRESS DESTINATION ──
                       _buildCardBox(
                         icon: Icons.location_on_outlined,
                         title: 'DELIVERY ADDRESS DESTINATION',
@@ -697,7 +685,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // ── Section 4: SERVICE & PRIORITY MATRIX ──
                       Row(
                         children: [
                           Expanded(
@@ -745,7 +732,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // ── Section 5: PAYMENT STRATEGY ROUTER ──
                       _buildCardBox(
                         icon: Icons.account_balance_wallet_outlined,
                         title: 'PAYMENT STRATEGY ROUTER',
@@ -918,7 +904,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // ── Section 7: PRODUCT SPECIFICATION ALLOCATIONS ──
                       _buildCardBox(
                         icon: Icons.inventory_2_outlined,
                         title: 'PRODUCT SPECIFICATION ALLOCATIONS',
@@ -1039,7 +1024,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                                 decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(8)),
                                 child: Column(
                                   children: [
-                                    // Table Header Row
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                       color: Colors.grey.shade100,
@@ -1054,7 +1038,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                                     ),
                                     const Divider(height: 1),
 
-                                    // Table Item Rows
                                     ListView.separated(
                                       shrinkWrap: true,
                                       physics: const NeverScrollableScrollPhysics(),
@@ -1068,7 +1051,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                           child: Row(
                                             children: [
-                                              // Product Name & SKU
                                               Expanded(
                                                 flex: 3,
                                                 child: Row(
@@ -1095,7 +1077,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                                                 ),
                                               ),
 
-                                              // Quantity Controls [- 1 +]
                                               Expanded(
                                                 flex: 2,
                                                 child: Center(
@@ -1130,7 +1111,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                                                 ),
                                               ),
 
-                                              // Notes Box
                                               Expanded(
                                                 flex: 3,
                                                 child: Container(
@@ -1145,7 +1125,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                                                 ),
                                               ),
 
-                                              // Remove Button with fixed width to avoid overflow
                                               SizedBox(
                                                 width: 70,
                                                 child: Center(
@@ -1173,7 +1152,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // ── Section 8: ORDER FINANCIAL SUMMARY ──
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -1211,7 +1189,6 @@ class _CustomerOrderScreenState extends ConsumerState<CustomerOrderScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // ── Section 9: Action Buttons ──
                       Row(
                         children: [
                           Expanded(

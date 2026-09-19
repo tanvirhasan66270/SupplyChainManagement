@@ -200,7 +200,6 @@ class _PurchaseOrderTrackingScreenState extends ConsumerState<PurchaseOrderTrack
     final allLineItems = lineItemsAsync.value ?? [];
     final allShipments = shipmentsAsync.value ?? [];
 
-    // Auto select first match if trackedPo is null and search query was provided
     if (trackedPo == null && _searchQuery.isNotEmpty && allPOs.isNotEmpty) {
       final query = _searchQuery.trim().toLowerCase();
       trackedPo = allPOs.where((po) => po.poNumber.toLowerCase().contains(query) || po.id.toString() == query).firstOrNull;
@@ -237,7 +236,6 @@ class _PurchaseOrderTrackingScreenState extends ConsumerState<PurchaseOrderTrack
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── 1. Search Vector Card ───────────────────
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(18),
@@ -390,7 +388,6 @@ class _PurchaseOrderTrackingScreenState extends ConsumerState<PurchaseOrderTrack
 
               const SizedBox(height: 16),
 
-              // ── 2. Placeholder if no PO selected ──────────
               if (trackedPo == null && _errorMessage == null) ...[
                 Container(
                   width: double.infinity,
@@ -414,9 +411,7 @@ class _PurchaseOrderTrackingScreenState extends ConsumerState<PurchaseOrderTrack
                 ),
               ],
 
-              // ── 3. Dynamic Tracking Results (when trackedPo != null) ──
               if (trackedPo != null) ...[
-                // Overall Tracking Progress Card
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(18),
@@ -494,7 +489,6 @@ class _PurchaseOrderTrackingScreenState extends ConsumerState<PurchaseOrderTrack
 
                 const SizedBox(height: 16),
 
-                // ── Milestone Stepper & Details Grid ─────────
                 LayoutBuilder(
                   builder: (context, constraints) {
                     final isDesktop = constraints.maxWidth > 750;
@@ -524,7 +518,6 @@ class _PurchaseOrderTrackingScreenState extends ConsumerState<PurchaseOrderTrack
     );
   }
 
-  // ── Milestone Stepper (Vertical Timeline) ──
   Widget _buildMilestoneStepper(
     List<POLineItemResponseDTO> lineItems,
     List<ShipmentResponseModel> shipments,
@@ -663,7 +656,6 @@ class _PurchaseOrderTrackingScreenState extends ConsumerState<PurchaseOrderTrack
     );
   }
 
-  // ── PO Summary & Line Items Table ──────────
   Widget _buildPoSummaryVector(
     int allocatedVolume,
     int shippedUnits,

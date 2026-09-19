@@ -133,7 +133,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
       body: SafeArea(
         child: Column(
           children: [
-            // ── 1. Top Header Bar (Fully Dynamic) ──
             DynamicScmTopNavBar(
               title: 'Shipment Update',
               showBackButton: true,
@@ -143,7 +142,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
               },
             ),
 
-            // ── 2. Error Message Banner ──
             if (errorMessage != null) ...[
               Container(
                 width: double.infinity,
@@ -164,7 +162,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
               ),
             ],
 
-            // ── 3. Scrollable Form Content ──
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -173,7 +170,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Step 1: SEARCH PURCHASE ORDER NUMBER
                       _buildNumberedStepLabel(1, 'SEARCH PURCHASE ORDER NUMBER *'),
                       TextField(
                         controller: _searchController,
@@ -241,7 +237,7 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
                         ),
                       ],
 
-                      // ── New Add Shipment Form Section ──
+                      //  New Add Shipment Form Section
                       if (selectedPo != null) ...[
                         const SizedBox(height: 16),
                         Container(
@@ -299,7 +295,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
                         ),
                         const SizedBox(height: 16),
 
-                        // Step 2: VEHICLE FLEET PLATE NO
                         _buildNumberedStepLabel(2, 'VEHICLE FLEET PLATE NO *'),
                         TextFormField(
                           controller: _vehicleController,
@@ -309,7 +304,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
                         ),
                         const SizedBox(height: 14),
 
-                        // Step 3: CAPTAIN LICENSE REG NO
                         _buildNumberedStepLabel(3, 'CAPTAIN LICENSE REG NO *'),
                         TextFormField(
                           controller: _captainController,
@@ -319,7 +313,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
                         ),
                         const SizedBox(height: 14),
 
-                        // Step 4: FREIGHT SOURCING ORIGIN
                         _buildNumberedStepLabel(4, 'FREIGHT SOURCING ORIGIN *'),
                         TextFormField(
                           controller: _originController,
@@ -361,7 +354,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
                         ],
                         const SizedBox(height: 14),
 
-                        // Step 6: EST COST ($)
                         _buildNumberedStepLabel(6, 'EST COST (\$) *'),
                         TextFormField(
                           controller: _costController,
@@ -372,7 +364,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
                         ),
                         const SizedBox(height: 14),
 
-                        // Step 7: TARGET EXPECTED DELIVERY DATE
                         _buildNumberedStepLabel(7, 'TARGET EXPECTED DELIVERY DATE *'),
                         TextFormField(
                           controller: _deliveryController,
@@ -385,7 +376,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
                         ),
                         const SizedBox(height: 14),
 
-                        // Step 8: CONSIGNMENT DESTINATION ADDRESS
                         _buildNumberedStepLabel(8, 'CONSIGNMENT TARGET DESTINATION ADDRESS *'),
                         TextFormField(
                           controller: _addressController,
@@ -396,7 +386,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
                         ),
                         const SizedBox(height: 14),
 
-                        // Step 9: PROOF OF DELIVERY FILE ATTACHMENT
                         _buildNumberedStepLabel(9, 'PROOF OF DELIVERY (PDF/IMAGE POD)'),
                         InkWell(
                           onTap: _pickAttachment,
@@ -437,7 +426,6 @@ class _ShipmentUpdateFormScreenState extends ConsumerState<ShipmentUpdateFormScr
                         ),
                         const SizedBox(height: 24),
 
-                        // SUBMIT BUTTON
                         SizedBox(
                           width: double.infinity,
                           height: 44,

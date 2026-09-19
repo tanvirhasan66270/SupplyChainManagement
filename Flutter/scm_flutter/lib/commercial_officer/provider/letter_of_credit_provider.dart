@@ -5,18 +5,15 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/commercial_officer/data/letter_of_credit_repository.dart';
 import 'package:scm_flutter/entity/letter_of_cradit_model.dart';
 
-// ১. Repository Provider
 final letterOfCreditRepositoryProvider = Provider<LetterOfCreditRepository>((ref) {
   return LetterOfCreditRepository(ref.watch(apiClientProvider));
 });
 
-// ২. List Provider
 final letterOfCreditListProvider = FutureProvider.autoDispose<List<LetterOfCreditResponseModel>>((ref) async {
   final repo = ref.watch(letterOfCreditRepositoryProvider);
   return await repo.findAll();
 });
 
-// ৩. Controller / Notifier (Save, Update, Amend, Delete )
 final letterOfCreditControllerProvider = StateNotifierProvider<LetterOfCreditController, AsyncValue<void>>((ref) {
   final repo = ref.watch(letterOfCreditRepositoryProvider);
   return LetterOfCreditController(repo, ref);

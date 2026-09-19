@@ -17,7 +17,6 @@ class POLineItemFormScreen extends ConsumerStatefulWidget {
 class _POLineItemFormScreenState extends ConsumerState<POLineItemFormScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // ফর্ম ফিল্ড স্টেটস
   int poId = 0;
   int productId = 0;
   int quantity = 1;
@@ -54,7 +53,6 @@ class _POLineItemFormScreenState extends ConsumerState<POLineItemFormScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── 1. Top Enterprise Bar (Fully Dynamic) ──
             const DynamicScmTopNavBar(
               title: 'Line Item Entry',
               showBackButton: true,
@@ -64,7 +62,6 @@ class _POLineItemFormScreenState extends ConsumerState<POLineItemFormScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // ── 2. Purple Gradient Form Header ──
                     _buildFormHeader(),
 
                     Padding(
@@ -74,7 +71,6 @@ class _POLineItemFormScreenState extends ConsumerState<POLineItemFormScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Step 1: Parent PO Matrix
                             _buildNumberedStepLabel(1, 'PARENT PURCHASE ORDER MATRIX *'),
                             _buildThemedDropdown<int>(
                               value: poId == 0 ? null : poId,
@@ -87,7 +83,6 @@ class _POLineItemFormScreenState extends ConsumerState<POLineItemFormScreen> {
                             ),
                             const SizedBox(height: 20),
 
-                            // Step 2: Target SKUs
                             _buildNumberedStepLabel(2, 'TARGET SKUS PRODUCT MODULE *'),
                             _buildThemedDropdown<int>(
                               value: productId == 0 ? null : productId,
@@ -100,7 +95,6 @@ class _POLineItemFormScreenState extends ConsumerState<POLineItemFormScreen> {
                             ),
                             const SizedBox(height: 20),
 
-                            // Step 3: Allocated Volume
                             _buildNumberedStepLabel(3, 'ALLOCATED VOLUME (QTY) *'),
                             _buildThemedField(
                               initialValue: quantity.toString(),
@@ -110,7 +104,6 @@ class _POLineItemFormScreenState extends ConsumerState<POLineItemFormScreen> {
                             ),
                             const SizedBox(height: 20),
 
-                            // Step 4: Explicit Base Price
                             _buildNumberedStepLabel(4, 'EXPLICIT BASE PRICE (\$) *'),
                             _buildThemedField(
                               initialValue: unitPrice.toStringAsFixed(2),
@@ -120,7 +113,6 @@ class _POLineItemFormScreenState extends ConsumerState<POLineItemFormScreen> {
                             ),
                             const SizedBox(height: 20),
 
-                            // Step 5: Quotation Reference
                             _buildNumberedStepLabel(5, 'QUOTATION REFERENCE'),
                             _buildThemedField(
                               hintText: 'e.g. QT-9982',
@@ -130,7 +122,6 @@ class _POLineItemFormScreenState extends ConsumerState<POLineItemFormScreen> {
                             ),
                             const SizedBox(height: 20),
 
-                            // Step 6: Shipment Method Pathway
                             _buildNumberedStepLabel(6, 'SHIPMENT METHOD PATHWAY'),
                             _buildThemedField(
                               hintText: 'e.g. DHL Air Cargo',
@@ -140,7 +131,6 @@ class _POLineItemFormScreenState extends ConsumerState<POLineItemFormScreen> {
                             ),
                             const SizedBox(height: 20),
 
-                            // Step 7: Target Delivery Date
                             _buildNumberedStepLabel(7, 'TARGET DELIVERY DATE'),
                             _buildThemedField(
                               hintText: 'mm/dd/yyyy',
@@ -151,7 +141,6 @@ class _POLineItemFormScreenState extends ConsumerState<POLineItemFormScreen> {
                             ),
                             const SizedBox(height: 20),
 
-                            // Step 8: Sourcing Pipeline Directives
                             _buildNumberedStepLabel(8, 'SOURCING PIPELINE DIRECTIVES'),
                             _buildThemedField(
                               hintText: 'Enter custom pipeline allocation logistics notes context...',

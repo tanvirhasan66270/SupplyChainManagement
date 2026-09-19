@@ -89,7 +89,6 @@ class _PurchaseRequisitionScreenState extends ConsumerState<PurchaseRequisitionS
       body: SafeArea(
         child: Column(
           children: [
-            // ── Top Header Navigation Bar (Fully Dynamic) ──
             DynamicScmTopNavBar(
               onRefresh: () {
                 ref.invalidate(productListProvider);
@@ -97,7 +96,6 @@ class _PurchaseRequisitionScreenState extends ConsumerState<PurchaseRequisitionS
               },
             ),
 
-            // ── Blue Banner Header Card ──
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(18),
@@ -179,7 +177,6 @@ class _PurchaseRequisitionScreenState extends ConsumerState<PurchaseRequisitionS
               ),
             ),
 
-            // ── Form Scrollable Area ──
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -188,21 +185,18 @@ class _PurchaseRequisitionScreenState extends ConsumerState<PurchaseRequisitionS
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ── 1. PRODUCT SPECIFICATION VECTOR ──
                       _buildNumberedStepLabel(1, 'PRODUCT SPECIFICATION VECTOR *'),
                       _buildProductDropdown(products),
                       const SizedBox(height: 8),
                       _buildProductChipsStack(products),
                       const SizedBox(height: 16),
 
-                      // ── 2. TARGET PREFERRED SUPPLIER ROUTING NODES ──
                       _buildNumberedStepLabel(2, 'TARGET PREFERRED SUPPLIER ROUTING NODES'),
                       _buildSupplierDropdown(suppliers, supplierListAsync.isLoading),
                       const SizedBox(height: 8),
                       _buildSupplierChipsStack(suppliers),
                       const SizedBox(height: 16),
 
-                      // ── 3. REQUIRED CONSIGNMENT UNITS ──
                       _buildNumberedStepLabel(3, 'REQUIRED CONSIGNMENT UNITS *'),
                       TextFormField(
                         controller: _quantityController,
@@ -215,7 +209,6 @@ class _PurchaseRequisitionScreenState extends ConsumerState<PurchaseRequisitionS
                       ),
                       const SizedBox(height: 16),
 
-                      // ── 4. URGENCY STRATUM LEVEL ──
                       _buildNumberedStepLabel(4, 'URGENCY STRATUM LEVEL *'),
                       DropdownButtonFormField<String>(
                         isExpanded: true,
@@ -233,7 +226,6 @@ class _PurchaseRequisitionScreenState extends ConsumerState<PurchaseRequisitionS
                       ),
                       const SizedBox(height: 16),
 
-                      // ── 5. TARGET REQUIRED DATE DEADLINE ──
                       _buildNumberedStepLabel(5, 'TARGET REQUIRED DATE DEADLINE'),
                       TextFormField(
                         controller: _dateController,
@@ -244,7 +236,6 @@ class _PurchaseRequisitionScreenState extends ConsumerState<PurchaseRequisitionS
                       ),
                       const SizedBox(height: 16),
 
-                      // ── 6. CURRENCY SETTLEMENT ──
                       _buildNumberedStepLabel(6, 'CURRENCY SETTLEMENT'),
                       TextFormField(
                         enabled: false,
@@ -254,7 +245,6 @@ class _PurchaseRequisitionScreenState extends ConsumerState<PurchaseRequisitionS
                       ),
                       const SizedBox(height: 16),
 
-                      // ── 7. SPECIAL REQUISITION DIRECTIVES & REMARKS ──
                       _buildNumberedStepLabel(7, 'SPECIAL REQUISITION DIRECTIVES & REMARKS'),
                       TextFormField(
                         controller: _remarksController,
@@ -273,7 +263,6 @@ class _PurchaseRequisitionScreenState extends ConsumerState<PurchaseRequisitionS
                       ),
                       const SizedBox(height: 24),
 
-                      // ── 6. Action Buttons (Clear & Dispatch) ──
                       Row(
                         children: [
                           Expanded(

@@ -1,4 +1,3 @@
-// ── QC Inspector Request Model ────────────────────────────────────────
 class QCInspectorRequestModel {
   QCInspectorRequestModel({
     required this.name,
@@ -56,7 +55,6 @@ class QCInspectorRequestModel {
   };
 }
 
-// ── QC Inspector Response Model ───────────────────────────────────────
 class QCInspectorResponseModel {
   QCInspectorResponseModel({
     required this.id,

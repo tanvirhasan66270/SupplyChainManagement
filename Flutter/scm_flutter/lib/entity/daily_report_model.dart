@@ -1,4 +1,3 @@
-// ── Daily Report Status Constants ──────────────────────────────────────
 class DailyReportStatus {
   static const draft = 'DRAFT';
   static const submitted = 'SUBMITTED';
@@ -6,7 +5,6 @@ class DailyReportStatus {
   static const values = [draft, submitted, approved];
 }
 
-/// UI badge/label metadata for Daily Report Status.
 class DailyReportStatusMeta {
   static const Map<String, String> label = {
     DailyReportStatus.draft: 'Draft',
@@ -17,7 +15,6 @@ class DailyReportStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Daily Report Request Model ─────────────────────────────────────────
 class DailyReportRequestModel {
   DailyReportRequestModel({
     required this.warehouseId,
@@ -42,7 +39,6 @@ class DailyReportRequestModel {
   };
 }
 
-// ── Notified Authority Model ───────────────────────────────────────────
 class NotifiedAuthority {
   NotifiedAuthority({
     required this.name,
@@ -69,7 +65,6 @@ class NotifiedAuthority {
   };
 }
 
-// ── Daily Report Response Model ────────────────────────────────────────
 class DailyReportResponseModel {
   DailyReportResponseModel({
     required this.id,

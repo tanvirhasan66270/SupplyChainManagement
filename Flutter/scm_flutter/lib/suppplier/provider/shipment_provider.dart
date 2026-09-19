@@ -5,12 +5,10 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/entity/shipment_model.dart';
 import 'package:scm_flutter/suppplier/data/shipment_repository.dart';
 
-// Shipment Repository Provider
 final shipmentRepositoryProvider = Provider<ShipmentRepository>((ref) {
   return ShipmentRepository(ref.watch(apiClientProvider));
 });
 
-// Shipment List Provider
 final shipmentListProvider = FutureProvider.autoDispose<List<ShipmentResponseModel>>((ref) async {
   final repo = ref.watch(shipmentRepositoryProvider);
   return await repo.findAll();
@@ -21,7 +19,6 @@ final singleShipmentProvider = FutureProvider.autoDispose.family<ShipmentRespons
   return await repo.getById(id);
 });
 
-//  Shipment Controller / Notifier (Create, Update, Delete)
 final shipmentControllerProvider = StateNotifierProvider<ShipmentController, AsyncValue<void>>((ref) {
   final repo = ref.watch(shipmentRepositoryProvider);
   return ShipmentController(repo, ref);

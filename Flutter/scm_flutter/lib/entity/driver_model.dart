@@ -1,4 +1,3 @@
-// ── Driver Request Model ───────────────────────────────────────────────
 class DriverRequestModel {
   DriverRequestModel({
     required this.id,
@@ -59,7 +58,6 @@ class DriverRequestModel {
   };
 }
 
-// ── Driver Response Model ──────────────────────────────────────────────
 class DriverResponseModel {
   DriverResponseModel({
     required this.id,

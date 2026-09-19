@@ -42,7 +42,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
   String lcRegistrySearchTerm = '';
   String lineItemsSearchTerm = '';
 
-  // Form State for Adding New LC
   int _selectedPoId = 0;
   int _selectedSupplierId = 0;
   int _selectedBankId = 0;
@@ -82,7 +81,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     final customerOrders = customerOrdersAsync.value ?? [];
     final notifications = notificationsAsync.value ?? [];
 
-    // Filter Active LCs
     final activeLCs = lcs.where((lc) => lc.lcStatus != 'CANCELLED').toList();
     final totalLCValue = activeLCs.fold<double>(0.0, (sum, lc) => sum + lc.amount);
     final totalLCValueBDT = activeLCs
@@ -92,13 +90,10 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
         .where((lc) => lc.currency.toUpperCase() == 'USD')
         .fold<double>(0.0, (sum, lc) => sum + lc.amount);
 
-    // Filter Pending Customs
     final pendingCustoms = shipments.where((s) => s.customPoNumber == 'PENDING' || s.customPoNumber == 'CUSTOMS').length;
 
-    // Filter Paid Amount across Invoices
     final totalPaidBDT = invoices.fold<double>(0.0, (sum, inv) => sum + inv.paidAmount);
 
-    // Documents Vault List
     final List<Map<String, String>> documents = [];
     for (var lc in lcs) {
       if (lc.documentVaultUrl.isNotEmpty) {
@@ -166,19 +161,15 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ── 2. Welcome Banner (Procurement Styled Gradient)
                       _buildWelcomeBanner(userName),
                       const SizedBox(height: 20),
 
-                      // ── 3. KPI Stats Grid (4 Cards Responsive) ──────────────────
                       _buildKpiStatsGrid(context, activeLCs.length, totalPaidBDT, totalLCValueUSD, approvedDocsCount),
                       const SizedBox(height: 24),
 
-                      // ── 4. Commercial Quick Actions & Tools (6 Nodes) ──
                       _buildQuickActionsCard(context),
                       const SizedBox(height: 24),
 
-                      // ── 5. LC Registry & Shipping Documents Manifest Vault
                       if (isMobile) ...[
                         _buildLcRegistryCard(activeLCs),
                         const SizedBox(height: 16),
@@ -195,7 +186,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
                       ],
                       const SizedBox(height: 24),
 
-                      // ── 6. Commercial Invoices Ledger & Cargo Consignments
                       if (isMobile) ...[
                         _buildInvoicesLedgerCard(invoices),
                         const SizedBox(height: 16),
@@ -212,7 +202,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
                       ],
                       const SizedBox(height: 24),
 
-                      // ── 7. Customer Payment Verification & PO Line Items Matrix
                       if (isMobile) ...[
                         _buildPaymentVerificationCard(customerOrders),
                         const SizedBox(height: 16),
@@ -229,7 +218,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
                       ],
                       const SizedBox(height: 24),
 
-                      // ── 8. Commercial Parameters & Quotas ─────────────
                       if (isMobile) ...[
                         _buildCapitalQuotasCard(totalLCValueBDT, totalLCValueUSD, totalLCValue),
                         const SizedBox(height: 16),
@@ -250,7 +238,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
                       ],
                       const SizedBox(height: 24),
 
-                      // ── 9. SWIFT Banking Terminals & Tariff Matrix ────
                       if (isMobile) ...[
                         _buildSwiftBanksCard(banks),
                         const SizedBox(height: 16),
@@ -267,7 +254,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
                       ],
                       const SizedBox(height: 24),
 
-                      // ── 10. Commercial Notifications & System Audit Log
                       _buildNotificationsSection(notifications),
                       const SizedBox(height: 30),
                     ],
@@ -282,7 +268,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── WELCOME BANNER (Procurement Styled Gradient) ─────────────────────
   Widget _buildWelcomeBanner(String userName) {
     return Container(
       width: double.infinity,
@@ -323,7 +308,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 3. KPI STATS GRID (4 Cards Responsive Grid) ─────────────────────
   Widget _buildKpiStatsGrid(BuildContext context, int lcCount, double paidBdt, double lcDuesUsd, int approvedDocs) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -414,7 +398,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 4. COMMERCIAL QUICK ACTIONS & TOOLS (6 Operational Nodes) ────────
   Widget _buildQuickActionsCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -508,7 +491,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 5. ACTIVE LCS REGISTRY CARD ──────────────────────────────────────
   Widget _buildLcRegistryCard(List<LetterOfCreditResponseModel> activeLCs) {
     final filtered = lcSearchTerm.isEmpty
         ? activeLCs
@@ -578,7 +560,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 6. SHIPPING DOCUMENTS MANIFEST CARD ──────────────────────────────
   Widget _buildShippingDocsCard(List<Map<String, String>> documents) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -635,7 +616,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 7. COMMERCIAL INVOICES LEDGER CARD ───────────────────────────────
   Widget _buildInvoicesLedgerCard(List<InvoiceResponseModel> invoices) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -699,7 +679,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 8. CARGO CONSIGNMENTS CARD ───────────────────────────────────────
   Widget _buildConsignmentsCard(List<ShipmentResponseModel> shipments) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -757,7 +736,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 9. CUSTOMER PAYMENT VERIFICATION CARD ────────────────────────────
   Widget _buildPaymentVerificationCard(List<CustomerOrderResponse> orders) {
     final pendingOrders = orders.where((o) => o.paymentStatus == 'UNPAID' || o.paymentStatus == 'PARTIALLY_PAID').toList();
 
@@ -820,7 +798,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 10. PO LINE ITEMS CARD ───────────────────────────────────────────
   Widget _buildPoLineItemsCard(List<POLineItemResponseDTO> items) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -878,7 +855,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 11. PARAMETER CARDS ──────────────────────────────────────────────
   Widget _buildCapitalQuotasCard(double bdt, double usd, double total) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -938,7 +914,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 12. SWIFT BANKS & TARIFF MATRIX ──────────────────────────────────
   Widget _buildSwiftBanksCard(List<LCBankResponseModel> banks) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -994,7 +969,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 13. NOTIFICATIONS SECTION ────────────────────────────────────────
   Widget _buildNotificationsSection(List<dynamic> notifications) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -1030,7 +1004,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── 14. BOTTOM NAVIGATION BAR (Procurement Styled) ──────────────────
   Widget _buildBottomNavigationBar() {
     return Container(
       height: 65,
@@ -1087,7 +1060,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── MODAL 1: ADD NEW LC ──────────────────────────────────────────────
   void _openAddLcModal(BuildContext context) {
     _selectedPoId = 0;
     _selectedSupplierId = 0;
@@ -1292,7 +1264,6 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── MODAL 2: LC REGISTRY MASTER VIEW ─────────────────────────────────
   void _openLcRegistryModal(BuildContext context) {
     showDialog(
       context: context,
@@ -1327,12 +1298,10 @@ class _CommercialDashboardScreenState extends ConsumerState<CommercialDashboardS
     );
   }
 
-  // ── MODAL 6: CUSTOMER PAYMENT VERIFICATION ───────────────────────────
   void _openPaymentModal(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (_) => const CustomerPaymentDataScreen()));
   }
 
-  // ── MODAL 7: PO LINE ITEMS MATRIX ────────────────────────────────────
   void _openLineItemsModal(BuildContext context) {
     showDialog(
       context: context,

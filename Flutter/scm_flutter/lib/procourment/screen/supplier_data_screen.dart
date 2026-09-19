@@ -117,7 +117,6 @@ class _SupplierDataScreenState extends ConsumerState<SupplierDataScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── 1. Header Metrics Banner (Android Responsive) ──
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(18),
@@ -209,7 +208,6 @@ class _SupplierDataScreenState extends ConsumerState<SupplierDataScreen> {
 
                     const SizedBox(height: 16),
 
-                    // ── 2. Search Input ──
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
@@ -238,7 +236,6 @@ class _SupplierDataScreenState extends ConsumerState<SupplierDataScreen> {
 
                     const SizedBox(height: 14),
 
-                    // ── 3. Supplier Cards List ──
                     if (filtered.isEmpty)
                       Container(
                         width: double.infinity,

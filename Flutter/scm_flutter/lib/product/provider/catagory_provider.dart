@@ -11,13 +11,11 @@ final categoryRepositoryProvider = Provider<CategoryRepository>((ref) {
   return CategoryRepository(ref.watch(apiClientProvider));
 });
 
-/// (GET /api/category)
 final categoryListProvider = FutureProvider.autoDispose<List<CategoryResponseModel>>((ref) async {
   final repository = ref.watch(categoryRepositoryProvider);
   return repository.getAll();
 });
 
-/// (GET /api/category/public)
 final publicCategoryListProvider = FutureProvider.autoDispose<List<CategoryResponseModel>>((ref) async {
   final repository = ref.watch(categoryRepositoryProvider);
   return repository.getAll();

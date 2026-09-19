@@ -138,7 +138,6 @@ class _InventoryDataScreenState extends ConsumerState<InventoryDataScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ১. Summary Metrics Banner
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -203,7 +202,6 @@ class _InventoryDataScreenState extends ConsumerState<InventoryDataScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // ৩. Status Filter Chips
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -220,7 +218,6 @@ class _InventoryDataScreenState extends ConsumerState<InventoryDataScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // ৪. Data List Cards
                   if (filteredList.isEmpty)
                     Container(
                       width: double.infinity,
@@ -355,7 +352,6 @@ class _InventoryDataScreenState extends ConsumerState<InventoryDataScreen> {
                                   ),
                                   Row(
                                     children: [
-                                      // Status edit button for LOGISTICS_OFFICER, MANAGER, ADMIN
                                       if (['LOGISTICS_OFFICER', 'MANAGER', 'ADMIN', 'ROLE_LOGISTICS_OFFICER'].contains(userRole))
                                         IconButton(
                                           tooltip: 'Update Stock Status',

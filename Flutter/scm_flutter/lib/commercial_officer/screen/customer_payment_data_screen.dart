@@ -124,7 +124,6 @@ class _CustomerPaymentDataScreenState extends ConsumerState<CustomerPaymentDataS
             final confirmedCount = payments.where((p) => p.issueStatus == 'CONFIRMED_BY_OFFICER').length;
             final pendingCount = payments.where((p) => p.issueStatus == 'PENDING_VERIFICATION').length;
 
-            // Filter logic
             final filteredPayments = payments.where((p) {
               final query = _searchQuery.toLowerCase();
               final matchesSearch = query.isEmpty ||
@@ -144,7 +143,6 @@ class _CustomerPaymentDataScreenState extends ConsumerState<CustomerPaymentDataS
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Top Metric Pipeline Banner ──
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -187,7 +185,6 @@ class _CustomerPaymentDataScreenState extends ConsumerState<CustomerPaymentDataS
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Search Bar ──
                   TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
@@ -238,7 +235,6 @@ class _CustomerPaymentDataScreenState extends ConsumerState<CustomerPaymentDataS
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Payment Cards List ──
                   if (filteredPayments.isEmpty)
                     Container(
                       width: double.infinity,
@@ -278,7 +274,6 @@ class _CustomerPaymentDataScreenState extends ConsumerState<CustomerPaymentDataS
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Header: Txn Ref, Order No & Status Badge
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -314,7 +309,6 @@ class _CustomerPaymentDataScreenState extends ConsumerState<CustomerPaymentDataS
                                 ),
                                 const SizedBox(height: 10),
 
-                                // Payment Metrics Grid
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
@@ -351,13 +345,11 @@ class _CustomerPaymentDataScreenState extends ConsumerState<CustomerPaymentDataS
                                 ),
                                 const Divider(height: 16),
 
-                                // Action Row with Status Buttons
                                 Wrap(
                                   spacing: 6,
                                   runSpacing: 6,
                                   alignment: WrapAlignment.spaceBetween,
                                   children: [
-                                    // 1. Accept & Confirm Button
                                     ElevatedButton.icon(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: AppTheme.success,
@@ -369,7 +361,6 @@ class _CustomerPaymentDataScreenState extends ConsumerState<CustomerPaymentDataS
                                       label: const Text('Accept', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
                                       onPressed: () => _updateStatus(p.id, 'ACCEPTED', 'CONFIRMED_BY_OFFICER'),
                                     ),
-                                    // 2. Reject Button
                                     ElevatedButton.icon(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: AppTheme.danger,
@@ -381,7 +372,6 @@ class _CustomerPaymentDataScreenState extends ConsumerState<CustomerPaymentDataS
                                       label: const Text('Reject', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
                                       onPressed: () => _updateStatus(p.id, 'REJECTED', 'FAILED_OR_REJECTED'),
                                     ),
-                                    // 3. Set Pending Button
                                     OutlinedButton.icon(
                                       style: OutlinedButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -391,7 +381,6 @@ class _CustomerPaymentDataScreenState extends ConsumerState<CustomerPaymentDataS
                                       label: const Text('Pending', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTheme.warning)),
                                       onPressed: () => _updateStatus(p.id, 'PENDING', 'PENDING_VERIFICATION'),
                                     ),
-                                    // 4. View PDF Button
                                     ElevatedButton.icon(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: AppTheme.primaryDark,

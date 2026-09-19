@@ -1,4 +1,3 @@
-// ── Warehouse Request Model ────────────────────────────────────────────
 class WarehouseRequestModel {
   WarehouseRequestModel({
     required this.name,
@@ -32,7 +31,6 @@ class WarehouseRequestModel {
   };
 }
 
-// ── Warehouse Response Model ───────────────────────────────────────────
 class WarehouseResponseModel {
   WarehouseResponseModel({
     required this.id,
@@ -53,7 +51,6 @@ class WarehouseResponseModel {
 
   final int id;
 
-  // সুবিধার্থে warehouseId গেটার যোগ করা হলো, যাতে w.warehouseId লিখলেও কাজ করে
   int get warehouseId => id;
 
   final String name;
@@ -74,7 +71,6 @@ class WarehouseResponseModel {
     num? asNum(dynamic v) => v == null ? null : (v is num ? v : num.tryParse(v.toString()));
 
     return WarehouseResponseModel(
-      // ব্যাকএন্ড থেকে যদি কখনো সরাসরি 'warehouseId' বা 'id' আসে, দুটোর যেকোনো একটা হ্যান্ডেল করবে
       id: (asNum(json['id'] ?? json['warehouseId']) ?? 0).toInt(),
       name: (json['name'] ?? '') as String,
       email: (json['email'] ?? '') as String,

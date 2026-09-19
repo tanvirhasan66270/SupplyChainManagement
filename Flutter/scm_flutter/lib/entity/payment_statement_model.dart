@@ -1,4 +1,3 @@
-// ── Payment Statement Status Constants ─────────────────────────────────
 class PaymentStatementStatus {
   static const pendingVerification = 'PENDING_VERIFICATION';
   static const confirmedByOfficer = 'CONFIRMED_BY_OFFICER';
@@ -6,7 +5,6 @@ class PaymentStatementStatus {
   static const values = [pendingVerification, confirmedByOfficer, failedOrRejected];
 }
 
-/// UI badge/label metadata for Payment Statement Status.
 class PaymentStatementStatusMeta {
   static const Map<String, String> label = {
     PaymentStatementStatus.pendingVerification: 'Pending Verification',
@@ -17,7 +15,6 @@ class PaymentStatementStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Payment Statement Request Model ───────────────────────────────────
 class PaymentStatementRequest {
   PaymentStatementRequest({
     required this.customerOrderId,
@@ -48,7 +45,6 @@ class PaymentStatementRequest {
   };
 }
 
-// ── Payment Statement Response Model ──────────────────────────────────
 class PaymentStatementResponse {
   PaymentStatementResponse({
     required this.id,

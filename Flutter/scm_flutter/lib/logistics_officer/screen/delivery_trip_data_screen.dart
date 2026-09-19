@@ -159,7 +159,6 @@ class _DeliveryTripDataScreenState extends ConsumerState<DeliveryTripDataScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ১. Summary Metrics Banner
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -199,7 +198,6 @@ class _DeliveryTripDataScreenState extends ConsumerState<DeliveryTripDataScreen>
                   ),
                   const SizedBox(height: 16),
 
-                  // ২. Search Field
                   TextField(
                     controller: _searchController,
                     onChanged: (val) => setState(() => _searchQuery = val.trim()),
@@ -225,7 +223,6 @@ class _DeliveryTripDataScreenState extends ConsumerState<DeliveryTripDataScreen>
                   ),
                   const SizedBox(height: 12),
 
-                  // ৩. Status Filter Chips
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -244,7 +241,6 @@ class _DeliveryTripDataScreenState extends ConsumerState<DeliveryTripDataScreen>
                   ),
                   const SizedBox(height: 16),
 
-                  // ৪. Data List Cards
                   if (filteredList.isEmpty)
                     Container(
                       width: double.infinity,

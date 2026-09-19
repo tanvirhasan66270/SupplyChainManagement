@@ -215,7 +215,6 @@ class _DriverProfileScreenState extends ConsumerState<DriverProfileScreen> {
   }
 
   Widget _buildProfileBody(DriverResponseModel driver) {
-    // Dynamic Completion Calculation
     int completedFields = 0;
     final totalFields = 8;
     if (_nameController.text.isNotEmpty) completedFields++;
@@ -234,11 +233,9 @@ class _DriverProfileScreenState extends ConsumerState<DriverProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Header Avatar Section ──────────────────
           _buildHeader(driver),
           const SizedBox(height: 20),
 
-          // ── Action Buttons for Avatar ─────────────
           Row(
             children: [
               Expanded(
@@ -273,7 +270,6 @@ class _DriverProfileScreenState extends ConsumerState<DriverProfileScreen> {
           ],
           const SizedBox(height: 24),
 
-          // ── KPI Summary Section ─────────────────────
           Row(
             children: [
               Expanded(child: _buildKpiBox('Total Deliveries', '${driver.totalDeliveries}', Icons.local_shipping_outlined, AppTheme.primary)),
@@ -283,11 +279,9 @@ class _DriverProfileScreenState extends ConsumerState<DriverProfileScreen> {
           ),
           const SizedBox(height: 24),
 
-          // ── Completion Section ──────────────────────
           _buildCompletionSection(completion),
           const SizedBox(height: 24),
 
-          // ── Personal Settings Form / List ──────────
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -303,25 +297,21 @@ class _DriverProfileScreenState extends ConsumerState<DriverProfileScreen> {
           _buildSettingsForm(driver),
           const SizedBox(height: 24),
 
-          // ── Vehicle Information ─────────────────────
           const Text('VEHICLE & FLEET INFORMATION', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.dark)),
           const SizedBox(height: 12),
           _buildVehicleInfo(driver),
           const SizedBox(height: 24),
 
-          // ── Warehouse Assignments ───────────────────
           const Text('ASSIGNED WAREHOUSE NODES', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.dark)),
           const SizedBox(height: 12),
           _buildWarehouseChips(driver),
           const SizedBox(height: 24),
 
-          // ── Logistics & Location Metadata ───────────
           const Text('LOGISTICS & LOCATION METADATA', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.dark)),
           const SizedBox(height: 12),
           _buildLocationSection(driver),
           const SizedBox(height: 12),
 
-          // Registered Date Box
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -339,7 +329,6 @@ class _DriverProfileScreenState extends ConsumerState<DriverProfileScreen> {
           ),
           const SizedBox(height: 24),
 
-          // ── Save/Update Button ──────────────────────
           ElevatedButton.icon(
             onPressed: _isUpdating ? null : () => _updateProfile(driver),
             icon: _isUpdating

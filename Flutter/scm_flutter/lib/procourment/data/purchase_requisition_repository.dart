@@ -9,7 +9,6 @@ class PurchaseRequisitionRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  // (GET /api/purchase-requisitions)
   Future<List<PurchaseRequisitionResponse>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.purchaseRequisitions);
@@ -20,7 +19,6 @@ class PurchaseRequisitionRepository {
     }
   }
 
-  // (POST /api/purchase-requisitions)
   Future<void> save(PurchaseRequisitionRequest request) async {
     try {
       await _dio.post(ApiConstants.purchaseRequisitions, data: request.toJson());
@@ -29,7 +27,6 @@ class PurchaseRequisitionRepository {
     }
   }
 
-  // (PUT /api/purchase-requisitions/{id})
   Future<void> update(int id, PurchaseRequisitionRequest request) async {
     try {
       await _dio.put(

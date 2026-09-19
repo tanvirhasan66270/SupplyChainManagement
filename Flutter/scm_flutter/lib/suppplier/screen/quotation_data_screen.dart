@@ -80,12 +80,10 @@ class _QuotationDataScreenState extends ConsumerState<QuotationDataScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── 1. Top Header Bar (Fully Dynamic) ──
             DynamicScmTopNavBar(
               onRefresh: () => ref.invalidate(quotationListProvider),
             ),
 
-            // ── 2. Header Title & Banner Card ──
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(18),
@@ -149,7 +147,6 @@ class _QuotationDataScreenState extends ConsumerState<QuotationDataScreen> {
               ),
             ),
 
-            // ── 3. Search Filters Row (Android Responsive) ──
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: LayoutBuilder(
@@ -214,7 +211,6 @@ class _QuotationDataScreenState extends ConsumerState<QuotationDataScreen> {
             ),
             const SizedBox(height: 12),
 
-            // ── 4. Quotations List View ──
             Expanded(
               child: quotationsAsync.when(
                 data: (quotations) {
@@ -269,7 +265,6 @@ class _QuotationDataScreenState extends ConsumerState<QuotationDataScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Top Row: QTN Badge, Supplier & Status
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -310,7 +305,6 @@ class _QuotationDataScreenState extends ConsumerState<QuotationDataScreen> {
                               ],
                             ),
                             const SizedBox(height: 6),
-                            // PR Node Meta
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -331,7 +325,6 @@ class _QuotationDataScreenState extends ConsumerState<QuotationDataScreen> {
                             ),
                             const Divider(height: 16),
 
-                            // Price & Volume Details (Responsive Expanded)
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -383,7 +376,6 @@ class _QuotationDataScreenState extends ConsumerState<QuotationDataScreen> {
                             ),
                             const SizedBox(height: 12),
 
-                            // Bottom Actions Row (Status Change & Actions)
                             Row(
                               children: [
                                 if (userRole == 'ADMIN' || userRole == 'PROCUREMENT' || userRole == 'MANAGER')

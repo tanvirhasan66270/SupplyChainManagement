@@ -1,4 +1,3 @@
-// ── Payment Method Constants ───────────────────────────────────────────
 class AppPaymentMethod {
   static const cash = 'CASH';
   static const bank = 'BANK';
@@ -8,7 +7,6 @@ class AppPaymentMethod {
   static const values = [cash, bank, bkash, nagad, rocket];
 }
 
-// ── Payment Status Constants ───────────────────────────────────────────
 class AppPaymentStatus {
   static const unpaid = 'UNPAID';
   static const partiallyPaid = 'PARTIALLY_PAID';
@@ -17,7 +15,6 @@ class AppPaymentStatus {
   static const values = [unpaid, partiallyPaid, paid, refunded];
 }
 
-// ── Invoice Status Constants ───────────────────────────────────────────
 class AppInvoiceStatus {
   static const draft = 'DRAFT';
   static const issued = 'ISSUED';
@@ -25,7 +22,6 @@ class AppInvoiceStatus {
   static const values = [draft, issued, cancelled];
 }
 
-/// UI badge/label metadata for Invoices.
 class InvoiceStatusMeta {
   static const Map<String, String> label = {
     AppInvoiceStatus.draft: 'Draft',
@@ -36,7 +32,6 @@ class InvoiceStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Invoice Request Model ─────────────────────────────────────────────
 class InvoiceRequestModel {
   InvoiceRequestModel({
     this.customerOrderId,
@@ -67,7 +62,7 @@ class InvoiceRequestModel {
   final String? paymentMethod; // 'CASH', 'BANK', 'BKASH', 'NAGAD', 'ROCKET'
   final String? transactionReference;
   final String invoiceStatus; // 'DRAFT', 'ISSUED', 'CANCELLED'
-  final String? deliveryDate; // ফ্রন্টএন্ড থেকে "YYYY-MM-DD" ফরম্যাটে স্ট্রিং ইনপুট আসবে
+  final String? deliveryDate;
   final String deliveryAddress;
   final String? notes;
   final String? cancelledReason;
@@ -91,7 +86,6 @@ class InvoiceRequestModel {
   };
 }
 
-// ── Invoice Response Model ────────────────────────────────────────────
 class InvoiceResponseModel {
   InvoiceResponseModel({
     required this.id,
@@ -125,14 +119,13 @@ class InvoiceResponseModel {
   });
 
   final int id;
-  final String invoiceNumber; // অটো-জেনারেটেড ইউনিক ইনভয়েস কোড
+  final String invoiceNumber;
   final int? customerOrderId;
-  final String customerEmail; // অটো-জেনারেটেড ইমেইল ফিল্ড রেসপন্স নোড
+  final String customerEmail;
   final int? salesOfficerId;
   final String issuedToName;
-  final String currency; // যেমন: "BDT"
+  final String currency;
 
-  // Financial Breakdown
   final double subtotal;
   final double taxRate;
   final double taxAmount;
@@ -143,19 +136,16 @@ class InvoiceResponseModel {
   final double paidAmount;
   final double dueAmount;
 
-  // Status Matrix
   final String paymentStatus; // 'UNPAID', 'PARTIALLY_PAID', 'PAID', 'REFUNDED'
   final String? paymentMethod;
   final String? transactionReference;
   final String invoiceStatus; // 'DRAFT', 'ISSUED', 'CANCELLED'
 
-  // Logistics & Logs
   final String? deliveryDate; // "YYYY-MM-DD"
   final String deliveryAddress;
   final String? notes;
   final String? cancelledReason;
 
-  // Auditing Timestamps (ISO Date Strings)
   final String? issuedAt;
   final String createdAt;
   final String updatedAt;

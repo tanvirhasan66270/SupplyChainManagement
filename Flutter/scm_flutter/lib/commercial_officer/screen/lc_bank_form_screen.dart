@@ -46,7 +46,6 @@ class _LCBankFormScreenState extends ConsumerState<LCBankFormScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ১. Top Header Bar
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               decoration: const BoxDecoration(
@@ -80,7 +79,6 @@ class _LCBankFormScreenState extends ConsumerState<LCBankFormScreen> {
               ),
             ),
 
-            // ২. Scrollable Form Body
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -105,7 +103,6 @@ class _LCBankFormScreenState extends ConsumerState<LCBankFormScreen> {
                         child: Text('Enter the name of the financial institution.', style: TextStyle(fontSize: 9, color: AppTheme.secondary)),
                       ),
 
-                      // Field 2: SWIFT Routing Code
                       _buildNumberedLabel(2, 'SWIFT ROUTING CODE *', Icons.code),
                       TextFormField(
                         initialValue: swiftCode,
@@ -121,7 +118,6 @@ class _LCBankFormScreenState extends ConsumerState<LCBankFormScreen> {
                         child: Text('Enter the SWIFT routing code.', style: TextStyle(fontSize: 9, color: AppTheme.secondary)),
                       ),
 
-                      // Field 3: Branch Name / Specification
                       _buildNumberedLabel(3, 'BRANCH NAME / SPECIFICATION *', Icons.place_outlined),
                       TextFormField(
                         initialValue: branchName,
@@ -137,7 +133,6 @@ class _LCBankFormScreenState extends ConsumerState<LCBankFormScreen> {
                         child: Text('Enter the branch name or specification.', style: TextStyle(fontSize: 9, color: AppTheme.secondary)),
                       ),
 
-                      // Field 4: Corporate Gateway Email (LC Desk)
                       _buildNumberedLabel(4, 'CORPORATE GATEWAY EMAIL (LC DESK) *', Icons.email_outlined),
                       TextFormField(
                         initialValue: contactEmail,
@@ -154,7 +149,6 @@ class _LCBankFormScreenState extends ConsumerState<LCBankFormScreen> {
                         child: Text('Enter the corporate gateway email for LC desk.', style: TextStyle(fontSize: 9, color: AppTheme.secondary)),
                       ),
 
-                      // Field 5: Official Hotline Phone Number
                       _buildNumberedLabel(5, 'OFFICIAL HOTLINE PHONE NUMBER *', Icons.phone_outlined),
                       TextFormField(
                         initialValue: contactPhone,
@@ -171,7 +165,6 @@ class _LCBankFormScreenState extends ConsumerState<LCBankFormScreen> {
                         child: Text('Enter the official hotline phone number.', style: TextStyle(fontSize: 9, color: AppTheme.secondary)),
                       ),
 
-                      // Field 6: Institutional Physical Address
                       _buildNumberedLabel(6, 'INSTITUTIONAL PHYSICAL ADDRESS *', Icons.location_on_outlined),
                       TextFormField(
                         initialValue: address,
@@ -191,7 +184,6 @@ class _LCBankFormScreenState extends ConsumerState<LCBankFormScreen> {
                         child: Text('Enter the full physical address.', style: TextStyle(fontSize: 9, color: AppTheme.secondary)),
                       ),
 
-                      // Footer Action Buttons (Publish Banking Terminal & Clear)
                       Column(
                         children: [
                           SizedBox(

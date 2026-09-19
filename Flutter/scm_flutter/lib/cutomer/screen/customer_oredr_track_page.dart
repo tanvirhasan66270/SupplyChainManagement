@@ -78,7 +78,6 @@ class _CustomerOrderTrackScreenState extends ConsumerState<CustomerOrderTrackScr
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // ── Track Banner & Search Box ──────────────────
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -147,7 +146,6 @@ class _CustomerOrderTrackScreenState extends ConsumerState<CustomerOrderTrackScr
             ),
             const SizedBox(height: 20),
 
-            // ── Order Details Result Section ───────────────
             if (searchedOrderNumber == null || searchedOrderNumber!.isEmpty)
               _buildEmptyState('Please enter a tracking ID to search.')
             else
@@ -177,7 +175,6 @@ class _CustomerOrderTrackScreenState extends ConsumerState<CustomerOrderTrackScr
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Order Reference Card
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -285,7 +282,6 @@ class _CustomerOrderTrackScreenState extends ConsumerState<CustomerOrderTrackScr
         ),
         const SizedBox(height: 20),
 
-        // ── Milestone Progress Pipeline ────────────────
         const Align(
           alignment: Alignment.centerLeft,
           child: Text('MILESTONE PROGRESS PIPELINE', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.grey)),
@@ -311,7 +307,6 @@ class _CustomerOrderTrackScreenState extends ConsumerState<CustomerOrderTrackScr
         ),
         const SizedBox(height: 20),
 
-        // ── Shipment Details Card ──────────────────────
         const Align(
           alignment: Alignment.centerLeft,
           child: Text('SHIPMENT DETAILS', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.grey)),

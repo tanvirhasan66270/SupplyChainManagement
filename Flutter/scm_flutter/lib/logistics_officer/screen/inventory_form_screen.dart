@@ -129,7 +129,6 @@ class _InventoryFormScreenState extends ConsumerState<InventoryFormScreen> {
                   const SizedBox(height: 16),
                 ],
 
-                // 1. Target Product Selector
                 _buildStepLabel(1, 'TARGET CARGO PRODUCT MATERIAL *'),
                 productsAsync.when(
                   loading: () => const LinearProgressIndicator(),
@@ -151,7 +150,6 @@ class _InventoryFormScreenState extends ConsumerState<InventoryFormScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 2. Storage Warehouse Selector
                 _buildStepLabel(2, 'OPERATIONAL STORAGE WAREHOUSE NODE *'),
                 warehousesAsync.when(
                   loading: () => const LinearProgressIndicator(),
@@ -173,7 +171,6 @@ class _InventoryFormScreenState extends ConsumerState<InventoryFormScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 3. Quantity On Hand
                 _buildStepLabel(3, 'QUANTITY ON HAND *'),
                 TextFormField(
                   initialValue: quantityOnHand.toString(),
@@ -188,7 +185,6 @@ class _InventoryFormScreenState extends ConsumerState<InventoryFormScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 4. Quantity Reserved
                 _buildStepLabel(4, 'QUANTITY RESERVED *'),
                 TextFormField(
                   initialValue: quantityReserved.toString(),
@@ -203,7 +199,6 @@ class _InventoryFormScreenState extends ConsumerState<InventoryFormScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 5. Warehouse Placement (Location Status)
                 _buildStepLabel(5, 'WAREHOUSE RACK / ROW LOCATION STATUS'),
                 TextFormField(
                   initialValue: locationStatus,
@@ -212,7 +207,6 @@ class _InventoryFormScreenState extends ConsumerState<InventoryFormScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 6. Expiration Date
                 _buildStepLabel(6, 'BATCH EXPIRATION BOUNDARY DATE'),
                 TextFormField(
                   initialValue: expiryDate,
@@ -239,7 +233,6 @@ class _InventoryFormScreenState extends ConsumerState<InventoryFormScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 7. Stock Status Dropdown
                 _buildStepLabel(7, 'STOCK TRACKING STATUS *'),
                 DropdownButtonFormField<String>(
                   initialValue: stockStatus,
@@ -253,7 +246,6 @@ class _InventoryFormScreenState extends ConsumerState<InventoryFormScreen> {
                 ),
                 const SizedBox(height: 28),
 
-                // 7. Action Buttons
                 Row(
                   children: [
                     Expanded(

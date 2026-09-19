@@ -156,7 +156,6 @@ class _GoodReceivedNoteFormScreenState extends ConsumerState<GoodReceivedNoteFor
     final prList = purchaseRequisitionsAsync.value ?? [];
     final allProducts = productsAsync.value ?? [];
 
-    // Filter products based on selected Purchase Order (poId)
     List<ProductResponseModel> filteredProducts = allProducts;
     if (poId != 0 && poList.isNotEmpty) {
       final selectedPo = poList.firstWhereOrNull((p) => p.id == poId);
@@ -248,7 +247,6 @@ class _GoodReceivedNoteFormScreenState extends ConsumerState<GoodReceivedNoteFor
                   const SizedBox(height: 16),
                 ],
 
-                // 1. Source Purchase Order Selector
                 _buildStepLabel(1, 'SOURCE PURCHASE ORDER VECTOR *'),
                 purchaseOrdersAsync.when(
                   loading: () => const LinearProgressIndicator(),
@@ -269,7 +267,6 @@ class _GoodReceivedNoteFormScreenState extends ConsumerState<GoodReceivedNoteFor
                               setState(() {
                                 poId = val ?? 0;
 
-                                // Filter products matching selected PO's requisition
                                 List<ProductResponseModel> newFiltered = allProducts;
                                 if (poId != 0 && poList.isNotEmpty) {
                                   final selectedPo = poList.firstWhereOrNull((p) => p.id == poId);
@@ -281,7 +278,6 @@ class _GoodReceivedNoteFormScreenState extends ConsumerState<GoodReceivedNoteFor
                                   }
                                 }
 
-                                // Reset any line item whose product is not in newFiltered
                                 for (int i = 0; i < lineItems.length; i++) {
                                   if (!newFiltered.any((p) => p.id == lineItems[i].productId)) {
                                     lineItems[i] = GRNLineItemRequestModel(
@@ -301,7 +297,6 @@ class _GoodReceivedNoteFormScreenState extends ConsumerState<GoodReceivedNoteFor
                 ),
                 const SizedBox(height: 16),
 
-                // 2. Destination Vault (Warehouse Allocation)
                 _buildStepLabel(2, 'DESTINATION VAULT (WAREHOUSE ALLOCATION) *'),
                 warehousesAsync.when(
                   loading: () => const LinearProgressIndicator(),
@@ -323,7 +318,6 @@ class _GoodReceivedNoteFormScreenState extends ConsumerState<GoodReceivedNoteFor
                 ),
                 const SizedBox(height: 16),
 
-                // 3. Total Received Volume
                 _buildStepLabel(3, 'TOTAL RECEIVED VOLUME *'),
                 TextFormField(
                   initialValue: receivedQuantity == 0 ? '' : receivedQuantity.toString(),
@@ -340,7 +334,6 @@ class _GoodReceivedNoteFormScreenState extends ConsumerState<GoodReceivedNoteFor
                 ),
                 const SizedBox(height: 16),
 
-                // 4. Arrival Log Date
                 _buildStepLabel(4, 'ARRIVAL LOG DATE *'),
                 TextFormField(
                   initialValue: receivedAt,
@@ -368,7 +361,6 @@ class _GoodReceivedNoteFormScreenState extends ConsumerState<GoodReceivedNoteFor
                 ),
                 const SizedBox(height: 16),
 
-                // 5 & 6. Quality Assurance Checkpoints (QC Inspector & Inspection Timestamp)
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -435,7 +427,6 @@ class _GoodReceivedNoteFormScreenState extends ConsumerState<GoodReceivedNoteFor
                 ),
                 const SizedBox(height: 16),
 
-                // 5. Bulk Item Line Cargo Allocation (Line Items)
                 if (!isEdit) ...[
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -579,7 +570,6 @@ class _GoodReceivedNoteFormScreenState extends ConsumerState<GoodReceivedNoteFor
                   const SizedBox(height: 16),
                 ],
 
-                // 8. Operational Remarks
                 _buildStepLabel(8, 'OPERATIONAL TERMINAL REMARKS'),
                 TextFormField(
                   initialValue: remarks,
@@ -589,7 +579,6 @@ class _GoodReceivedNoteFormScreenState extends ConsumerState<GoodReceivedNoteFor
                 ),
                 const SizedBox(height: 24),
 
-                // 7. Action Buttons
                 Row(
                   children: [
                     Expanded(

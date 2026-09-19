@@ -9,7 +9,6 @@ class ProductRequirementRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  //  (GET /api/product-requirements)
   Future<List<ProductRequirementResponse>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.productRequirements);
@@ -20,7 +19,6 @@ class ProductRequirementRepository {
     }
   }
 
-  //(GET /api/product-requirements/{id})
   Future<ProductRequirementResponse> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.productRequirementById(id));
@@ -30,7 +28,6 @@ class ProductRequirementRepository {
     }
   }
 
-  // (POST /api/product-requirements)
   Future<ProductRequirementResponse> save(ProductRequirementRequest request) async {
     try {
       final response = await _dio.post(ApiConstants.productRequirements, data: request.toJson());
@@ -40,7 +37,6 @@ class ProductRequirementRepository {
     }
   }
 
-  // (PUT /api/product-requirements/{id})
   Future<ProductRequirementResponse> update(int id, ProductRequirementRequest request) async {
     try {
       final response = await _dio.put(ApiConstants.productRequirementById(id), data: request.toJson());
@@ -50,7 +46,6 @@ class ProductRequirementRepository {
     }
   }
 
-  //  (PATCH /api/product-requirements/{id}/status)
   Future<ProductRequirementResponse> updateStatus(int id, String status) async {
     try {
       final response = await _dio.patch(
@@ -63,7 +58,6 @@ class ProductRequirementRepository {
     }
   }
 
-  //  (DELETE /api/product-requirements/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.productRequirementById(id));

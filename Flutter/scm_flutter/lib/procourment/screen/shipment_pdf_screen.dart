@@ -68,7 +68,6 @@ class ShipmentPDFScreen extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // ── 1. Top Header Banner ──────────────────────────────
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -139,7 +138,6 @@ class ShipmentPDFScreen extends StatelessWidget {
               pw.Divider(color: primaryNavy, thickness: 2),
               pw.SizedBox(height: 14),
 
-              // ── 2. Party Cards (Origin / Consignor & Destination / Consignee) ────────
               pw.Row(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
@@ -224,7 +222,6 @@ class ShipmentPDFScreen extends StatelessWidget {
 
               pw.SizedBox(height: 18),
 
-              // ── 3. Consignment Matrix Table ──────────────────────
               pw.Text(
                 'CARGO FREIGHT SPECIFICATION MATRIX',
                 style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: primaryNavy),
@@ -269,7 +266,6 @@ class ShipmentPDFScreen extends StatelessWidget {
 
               pw.SizedBox(height: 14),
 
-              // ── 4. Freight Directives & Financial Box ──────────────
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -340,7 +336,6 @@ class ShipmentPDFScreen extends StatelessWidget {
 
               pw.Spacer(),
 
-              // ── 5. Formal Signatures & Stamps ────────────────────
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
@@ -398,7 +393,6 @@ class ShipmentPDFScreen extends StatelessWidget {
               pw.Divider(color: borderGrey),
               pw.SizedBox(height: 6),
 
-              // ── Footer Security Statement ────────────────────────
               pw.Center(
                 child: pw.Text(
                   'This is a legally binding B2B Cargo Waybill document generated electronically by SCM Enterprise Logistics.',

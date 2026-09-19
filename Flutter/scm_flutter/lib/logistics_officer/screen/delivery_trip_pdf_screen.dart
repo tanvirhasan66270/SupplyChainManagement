@@ -26,7 +26,6 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
     final cleanPath = path.trim();
     final dio = ref.read(apiClientProvider).dio;
 
-    // List of candidate URLs to try until one succeeds (200 OK)
     final candidateUrls = <String>[];
     if (cleanPath.startsWith('http://') || cleanPath.startsWith('https://')) {
       candidateUrls.add(cleanPath);
@@ -92,10 +91,9 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
       italicFont = font;
     }
 
-    // Color palette definitions for professional enterprise styling
-    final primaryDark = PdfColor.fromHex('#0F172A'); // Deep Navy Slate
-    final primaryAccent = PdfColor.fromHex('#2563EB'); // Royal Blue
-    final bgLight = PdfColor.fromHex('#F8FAFC'); // Cool Grey Background
+    final primaryDark = PdfColor.fromHex('#0F172A');
+    final primaryAccent = PdfColor.fromHex('#2563EB');
+    final bgLight = PdfColor.fromHex('#F8FAFC');
     final borderGrey = PdfColor.fromHex('#E2E8F0');
     final textDark = PdfColor.fromHex('#1E293B');
     final textMuted = PdfColor.fromHex('#64748B');
@@ -103,22 +101,21 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
     PdfColor statusColor;
     switch (trip.status.toUpperCase()) {
       case 'DELIVERED':
-        statusColor = PdfColor.fromHex('#059669'); // Emerald Green
+        statusColor = PdfColor.fromHex('#059669');
         break;
       case 'IN_TRANSIT':
-        statusColor = PdfColor.fromHex('#D97706'); // Amber Gold
+        statusColor = PdfColor.fromHex('#D97706');
         break;
       case 'PENDING':
-        statusColor = PdfColor.fromHex('#2563EB'); // Royal Blue
+        statusColor = PdfColor.fromHex('#2563EB');
         break;
       case 'CANCELLED':
-        statusColor = PdfColor.fromHex('#DC2626'); // Red
+        statusColor = PdfColor.fromHex('#DC2626');
         break;
       default:
         statusColor = PdfColor.fromHex('#64748B');
     }
 
-    // Resolve driver profile image path from initial arg or by querying repository directly
     String? driverPath = initialDriverImagePath;
     if (driverPath == null || driverPath.isEmpty) {
       try {
@@ -130,7 +127,6 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
       } catch (_) {}
     }
 
-    // Download signature, POD photos & Driver Profile Image with Auth
     final sigImage = await _fetchImageWithAuth(trip.recipientSignature, ref);
     final podImage = await _fetchImageWithAuth(trip.deliveryPhotoUrl, ref);
     final driverImage = await _fetchImageWithAuth(driverPath, ref);
@@ -149,7 +145,6 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
         ),
         build: (pw.Context context) {
           return [
-            // 1. Enterprise Header Banner Box
             pw.Container(
               padding: const pw.EdgeInsets.all(14),
               decoration: pw.BoxDecoration(
@@ -205,11 +200,9 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
             ),
             pw.SizedBox(height: 12),
 
-            // 2. Three-Column Key Metadata Cards (Consignee, Fleet & Captain Specs, Route Timeline)
             pw.Row(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                // Card 1: Consignee & Drop Details
                 pw.Expanded(
                   child: pw.Container(
                     padding: const pw.EdgeInsets.all(8),
@@ -233,12 +226,11 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
                 ),
                 pw.SizedBox(width: 8),
 
-                // Card 2: Fleet & Captain Specifications (Includes Captain Profile Photo)
                 pw.Expanded(
                   child: pw.Container(
                     padding: const pw.EdgeInsets.all(8),
                     decoration: pw.BoxDecoration(
-                      color: PdfColor.fromHex('#F0F9FF'), // Light Sky Blue
+                      color: PdfColor.fromHex('#F0F9FF'),
                       borderRadius: pw.BorderRadius.circular(5),
                       border: pw.Border.all(color: PdfColor.fromHex('#BAE6FD')),
                     ),
@@ -279,7 +271,6 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
                 ),
                 pw.SizedBox(width: 8),
 
-                // Card 3: Route Timeline & Audit
                 pw.Expanded(
                   child: pw.Container(
                     padding: const pw.EdgeInsets.all(8),
@@ -305,11 +296,10 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
             ),
             pw.SizedBox(height: 12),
 
-            // 3. Metrics Summary Callout Strip
             pw.Container(
               padding: const pw.EdgeInsets.all(10),
               decoration: pw.BoxDecoration(
-                color: PdfColor.fromHex('#EFF6FF'), // Soft Blue Fill
+                color: PdfColor.fromHex('#EFF6FF'),
                 borderRadius: pw.BorderRadius.circular(5),
                 border: pw.Border.all(color: PdfColor.fromHex('#BFDBFE')),
               ),
@@ -374,7 +364,6 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
             ),
             pw.SizedBox(height: 12),
 
-            // 4. Main Delivery Trip Details Table
             pw.Text('FLEET ROUTE & DISPATCH LEDGER SPECIFICATIONS', style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold, color: textDark)),
             pw.SizedBox(height: 4),
             pw.Table(
@@ -394,7 +383,6 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
             ),
             pw.SizedBox(height: 12),
 
-            // 5. Proof of Delivery Images Section (Driver Profile Photo, Signature & POD Photo)
             if (driverImage != null || sigImage != null || podImage != null) ...[
               pw.Text('VERIFIED DISPATCH & PROOF OF DELIVERY (POD) ATTACHMENTS', style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold, color: textDark)),
               pw.SizedBox(height: 4),
@@ -479,7 +467,6 @@ class DeliveryTripFormPDFScreen extends ConsumerWidget {
               pw.SizedBox(height: 12),
             ],
 
-            // 6. Dual Signature Footer & Security Stamp
             pw.Spacer(),
             pw.Container(
               padding: const pw.EdgeInsets.only(top: 10),

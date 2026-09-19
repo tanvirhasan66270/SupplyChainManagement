@@ -34,7 +34,6 @@ class CustomerPaymentPdfScreen extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // ── Corporate Header ──
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
@@ -112,7 +111,6 @@ class CustomerPaymentPdfScreen extends StatelessWidget {
               pw.Divider(color: borderGrey, thickness: 1),
               pw.SizedBox(height: 12),
 
-              // ── Receipt Meta Box ──
               pw.Container(
                 width: double.infinity,
                 padding: const pw.EdgeInsets.all(12),
@@ -148,7 +146,6 @@ class CustomerPaymentPdfScreen extends StatelessWidget {
               ),
               pw.SizedBox(height: 16),
 
-              // ── Financial Breakdown Table ──
               pw.Text('PAYMENT AUDIT & MANIFEST DETAILS', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: darkHeader)),
               pw.SizedBox(height: 6),
               pw.Table(
@@ -169,7 +166,6 @@ class CustomerPaymentPdfScreen extends StatelessWidget {
 
               pw.Spacer(),
 
-              // ── Signature Seal Blocks ──
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [

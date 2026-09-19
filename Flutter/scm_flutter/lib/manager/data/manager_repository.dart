@@ -11,7 +11,6 @@ class ManagerRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  //  (GET /api/managers)
   Future<List<ManagerResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.managers);
@@ -22,7 +21,6 @@ class ManagerRepository {
     }
   }
 
-  // (GET /api/managers/{id})
   Future<ManagerResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.managerById(id));
@@ -32,7 +30,6 @@ class ManagerRepository {
     }
   }
 
-  // (POST /api/managers with multipart 'manager' & 'file')
   Future<ManagerResponseModel> save(ManagerRequestModel request, File? imageFile) async {
     try {
       FormData formData = FormData.fromMap({
@@ -59,7 +56,6 @@ class ManagerRepository {
     }
   }
 
-  //(PUT /api/managers/{id} with multipart)
   Future<ManagerResponseModel> update(int id, ManagerRequestModel request, File? imageFile) async {
     try {
       FormData formData = FormData.fromMap({
@@ -86,7 +82,6 @@ class ManagerRepository {
     }
   }
 
-  //(DELETE /api/managers/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.managerById(id));

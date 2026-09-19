@@ -5,12 +5,10 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/entity/grn_model.dart';
 import 'package:scm_flutter/logistics_officer/data/good_received_note_repository.dart';
 
-// ১. Repository Provider
 final goodReceivedNoteRepositoryProvider = Provider<GoodReceivedNoteRepository>((ref) {
   return GoodReceivedNoteRepository(ref.watch(apiClientProvider));
 });
 
-// ২. List Provider
 final goodReceivedNoteListProvider = FutureProvider.autoDispose<List<GoodsReceivedNoteResponseModel>>((ref) async {
   final user = ref.watch(currentUserProvider);
   if (user == null) return [];
@@ -22,7 +20,6 @@ final goodReceivedNoteListProvider = FutureProvider.autoDispose<List<GoodsReceiv
   }
 });
 
-// ৩. Controller / Notifier (Save, Update, Delete)
 final goodReceivedNoteControllerProvider = StateNotifierProvider<GoodReceivedNoteController, AsyncValue<void>>((ref) {
   final repo = ref.watch(goodReceivedNoteRepositoryProvider);
   return GoodReceivedNoteController(repo, ref);

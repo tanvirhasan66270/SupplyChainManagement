@@ -1,4 +1,3 @@
-// ── Message Priority Constants ─────────────────────────────────────────
 class MessagePriority {
   static const low = 'LOW';
   static const medium = 'MEDIUM';
@@ -6,14 +5,12 @@ class MessagePriority {
   static const values = [low, medium, high];
 }
 
-// ── Message Status Constants ───────────────────────────────────────────
 class MessageStatus {
   static const unread = 'UNREAD';
   static const read = 'READ';
   static const values = [unread, read];
 }
 
-/// UI badge/label metadata for Message Priority.
 class MessagePriorityMeta {
   static const Map<String, String> label = {
     MessagePriority.low: 'Low',
@@ -24,7 +21,6 @@ class MessagePriorityMeta {
   static String labelFor(String priority) => label[priority] ?? priority;
 }
 
-// ── Message Request Model ─────────────────────────────────────────────
 class MessageRequestModel {
   MessageRequestModel({
     this.recipientId,
@@ -46,7 +42,6 @@ class MessageRequestModel {
   };
 }
 
-// ── Message Response Model ────────────────────────────────────────────
 class MessageResponseModel {
   MessageResponseModel({
     required this.id,

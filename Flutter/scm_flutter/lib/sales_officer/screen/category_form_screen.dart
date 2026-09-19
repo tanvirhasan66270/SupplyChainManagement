@@ -81,7 +81,6 @@ class _CategoryFormScreenState extends ConsumerState<CategoryFormScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // 1. Top Green Header Bar
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               decoration: const BoxDecoration(
@@ -128,7 +127,6 @@ class _CategoryFormScreenState extends ConsumerState<CategoryFormScreen> {
               ),
             ),
 
-            // 2. Scrollable Form Body
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -137,7 +135,6 @@ class _CategoryFormScreenState extends ConsumerState<CategoryFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Field 1: Category Cluster Name
                       _buildLabel('CATEGORY CLUSTER NAME', Icons.description_outlined, primaryGreen),
                       const SizedBox(height: 6),
                       TextFormField(

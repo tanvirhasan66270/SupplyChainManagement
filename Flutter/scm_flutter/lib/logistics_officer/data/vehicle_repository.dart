@@ -9,7 +9,6 @@ class VehicleRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  // (GET /api/vehicles)
   Future<List<VehicleResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.vehicles);
@@ -20,7 +19,6 @@ class VehicleRepository {
     }
   }
 
-  // (GET /api/vehicles/{id})
   Future<VehicleResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.vehicleById(id));
@@ -30,7 +28,6 @@ class VehicleRepository {
     }
   }
 
-  //(POST /api/vehicles)
   Future<VehicleResponseModel> create(VehicleRequestModel request) async {
     try {
       final response = await _dio.post(ApiConstants.vehicles, data: request.toJson());
@@ -40,7 +37,6 @@ class VehicleRepository {
     }
   }
 
-  // (PUT /api/vehicles/{id})
   Future<VehicleResponseModel> update(int id, VehicleRequestModel request) async {
     try {
       final response = await _dio.put(ApiConstants.vehicleById(id), data: request.toJson());
@@ -50,7 +46,6 @@ class VehicleRepository {
     }
   }
 
-  //  (DELETE /api/vehicles/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.vehicleById(id));

@@ -5,12 +5,10 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/entity/quatation_model.dart';
 import 'package:scm_flutter/suppplier/data/quatation_repository.dart';
 
-// ১. Quotation Repository Provider
 final quotationRepositoryProvider = Provider<QuotationRepository>((ref) {
   return QuotationRepository(ref.watch(apiClientProvider));
 });
 
-// ২. Quotation List Provider
 final quotationListProvider = FutureProvider.autoDispose<List<QuotationResponseModel>>((ref) async {
   final repo = ref.watch(quotationRepositoryProvider);
   return await repo.findAll();
@@ -21,7 +19,6 @@ final singleQuotationProvider = FutureProvider.autoDispose.family<QuotationRespo
   return await repo.getById(id);
 });
 
-// Quotation Controller / Notifier (Create, Update, Delete, Status Change)
 final quotationControllerProvider = StateNotifierProvider<QuotationController, AsyncValue<void>>((ref) {
   final repo = ref.watch(quotationRepositoryProvider);
   return QuotationController(repo, ref);

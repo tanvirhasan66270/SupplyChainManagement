@@ -1,4 +1,3 @@
-// ── Commercial Officer Request Model ───────────────────────────────────
 class CommercialOfficerRequestModel {
   CommercialOfficerRequestModel({
     required this.address,
@@ -47,7 +46,6 @@ class CommercialOfficerRequestModel {
   };
 }
 
-// ── Commercial Officer Response Model ──────────────────────────────────
 class CommercialOfficerResponseModel {
   CommercialOfficerResponseModel({
     required this.id,

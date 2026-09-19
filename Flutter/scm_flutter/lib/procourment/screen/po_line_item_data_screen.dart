@@ -98,7 +98,6 @@ class _POLineItemDataScreenState extends ConsumerState<POLineItemDataScreen> {
           onRefresh: () async => ref.invalidate(poLineItemListProvider),
           child: Column(
             children: [
-              // ── 1. Top Title & Summary Banner Card ──
               Container(
                 margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.all(18),
@@ -147,7 +146,6 @@ class _POLineItemDataScreenState extends ConsumerState<POLineItemDataScreen> {
                 ),
               ),
 
-              // ── 2. Search & Status Filter Controls (Android Responsive) ──
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: LayoutBuilder(
@@ -226,7 +224,6 @@ class _POLineItemDataScreenState extends ConsumerState<POLineItemDataScreen> {
 
               const SizedBox(height: 12),
 
-              // ── 3. Line Items List Vector ──
               Expanded(
                 child: lineItemsAsync.when(
                   loading: () => const Center(child: CircularProgressIndicator()),

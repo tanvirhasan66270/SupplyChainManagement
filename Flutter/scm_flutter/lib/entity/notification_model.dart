@@ -1,4 +1,3 @@
-// ── Notification Type Constants ────────────────────────────────────────
 class NotificationType {
   static const shipment = 'SHIPMENT';
   static const tripAlert = 'TRIP_ALERT';
@@ -6,7 +5,6 @@ class NotificationType {
   static const values = [shipment, tripAlert, reportApproved];
 }
 
-/// UI badge/label metadata for Notification Type.
 class NotificationTypeMeta {
   static const Map<String, String> label = {
     NotificationType.shipment: 'Shipment',
@@ -17,7 +15,6 @@ class NotificationTypeMeta {
   static String labelFor(String type) => label[type] ?? type;
 }
 
-// ── Notification Model ────────────────────────────────────────────────
 class NotificationModel {
   NotificationModel({
     this.id,

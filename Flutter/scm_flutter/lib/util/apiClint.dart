@@ -47,8 +47,7 @@ ApiClient(this._storageService) {
 }
 
 
-/// Normalizes Dio/backend errors into a readable message, similar to how
-/// the Angular login component branched on `err.status`.
+
 String apiErrorMessage(Object error) {
   if (error is DioException) {
     final status = error.response?.statusCode;

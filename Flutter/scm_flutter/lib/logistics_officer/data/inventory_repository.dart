@@ -9,7 +9,6 @@ class InventoryRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  //  (GET /api/inventories)
   Future<List<InventoryResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.inventories);
@@ -20,7 +19,6 @@ class InventoryRepository {
     }
   }
 
-  //  (GET /api/inventories/{id})
   Future<InventoryResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.inventoryById(id));
@@ -30,7 +28,6 @@ class InventoryRepository {
     }
   }
 
-  // (POST /api/inventories)
   Future<InventoryResponseModel> save(InventoryRequestModel request) async {
     try {
       final response = await _dio.post(ApiConstants.inventories, data: request.toJson());
@@ -40,7 +37,6 @@ class InventoryRepository {
     }
   }
 
-  // (PUT /api/inventories/{id})
   Future<InventoryResponseModel> update(int id, InventoryRequestModel request) async {
     try {
       final response = await _dio.put(ApiConstants.inventoryById(id), data: request.toJson());
@@ -50,7 +46,6 @@ class InventoryRepository {
     }
   }
 
-  // (DELETE /api/inventories/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.inventoryById(id));

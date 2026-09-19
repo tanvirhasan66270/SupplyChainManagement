@@ -55,7 +55,6 @@ class _ManagerDashboardScreenState extends ConsumerState<ManagerDashboardScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── 1. Top KPI Metrics Grid (2x3 Grid) ─────────────────────────
             _buildKpiGrid(
               pendingApprovals: pendingApprovalsCount,
               activeShipments: activeShipmentsCount,
@@ -65,15 +64,12 @@ class _ManagerDashboardScreenState extends ConsumerState<ManagerDashboardScreen>
             ),
             const SizedBox(height: 20),
 
-            // ── 2. Managerial Quick Shortcuts ──────────────────────────────
             _buildManagerialShortcuts(context),
             const SizedBox(height: 20),
 
-            // ── 3. Operations Shortcuts ─────────────────────────────────────
             _buildOperationsShortcuts(context, pendingApprovalsCount, activeShipmentsCount, lowStockCount),
             const SizedBox(height: 20),
 
-            // ── 4. Analytics & Performance 2-Column Row ─────────────────────
             LayoutBuilder(
               builder: (context, constraints) {
                 if (constraints.maxWidth > 900) {
@@ -98,7 +94,6 @@ class _ManagerDashboardScreenState extends ConsumerState<ManagerDashboardScreen>
             ),
             const SizedBox(height: 20),
 
-            // ── 5. Critical Logistics & Latest Updates 2-Column Row ─────────
             LayoutBuilder(
               builder: (context, constraints) {
                 if (constraints.maxWidth > 900) {
@@ -123,7 +118,6 @@ class _ManagerDashboardScreenState extends ConsumerState<ManagerDashboardScreen>
             ),
             const SizedBox(height: 20),
 
-            // ── 6. Colorful Stats Strip ──────────────────────────────────────
             _buildColorfulStatsStrip(
               pendingApprovals: pendingApprovalsCount,
               activeShipments: activeShipmentsCount,
@@ -134,7 +128,6 @@ class _ManagerDashboardScreenState extends ConsumerState<ManagerDashboardScreen>
         ),
       ),
 
-      // ── Bottom Navigation Bar (Customer Dashboard Style) ────────────────
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentBottomNavIndex,
         onTap: (index) {
@@ -159,7 +152,6 @@ class _ManagerDashboardScreenState extends ConsumerState<ManagerDashboardScreen>
     );
   }
 
-  // ── 1. KPI Grid Widget ───────────────────────────────────────────────────
   Widget _buildKpiGrid({
     required int pendingApprovals,
     required int activeShipments,
@@ -250,7 +242,6 @@ class _ManagerDashboardScreenState extends ConsumerState<ManagerDashboardScreen>
     );
   }
 
-  // ── 2. Managerial Quick Shortcuts ───────────────────────────────────────
   Widget _buildManagerialShortcuts(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -345,7 +336,6 @@ class _ManagerDashboardScreenState extends ConsumerState<ManagerDashboardScreen>
     );
   }
 
-  // ── 3. Operations Shortcuts ─────────────────────────────────────────────
   Widget _buildOperationsShortcuts(BuildContext context, int pending, int shipments, int lowStock) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -440,7 +430,6 @@ class _ManagerDashboardScreenState extends ConsumerState<ManagerDashboardScreen>
     );
   }
 
-  // ── 6. Colorful Stats Strip ───────────────────────────────────────────────
   Widget _buildColorfulStatsStrip({
     required int pendingApprovals,
     required int activeShipments,
@@ -522,7 +511,6 @@ class _ManagerDashboardScreenState extends ConsumerState<ManagerDashboardScreen>
   }
 }
 
-// ── KPI Card Component ──────────────────────────────────────────────────────
 class _KpiCard extends StatelessWidget {
   const _KpiCard({
     required this.title,
@@ -626,7 +614,6 @@ class _KpiCard extends StatelessWidget {
   }
 }
 
-// ── Mini Sparkline Painter ──────────────────────────────────────────────────
 class _SparklinePainter extends CustomPainter {
   _SparklinePainter({required this.color});
   final Color color;
@@ -653,7 +640,6 @@ class _SparklinePainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-// ── Quick Shortcut Card Component ───────────────────────────────────────────
 class _ShortcutCard extends StatelessWidget {
   const _ShortcutCard({
     required this.icon,
@@ -724,7 +710,6 @@ class _ShortcutCard extends StatelessWidget {
   }
 }
 
-// ── Revenue & Spend Analytics Card ──────────────────────────────────────────
 class _RevenueSpendAnalyticsCard extends StatelessWidget {
   const _RevenueSpendAnalyticsCard();
 
@@ -876,7 +861,7 @@ class _AnalyticsChartPainter extends CustomPainter {
       final x = i * dx;
       double y = size.height * 0.85;
       if (i == 5) {
-        y = size.height * 0.15; // Spike at Aug
+        y = size.height * 0.15;
       }
       if (i == 0) {
         expensesPath.moveTo(x, y);
@@ -892,7 +877,6 @@ class _AnalyticsChartPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-// ── Department Performance Card ─────────────────────────────────────────────
 class _DepartmentPerformanceCard extends StatelessWidget {
   const _DepartmentPerformanceCard();
 
@@ -977,7 +961,6 @@ class _DepartmentPerformanceCard extends StatelessWidget {
   }
 }
 
-// ── Critical Logistics & Shipments Card ──────────────────────────────────────
 class _CriticalLogisticsCard extends StatelessWidget {
   const _CriticalLogisticsCard();
 
@@ -1076,7 +1059,6 @@ class _CriticalLogisticsCard extends StatelessWidget {
   }
 }
 
-// ── Latest Updates Card ──────────────────────────────────────────────────────
 class _LatestUpdatesCard extends StatelessWidget {
   const _LatestUpdatesCard();
 
@@ -1183,7 +1165,6 @@ class _LatestUpdatesCard extends StatelessWidget {
   }
 }
 
-// ── Color Stat Pill Component ───────────────────────────────────────────────
 class _ColorStatPill extends StatelessWidget {
   const _ColorStatPill({
     required this.bgColor,

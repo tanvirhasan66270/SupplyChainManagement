@@ -9,14 +9,12 @@ final productRepositoryProvider = Provider<ProductRepository>((ref) {
 });
 
 
-///(All Products)
 final productListProvider = FutureProvider.autoDispose<List<ProductResponseModel>>((ref) async {
   final repository = ref.watch(productRepositoryProvider);
   return repository.getAll();
 });
 
 
-///(Single Product By ID)
 final singleProductProvider = FutureProvider.autoDispose.family<ProductResponseModel, int>((ref, id) async {
   final repository = ref.watch(productRepositoryProvider);
   return repository.getProductById(id);

@@ -1,4 +1,3 @@
-// ── LC Bank Request Model ──────────────────────────────────────────────
 class LCBankRequestModel {
   LCBankRequestModel({
     required this.name,
@@ -26,7 +25,6 @@ class LCBankRequestModel {
   };
 }
 
-// ── LC Bank Response Model ─────────────────────────────────────────────
 class LCBankResponseModel {
   LCBankResponseModel({
     required this.id,

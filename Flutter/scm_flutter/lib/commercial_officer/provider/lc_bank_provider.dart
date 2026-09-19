@@ -4,18 +4,15 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/commercial_officer/data/lc_bank_repository.dart';
 import 'package:scm_flutter/entity/lc_bank.dart';
 
-// ১. Repository Provider
 final lcBankRepositoryProvider = Provider<LCBankRepository>((ref) {
   return LCBankRepository(ref.watch(apiClientProvider));
 });
 
-// ২. List Provider
 final lcBankListProvider = FutureProvider.autoDispose<List<LCBankResponseModel>>((ref) async {
   final repo = ref.watch(lcBankRepositoryProvider);
   return await repo.findAll();
 });
 
-// ৩. Controller / Notifier (Create, Update, Delete )
 final lcBankControllerProvider = StateNotifierProvider<LCBankController, AsyncValue<void>>((ref) {
   final repo = ref.watch(lcBankRepositoryProvider);
   return LCBankController(repo, ref);

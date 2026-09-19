@@ -27,15 +27,12 @@ class _SupplierDashboardScreenState extends ConsumerState<SupplierDashboardScree
   String activeTableTab = 'ISSUED_POS';
   String searchQuery = '';
 
-  // Dialog State Variables
   String modalSearchText = '';
   String? activeShortcutModal;
 
-  // Shipment Update Modal State
   String shipmentSearchTerm = '';
   PurchaseOrderResponse? selectedShipmentPo;
 
-  // Find LC Modal State
   final TextEditingController _findLcPoController = TextEditingController();
   Map<String, dynamic>? foundLcResult;
   String? lcSearchError;
@@ -87,7 +84,6 @@ class _SupplierDashboardScreenState extends ConsumerState<SupplierDashboardScree
     }
   }
 
-  // ── Modal Handlers ──
 
   void _openFindLcModal(List<PurchaseOrderResponse> allPOs) {
     setState(() {
@@ -246,7 +242,6 @@ class _SupplierDashboardScreenState extends ConsumerState<SupplierDashboardScree
     final currentSupplier = suppliers.where((s) => s.userId == currentUser?.userId).firstOrNull;
     final isSupplierRole = userRole == 'SUPPLIER';
 
-    // Supplier Specific PO filtering
     final supplierPOs = isSupplierRole && currentSupplier != null
         ? allPOs.where((po) => po.supplierId == currentSupplier.id).toList()
         : allPOs;
@@ -254,7 +249,6 @@ class _SupplierDashboardScreenState extends ConsumerState<SupplierDashboardScree
     final issuedPOs = supplierPOs.where((po) => po.status.toUpperCase() == 'ISSUED' || po.status.toUpperCase() == 'DRAFT').toList();
     final receivedPOs = supplierPOs.where((po) => po.status.toUpperCase() == 'RECEIVED' || po.status.toUpperCase() == 'APPROVED').toList();
 
-    // Metrics Calculation
     final totalPOs = supplierPOs.length;
     final pendingDeliveries = issuedPOs.length;
     final supplyAccuracy = totalPOs > 0 ? ((receivedPOs.length / totalPOs) * 100).round() : 100;
@@ -271,7 +265,6 @@ class _SupplierDashboardScreenState extends ConsumerState<SupplierDashboardScree
     final assignedPRs = supplierRequisitions.length;
     final activeLCs = receivedPOs.length;
 
-    // Build KPI List matching ProcurementDashboardScreen format
     final List<Map<String, dynamic>> kpisRow1 = [
       {
         'label': 'Purchase Orders',
@@ -335,7 +328,6 @@ class _SupplierDashboardScreenState extends ConsumerState<SupplierDashboardScree
       },
     ];
 
-    // Quick Actions grid array matching ProcurementDashboardScreen
     final List<Map<String, dynamic>> quickActions = [
       {
         'label': 'Add Quotation',
@@ -407,7 +399,6 @@ class _SupplierDashboardScreenState extends ConsumerState<SupplierDashboardScree
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── 1. Top Bar (Fully Dynamic) ──
                 DynamicScmTopNavBar(
                   onRefresh: () {
                     ref.invalidate(supplierListProvider);
@@ -424,22 +415,18 @@ class _SupplierDashboardScreenState extends ConsumerState<SupplierDashboardScree
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ── 2. Welcome Banner (Matching ProcurementDashboardScreen) ──
                       _buildWelcomeBanner(userName, userRole),
 
                       const SizedBox(height: 20),
 
-                      // ── 3. KPI Row 1 (Matching ProcurementDashboardScreen) ──
                       _buildKpiCardRow(kpisRow1),
 
                       const SizedBox(height: 12),
 
-                      // ── 4. KPI Row 2 (Matching ProcurementDashboardScreen) ──
                       _buildKpiCardRow(kpisRow2),
 
                       const SizedBox(height: 24),
 
-                      // ── 5. Quick Actions Section Header ──
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -452,12 +439,10 @@ class _SupplierDashboardScreenState extends ConsumerState<SupplierDashboardScree
                       ),
                       const SizedBox(height: 12),
 
-                      // ── 6. Quick Actions Grid (Matching ProcurementDashboardScreen Grid) ──
                       _buildQuickActionsGrid(quickActions),
 
                       const SizedBox(height: 24),
 
-                      // ── 7. Category Tab Switcher Chips ──
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
@@ -471,7 +456,6 @@ class _SupplierDashboardScreenState extends ConsumerState<SupplierDashboardScree
                       ),
                       const SizedBox(height: 14),
 
-                      // ── 8. Dynamic Data Section (Matching ProcurementDashboardScreen Card Log) ──
                       _buildTabContent(isSupplierRole, supplierPOs, issuedPOs, receivedPOs, allQuotations, supplierRequisitions, suppliers, isMobile),
                     ],
                   ),

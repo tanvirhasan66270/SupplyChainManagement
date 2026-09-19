@@ -114,7 +114,6 @@ class _LCBankDataScreenState extends ConsumerState<LCBankDataScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Top Metric Pipeline Banner ──
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -177,7 +176,6 @@ class _LCBankDataScreenState extends ConsumerState<LCBankDataScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Search Bar ──
                   TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
@@ -297,7 +295,6 @@ class _LCBankDataScreenState extends ConsumerState<LCBankDataScreen> {
                                 ),
                                 const SizedBox(height: 10),
 
-                                // Grid Details
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
@@ -353,7 +350,6 @@ class _LCBankDataScreenState extends ConsumerState<LCBankDataScreen> {
                                 ),
                                 const Divider(height: 16),
 
-                                // Actions
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [

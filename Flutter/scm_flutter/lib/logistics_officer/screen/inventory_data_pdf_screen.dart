@@ -112,7 +112,6 @@ class InventoryDataPDFScreen extends StatelessWidget {
             ),
             pw.SizedBox(height: 16),
 
-            // Section 1: Stock Quantities & Quotas
             pw.Text('I. Stock Metric Parameters', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColor.fromHex('#212529'))),
             pw.SizedBox(height: 6),
             pw.Table(
@@ -145,7 +144,6 @@ class InventoryDataPDFScreen extends StatelessWidget {
             ),
             pw.SizedBox(height: 16),
 
-            // Section 2: Storage Placement & Expiration
             pw.Text('II. Storage Placement & Batch Expiration', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColor.fromHex('#212529'))),
             pw.SizedBox(height: 6),
             pw.Container(
@@ -185,7 +183,6 @@ class InventoryDataPDFScreen extends StatelessWidget {
             ),
             pw.SizedBox(height: 24),
 
-            // Signature & Footer
             pw.Spacer(),
             pw.Divider(color: PdfColors.grey300),
             pw.SizedBox(height: 12),

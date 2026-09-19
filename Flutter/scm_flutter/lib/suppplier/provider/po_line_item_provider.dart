@@ -4,30 +4,25 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/entity/po_line_item_model.dart';
 import 'package:scm_flutter/suppplier/data/po_line_item_repository.dart';
 
-//  Repository Provider
 final poLineItemRepositoryProvider = Provider<POLineItemRepository>((ref) {
   return POLineItemRepository(ref.watch(apiClientProvider));
 });
 
-//  All Line Items List Provider
 final poLineItemListProvider = FutureProvider.autoDispose<List<POLineItemResponseDTO>>((ref) async {
   final repo = ref.watch(poLineItemRepositoryProvider);
   return await repo.findAll();
 });
 
-// Single Line Item Family Provider
 final singlePoLineItemProvider = FutureProvider.autoDispose.family<POLineItemResponseDTO, int>((ref, id) async {
   final repo = ref.watch(poLineItemRepositoryProvider);
   return await repo.getById(id);
 });
 
-// Line Items by Order ID Family Provider
 final poLineItemsByOrderIdProvider = FutureProvider.autoDispose.family<List<POLineItemResponseDTO>, int>((ref, orderId) async {
   final repo = ref.watch(poLineItemRepositoryProvider);
   return await repo.getByOrderId(orderId);
 });
 
-//  Controller / Notifier (Create, Update, Delete)
 final poLineItemControllerProvider = StateNotifierProvider<POLineItemController, AsyncValue<void>>((ref) {
   final repo = ref.watch(poLineItemRepositoryProvider);
   return POLineItemController(repo, ref);
@@ -39,7 +34,6 @@ class POLineItemController extends StateNotifier<AsyncValue<void>> {
 
   POLineItemController(this._repository, this._ref) : super(const AsyncValue.data(null));
 
-  // Create Line Item
   Future<bool> createLineItem(POLineItemRequestDTO request) async {
     state = const AsyncValue.loading();
     try {
@@ -53,7 +47,6 @@ class POLineItemController extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  // Update Line Item (অথবা স্ট্যাটাস পরিবর্তন)
   Future<bool> updateLineItem(int id, POLineItemRequestDTO request) async {
     state = const AsyncValue.loading();
     try {
@@ -67,7 +60,6 @@ class POLineItemController extends StateNotifier<AsyncValue<void>> {
     }
   }
 
-  // Delete Line Item
   Future<bool> deleteLineItem(int id) async {
     state = const AsyncValue.loading();
     try {

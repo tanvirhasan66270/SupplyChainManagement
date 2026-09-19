@@ -13,7 +13,6 @@ class MessageRepository {
     return Options(headers: {'X-User-Id': userId});
   }
 
-  /// (POST /api/messages)
   Future<List<MessageResponseModel>> sendMessage(MessageRequestModel dto, {String? userId}) async {
     final res = await _dio.post(ApiConstants.messages, data: dto.toJson(), options: _getOptions(userId));
     if (res.statusCode == 204 || res.data == null) return [];
@@ -22,7 +21,6 @@ class MessageRepository {
         .toList();
   }
 
-  ///  (GET /api/messages/inbox)
   Future<List<MessageResponseModel>> getInbox({String? userId}) async {
     final res = await _dio.get(ApiConstants.messageInbox, options: _getOptions(userId));
     if (res.statusCode == 204 || res.data == null) return [];
@@ -31,7 +29,6 @@ class MessageRepository {
         .toList();
   }
 
-  ///(GET /api/messages/chatlist)
   Future<List<dynamic>> getChatlist({String? userId}) async {
     try {
       final res = await _dio.get(ApiConstants.messageChatlist, options: _getOptions(userId));
@@ -42,7 +39,6 @@ class MessageRepository {
     }
   }
 
-  /// (GET /api/messages/history?contactId=...)
   Future<List<MessageResponseModel>> getChatHistory(String contactId, {String? userId}) async {
     final res = await _dio.get(
       ApiConstants.messageHistory,
@@ -55,7 +51,6 @@ class MessageRepository {
         .toList();
   }
 
-  /// (PATCH /api/messages/{id}/read)
   Future<void> markAsRead(int id, {String? userId}) async {
     await _dio.patch(ApiConstants.messageRead(id), options: _getOptions(userId));
   }

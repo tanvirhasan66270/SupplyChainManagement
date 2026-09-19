@@ -9,7 +9,6 @@ class POLineItemRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  // (GET /api/po-line-items or fallback to /api/order-items)
   Future<List<POLineItemResponseDTO>> findAll() async {
     try {
       try {
@@ -26,7 +25,6 @@ class POLineItemRepository {
     }
   }
 
-  // (GET /api/po-line-items/{id} or fallback to /api/order-items/{id})
   Future<POLineItemResponseDTO> getById(int id) async {
     try {
       try {
@@ -41,7 +39,6 @@ class POLineItemRepository {
     }
   }
 
-  // (GET /api/po-line-items/order/{orderId} or fallback to /api/order-items/order/{orderId})
   Future<List<POLineItemResponseDTO>> getByOrderId(int orderId) async {
     try {
       try {
@@ -58,7 +55,6 @@ class POLineItemRepository {
     }
   }
 
-  // (GET /api/po-line-items/track/{trackingNumber})
   Future<POLineItemResponseDTO> trackByNumber(String trackingNumber) async {
     try {
       final response = await _dio.get(ApiConstants.trackPoLineItem(trackingNumber));
@@ -68,7 +64,6 @@ class POLineItemRepository {
     }
   }
 
-  // (POST /api/po-line-items or fallback to /api/order-items)
   Future<POLineItemResponseDTO> save(POLineItemRequestDTO request) async {
     try {
       try {
@@ -83,7 +78,6 @@ class POLineItemRepository {
     }
   }
 
-  // (PUT /api/po-line-items/{id} or fallback to /api/order-items/{id})
   Future<POLineItemResponseDTO> update(int id, POLineItemRequestDTO request) async {
     try {
       try {
@@ -98,7 +92,6 @@ class POLineItemRepository {
     }
   }
 
-  // (DELETE /api/po-line-items/{id} or fallback to /api/order-items/{id})
   Future<void> delete(int id) async {
     try {
       try {

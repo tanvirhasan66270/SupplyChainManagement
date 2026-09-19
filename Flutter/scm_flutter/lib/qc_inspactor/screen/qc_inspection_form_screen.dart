@@ -166,7 +166,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
       body: SafeArea(
         child: Column(
           children: [
-            // ১. Top Teal Gradient Header Banner (Using AppTheme palette)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               decoration: const BoxDecoration(
@@ -209,7 +208,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
               ),
             ),
 
-            // ২. Scrollable Form Content
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -218,7 +216,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Step 1: Assigning Cargo Node Vector (GRN Link)
                       _buildNumberedLabel(1, 'ASSIGNING CARGO NODE VECTOR (GRN LINK) *', Icons.link),
                       DropdownButtonFormField<int>(
                         isExpanded: true,
@@ -240,7 +237,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 2: Target Consignment Product
                       _buildNumberedLabel(2, 'TARGET CONSIGNMENT PRODUCT *', Icons.inventory_2_outlined),
                       DropdownButtonFormField<int>(
                         isExpanded: true,
@@ -272,7 +268,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 4: Sample Pool Volume Size
                       _buildNumberedLabel(4, 'SAMPLE POOL VOLUME SIZE *', Icons.bar_chart),
                       TextFormField(
                         initialValue: sampleSize.toString(),
@@ -287,7 +282,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 5: Audit Authority Execution Date
                       _buildNumberedLabel(5, 'AUDIT AUTHORITY EXECUTION DATE *', Icons.calendar_today),
                       TextFormField(
                         initialValue: inspectedAt,
@@ -298,7 +292,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 6: Audit Evaluation Grade
                       _buildNumberedLabel(6, 'AUDIT EVALUATION GRADE *', Icons.workspace_premium_outlined),
                       DropdownButtonFormField<String>(
                         isExpanded: true,
@@ -314,7 +307,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 7: Total Defectives Identified
                       _buildNumberedLabel(7, 'TOTAL DEFECTIVES IDENTIFIED *', Icons.cancel_outlined),
                       TextFormField(
                         initialValue: defectsFound.toString(),
@@ -325,7 +317,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 8: Certificate Reference Stamp
                       _buildNumberedLabel(8, 'CERTIFICATE REFERENCE STAMP', Icons.verified_outlined),
                       TextFormField(
                         initialValue: certificateRef,
@@ -337,7 +328,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 9: Inspector Controller Assigned (Read-only as in Angular template)
                       _buildNumberedLabel(9, 'INSPECTOR CONTROLLER ASSIGNED', Icons.person_outline),
                       TextFormField(
                         initialValue: inspectorDisplayName,
@@ -349,7 +339,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 10: Defect Layer Narrative Description
                       _buildNumberedLabel(10, 'DEFECT LAYER NARRATIVE DESCRIPTION *', Icons.chat_bubble_outline),
                       TextFormField(
                         initialValue: defectDescription,
@@ -371,7 +360,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 11: Target QC Checkpoint Metrics
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -494,7 +482,6 @@ class _QCInspectionFormScreenState extends ConsumerState<QCInspectionFormScreen>
                         }),
                       const SizedBox(height: 16),
 
-                      // Step 12: Chemical Lab Swift Telemetry Report Copy
                       _buildNumberedLabel(12, 'CHEMICAL LAB SWIFT TELEMETRY REPORT COPY *', Icons.description_outlined),
                       InkWell(
                         onTap: _pickFile,

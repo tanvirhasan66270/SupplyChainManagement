@@ -1,4 +1,3 @@
-// ── GRN Status Constants ───────────────────────────────────────────────
 class GRNStatus {
   static const pending = 'PENDING';
   static const received = 'RECEIVED';
@@ -7,7 +6,6 @@ class GRNStatus {
   static const values = [pending, received, approved, rejected];
 }
 
-/// UI badge/label metadata for GRN Status.
 class GRNStatusMeta {
   static const Map<String, String> label = {
     GRNStatus.pending: 'Pending',
@@ -19,7 +17,6 @@ class GRNStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── GRN Line Item Request Model ────────────────────────────────────────
 class GRNLineItemRequestModel {
   GRNLineItemRequestModel({
     this.id,
@@ -44,7 +41,6 @@ class GRNLineItemRequestModel {
   };
 }
 
-// ── GRN Line Item Response Model ───────────────────────────────────────
 class GRNLineItemResponseModel {
   GRNLineItemResponseModel({
     required this.id,
@@ -79,7 +75,6 @@ class GRNLineItemResponseModel {
   }
 }
 
-// ── Goods Received Note Request Model ──────────────────────────────────
 class GoodsReceivedNoteRequestModel {
   GoodsReceivedNoteRequestModel({
     required this.poId,

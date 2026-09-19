@@ -9,7 +9,6 @@ class PurchaseOrderRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  // (GET /api/purchase-orders)
   Future<List<PurchaseOrderResponse>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.purchaseOrders);
@@ -20,7 +19,6 @@ class PurchaseOrderRepository {
     }
   }
 
-  //  (GET /api/purchase-orders/{id})
   Future<PurchaseOrderResponse> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.purchaseOrderById(id));
@@ -40,7 +38,6 @@ class PurchaseOrderRepository {
     }
   }
 
-  //  (POST /api/purchase-orders)
   Future<PurchaseOrderResponse> save(PurchaseOrderRequest request) async {
     try {
       final response = await _dio.post(ApiConstants.purchaseOrders, data: request.toJson());
@@ -50,7 +47,6 @@ class PurchaseOrderRepository {
     }
   }
 
-  // (PUT /api/purchase-orders/{id})
   Future<PurchaseOrderResponse> update(int id, PurchaseOrderRequest request) async {
     try {
       final response = await _dio.put(ApiConstants.purchaseOrderById(id), data: request.toJson());
@@ -60,7 +56,6 @@ class PurchaseOrderRepository {
     }
   }
 
-  // (PUT /api/purchase-orders/{id}/approve)
   Future<PurchaseOrderResponse> approve(int id) async {
     try {
       final response = await _dio.put(ApiConstants.approvePurchaseOrder(id));

@@ -1,4 +1,3 @@
-// ── Quotation Status Constants ─────────────────────────────────────────
 class QuotationStatus {
   static const pending = 'PENDING';
   static const underReview = 'UNDER_REVIEW';
@@ -14,7 +13,6 @@ class QuotationStatus {
   ];
 }
 
-/// UI badge/label metadata for Quotation Status.
 class QuotationStatusMeta {
   static const Map<String, String> label = {
     QuotationStatus.pending: 'Pending',
@@ -27,7 +25,6 @@ class QuotationStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Quotation Request Model ────────────────────────────────────────────
 class QuotationRequestModel {
   QuotationRequestModel({
     required this.supplierId,
@@ -73,7 +70,6 @@ class QuotationRequestModel {
   };
 }
 
-// ── Quotation Response Model ───────────────────────────────────────────
 class QuotationResponseModel {
   QuotationResponseModel({
     required this.id,

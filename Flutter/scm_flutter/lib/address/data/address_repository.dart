@@ -9,7 +9,6 @@ class AddressRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  /// Fetch all countries dynamically from backend API (GET /api/country)
   Future<List<AddressItem>> getCountries() async {
     final res = await _dio.get(ApiConstants.country);
     if (res.data is List) {
@@ -20,7 +19,6 @@ class AddressRepository {
     return [];
   }
 
-  /// Fetch divisions by country ID dynamically from backend API (GET /api/division/country/{countryId})
   Future<List<AddressItem>> getDivisionsByCountry(int countryId) async {
     final res = await _dio.get(ApiConstants.divisionsByCountry(countryId));
     if (res.data is List) {
@@ -31,7 +29,6 @@ class AddressRepository {
     return [];
   }
 
-  /// Fetch districts by division ID dynamically from backend API (GET /api/district/division/{divisionId})
   Future<List<AddressItem>> getDistrictsByDivision(int divisionId) async {
     final res = await _dio.get(ApiConstants.districtsByDivision(divisionId));
     if (res.data is List) {
@@ -42,7 +39,6 @@ class AddressRepository {
     return [];
   }
 
-  /// Fetch police stations by district ID dynamically from backend API (GET /api/policestation/district/{districtId})
   Future<List<AddressItem>> getPoliceStationsByDistrict(int districtId) async {
     final res = await _dio.get(ApiConstants.policeStationsByDistrict(districtId));
     if (res.data is List) {

@@ -4,18 +4,15 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/entity/product_requirement.dart';
 import 'package:scm_flutter/logistics_officer/data/product_requirement_repository.dart';
 
-// ১. Repository Provider
 final productRequirementRepositoryProvider = Provider<ProductRequirementRepository>((ref) {
   return ProductRequirementRepository(ref.watch(apiClientProvider));
 });
 
-// ২. List Provider
 final productRequirementListProvider = FutureProvider.autoDispose<List<ProductRequirementResponse>>((ref) async {
   final repo = ref.watch(productRequirementRepositoryProvider);
   return await repo.findAll();
 });
 
-// ৩. Controller / Notifier (Save, Update, Status, Delete)
 final productRequirementControllerProvider = StateNotifierProvider<ProductRequirementController, AsyncValue<void>>((ref) {
   final repo = ref.watch(productRequirementRepositoryProvider);
   return ProductRequirementController(repo, ref);

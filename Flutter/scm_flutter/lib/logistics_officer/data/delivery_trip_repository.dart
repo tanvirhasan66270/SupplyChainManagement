@@ -9,7 +9,6 @@ class DeliveryTripRepository {
   final ApiClient _apiClient;
   Dio get _dio => _apiClient.dio;
 
-  // (GET /api/delivery-trips)
   Future<List<DeliveryTripResponseModel>> findAll() async {
     try {
       final response = await _dio.get(ApiConstants.deliveryTrips);
@@ -20,7 +19,6 @@ class DeliveryTripRepository {
     }
   }
 
-  // (GET /api/delivery-trips/{id})
   Future<DeliveryTripResponseModel> getById(int id) async {
     try {
       final response = await _dio.get(ApiConstants.deliveryTripById(id));
@@ -30,7 +28,6 @@ class DeliveryTripRepository {
     }
   }
 
-  // (POST /api/delivery-trips)
   Future<DeliveryTripResponseModel> create(DeliveryTripRequestModel request) async {
     try {
       final response = await _dio.post(ApiConstants.deliveryTrips, data: request.toJson());
@@ -40,7 +37,6 @@ class DeliveryTripRepository {
     }
   }
 
-  //  (PUT /api/delivery-trips/{id})
   Future<DeliveryTripResponseModel> update(int id, DeliveryTripRequestModel request) async {
     try {
       final response = await _dio.put(ApiConstants.deliveryTripById(id), data: request.toJson());
@@ -50,7 +46,6 @@ class DeliveryTripRepository {
     }
   }
 
-  //  (PATCH /api/delivery-trips/{id}/status)
   Future<DeliveryTripResponseModel> changeStatus(
       int id, String status, MultipartFile? signature, MultipartFile? photo) async {
     try {
@@ -71,7 +66,6 @@ class DeliveryTripRepository {
     }
   }
 
-  //  (DELETE /api/delivery-trips/{id})
   Future<void> delete(int id) async {
     try {
       await _dio.delete(ApiConstants.deliveryTripById(id));

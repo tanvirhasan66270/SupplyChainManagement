@@ -1,4 +1,3 @@
-// ── Stock Movement Type Constants ──────────────────────────────────────
 class StockMovementType {
   static const inward = 'INWARD';
   static const outward = 'OUTWARD';
@@ -7,7 +6,6 @@ class StockMovementType {
   static const values = [inward, outward, transfer, adjustment];
 }
 
-/// UI badge/label metadata for Stock Movement Type.
 class StockMovementTypeMeta {
   static const Map<String, String> label = {
     StockMovementType.inward: 'Inward',
@@ -19,7 +17,6 @@ class StockMovementTypeMeta {
   static String labelFor(String type) => label[type] ?? type;
 }
 
-// ── Stock Movement Request Model ───────────────────────────────────────
 class StockMovementRequestModel {
   StockMovementRequestModel({
     required this.productId,
@@ -53,7 +50,6 @@ class StockMovementRequestModel {
   };
 }
 
-// ── Stock Movement Response Model ──────────────────────────────────────
 class StockMovementResponseModel {
   StockMovementResponseModel({
     required this.id,

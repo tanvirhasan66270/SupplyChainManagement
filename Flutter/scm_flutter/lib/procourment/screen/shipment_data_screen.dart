@@ -75,7 +75,6 @@ class _ShipmentDataScreenState extends ConsumerState<ShipmentDataScreen> {
           onRefresh: () async => ref.invalidate(shipmentListProvider),
           child: Column(
             children: [
-              // ── 1. Header Title & Summary Banner ──
               Container(
                 margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.all(18),
@@ -161,7 +160,6 @@ class _ShipmentDataScreenState extends ConsumerState<ShipmentDataScreen> {
                 ),
               ),
 
-              // ── 2. Multi-Vector Search Controls (Android Responsive) ──
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: LayoutBuilder(
@@ -231,7 +229,6 @@ class _ShipmentDataScreenState extends ConsumerState<ShipmentDataScreen> {
 
               const SizedBox(height: 12),
 
-              // ── 3. Cargo Shipments List ──
               Expanded(
                 child: shipmentListAsync.when(
                   loading: () => const Center(child: CircularProgressIndicator()),

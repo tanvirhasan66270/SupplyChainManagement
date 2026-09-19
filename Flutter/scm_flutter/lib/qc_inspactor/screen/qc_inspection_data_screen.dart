@@ -160,7 +160,6 @@ class _QCInspectionDataScreenState extends ConsumerState<QCInspectionDataScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ১. Summary Metrics Banner
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -199,7 +198,6 @@ class _QCInspectionDataScreenState extends ConsumerState<QCInspectionDataScreen>
                   ),
                   const SizedBox(height: 16),
 
-                  // ২. Search Field
                   TextField(
                     controller: _searchController,
                     onChanged: (val) => setState(() => _searchQuery = val.trim()),
@@ -225,7 +223,6 @@ class _QCInspectionDataScreenState extends ConsumerState<QCInspectionDataScreen>
                   ),
                   const SizedBox(height: 12),
 
-                  // ৩. Filter Chips Row
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -244,7 +241,6 @@ class _QCInspectionDataScreenState extends ConsumerState<QCInspectionDataScreen>
                   ),
                   const SizedBox(height: 16),
 
-                  // ৪. Data List Cards
                   if (filteredInspections.isEmpty)
                     Container(
                       width: double.infinity,

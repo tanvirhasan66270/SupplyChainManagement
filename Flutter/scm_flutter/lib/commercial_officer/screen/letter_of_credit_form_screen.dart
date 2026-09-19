@@ -124,7 +124,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
       body: SafeArea(
         child: Column(
           children: [
-            // Top Header Bar
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               decoration: const BoxDecoration(
@@ -158,7 +157,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
               ),
             ),
 
-            // Error Banner
             if (errorMessage != null)
               Container(
                 width: double.infinity,
@@ -178,7 +176,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                 ),
               ),
 
-            // Form Body - Step by Step Vertical Fields
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -210,7 +207,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                           ),
                         ),
 
-                      // Step 1: Purchase Order Node
                       _buildStepLabel('1', 'TARGET CORPORATE PURCHASE ORDER *', Icons.description_outlined),
                       DropdownButtonFormField<int>(
                         initialValue: purchaseOrderId == 0 ? null : purchaseOrderId,
@@ -226,7 +222,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 2: Vendor Beneficiary
                       _buildStepLabel('2', 'CREDIT BENEFICIARY (SUPPLIER) *', Icons.person_outline),
                       DropdownButtonFormField<int>(
                         initialValue: supplierId == 0 ? null : supplierId,
@@ -242,7 +237,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 3: Issuing Financial Institution
                       _buildStepLabel('3', 'ISSUING FINANCIAL INSTITUTION (BANK) *', Icons.account_balance_outlined),
                       DropdownButtonFormField<int>(
                         initialValue: issuingBankId == 0 ? null : issuingBankId,
@@ -258,7 +252,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 4: Incoterms Framework
                       _buildStepLabel('4', 'INCOTERMS FRAMEWORK *', Icons.assignment_outlined),
                       DropdownButtonFormField<String>(
                         initialValue: shipmentIncoTerms,
@@ -275,7 +268,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 5: LC Operation State
                       _buildStepLabel('5', 'LC OPERATION STAGE *', Icons.flaky_outlined),
                       DropdownButtonFormField<String>(
                         initialValue: lcStatus,
@@ -292,7 +284,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 6: Port of Loading
                       _buildStepLabel('6', 'PORT OF LOADING *', Icons.anchor),
                       TextFormField(
                         initialValue: portOfLoading,
@@ -305,7 +296,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 7: Port of Discharge
                       _buildStepLabel('7', 'PORT OF DISCHARGE *', Icons.anchor_outlined),
                       TextFormField(
                         initialValue: portOfDischarge,
@@ -318,7 +308,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 8: Total Credit Valuation
                       _buildStepLabel('8', 'TOTAL CREDIT VALUATION (\$ AMOUNT) *', Icons.monetization_on_outlined),
                       TextFormField(
                         initialValue: amount == 0.0 ? '' : amount.toStringAsFixed(0),
@@ -331,7 +320,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 9: Currency
                       _buildStepLabel('9', 'INSTRUMENT CURRENCY *', Icons.currency_exchange),
                       DropdownButtonFormField<String>(
                         initialValue: currency,
@@ -346,7 +334,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 10: Latest Shipment Date
                       _buildStepLabel('10', 'LATEST SHIPMENT DATE *', Icons.calendar_month),
                       InkWell(
                         onTap: () => _selectDate(context, true),
@@ -374,7 +361,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 11: LC Expiry Deadline
                       _buildStepLabel('11', 'LC EXPIRY DEADLINE *', Icons.event_busy),
                       InkWell(
                         onTap: () => _selectDate(context, false),
@@ -402,7 +388,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 12: Official SWIFT Document File Copy
                       if (!isAmend) ...[
                         _buildStepLabel('12', 'OFFICIAL SWIFT LETTER DOCUMENT COPY', Icons.attach_file),
                         InkWell(
@@ -445,7 +430,6 @@ class _LetterOfCreditFormScreenState extends ConsumerState<LetterOfCreditFormScr
                         const SizedBox(height: 24),
                       ],
 
-                      // Action Buttons
                       SizedBox(
                         width: double.infinity,
                         height: 48,

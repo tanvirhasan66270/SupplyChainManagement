@@ -1,4 +1,3 @@
-// ── Product Requirement Status Constants ───────────────────────────────
 class ProductRequirementStatus {
   static const pending = 'PENDING';
   static const approved = 'APPROVED';
@@ -7,7 +6,6 @@ class ProductRequirementStatus {
   static const values = [pending, approved, rejected, processing];
 }
 
-/// UI badge/label metadata for Product Requirement Status.
 class ProductRequirementStatusMeta {
   static const Map<String, String> label = {
     ProductRequirementStatus.pending: 'Pending',
@@ -19,7 +17,6 @@ class ProductRequirementStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Product Requirement Request Model ──────────────────────────────────
 class ProductRequirementRequest {
   ProductRequirementRequest({
     required this.customerOrderNumber,
@@ -62,7 +59,6 @@ class ProductRequirementRequest {
   };
 }
 
-// ── Product Requirement Response Model ─────────────────────────────────
 class ProductRequirementResponse {
   ProductRequirementResponse({
     required this.id,

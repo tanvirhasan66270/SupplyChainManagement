@@ -42,8 +42,7 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
   int _selectedOverviewMonth = DateTime.now().month - 1;
   int _selectedOverviewYear = DateTime.now().year;
 
-  final double monthlyTarget = 10000000.0; // 10 Million Goal
-
+  final double monthlyTarget = 10000000.0;
   final List<String> availableStatuses = [
     'PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 
     'OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED', 'RETURNED', 'REFUNDED'
@@ -222,11 +221,9 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── 1. Top Header Bar ──────────────────────────────────────────
                 _buildHeaderBar(context, user?.name ?? 'Sales Officer'),
                 const SizedBox(height: 16),
 
-                // ── 2. Top 6 KPI Cards Grid ────────────────────────────────────
                 GridView.count(
                   crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
                   crossAxisSpacing: 12,
@@ -245,27 +242,21 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // ── 3. Quick Actions Section ───────────────────────────────────
                 _buildQuickActionsGrid(context, orders, quotations, invoices, customers, purchaseOrders, categories),
                 const SizedBox(height: 20),
 
-                // ── 4. Customer Order Log Table (Full Width) ───────────────────
                 _buildCustomerOrderLogCard(context, filteredDashboardOrders),
                 const SizedBox(height: 20),
 
-                // ── 5. Sales Overview & Monthly Target Row ─────────────────────
                 _buildOverviewAndTargetRow(context, orders, totalRevenue, targetProgress),
                 const SizedBox(height: 20),
 
-                // ── 6. Top Product Sales & Pending Tasks Row ───────────────────
                 _buildProductsAndTasksRow(context, products, activeQuotations, orders, pendingDeliveries, invoices),
                 const SizedBox(height: 20),
 
-                // ── 7. Recent Quotations & Top Customers Row ───────────────────
                 _buildQuotationsAndCustomersRow(context, quotations, orders, customers),
                 const SizedBox(height: 20),
 
-                // ── 8. Footer Cards: Pipeline, Shipments, Notifications ───────
                 _buildFooterCardsRow(context, quotations, orders, shipments, notifications),
                 const SizedBox(height: 40),
               ],
@@ -276,7 +267,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
     );
   }
 
-  // ── Header Bar ─────────────────────────────────────────────────────────────
   Widget _buildHeaderBar(BuildContext context, String officerName) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -342,7 +332,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
     );
   }
 
-  // ── KPI Card Builder ───────────────────────────────────────────────────────
   Widget _buildKpiCard(String title, String value, String subtitle, String trend, IconData icon, Color iconColor, Color iconBg) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -383,7 +372,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
     );
   }
 
-  // ── Quick Actions Grid ─────────────────────────────────────────────────────
   Widget _buildQuickActionsGrid(
     BuildContext context,
     List<CustomerOrderResponse> orders,
@@ -471,7 +459,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
     );
   }
 
-  // ── Customer Order Log Table Card (Full Width) ─────────────────────────────
   Widget _buildCustomerOrderLogCard(BuildContext context, List<CustomerOrderResponse> orders) {
     return Container(
       decoration: BoxDecoration(
@@ -583,7 +570,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
     );
   }
 
-  // ── Overview & Monthly Target Row ──────────────────────────────────────────
   Widget _buildOverviewAndTargetRow(BuildContext context, List<CustomerOrderResponse> orders, double totalRevenue, double targetProgress) {
     final shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     final selectedIdx = _selectedOverviewMonth >= 0 ? _selectedOverviewMonth : DateTime.now().month - 1;
@@ -800,7 +786,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
     );
   }
 
-  // ── Top Products & Pending Tasks Row ───────────────────────────────────────
   Widget _buildProductsAndTasksRow(
     BuildContext context,
     List<ProductResponseModel> products,
@@ -930,7 +915,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
     );
   }
 
-  // ── Recent Quotations & Top Customers Row ──────────────────────────────────
   Widget _buildQuotationsAndCustomersRow(
     BuildContext context,
     List<QuotationResponseModel> quotations,
@@ -1067,7 +1051,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
     );
   }
 
-  // ── Footer Cards Row ───────────────────────────────────────────────────────
   Widget _buildFooterCardsRow(
     BuildContext context,
     List<QuotationResponseModel> quotations,
@@ -1186,13 +1169,10 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
     );
   }
 
-  // ===========================================================================
-  // ── MODALS / DIALOGS IMPLEMENTATION ─────────────────────────────────────────
-  // ===========================================================================
 
 
 
-  // 1. Order Lifecycle Status Update Dialog
+
   void _openOrderStatusUpdateDialog(BuildContext context, CustomerOrderResponse order) {
     final user = ref.read(currentUserProvider);
     final userRole = user?.role.toUpperCase() ?? '';
@@ -1270,7 +1250,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
 
 
 
-  // 4. View All Quotations Modal
   void _openQuotationsModal(BuildContext context, List<QuotationResponseModel> quotations) {
     showModalBottomSheet(
       context: context,
@@ -1314,7 +1293,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
 
 
 
-  // 8. Customer Directory Modal
   void _openCustomerDirectoryModal(BuildContext context, List<CustomerResponseModel> customers) {
     showModalBottomSheet(
       context: context,
@@ -1357,7 +1335,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
     );
   }
 
-  // 9. View Shipments Modal
   void _openShipmentsModal(BuildContext context, List<ShipmentResponseModel> shipments) {
     showModalBottomSheet(
       context: context,
@@ -1399,7 +1376,6 @@ class _SalesDashboardScreenState extends ConsumerState<SalesDashboardScreen> {
     );
   }
 
-  // 10. Target Breakdown Modal
   void _openTargetBreakdownModal(BuildContext context, double totalRevenue, double targetProgress) {
     showDialog(
       context: context,

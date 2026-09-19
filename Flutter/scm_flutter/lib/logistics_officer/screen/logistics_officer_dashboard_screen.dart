@@ -66,7 +66,6 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
 
   @override
   Widget build(BuildContext context) {
-    // ── Watch Riverpod Async Providers ──
     final currentUser = ref.watch(currentUserProvider);
     final shipmentsAsync = ref.watch(shipmentListProvider);
     final inventoryAsync = ref.watch(inventoryListProvider);
@@ -79,7 +78,6 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
 
     final userName = currentUser?.name ?? 'Logistics Officer';
 
-    // ── Extract Data Lists ──
     final shipments = shipmentsAsync.value ?? [];
     final inventory = inventoryAsync.value ?? [];
     final vehicles = vehiclesAsync.value ?? [];
@@ -89,11 +87,9 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
     final grns = grnAsync.value ?? [];
     final qcs = qcAsync.value ?? [];
 
-    // ── Calculate Dynamic KPI Metrics ──
     final totalShipments = shipments.length;
     final activeShipments = shipments.where((s) => s.status == 'IN_TRANSIT' || s.status == 'DISPATCHING' || s.status == 'PENDING').length;
     
-    // Date Comparisons for Trends
     final today = DateTime.now();
     final yesterday = today.subtract(const Duration(days: 1));
 
@@ -127,7 +123,6 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
     final totalInventoryCount = inventory.fold<int>(0, (sum, i) => sum + (((i.quantityOnHand as num?) ?? 0).toInt()));
     final totalAvailableQty = inventory.fold<int>(0, (sum, i) => sum + (((i.availableQuantity as num?) ?? 0).toInt()));
 
-    // Movements Today Calculation
     int movementsTodayCount = 0;
     int movementsYesterdayCount = 0;
     int inCount = 0;
@@ -160,7 +155,6 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
       inventoryTrend = 100;
     }
 
-    // Warehouse Aggregate Capacity Calculation
     int aggregateUsed = 0;
     int aggregateCap = 0;
     for (final wh in warehouses) {
@@ -196,7 +190,6 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ১. Top Bar
                 DynamicScmTopNavBar(
                   onRefresh: () {
                     ref.invalidate(shipmentListProvider);
@@ -215,11 +208,9 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ২. Welcome Banner
                       _buildWelcomeBanner(userName),
                       const SizedBox(height: 16),
 
-                      // ৩. KPI Grid (6 Metric Cards)
                       _buildKpiGrid(
                         totalShipments: totalShipments,
                         activeShipments: activeShipments,
@@ -237,7 +228,6 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
                       ),
                       const SizedBox(height: 20),
 
-                      // ৪. Quick Navigation Section
                       Row(
                         children: const [
                           Icon(Icons.grid_view_rounded, color: AppTheme.primary, size: 20),
@@ -249,7 +239,6 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
                       _buildQuickNavigationGrid(context),
                       const SizedBox(height: 20),
 
-                      // ৫. Schedule & Fleet Overview Row
                       LayoutBuilder(
                         builder: (context, constraints) {
                           if (constraints.maxWidth >= 800) {
@@ -274,7 +263,6 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
                       ),
                       const SizedBox(height: 20),
 
-                      // ৬. Shipment Performance, Warehouse Capacity & Inventory Movement Row
                       LayoutBuilder(
                         builder: (context, constraints) {
                           if (constraints.maxWidth >= 900) {
@@ -303,7 +291,6 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
                       ),
                       const SizedBox(height: 20),
 
-                      // ৭. Dispatch Queue & Live Tracking Map Row
                       LayoutBuilder(
                         builder: (context, constraints) {
                           if (constraints.maxWidth >= 800) {
@@ -328,7 +315,6 @@ class _LogisticsOfficerDashboardScreenState extends ConsumerState<LogisticsOffic
                       ),
                       const SizedBox(height: 20),
 
-                      // ৮. Alerts & Notifications Footer Section
                       const Text('Alerts & Notifications', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppTheme.dark)),
                       const SizedBox(height: 12),
                       _buildAlertsSection(grns.length, qcs.length, lowStockCount),

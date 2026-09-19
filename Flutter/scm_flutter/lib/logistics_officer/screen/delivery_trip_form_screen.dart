@@ -109,7 +109,6 @@ class _DeliveryTripFormScreenState extends ConsumerState<DeliveryTripFormScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Banner Box
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
@@ -170,7 +169,6 @@ class _DeliveryTripFormScreenState extends ConsumerState<DeliveryTripFormScreen>
                   const SizedBox(height: 16),
                 ],
 
-                // 1. Target Customer Account
                 _buildStepLabel(1, 'TARGET CUSTOMER ACCOUNT *'),
                 customersAsync.when(
                   loading: () => const LinearProgressIndicator(),
@@ -192,7 +190,6 @@ class _DeliveryTripFormScreenState extends ConsumerState<DeliveryTripFormScreen>
                 ),
                 const SizedBox(height: 16),
 
-                // 2. Select Vehicle Mode
                 _buildStepLabel(2, 'SELECT VEHICLE MODE *'),
                 DropdownButtonFormField<String>(
                   initialValue: selectedVehicleType.isNotEmpty ? selectedVehicleType : null,
@@ -208,7 +205,6 @@ class _DeliveryTripFormScreenState extends ConsumerState<DeliveryTripFormScreen>
                 ),
                 const SizedBox(height: 16),
 
-                // 3. Assign Captain & Fleet Asset
                 _buildStepLabel(3, 'ASSIGN CAPTAIN & FLEET ASSET *'),
                 vehiclesAsync.when(
                   loading: () => const LinearProgressIndicator(),
@@ -258,7 +254,6 @@ class _DeliveryTripFormScreenState extends ConsumerState<DeliveryTripFormScreen>
                 ),
                 const SizedBox(height: 16),
 
-                // 4. Initial Operational State
                 _buildStepLabel(4, 'INITIAL OPERATIONAL STATE'),
                 DropdownButtonFormField<String>(
                   initialValue: status,
@@ -273,7 +268,6 @@ class _DeliveryTripFormScreenState extends ConsumerState<DeliveryTripFormScreen>
                 ),
                 const SizedBox(height: 16),
 
-                // 5. Consignment Drop Coordinate Address
                 _buildStepLabel(5, 'CONSIGNMENT DROP COORDINATE ADDRESS *'),
                 TextFormField(
                   initialValue: customerAddress,
@@ -284,7 +278,6 @@ class _DeliveryTripFormScreenState extends ConsumerState<DeliveryTripFormScreen>
                 ),
                 const SizedBox(height: 16),
 
-                // 6. Operational Transit Notes
                 _buildStepLabel(6, 'OPERATIONAL TRANSIT NOTES'),
                 TextFormField(
                   initialValue: remarks,
@@ -294,7 +287,6 @@ class _DeliveryTripFormScreenState extends ConsumerState<DeliveryTripFormScreen>
                 ),
                 const SizedBox(height: 24),
 
-                // 7. Action Buttons
                 Row(
                   children: [
                     Expanded(

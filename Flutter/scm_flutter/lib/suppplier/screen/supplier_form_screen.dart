@@ -80,12 +80,10 @@ class _SupplierFormScreenState extends ConsumerState<SupplierFormScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── 1. Top Enterprise Bar (Fully Dynamic) ──
             DynamicScmTopNavBar(
               onRefresh: () => ref.invalidate(supplierListProvider),
             ),
 
-            // ── 2. Blue Banner Header Card with View All Button ──
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(18),
@@ -167,7 +165,6 @@ class _SupplierFormScreenState extends ConsumerState<SupplierFormScreen> {
               ),
             ),
 
-            // ── 3. Form Content Scrollable Area ──
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -185,7 +182,6 @@ class _SupplierFormScreenState extends ConsumerState<SupplierFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 2: Email Address
                       _buildNumberedStepLabel(2, 'EMAIL ADDRESS *'),
                       TextFormField(
                         controller: emailController,
@@ -195,7 +191,6 @@ class _SupplierFormScreenState extends ConsumerState<SupplierFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 3: Phone Number
                       _buildNumberedStepLabel(3, 'PHONE NUMBER *'),
                       TextFormField(
                         controller: phoneController,
@@ -205,7 +200,6 @@ class _SupplierFormScreenState extends ConsumerState<SupplierFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 4: Contact Person
                       _buildNumberedStepLabel(4, 'CONTACT PERSON'),
                       TextFormField(
                         controller: contactPersonController,
@@ -213,7 +207,6 @@ class _SupplierFormScreenState extends ConsumerState<SupplierFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 5: NID / Registration No
                       _buildNumberedStepLabel(5, 'NID / REGISTRATION NO'),
                       TextFormField(
                         controller: nidController,
@@ -221,7 +214,6 @@ class _SupplierFormScreenState extends ConsumerState<SupplierFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 6: Location Address
                       _buildNumberedStepLabel(6, 'LOCATION & LOGISTIC SPECIFICATIONS'),
                       TextFormField(
                         controller: addressController,
@@ -229,7 +221,6 @@ class _SupplierFormScreenState extends ConsumerState<SupplierFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 7: Avg Lead Time
                       _buildNumberedStepLabel(7, 'AVG LEAD TIME (DAYS)'),
                       TextFormField(
                         controller: leadTimeController,
@@ -238,7 +229,6 @@ class _SupplierFormScreenState extends ConsumerState<SupplierFormScreen> {
                       ),
                       const SizedBox(height: 14),
 
-                      // Step 8: Performance Rating
                       _buildNumberedStepLabel(8, 'PERFORMANCE RATING: ${rating.toStringAsFixed(1)} ⭐'),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

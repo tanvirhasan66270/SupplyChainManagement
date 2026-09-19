@@ -1,4 +1,3 @@
-// ── Urgency Level Constants ─────────────────────────────────────────────
 class UrgencyLevel {
   static const low = 'LOW';
   static const medium = 'MEDIUM';
@@ -7,7 +6,6 @@ class UrgencyLevel {
   static const values = [low, medium, high, critical];
 }
 
-// ── Approval Status Constants ──────────────────────────────────────────
 class ApprovalStatus {
   static const pending = 'PENDING';
   static const approved = 'APPROVED';
@@ -16,7 +14,6 @@ class ApprovalStatus {
   static const values = [pending, approved, rejected, cancelled];
 }
 
-/// UI badge/label metadata for Approval Status.
 class ApprovalStatusMeta {
   static const Map<String, String> label = {
     ApprovalStatus.pending: 'Pending',
@@ -28,7 +25,6 @@ class ApprovalStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Purchase Requisition Request ──────────────────────────────────────
 class PurchaseRequisitionRequest {
   PurchaseRequisitionRequest({
     required this.requestedBy,
@@ -62,7 +58,6 @@ class PurchaseRequisitionRequest {
   };
 }
 
-// ── Purchase Requisition Response ─────────────────────────────────────
 class PurchaseRequisitionResponse {
   PurchaseRequisitionResponse({
     required this.id,

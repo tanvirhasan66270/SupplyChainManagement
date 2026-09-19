@@ -62,7 +62,6 @@ class _CustomerDashboardScreenState extends ConsumerState<CustomerDashboardScree
             ? currentCustomerAsync.value!.name
             : 'Customer');
 
-    // Calculate dynamic due total & wallet paid total
     double dueAmountTotal = 0.0;
     double walletBalance = 0.0;
 
@@ -90,7 +89,6 @@ class _CustomerDashboardScreenState extends ConsumerState<CustomerDashboardScree
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Welcome Banner ──────────────────────────
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -150,7 +148,6 @@ class _CustomerDashboardScreenState extends ConsumerState<CustomerDashboardScree
               ),
               const SizedBox(height: 16),
 
-              // ── Wallet & Due Cards ──────────────────────
               Row(
                 children: [
                   Expanded(
@@ -211,7 +208,6 @@ class _CustomerDashboardScreenState extends ConsumerState<CustomerDashboardScree
               ),
               const SizedBox(height: 16),
 
-              // ── Order Metrics Grid ──────────────────────
               orderSummaryAsync.when(
                 loading: () => const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator())),
                 error: (err, _) => Center(child: Text('Error loading stats: $err', style: const TextStyle(color: AppTheme.danger))),
@@ -275,7 +271,6 @@ class _CustomerDashboardScreenState extends ConsumerState<CustomerDashboardScree
               ),
               const SizedBox(height: 20),
 
-              // ── Quick Actions ───────────────────────────
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -322,7 +317,6 @@ class _CustomerDashboardScreenState extends ConsumerState<CustomerDashboardScree
               ),
               const SizedBox(height: 20),
 
-              // ── Active Order Pipeline ───────────────────
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -442,7 +436,6 @@ class _CustomerDashboardScreenState extends ConsumerState<CustomerDashboardScree
               ),
               const SizedBox(height: 20),
 
-              // ── Recommended for You ─────────────────────
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

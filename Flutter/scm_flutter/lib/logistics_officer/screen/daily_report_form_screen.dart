@@ -61,7 +61,6 @@ class _DailyReportFormScreenState extends ConsumerState<DailyReportFormScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ১. Top Header Bar
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               decoration: const BoxDecoration(
@@ -104,7 +103,6 @@ class _DailyReportFormScreenState extends ConsumerState<DailyReportFormScreen> {
               ),
             ),
 
-            // ২. Scrollable Form Content
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -113,7 +111,6 @@ class _DailyReportFormScreenState extends ConsumerState<DailyReportFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Step 1: Target Warehouse Node
                       _buildNumberedLabel(1, 'TARGET WAREHOUSE NODE *'),
                       DropdownButtonFormField<String>(
                         initialValue: warehouseId.isEmpty ? null : warehouseId,
@@ -133,7 +130,6 @@ class _DailyReportFormScreenState extends ConsumerState<DailyReportFormScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 2 & 3: Row - Operation Date & Total Tasks Processed
                       Row(
                         children: [
                           Expanded(
@@ -175,7 +171,6 @@ class _DailyReportFormScreenState extends ConsumerState<DailyReportFormScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 4: Damages / Issues Logged Counter
                       _buildNumberedLabel(4, 'DAMAGES / ISSUES LOGGED COUNTER *'),
                       TextFormField(
                         initialValue: issuesLogged.toString(),
@@ -188,7 +183,6 @@ class _DailyReportFormScreenState extends ConsumerState<DailyReportFormScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Step 5: Attachment Proof Image
                       _buildNumberedLabel(5, 'ATTACHMENT PROOF IMAGE'),
                       InkWell(
                         onTap: _pickImage,
@@ -230,7 +224,6 @@ class _DailyReportFormScreenState extends ConsumerState<DailyReportFormScreen> {
                       ],
                       const SizedBox(height: 16),
 
-                      // Step 6: Operational Summary Notes
                       _buildNumberedLabel(6, 'OPERATIONAL SUMMARY NOTES *'),
                       TextFormField(
                         initialValue: summary,
@@ -256,7 +249,6 @@ class _DailyReportFormScreenState extends ConsumerState<DailyReportFormScreen> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Footer Action Buttons (Dispatch Manifest & Cancel)
                       Column(
                         children: [
                           SizedBox(

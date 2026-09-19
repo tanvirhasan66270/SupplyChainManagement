@@ -19,7 +19,7 @@ class ProcurementDashboardScreen extends ConsumerStatefulWidget {
 
 class _ProcurementDashboardScreenState extends ConsumerState<ProcurementDashboardScreen> {
   String selectedPeriod = 'All Time';
-  String activeTab = 'APPROVED'; // 'RFQ', 'APPROVED', 'REJECTED', 'SHIPMENT', 'PO_LINE_ITEM'
+  String activeTab = 'APPROVED';
 
   final List<Map<String, dynamic>> spendCategories = [
     {'label': 'Sourcing Cost', 'pct': '35%', 'color': AppTheme.success},
@@ -188,7 +188,6 @@ class _ProcurementDashboardScreenState extends ConsumerState<ProcurementDashboar
     );
   }
 
-  // --- FIXED KPI ROW 1 (Added Overflow safety with Flexible) ---
   Widget _buildKpiRow1(int reqCount, int rfqCount, int pendingPoCount, int budgetPct) {
     final List<Map<String, dynamic>> kpis = [
       {
@@ -366,7 +365,6 @@ class _ProcurementDashboardScreenState extends ConsumerState<ProcurementDashboar
     );
   }
 
-  // --- FIXED KPI ROW 2 (Added Overflow safety with Flexible) ---
   Widget _buildKpiRow2(double totalSpend, int pendingCount, int approvedCount, int activeSupplierCount) {
     final List<Map<String, dynamic>> kpis = [
       {

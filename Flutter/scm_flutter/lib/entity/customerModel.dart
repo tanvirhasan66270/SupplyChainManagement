@@ -2,10 +2,10 @@ class CustomerRequestModel {
   final String name;
   final String email;
   final String phone;
-  final String? password; // এডিট মোডে পাসওয়ার্ড অপশনাল
+  final String? password;
   final String address;
   final String gender;
-  final String dob; // "YYYY-MM-DD" ফরম্যাট স্ট্রিং
+  final String dob;
   final String nidNumber;
   final int policeStationId;
 

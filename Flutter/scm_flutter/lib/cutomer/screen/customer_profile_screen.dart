@@ -225,11 +225,9 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Header Avatar Section ──────────────────
           _buildHeader(customer),
           const SizedBox(height: 20),
 
-          // ── Action Buttons for Avatar ─────────────
           Row(
             children: [
               Expanded(
@@ -264,11 +262,9 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen> {
           ],
           const SizedBox(height: 24),
 
-          // ── Completion Section ──────────────────────
           _buildCompletionSection(completion),
           const SizedBox(height: 24),
 
-          // ── Personal Settings Form / List ──────────
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -284,13 +280,11 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen> {
           _buildSettingsForm(customer),
           const SizedBox(height: 24),
 
-          // ── Logistics & Location Metadata ───────────
           const Text('LOGISTICS & LOCATION METADATA', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.dark)),
           const SizedBox(height: 12),
           _buildLocationSection(customer),
           const SizedBox(height: 12),
 
-          // Registered Date Box
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -308,7 +302,6 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen> {
           ),
           const SizedBox(height: 24),
 
-          // ── Save/Update Button ──────────────────────
           ElevatedButton.icon(
             onPressed: _isUpdating ? null : () => _updateProfile(customer),
             icon: _isUpdating

@@ -13,7 +13,6 @@ final purchaseRequisitionListProvider = FutureProvider.autoDispose<List<Purchase
   return await repo.findAll();
 });
 
-//  (Create, Update, Delete, Approve, Reject )
 final purchaseRequisitionControllerProvider = StateNotifierProvider<PurchaseRequisitionController, AsyncValue<void>>((ref) {
   final repo = ref.watch(purchaseRequisitionRepositoryProvider);
   return PurchaseRequisitionController(repo, ref);

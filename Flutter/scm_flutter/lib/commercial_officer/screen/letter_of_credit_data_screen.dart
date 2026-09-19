@@ -103,7 +103,6 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
               return matchesSearch && matchesStatus;
             }).toList();
 
-            // Calculate metrics totals
             double totalValuation = 0;
             int activeOpened = 0;
             int amendedCount = 0;
@@ -120,7 +119,6 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Metrics Summary Banner ──
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -212,7 +210,6 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Search Control ───────────────────
                   TextField(
                     controller: _searchController,
                     onChanged: (val) => setState(() => _searchQuery = val.trim()),
@@ -238,7 +235,6 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
                   ),
                   const SizedBox(height: 12),
 
-                  // ── Status Filter Chips ─────────────────
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -271,7 +267,6 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
                   ),
                   const SizedBox(height: 16),
 
-                  // ── LC Data Cards List ───────────────────
                   if (filteredLCs.isEmpty)
                     Container(
                       width: double.infinity,
@@ -366,7 +361,6 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
                                 ),
                               ),
 
-                              // Card Details Grid
                               Padding(
                                 padding: const EdgeInsets.all(14),
                                 child: Column(
@@ -434,7 +428,6 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
 
                               const Divider(height: 1, thickness: 1),
 
-                              // Card Footer Bar
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                                 child: Row(
@@ -451,10 +444,8 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
                                       ],
                                     ),
 
-                                    // Action Buttons Row
                                     Row(
                                       children: [
-                                        // PDF View Button
                                         IconButton(
                                           tooltip: 'View Document / PDF',
                                           icon: const Icon(Icons.picture_as_pdf, color: AppTheme.primary, size: 20),
@@ -466,7 +457,6 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
                                           },
                                         ),
 
-                                        // Apply Amendment (Patch) Button
                                         IconButton(
                                           tooltip: 'Apply Amendment (PATCH)',
                                           icon: const Icon(Icons.tune, color: AppTheme.warning, size: 20),
@@ -478,7 +468,6 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
                                           },
                                         ),
 
-                                        // Edit Metadata Button
                                         IconButton(
                                           tooltip: 'Edit LC Configuration',
                                           icon: const Icon(Icons.edit_square, color: AppTheme.blue, size: 20),
@@ -490,7 +479,6 @@ class _LetterOfCreditDataScreenState extends ConsumerState<LetterOfCreditDataScr
                                           },
                                         ),
 
-                                        // Purge / Delete Button
                                         IconButton(
                                           tooltip: 'Purge LC Mapping',
                                           icon: const Icon(Icons.delete_outline, color: AppTheme.danger, size: 20),

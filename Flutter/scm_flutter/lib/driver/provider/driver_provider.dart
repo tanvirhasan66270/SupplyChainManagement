@@ -4,12 +4,10 @@ import 'package:scm_flutter/auth/helperProvider.dart';
 import 'package:scm_flutter/driver/data/driver_repository.dart';
 import 'package:scm_flutter/entity/driver_model.dart';
 
-// ১. Driver Repository Provider
 final driverRepositoryProvider = Provider<DriverRepository>((ref) {
   return DriverRepository(ref.watch(apiClientProvider));
 });
 
-/// ২. The logged-in driver's profile — keyed off the authenticated user's `userId`.
 final currentDriverProvider = FutureProvider.autoDispose<DriverResponseModel?>((ref) async {
   final user = ref.watch(currentUserProvider);
   if (user == null) return null;
@@ -24,13 +22,11 @@ final currentDriverProvider = FutureProvider.autoDispose<DriverResponseModel?>((
   }
 });
 
-/// ৩. Get All Drivers List Provider
 final driverListProvider = FutureProvider.autoDispose<List<DriverResponseModel>>((ref) async {
   final repository = ref.watch(driverRepositoryProvider);
   return repository.getAll();
 });
 
-/// ৪. Get Single Driver By ID Provider
 final singleDriverProvider = FutureProvider.autoDispose.family<DriverResponseModel, int>((ref, driverId) async {
   final repository = ref.watch(driverRepositoryProvider);
   final drivers = await repository.getAll();

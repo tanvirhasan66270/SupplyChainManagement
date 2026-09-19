@@ -1,4 +1,3 @@
-// ── Vehicle Type Constants ─────────────────────────────────────────────
 class VehicleType {
   static const truck = 'TRUCK';
   static const van = 'VAN';
@@ -8,7 +7,6 @@ class VehicleType {
   static const values = [truck, van, bike, air, riverShip];
 }
 
-/// UI badge/label metadata for Vehicle Type.
 class VehicleTypeMeta {
   static const Map<String, String> label = {
     VehicleType.truck: 'Truck',
@@ -21,7 +19,6 @@ class VehicleTypeMeta {
   static String labelFor(String type) => label[type] ?? type;
 }
 
-// ── Vehicle Status Constants ───────────────────────────────────────────
 class VehicleStatus {
   static const available = 'AVAILABLE';
   static const onTrip = 'ON_TRIP';
@@ -30,7 +27,6 @@ class VehicleStatus {
   static const values = [available, onTrip, maintenance, outOfService];
 }
 
-/// UI badge/label metadata for Vehicle Status.
 class VehicleStatusMeta {
   static const Map<String, String> label = {
     VehicleStatus.available: 'Available',
@@ -42,7 +38,6 @@ class VehicleStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Vehicle Request Model ──────────────────────────────────────────────
 class VehicleRequestModel {
   VehicleRequestModel({
     required this.plateNumber,
@@ -73,7 +68,6 @@ class VehicleRequestModel {
   };
 }
 
-// ── Vehicle Response Model ─────────────────────────────────────────────
 class VehicleResponseModel {
   VehicleResponseModel({
     required this.id,

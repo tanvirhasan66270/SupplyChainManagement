@@ -138,7 +138,6 @@ class _StockMovementDataScreenState extends ConsumerState<StockMovementDataScree
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ১. Summary Metrics Banner
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -203,7 +202,6 @@ class _StockMovementDataScreenState extends ConsumerState<StockMovementDataScree
                   ),
                   const SizedBox(height: 12),
 
-                  // ৩. Filter Chips Row
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -222,7 +220,6 @@ class _StockMovementDataScreenState extends ConsumerState<StockMovementDataScree
                   ),
                   const SizedBox(height: 16),
 
-                  // ৪. Data List Cards
                   if (filteredList.isEmpty)
                     Container(
                       width: double.infinity,

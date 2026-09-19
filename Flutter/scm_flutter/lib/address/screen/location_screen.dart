@@ -27,9 +27,7 @@ class LocationSelection {
   bool get isComplete => policeStationId != null;
 }
 
-/// Reusable Country -> Division -> District -> Police Station cascade.
-/// Mirrors the identical dropdown-cascade block repeated in add-customer,
-/// customer-profile, and book-parcel (origin + destination) in Angular.
+
 class LocationCascade extends ConsumerStatefulWidget {
   const LocationCascade({
     super.key,

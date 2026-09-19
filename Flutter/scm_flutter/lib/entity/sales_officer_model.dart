@@ -1,4 +1,3 @@
-// ── Sales Officer Request DTO ──────────────────────────────────────────
 class SalesOfficerRequestDTO {
   SalesOfficerRequestDTO({
     required this.id,
@@ -47,7 +46,6 @@ class SalesOfficerRequestDTO {
   };
 }
 
-// ── Sales Officer Response DTO ─────────────────────────────────────────
 class SalesOfficerResponseDTO {
   SalesOfficerResponseDTO({
     required this.id,

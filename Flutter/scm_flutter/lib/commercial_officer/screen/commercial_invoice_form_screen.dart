@@ -271,7 +271,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
                 const SizedBox(height: 16),
               ],
 
-              // ── Step 1: Customer Order Selection ──
               _buildStepHeader('Step 1', 'Link Customer Order Vector'),
               const SizedBox(height: 6),
               DropdownButtonFormField<int>(
@@ -300,7 +299,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 16),
 
-              // ── Step 2: Financial Subtotal ──
               _buildStepHeader('Step 2', 'Financial Subtotal Volume'),
               const SizedBox(height: 6),
               TextFormField(
@@ -317,7 +315,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 16),
 
-              // ── Step 3: Tax Rate Tariff ──
               _buildStepHeader('Step 3', 'Tax Rate Tariff Multiplier'),
               const SizedBox(height: 6),
               DropdownButtonFormField<double>(
@@ -337,7 +334,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 16),
 
-              // ── Step 4: Discount Pct (%) ──
               _buildStepHeader('Step 4', 'Discount Percentage Margin (%)'),
               const SizedBox(height: 6),
               TextFormField(
@@ -353,7 +349,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 16),
 
-              // ── Step 5: Discount Flat Amount ──
               _buildStepHeader('Step 5', 'Discount Flat Amount'),
               const SizedBox(height: 6),
               TextFormField(
@@ -369,7 +364,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 16),
 
-              // ── Step 6: Shipping Fees ──
               _buildStepHeader('Step 6', 'Logistics Shipping Fees'),
               const SizedBox(height: 6),
               TextFormField(
@@ -384,7 +378,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 16),
 
-              // ── Step 7: Paid Amount ──
               _buildStepHeader('Step 7', 'Paid Account Balance'),
               const SizedBox(height: 6),
               TextFormField(
@@ -399,7 +392,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 16),
 
-              // ── Step 8: Payment Instrument ──
               _buildStepHeader('Step 8', 'Payment Instrument'),
               const SizedBox(height: 6),
               DropdownButtonFormField<String>(
@@ -421,7 +413,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 16),
 
-              // ── Step 9: Txn Ref ──
               _buildStepHeader('Step 9', 'Transaction Reference String'),
               const SizedBox(height: 6),
               TextFormField(
@@ -436,7 +427,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 16),
 
-              // ── Step 10: Invoice Status ──
               _buildStepHeader('Step 10', 'Invoice Pipeline Status'),
               const SizedBox(height: 6),
               DropdownButtonFormField<String>(
@@ -473,7 +463,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 16),
 
-              // ── Step 12: Delivery Address ──
               _buildStepHeader('Step 12', 'Consignment Destination Address'),
               const SizedBox(height: 6),
               TextFormField(
@@ -521,7 +510,6 @@ class _CommercialInvoiceFormScreenState extends ConsumerState<CommercialInvoiceF
               ),
               const SizedBox(height: 24),
 
-              // ── Submit Button ──
               SizedBox(
                 width: double.infinity,
                 height: 50,

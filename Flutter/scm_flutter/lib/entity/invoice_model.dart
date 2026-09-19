@@ -1,4 +1,3 @@
-// ── Invoice Status Constants ───────────────────────────────────────────
 import 'package:scm_flutter/entity/customerOrderModel.dart';
 
 class InvoiceStatus {
@@ -8,7 +7,6 @@ class InvoiceStatus {
   static const values = [draft, issued, cancelled];
 }
 
-/// UI badge/label metadata for Invoice Status.
 class InvoiceStatusMeta {
   static const Map<String, String> label = {
     InvoiceStatus.draft: 'Draft',
@@ -19,7 +17,6 @@ class InvoiceStatusMeta {
   static String labelFor(String status) => label[status] ?? status;
 }
 
-// ── Invoice Request Model ──────────────────────────────────────────────
 class InvoiceRequestModel {
   InvoiceRequestModel({
     this.customerOrderId,
@@ -74,7 +71,6 @@ class InvoiceRequestModel {
   };
 }
 
-// ── Invoice Response Model ─────────────────────────────────────────────
 class InvoiceResponseModel {
   InvoiceResponseModel({
     required this.id,
