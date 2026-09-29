@@ -48,7 +48,7 @@ public class CommercialOfficerServiceImp implements CommercialOfficerService {
     @Override
     public CommercialOfficerResponseDTO save(CommercialOfficerRequestDTO dto, MultipartFile file) {
         if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
-            throw new RuntimeException("Credential password mandatory for commercial workstation deployment!");
+            throw new RuntimeException("Credential password mandatory for commercial Officer Login!");
         }
 
         if (dto.getPassportNumber() != null && officerRepository.existsByPassportNumber(dto.getPassportNumber())) {
@@ -92,7 +92,7 @@ public class CommercialOfficerServiceImp implements CommercialOfficerService {
     @Override
     public CommercialOfficerResponseDTO update(Long id, CommercialOfficerRequestDTO dto, MultipartFile file) {
         CommercialOfficer officer = officerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Commercial Officer instance not found at ID: " + id));
+                .orElseThrow(() -> new RuntimeException(" Not found Commercial Officer ID: " + id));
 
         User user = officer.getUser();
         if (user != null) {

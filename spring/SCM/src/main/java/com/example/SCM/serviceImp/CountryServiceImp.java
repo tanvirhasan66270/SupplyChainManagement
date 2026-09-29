@@ -39,7 +39,7 @@ public class CountryServiceImp implements CountryService {
             throw new IllegalArgumentException("Update data cannot be null");
         }
         Country country = countryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Country not found with ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Country ID not found : " + id));
 
         countryMapper.updateEntity(dto, country);
         Country updatedCountry = countryRepository.save(country);

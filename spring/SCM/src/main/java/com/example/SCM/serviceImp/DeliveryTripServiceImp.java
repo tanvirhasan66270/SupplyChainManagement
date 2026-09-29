@@ -40,7 +40,7 @@ public class DeliveryTripServiceImp implements DeliveryTripService {
     @Override
     public DeliveryTripResponseDTO save(DeliveryTripRequestDTO dto) {
         Customer customer = customerRepository.findById(dto.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Customer profile mapping failure"));
+                .orElseThrow(() -> new RuntimeException("Customer profile not found "));
         Driver driver = driverRepository.findById(dto.getDriverId())
                 .orElseThrow(() -> new RuntimeException("Assigned driver not found"));
         Vehicle vehicle = vehicleRepository.findById(dto.getVehicleId())

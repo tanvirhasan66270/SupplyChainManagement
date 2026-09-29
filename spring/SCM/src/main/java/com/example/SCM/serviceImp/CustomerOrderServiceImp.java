@@ -65,7 +65,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
     @Override
     public CustomerOrderResponseDTO save(CustomerOrderRequestDTO dto, MultipartFile image) {
         Customer customerProfile = customerRepository.findById(dto.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Target customer profile missing! ID: " + dto.getCustomerId()));
+                .orElseThrow(() -> new RuntimeException("Target customer profile Not found! ID: " + dto.getCustomerId()));
 
         User customerUser = customerProfile.getUser();
         if (customerUser == null) {
@@ -77,7 +77,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
 
         double inputPaid = dto.getCodAmount();
         if (inputPaid > order.getTotalAmount()) {
-            throw new IllegalArgumentException("Error: Provided amount cannot be greater than Total Order Value (" + order.getTotalAmount() + " BDT)!");
+            throw new IllegalArgumentException(" Provided amount cannot be greater than Total Order Value (" + order.getTotalAmount() + " BDT)!");
         }
 
         if (image != null && !image.isEmpty()) {
@@ -99,7 +99,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
                 "CREATE",
                 "CUSTOMER_ORDER",
                 savedOrder.getId().toString(),
-                "Customer Order created successfully. Order Number: " + savedOrder.getOrderNumber() + " for Customer: " + savedOrder.getCustomerName(),
+                "Customer Order created successfully. Order Number is: " + savedOrder.getOrderNumber() + " for Customer: " + savedOrder.getCustomerName(),
                 null,
                 "{\"orderNumber\":\"" + savedOrder.getOrderNumber() + "\", \"totalAmount\":" + savedOrder.getTotalAmount() + ", \"paymentMethod\":\"" + savedOrder.getPaymentMethod() + "\"}",
                 ActionStatus.SUCCESS,
@@ -213,7 +213,7 @@ public class CustomerOrderServiceImp implements CustomerOrderService {
             }
             else if (newStatus == CustomerOrderStatus.RETURNED) {
                 // for return
-                order.setRemarks("Consignment returned back to logistics hub.");
+                order.setRemarks("Delivery unit returned back to logistics hub.");
             }
 
         } catch (IllegalArgumentException e) {

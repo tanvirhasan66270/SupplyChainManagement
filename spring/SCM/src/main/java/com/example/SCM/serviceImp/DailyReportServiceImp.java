@@ -88,7 +88,9 @@ public class DailyReportServiceImp implements DailyReportService {
         responseDTO.setNotifiedAuthorities(notifiedList);
 
         activityLogService.log(
-                resolveCurrentUserId(), null, "CREATE", "DAILY_REPORT",
+                resolveCurrentUserId(),
+                null, "CREATE",
+                "DAILY_REPORT",
                 savedReport.getId().toString(),
                 "Logistics Officer generated daily operational report for Warehouse ID: " + savedReport.getWarehouseId(),
                 null, savedReport.getReportStatus().toString(), ActionStatus.SUCCESS, request.getRemoteAddr()
@@ -153,6 +155,47 @@ public class DailyReportServiceImp implements DailyReportService {
         return reportMapper.convertTOResponseDTO(approvedReport);
     }
 
+
+
+    private String uploadFile(MultipartFile file, String subFolder) {
+        try {
+            Path path = Paths.get(uploadDir, subFolder);
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+
+            String ext = "";
+            String original = file.getOriginalFilename();
+            if (original != null && original.contains(".")) {
+                ext = original.substring(original.lastIndexOf("."));
+            }
+
+            String cleanedName = subFolder.toUpperCase();
+            String fileName = cleanedName + "_" + UUID.randomUUID() + ext;
+
+            Files.copy(file.getInputStream(), path.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+            return fileName;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Report file syncing operational exception: " + e.getMessage());
+        }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<DailyReportResponseDTO> findAll() { return reportRepository.findAll().stream().map(reportMapper::convertTOResponseDTO).collect(Collectors.toList()); }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<DailyReportResponseDTO> getById(Long id) { return reportRepository.findById(id).map(reportMapper::convertTOResponseDTO); }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<DailyReportResponseDTO> getByWarehouse(String warehouseId) { return reportRepository.findByWarehouseIdOrderByReportDateDesc(warehouseId).stream().map(reportMapper::convertTOResponseDTO).collect(Collectors.toList()); }
+
+    @Transactional
+    @Override
+    public void delete(Long id) { reportRepository.deleteById(id); }
     private List<Map<String, String>> sendReportToManagersAndAdmins(DailyReport report) {
         List<Map<String, String>> successfullyNotified = new ArrayList<>();
         List<Role> targetRoles = List.of(Role.MANAGER, Role.ADMIN);
@@ -162,7 +205,7 @@ public class DailyReportServiceImp implements DailyReportService {
             return successfullyNotified;
         }
 
-        String subject = "SCM Monitoring Alert: Daily Operational Report - " + report.getWarehouseId();
+        String subject = "SCM Monitoring Alert: Daily Operational Warehouse Report - " + report.getWarehouseId();
 
         for (User user : targetUsers) {
             try {
@@ -239,44 +282,4 @@ public class DailyReportServiceImp implements DailyReportService {
         }
         return successfullyNotified;
     }
-
-    private String uploadFile(MultipartFile file, String subFolder) {
-        try {
-            Path path = Paths.get(uploadDir, subFolder);
-            if (!Files.exists(path)) {
-                Files.createDirectories(path);
-            }
-
-            String ext = "";
-            String original = file.getOriginalFilename();
-            if (original != null && original.contains(".")) {
-                ext = original.substring(original.lastIndexOf("."));
-            }
-
-            String cleanedName = subFolder.toUpperCase();
-            String fileName = cleanedName + "_" + UUID.randomUUID() + ext;
-
-            Files.copy(file.getInputStream(), path.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
-            return fileName;
-
-        } catch (Exception e) {
-            throw new RuntimeException("Report file syncing operational exception: " + e.getMessage());
-        }
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<DailyReportResponseDTO> findAll() { return reportRepository.findAll().stream().map(reportMapper::convertTOResponseDTO).collect(Collectors.toList()); }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<DailyReportResponseDTO> getById(Long id) { return reportRepository.findById(id).map(reportMapper::convertTOResponseDTO); }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<DailyReportResponseDTO> getByWarehouse(String warehouseId) { return reportRepository.findByWarehouseIdOrderByReportDateDesc(warehouseId).stream().map(reportMapper::convertTOResponseDTO).collect(Collectors.toList()); }
-
-    @Transactional
-    @Override
-    public void delete(Long id) { reportRepository.deleteById(id); }
 }

@@ -65,7 +65,7 @@ public class StockMovementServiceImp implements StockMovementService {
                     .orElseThrow(() -> new RuntimeException("Inventory record not found for this product in the target warehouse!"));
 
             int updatedQty = inventory.getQuantityOnHand() - dto.getQuantity();
-            inventory.setQuantityOnHand(Math.max(updatedQty, 0)); // নেগেটিভ হওয়া রোধ করতে
+            inventory.setQuantityOnHand(Math.max(updatedQty, 0));
             inventoryRepository.save(inventory);
 
         } else if (movementType.equals("TRANSFER")) {
