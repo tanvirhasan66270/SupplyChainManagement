@@ -57,7 +57,7 @@ public class ProductRequirementServiceImp implements ProductRequirementService {
         return mapper.toResponseDTO(saved);
     }
 
-    //  LOGISTICS_OFFICER update করতে পারবে
+    //  LOGISTICS_OFFICER update
     @Override
     @Transactional
     public ProductRequirementResponseDTO update(Long id, ProductRequirementRequestDTO dto) {

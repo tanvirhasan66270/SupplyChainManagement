@@ -202,12 +202,18 @@ public class LetterOfCreditServiceImp implements LetterOfCreditService {
         );
     }
 
-    @Override @Transactional(readOnly = true) public List<LetterOfCreditResponseDTO> findAll() {
+    @Override
+    @Transactional(readOnly = true)
+    public List<LetterOfCreditResponseDTO> findAll() {
         return lcRepository.findAllWithDetails().stream()
                 .map(lcMapper::convertTOResponseDTO).collect(Collectors.toList()); }
-    @Override @Transactional(readOnly = true) public Optional<LetterOfCreditResponseDTO> getById(Long id) {
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<LetterOfCreditResponseDTO> getById(Long id) {
         return lcRepository.findByIdWithDetails(id).map(lcMapper::convertTOResponseDTO); }
-    @Override @Transactional(readOnly = true) public Optional<LetterOfCreditResponseDTO> getByLcNumber(String lcNumber) {
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<LetterOfCreditResponseDTO> getByLcNumber(String lcNumber) {
         return lcRepository.findByLcNumber(lcNumber).map(lcMapper::convertTOResponseDTO); }
 
     private String uploadLcFile(MultipartFile file, String poIdentifier) {
