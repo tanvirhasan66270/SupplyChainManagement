@@ -1,0 +1,23 @@
+.public-footer {
+  background-color: #0f172a !important; /* deep corporate blue/black */
+  border-top-color: #1e293b !important;
+}
+
+.footer-links li {
+  margin-bottom: 8px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: #94a3b8;
+  transition: all 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: #3b82f6;
+  padding-left: 4px;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
+}

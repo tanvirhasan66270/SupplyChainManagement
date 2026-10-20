@@ -1,0 +1,233 @@
+<div class="container-fluid px-4 mt-4">
+
+  <div class="drawer-backdrop" *ngIf="isDrawerOpen" (click)="closeDrawer()"></div>
+
+  <div class="slide-drawer" [class.show]="isDrawerOpen">
+    <div class="drawer-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="mb-1 fw-bold">{{ isEdit ? 'Modify Fleet Agent Parameters' : 'Deploy Logistics Fleet Driver' }}</h5>
+        <p class="mb-0 text-muted small">Configure SCM active driver nodes.</p>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4" style="overflow-y: auto; height: calc(100vh - 100px);">
+      
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm border-2 mb-4" role="alert">
+        <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+        <div class="fs-7 fw-semibold">{{ errorMessage }}</div>
+        <button type="button" class="btn-close small" (click)="errorMessage = null" aria-label="Close"></button>
+      </div>
+
+      <form (ngSubmit)="save()">
+        
+        <div class="mb-3 text-center p-3 bg-light rounded-3 border">
+          <label class="form-label fw-semibold text-secondary small text-uppercase d-block mb-2">Driver Profile Matrix Image</label>
+          <div class="position-relative d-inline-block mb-2">
+            <div class="avatar-md bg-white rounded-circle d-flex align-items-center justify-content-center overflow-hidden border" style="width: 85px; height: 85px; margin: 0 auto;">
+              <img *ngIf="imagePreview" [src]="imagePreview" class="w-100 h-100 object-fit-cover">
+              <i *ngIf="!imagePreview" class="bi bi-truck-front text-secondary fs-2"></i>
+            </div>
+            <button *ngIf="imagePreview" type="button" class="btn btn-danger btn-sm rounded-circle position-absolute bottom-0 end-0" (click)="removeSelectedFile(fileInput)"><i class="bi bi-x-lg"></i></button>
+          </div>
+          <input #fileInput type="file" class="form-control form-control-sm" accept="image/*" (change)="onFileSelected($event)">
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Driver Node Name</label>
+            <input type="text" class="form-control fs-7" placeholder="e.g., Rahat Khan" [(ngModel)]="driver.driverName" name="driverName" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Contact Vector (Phone)</label>
+            <input type="text" class="form-control fs-7" placeholder="018XXXXXXXX" [(ngModel)]="driver.phone" name="phone" required>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Email Identity</label>
+            <input type="email" class="form-control fs-7" placeholder="driver@scm.com" [(ngModel)]="driver.email" name="email" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Identity Key (NID)</label>
+            <input type="text" class="form-control fs-7 font-monospace" placeholder="199XXXXXXXXXX" [(ngModel)]="driver.nidNumber" name="nidNumber" required>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3" *ngIf="!isEdit">
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Logistics Gate Password</label>
+            <input type="password" class="form-control fs-7" placeholder="••••••••" [(ngModel)]="driver.password" name="password" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Confirm Gate Password</label>
+            <input type="password" class="form-control fs-7" placeholder="••••••••" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+          </div>
+        </div>
+
+        <div class="p-3 bg-light rounded-3 mb-3 border">
+          <span class="fw-bold d-block text-secondary small text-uppercase mb-2 text-dark"><i class="bi bi-car-front-fill me-1"></i> Fleet Asset Registration</span>
+          <div class="row g-2">
+            <div class="col-6">
+              <select class="form-select fs-7" [(ngModel)]="driver.vehicleType" name="vehicleType" required>
+                <option value="">-- Vehicle Type --</option>
+                <option value="COVERED_VAN">Covered Van</option>
+                <option value="CARGO_TRUCK">Cargo Truck</option>
+                <option value="MINI_TRUCK">Mini Pickup</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <input type="text" class="form-control fs-7" placeholder="DHAKA METRO-T-XX-XXXX" [(ngModel)]="driver.vehicleNumber" name="vehicleNumber" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Birthdate</label>
+            <input type="date" class="form-control fs-7" [(ngModel)]="driver.dob" name="dob" required>
+          </div>
+          <div class="col-6">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Gender Vector</label>
+            <select class="form-select fs-7" [(ngModel)]="driver.gender" name="gender" required>
+              <option value="">-- Select Gender --</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-3 p-2 bg-dark-subtle rounded-3 border" *ngIf="isEdit">
+          <div class="col-4">
+            <label class="form-label text-secondary fw-bold small text-uppercase mb-1">Rating</label>
+            <input type="number" step="0.1" class="form-control fs-7 text-center fw-bold text-primary" [(ngModel)]="driver.rating" name="rating">
+          </div>
+          <div class="col-4">
+            <label class="form-label text-secondary fw-bold small text-uppercase mb-1">Total Deliveries</label>
+            <input type="number" class="form-control fs-7 text-center" [(ngModel)]="driver.totalDeliveries" name="totalDeliveries">
+          </div>
+          <div class="col-4">
+            <label class="form-label text-secondary fw-bold small text-uppercase mb-1">Earnings</label>
+            <input type="number" class="form-control fs-7 text-center font-monospace" [(ngModel)]="driver.totalEarnings" name="totalEarnings">
+          </div>
+        </div>
+
+        <div class="mb-3 p-3 bg-white rounded-3 border shadow-sm">
+          <label class="form-label fw-bold text-dark small text-uppercase mb-2 d-block text-danger"><i class="bi bi-houses-fill me-1"></i> Bound Warehouses Supply Clusters</label>
+          <div style="max-height: 120px; overflow-y: auto;" class="border p-2 rounded bg-light">
+            <div *ngFor="let w of warehouses" class="form-check mb-1 fs-7">
+              <input class="form-check-input" type="checkbox" [id]="'wh_' + w.id" [checked]="driver.warehouseIds.includes(w.id)" (change)="toggleWarehouseSelection(w.id, $event)">
+              <label class="form-check-input-label text-dark fw-medium" [for]="'wh_' + w.id">
+                {{ w.name }} <span class="text-muted small">({{w.code || 'Node'}})</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-light rounded-3 mb-3 border shadow-sm">
+          <span class="fw-bold d-block text-dark small text-uppercase mb-3 text-primary"><i class="bi bi-geo-alt-fill me-1"></i> Regional Matrix Base Station</span>
+          <div class="mb-2"><select class="form-select fs-7" [(ngModel)]="selectedCountryId" name="countryId" (change)="onCountryChange()"><option [ngValue]="null">-- Country Base --</option><option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option></select></div>
+          <div class="mb-2"><select class="form-select fs-7" [(ngModel)]="selectedDivisionId" name="divisionId" (change)="onDivisionChange()" [disabled]="!divisions || divisions.length === 0"><option [ngValue]="null">-- Division Cluster --</option><option *ngFor="let d of divisions" [value]="d.id">{{ d.name }}</option></select></div>
+          <div class="mb-2"><select class="form-select fs-7" [(ngModel)]="selectedDistrictId" name="districtId" (change)="onDistrictChange()" [disabled]="!districts || districts.length === 0"><option [ngValue]="null">-- District Node --</option><option *ngFor="let dst of districts" [value]="dst.id">{{ dst.name }}</option></select></div>
+          <div class="mb-1"><select class="form-select fs-7" [(ngModel)]="driver.policeStationId" name="policeStationId" (change)="generateFullAddress()" [disabled]="!policeStations || policeStations.length === 0" required><option value="0">-- Police Station Terminal --</option><option *ngFor="let ps of policeStations" [value]="ps.id">{{ ps.name }}</option></select></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-secondary small text-uppercase">Local Street Vector Line</label>
+          <input type="text" class="form-control fs-7" placeholder="e.g., Terminal 4, Road 1" [(ngModel)]="streetAddress" name="streetAddress" (input)="generateFullAddress()" required>
+        </div>
+
+        <div class="mb-4 bg-primary-subtle border border-primary-subtle p-3 rounded-3">
+          <label class="form-label fw-bold text-primary small text-uppercase mb-2"><i class="bi bi-cpu-fill me-1"></i>Aggregated Address Manifest String</label>
+          <div class="bg-white p-2.5 rounded border text-dark fs-7 fw-medium font-monospace shadow-sm" style="min-height: 55px; word-break: break-word;">
+            {{ driver.address || 'Awaiting coordinates...' }}
+          </div>
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 mt-5">
+          <button class="btn btn-success flex-grow-1 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-semibold" type="submit">
+            <i class="bi bi-cloud-arrow-up-fill"></i> {{ isEdit ? 'Update Agent Core' : 'Register Cluster Node' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3" (click)="reset()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="mb-1 text-dark fw-bold">SCM Fleet Driver Workspace</h4>
+      <p class="text-muted mb-0 small">Initialize tracking indices and manage fleet clusters.</p>
+    </div>
+    <button class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 shadow-sm fw-semibold" (click)="openDrawer()">
+      <i class="bi bi-plus-circle-fill"></i> Deploy Active Driver
+    </button>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light text-uppercase fs-7 tracking-wider">
+            <tr>
+              <th class="ps-4" width="80">ID</th>
+              <th>Driver Details Stream</th>
+              <th>Vehicle Asset Class</th>
+              <th>Cluster Warehouses Linked</th>
+              <th>Territorial Node Base</th>
+              <th class="text-end pe-4" width="160">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let d of drivers">
+              <td class="ps-4 text-muted fw-medium font-monospace">#{{ d.id }}</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar-sm bg-light border text-primary rounded-circle me-3 d-flex align-items-center justify-content-center overflow-hidden" style="width: 42px; height: 42px;">
+                    <img *ngIf="d.image" [src]="imageBaseUrl+d?.image" class="w-100 h-100 object-fit-cover" (error)="onImageError($event)" />
+                    <i *ngIf="!d.image" class="bi bi-person-video2 fs-5 text-secondary"></i>
+                  </div>
+                  <div>
+                    <span class="fw-semibold text-dark d-block mb-0.5">{{ d.driverName }}</span>
+                    <span class="text-secondary small d-block"><i class="bi bi-telephone-outbound me-1"></i>{{ d.phone }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-primary text-uppercase d-inline-block mb-1 fs-8">{{ d.vehicleType }}</span>
+                <span class="d-block small text-dark font-monospace fw-bold">{{ d.vehicleNumber }}</span>
+              </td>
+              <td>
+                <div class="d-flex flex-wrap gap-1" style="max-width: 200px;">
+                  <span *ngFor="let wh of d.warehouseNames" class="badge bg-secondary rounded-pill font-monospace fs-8">{{ wh }}</span>
+                  <span *ngIf="!d.warehouseNames || d.warehouseNames.length === 0" class="text-muted small">None Linked</span>
+                </div>
+              </td>
+              <td>
+                <span class="text-dark small fw-medium d-block text-truncate" style="max-width: 250px;" [title]="d.address">
+                  {{ d.address }}
+                </span>
+              </td>
+              <td class="text-end pe-4">
+                <div class="d-flex justify-content-end gap-2">
+                  <button class="btn btn-icon btn-light border-0 text-warning" title="Modify Node" (click)="edit(d)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-icon btn-light border-0 text-danger" title="Purge Node" (click)="delete(d.id)">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+
+  
+
+</div>

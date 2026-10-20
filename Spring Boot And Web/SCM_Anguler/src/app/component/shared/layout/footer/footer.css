@@ -1,0 +1,45 @@
+:host {
+  display: block;
+}
+
+.footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--gray-200);
+  background: var(--surface-card);
+  padding: 0.75rem 1.5rem;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  font-size: var(--font-size-xs);
+  color: var(--gray-400);
+}
+
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 600;
+  color: var(--gray-500);
+}
+
+.footer-brand i {
+  color: var(--primary-500);
+  font-size: 0.75rem;
+}
+
+.footer-brand span {
+  color: var(--gray-400);
+  font-weight: 400;
+}
+
+.footer-sep {
+  color: var(--gray-300);
+}
+
+.footer-copy {
+  color: var(--gray-400);
+}

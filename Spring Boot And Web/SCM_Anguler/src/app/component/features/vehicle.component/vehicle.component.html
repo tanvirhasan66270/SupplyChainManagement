@@ -1,0 +1,203 @@
+<div class="container-fluid py-4 px-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1"><i class="bi bi-car-front-fill text-primary me-2"></i>Corporate Fleet Asset Matrix</h4>
+      <p class="text-muted mb-0 small">Manage corporate logistics vehicle profiles: track capacity weight, monitor fuel levels, log service dates, and bind driver personnel links.</p>
+    </div>
+   @if (userRole !== 'PROCUREMENT') {
+  <button class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 shadow-sm fw-semibold" (click)="openDrawer()">
+    <i class="bi bi-plus-square-fill me-2"></i>Register New Vehicle
+  </button>
+}
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger shadow-sm border-2 mb-4 fs-7" role="alert">
+      <strong><i class="bi bi-exclamation-octagon-fill me-2"></i>Fleet Operation Fault:</strong> {{ errorMessage }}
+    </div>
+  }
+
+  <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 fs-7">
+          <thead class="table-light text-uppercase fs-8 fw-bold text-secondary">
+            <tr>
+              <th class="ps-4">Vehicle ID</th>
+              <th>Plate Number Token</th>
+              <th>Classification</th>
+              <th>Max Capacity (KG)</th>
+              <th>Fuel Level</th>
+              <th>Maintenance State</th>
+              <th>Bound Driver</th>
+              <th class="text-end px-4" width="160">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (v of vehicles; track v.id) {
+              <tr>
+                <td class="ps-4"><span class="badge bg-secondary font-monospace">FLEET-{{ v.id }}</span></td>
+                <td><div class="fw-bold text-dark font-monospace"><i class="bi bi-hash text-muted"></i>{{ v.plateNumber }}</div></td>
+                <td><span class="badge bg-light text-secondary border text-uppercase font-monospace fs-8">{{ v.type }}</span></td>
+                <td><b class="text-indigo font-monospace">{{ v.capacity | number }} KG</b></td>
+                <td>
+                  <div class="d-flex align-items-center gap-2" style="width: 120px;">
+                    <div class="progress flex-grow-1" style="height: 6px;">
+                      <div class="progress-bar" role="progressbar" 
+                        [style.width]="v.fuelLevel + '%'"
+                        [ngClass]="{'bg-success': v.fuelLevel > 50, 'bg-warning': v.fuelLevel >= 20 && v.fuelLevel <= 50, 'bg-danger': v.fuelLevel < 20}">
+                      </div>
+                    </div>
+                    <span class="fw-bold font-monospace fs-8">{{ v.fuelLevel }}%</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge px-2.5 py-1.5 fs-8 text-uppercase"
+                    [ngClass]="{
+                      'bg-success-subtle text-success border border-success': v.status === 'AVAILABLE',
+                      'bg-info-subtle text-info border border-info': v.status === 'ON_TRIP',
+                      'bg-warning-subtle text-warning border border-warning': v.status === 'MAINTENANCE',
+                      'bg-danger-subtle text-danger border border-danger': v.status === 'OUT_OF_SERVICE'
+                    }">
+                    {{ v.status }}
+                  </span>
+                </td>
+                <td>
+                  @if (v.driverId) {
+                    <div class="fw-bold text-dark"><i class="bi bi-person-circle text-teal me-1"></i>{{ v.driverName }}</div>
+                    <small class="text-muted font-monospace fs-8"><i class="bi bi-telephone"></i> {{ v.driverPhone }}</small>
+                  } @else {
+                    <span class="text-muted font-monospace fs-8 italic"><i class="bi bi-exclamation-circle"></i> Unassigned</span>
+                  }
+                </td>
+                <td class="text-end px-4">
+                  <div class="d-flex justify-content-end gap-1.5">
+                    <button class="btn btn-icon btn-light text-success" title="Quick Change Status" (click)="openStatusModal(v)">
+                      <i class="bi bi-shield-shaded"></i>
+                    </button>
+                    @if (userRole !== 'PROCUREMENT') {
+                    <button class="btn btn-icon btn-light text-warning" title="Edit Properties" (click)="edit(v)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-icon btn-light text-danger" title="Purge Asset" (click)="deleteVehicle(v.id)">
+                      <i class="bi bi-trash3-fill"></i>
+                    </button>}
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="8" class="text-center py-5 text-muted font-monospace fs-8">
+                  <i class="bi bi-truck-flatbed fs-1 d-block mb-2 text-secondary"></i>No vehicular fleet logistics metrics localized in datastore contexts.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-drawer shadow" [class.open]="isDrawerOpen">
+    <div class="drawer-header bg-teal text-white p-4 d-flex justify-content-between align-items-center">
+      <h5 class="fw-bold mb-0"><i class="bi bi-truck-front-fill me-2"></i>{{ isEdit ? 'Modify Fleet Attributes' : 'Register Vehicle Hub' }}</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4" style="overflow-y: auto; height: calc(100vh - 110px);">
+      <form #vehicleForm="ngForm" (ngSubmit)="vehicleForm.valid && submitVehicle()">
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">BRTA License Plate Number</label>
+          <input type="text" class="form-control font-monospace fw-bold fs-7" [(ngModel)]="formModel.plateNumber" name="plateNumber" placeholder="e.g., Dhaka Metro-GA-11-2026" required>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Vehicle Logistics Type</label>
+            <select class="form-select fs-7" [(ngModel)]="formModel.type" name="type" required>
+              <option value="TRUCK">TRUCK</option>
+              <option value="VAN">VAN</option>
+              <option value="BIKE">BIKE</option>
+              <option value="AIR">AIR DISPATCH</option>
+              <option value="RIVER_SHIP">RIVER FREIGHT SHIP</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Load Capacity (KG)</label>
+            <input type="number" class="form-control fs-7 font-monospace text-indigo fw-bold" [(ngModel)]="formModel.capacity" name="capacity" min="0" required>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Current Fleet State</label>
+            <select class="form-select fs-7 fw-bold text-teal bg-light" [(ngModel)]="formModel.status" name="status" [disabled]="true" required>
+              <option value="AVAILABLE">AVAILABLE</option>
+              <option value="ON_TRIP">ON_TRIP</option>
+              <option value="MAINTENANCE">MAINTENANCE</option>
+              <option value="OUT_OF_SERVICE">OUT_OF_SERVICE</option>
+            </select>
+            <small class="text-muted d-block mt-1 fs-9 italic"><i class="bi bi-lock-fill"></i> Read-only from form control.</small>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold text-secondary text-uppercase fs-8">Fuel Level Volume (%)</label>
+            <input type="number" class="form-control fs-7 font-monospace fw-bold" [(ngModel)]="formModel.fuelLevel" name="fuelLevel" min="0" max="100" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Bind Captain Personnel (Driver)</label>
+          <select class="form-select fs-7" [(ngModel)]="formModel.driverId" name="driverId">
+            <option [value]="null">-- Leave Unassigned / Standby --</option>
+            @for (d of drivers; track d.id) {
+              <option [value]="d.id">{{ d.driverName }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8">Last Workshop Service Audit Date</label>
+          <input type="date" class="form-control fs-7 font-monospace" [(ngModel)]="formModel.lastServiceDate" name="lastServiceDate">
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 pt-3 border-top">
+          <button class="btn btn-teal text-white flex-grow-1 py-2.5 fw-bold fs-7 text-uppercase" type="submit">
+            <i class="bi bi-cloud-arrow-up-fill me-1"></i> {{ isEdit ? 'Push Attribute Patch' : 'Execute Asset Genesis' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3 fs-7 text-uppercase" (click)="resetForm()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  @if (isStatusModalOpen) {
+    <div class="modal-overlay d-flex align-items-center justify-content-center">
+      <div class="modal-window bg-white rounded shadow-lg p-4 animate-scale-in">
+        <h5 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="bi bi-activity text-teal me-1"></i>Patch Fleet Workshop Console</h5>
+        
+        <div class="mb-4">
+          <label class="form-label fw-bold text-secondary text-uppercase fs-8 mb-2">Configure Target Vehicle State Flag</label>
+          <select class="form-select fs-7 fw-bold" [(ngModel)]="statusUpdateValue">
+            <option value="AVAILABLE">🟢 AVAILABLE (Ready for Mission)</option>
+            <option value="ON_TRIP">🔵 ON_TRIP (Dispatched Node)</option>
+            <option value="MAINTENANCE">🟡 MAINTENANCE (Workshop Maintenance)</option>
+            <option value="OUT_OF_SERVICE">🔴 OUT_OF_SERVICE (Decommissioned)</option>
+          </select>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end pt-2 border-top">
+          <button class="btn btn-teal text-white px-4 fs-7 fw-bold" (click)="executeStatusUpdate()"><i class="bi bi-check-circle-fill me-1"></i>Commit Status</button>
+          <button class="btn btn-secondary px-4 fs-7" (click)="closeStatusModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (isDrawerOpen || isStatusModalOpen) {
+    <div class="drawer-backdrop" (click)="isDrawerOpen ? closeDrawer() : closeStatusModal()"></div>
+  }
+
+</div>

@@ -1,0 +1,152 @@
+<div class="container-fluid px-4 mt-4">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="mb-1 text-dark fw-bold">District Management</h4>
+      <p class="text-muted mb-0 small">Configure enterprise district zones mapping with countries and divisions.</p>
+    </div>
+    <button class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 shadow-sm fw-semibold" (click)="openDrawer()">
+      <i class="bi bi-plus-circle-fill"></i> Add New District
+    </button>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light text-uppercase fs-7 tracking-wider">
+            <tr>
+              <th class="ps-4">ID</th>
+              <th>District Details</th>
+              <th>District Code</th>
+              <th>Region Hierarchy</th>
+              <th>Status</th>
+              <th class="text-end pe-4" width="160">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let d of districts">
+              <td class="ps-4 text-muted fw-medium">#{{ d.id }}</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar-sm bg-primary-subtle text-primary rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold">
+                    {{ d.name.charAt(0) }}
+                  </div>
+                  <div>
+                    <span class="fw-semibold text-dark d-block">{{ d.name }}</span>
+                    <span class="text-muted small">{{ d.nameBn }}</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge bg-light text-secondary border px-2 py-1.5 font-monospace fs-7">{{ d.districtCode }}</span></td>
+              <td>
+                <div class="small">
+                  <span class="text-dark fw-medium">{{ d.divisionName }}</span>
+                  <i class="bi bi-chevron-right mx-1 text-muted fs-8"></i>
+                  <span class="text-muted">{{ d.countryName }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="badge rounded-pill px-3 py-1.5" 
+                      [class.bg-success-subtle]="d.active" [class.text-success]="d.active"
+                      [class.bg-danger-subtle]="!d.active" [class.text-danger]="!d.active">
+                  <i class="bi bi-circle-fill me-1 small"></i> {{ d.active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td class="text-end pe-4">
+                <div class="d-flex justify-content-end gap-2">
+                  <button class="btn btn-icon btn-light border-0 text-warning" title="Edit" (click)="edit(d)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-icon btn-light border-0 text-danger" title="Delete" (click)="delete(d.id)">
+                    <i class="bi bi-trash3-fill"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="districts.length === 0">
+              <td colspan="6" class="text-center py-5 text-muted">
+                <i class="bi bi-folder-x fs-1 d-block mb-2 text-secondary"></i>
+                No records found in the system.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-backdrop" *ngIf="isDrawerOpen" (click)="closeDrawer()"></div>
+
+  <div class="slide-drawer" [class.show]="isDrawerOpen">
+    <div class="drawer-header bg-dark text-white p-4 d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="mb-1 fw-bold">{{ isEdit ? 'Update District' : 'Register New District' }}</h5>
+        <p class="mb-0 text-muted small">Fill up the logistics region data accurately.</p>
+      </div>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4">
+      <form (ngSubmit)="save()">
+        
+        <div class="mb-4">
+          <label class="form-label fw-semibold text-secondary small text-uppercase">Select Division</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-layers-half"></i></span>
+            <select class="form-select border-start-0 ps-0" [(ngModel)]="district.divisionId" name="divisionId" required>
+              <option value="0" disabled selected>-- Choose Division --</option>
+              <option *ngFor="let div of divisions" [value]="div.id">
+                {{ div.name }} ({{ div.countryName }})
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold text-secondary small text-uppercase">District Name (English)</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-geo-alt"></i></span>
+            <input type="text" class="form-control border-start-0 ps-0" placeholder="e.g., Gazipur" [(ngModel)]="district.name" name="name" required>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold text-secondary small text-uppercase">District Name (Bangla)</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-translate"></i></span>
+            <input type="text" class="form-control border-start-0 ps-0" placeholder="যেমন: গাজীপুর" [(ngModel)]="district.nameBn" name="nameBn" required>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold text-secondary small text-uppercase">District Code</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-hash"></i></span>
+            <input type="text" class="form-control border-start-0 ps-0" placeholder="e.g., GZP" [(ngModel)]="district.districtCode" name="districtCode" required>
+          </div>
+        </div>
+
+        <div class="mb-4 bg-light p-3 rounded-3 d-flex justify-content-between align-items-center">
+          <div>
+            <label class="form-label fw-semibold text-dark mb-0 d-block">Operational Status</label>
+            <span class="text-muted small">Toggle to manage regional delivery access.</span>
+          </div>
+          <div class="form-check form-switch fs-4 mb-0">
+            <input class="form-check-input pointer" type="checkbox" role="switch" [(ngModel)]="district.active" name="active">
+          </div>
+        </div>
+
+        <div class="drawer-footer d-flex gap-2 mt-5">
+          <button class="btn btn-success flex-grow-1 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-semibold" type="submit">
+            <i class="bi bi-cloud-arrow-up-fill"></i> {{ isEdit ? 'Update Records' : 'Commit Configuration' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3" (click)="reset()">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>

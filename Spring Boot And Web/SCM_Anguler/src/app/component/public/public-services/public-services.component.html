@@ -1,0 +1,82 @@
+<div class="public-services">
+
+  <!-- SERVICES HERO -->
+  <section class="services-hero text-white py-5">
+    <div class="container py-5">
+      <div class="text-center mb-5">
+        <span class="badge bg-white/10 text-white text-uppercase px-3 py-1.5 fw-bold mb-3 small border border-white/20 rounded-pill">
+          <i class="bi bi-gear-wide-connected me-1"></i> Solutions
+        </span>
+        <h1 class="display-4 fw-black text-white mb-3">Comprehensive Supply Chain Solutions</h1>
+        <p class="lead text-white-50 col-lg-7 mx-auto">From sourcing raw materials to last-mile delivery, we provide end-to-end logistics infrastructure for global trade.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES GRID -->
+  <section class="py-5 bg-white">
+    <div class="container py-4">
+      <div class="row g-4">
+        <div class="col-md-6" *ngFor="let s of services">
+          <div class="card border-0 shadow-sm p-0 rounded-4 h-100 service-detail-card overflow-hidden">
+            <div class="card-header border-0 py-3 px-4" [ngClass]="s.headerBg">
+              <div class="d-flex align-items-center gap-3">
+                <div class="service-icon-lg rounded-3 d-flex align-items-center justify-content-center" [ngClass]="s.iconBg">
+                  <i class="bi" [ngClass]="s.icon" [style.color]="s.color"></i>
+                </div>
+                <h4 class="fw-bold text-dark mb-0">{{ s.title }}</h4>
+              </div>
+            </div>
+            <div class="card-body p-4">
+              <p class="text-secondary mb-3">{{ s.desc }}</p>
+              <ul class="list-unstyled mb-0">
+                <li class="d-flex align-items-start gap-2 mb-2" *ngFor="let feature of s.features">
+                  <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                  <span class="text-secondary small">{{ feature }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS SECTION -->
+  <section class="py-5 bg-light">
+    <div class="container py-4">
+      <div class="text-center mb-5">
+        <span class="badge bg-primary-subtle text-primary text-uppercase px-3 py-1.5 fw-bold mb-2 small">How It Works</span>
+        <h2 class="fw-black text-dark display-6">Our Simple 4-Step Process</h2>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-3" *ngFor="let step of steps; let i = index">
+          <div class="text-center p-4 position-relative">
+            <div class="step-number mx-auto mb-3" [ngClass]="step.colorBg">
+              <span class="fw-black font-monospace" [style.color]="step.color">{{ i + 1 }}</span>
+            </div>
+            <h6 class="fw-bold text-dark">{{ step.title }}</h6>
+            <p class="text-secondary small mb-0">{{ step.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-5 bg-primary text-white">
+    <div class="container py-4 text-center">
+      <h2 class="display-6 fw-black mb-3">Need a Custom Solution?</h2>
+      <p class="text-white-50 col-lg-6 mx-auto mb-4">Our logistics architects can design a tailored supply chain workflow for your specific industry requirements.</p>
+      <div class="d-flex gap-3 justify-content-center">
+        <a routerLink="/join-us" class="btn btn-lg btn-warning px-5 py-3 fw-bold rounded-pill">
+          <i class="bi bi-person-plus me-2"></i> Get Started
+        </a>
+        <a routerLink="/contact" class="btn btn-lg btn-outline-light px-5 py-3 fw-bold rounded-pill">
+          Contact Sales
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>

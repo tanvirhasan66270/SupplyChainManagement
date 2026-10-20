@@ -1,0 +1,27 @@
+.avatar-sm {
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+}
+
+.bg-primary-subtle { background-color: #e0eaff !important; }
+.bg-success-subtle { background-color: #d1e7dd !important; }
+.bg-danger-subtle { background-color: #f8d7da !important; }
+
+.fs-7 { font-size: 0.825rem; }
+.fs-8 { font-size: 0.7rem; }
+.tracking-wider { letter-spacing: 0.05em; }
+
+.form-select, .form-control {
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+}
+
+.form-select:focus, .form-control:focus {
+  box-shadow: none !important;
+  border-color: #86b7fe !important;
+}
+
+.input-group-text {
+  border-radius: 6px 0 0 6px;
+}

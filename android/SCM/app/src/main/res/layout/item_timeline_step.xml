@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/ivStepIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/bg_status_badge_delivered"
+        android:backgroundTint="#F0F4F8"
+        android:padding="6dp"
+        android:src="@drawable/ic_nav_home"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/gray_light"
+        tools:tint="@color/green_status" />
+
+    <View
+        android:id="@+id/viewLine"
+        android:layout_width="2dp"
+        android:layout_height="40dp"
+        android:background="@color/gray_light"
+        app:layout_constraintEnd_toEndOf="@id/ivStepIcon"
+        app:layout_constraintStart_toStartOf="@id/ivStepIcon"
+        app:layout_constraintTop_toBottomOf="@id/ivStepIcon"
+        tools:background="@color/green_status" />
+
+    <TextView
+        android:id="@+id/tvStepTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textColor="#1A1A1A"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/ivStepIcon"
+        app:layout_constraintTop_toTopOf="@id/ivStepIcon"
+        tools:text="Order Placed" />
+
+    <TextView
+        android:id="@+id/tvStepDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray_text"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@id/tvStepDate"
+        app:layout_constraintStart_toStartOf="@id/tvStepTitle"
+        app:layout_constraintTop_toBottomOf="@id/tvStepTitle"
+        tools:text="Your order has been placed successfully." />
+
+    <TextView
+        android:id="@+id/tvStepDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="@color/gray_text"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivStepIcon"
+        tools:text="18 May 2026\n09:15 AM" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

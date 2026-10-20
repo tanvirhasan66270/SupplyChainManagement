@@ -1,0 +1,72 @@
+.public-join-us {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.join-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #198754, #20c997);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-dot {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border-radius: 50px;
+  background: #e2e8f0;
+  color: #94a3b8;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.step-dot.active {
+  background: #0d6efd;
+  color: white;
+}
+
+.step-dot.completed {
+  background: #198754;
+  color: white;
+}
+
+.step-dot span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 0.8rem;
+}
+
+.step-dot.active span {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: #e2e8f0;
+  align-self: center;
+  transition: all 0.3s ease;
+}
+
+.step-line.active {
+  background: #0d6efd;
+}
+
+body.dark-theme .public-join-us {
+  background-color: #0f172a;
+}

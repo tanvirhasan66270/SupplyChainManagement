@@ -1,0 +1,192 @@
+<div class="container-fluid py-4 px-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border-start border-primary border-4">
+    <div>
+      <h4 class="text-dark fw-bold mb-1"><i class="bi bi-box-seam text-primary me-2"></i>Warehouse Stock Inventory</h4>
+      <p class="text-muted mb-0 small">Manage structural stock locations, log real-time reserve quotas, audit expiry nodes, and track low-stock exceptions.</p>
+    </div>
+    <button class="btn btn-primary d-flex align-items-center gap-2 px-3 py-2 shadow-sm fw-semibold" (click)="openDrawer()">
+      <i class="bi bi-plus-square-fill me-2"></i>Create New Stock Node
+    </button>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger shadow-sm border-2 mb-4 fs-7" role="alert">
+      <strong><i class="bi bi-shield-slash-fill me-2"></i>Inventory Sync Blocked:</strong> {{ errorMessage }}
+    </div>
+  }
+
+  <div class="card shadow-sm border-0 rounded-3 overflow-visible">
+    <div class="card-body p-0">
+      <div class="table-responsive" style="overflow-y: visible !important;">
+        <table class="table table-hover align-middle mb-0 fs-7">
+          <thead class="table-light text-uppercase fs-8">
+            <tr>
+              <th class="ps-4">Stock ID</th>
+              <th>Product Specs</th>
+              <th>Assigned Warehouse</th>
+              <th>Quantity On Hand</th>
+              <th>Reserved Quota</th>
+              <th>Available Sellable</th>
+              <th>Warehouse Placement</th>
+              <th>Status Matrix</th>
+              <th class="text-end px-4" width="160">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (inv of inventories; track inv.id) {
+              <tr>
+                <td class="ps-4">
+                  <span class="badge bg-secondary font-monospace">STK-{{ inv.id }}</span>
+                </td>
+                <td>
+                  <div class="fw-bold text-dark">{{ inv.productName }}</div>
+                  <small class="text-indigo font-monospace fs-8 bg-indigo-subtle px-1 border border-indigo-subtle rounded">{{ inv.productCode }}</small>
+                </td>
+                <td><div class="fw-semibold text-secondary"><i class="bi bi-building me-1"></i>{{ inv.warehouseName }}</div></td>
+                <td><b class="text-dark font-monospace">{{ inv.quantityOnHand }}</b></td>
+                <td><span class="text-danger fw-semibold font-monospace">{{ inv.quantityReserved }}</span></td>
+                <td>
+                  <span class="badge bg-success font-monospace px-2 py-1 fs-7" [class.bg-danger]="inv.availableQuantity <= 0">
+                    {{ inv.availableQuantity }}
+                  </span>
+                </td>
+                <td>
+                  <div class="text-muted font-sans"><i class="bi bi-geo-alt-fill me-1 small"></i>{{ inv.locationStatus || 'Unassigned Row' }}</div>
+                  @if (inv.expiryDate) {
+                    <small class="d-block text-warning font-monospace fs-8 mt-0.5">Exp: {{ inv.expiryDate }}</small>
+                  }
+                </td>
+                <td>
+                  <span class="badge px-2.5 py-1.5 fs-8 text-uppercase border"
+                    [ngClass]="{
+                      'bg-success text-white': inv.stockStatus === 'IN_STOCK',
+                      'bg-warning-subtle text-warning border-warning': inv.stockStatus === 'LOW_STOCK',
+                      'bg-danger-subtle text-danger border-danger': inv.stockStatus === 'OUT_OF_STOCK'
+                    }">
+                    {{ inv.stockStatus }}
+                  </span>
+                </td>
+                <td class="text-end px-4 position-relative">
+                  <div class="d-flex justify-content-end gap-2 align-items-center">
+                    
+                    <!-- Status Change Icon for LOGISTICS_OFFICER, MANAGER, ADMIN -->
+                      @if (['LOGISTICS_OFFICER', 'MANAGER', 'ADMIN'].includes(storage.getUser()!.role!)) {                      <div class="position-relative">
+                       <button class="btn btn-icon btn-light text-success" title="Change Stock Status" (click)="statusEditId === inv.id ? closeStatusEdit() : openStatusEdit(inv)">
+  <i class="bi bi-shield-check"></i>
+</button>
+                        @if (statusEditId === inv.id) {
+                          <div class="card shadow-lg border-0 p-3 status-floating-card" style="width: 220px; position: absolute; right: 0; top: 100%; margin-top: 5px; z-index: 99999;">
+                            <label class="form-label fw-bold small text-dark mb-1">Update Stock Status</label>
+                            <select class="form-select form-select-sm fs-8 mb-2" [(ngModel)]="statusEditValue">
+                              <option value="IN_STOCK">IN_STOCK</option>
+                              <option value="LOW_STOCK">LOW_STOCK</option>
+                              <option value="OUT_OF_STOCK">OUT_OF_STOCK</option>
+                            </select>
+                            <div class="d-flex gap-1">
+                              <button class="btn btn-sm btn-success flex-grow-1 fw-bold fs-8" [disabled]="statusSaving" (click)="changeStatus(inv)">
+                                @if (statusSaving) { <span class="spinner-border spinner-border-sm me-1"></span> } Save
+                              </button>
+                              <button class="btn btn-sm btn-outline-secondary fs-8" (click)="closeStatusEdit()">Cancel</button>
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    }
+
+                    <button class="btn btn-icon btn-light text-warning" title="Edit Parameters" (click)="edit(inv)">
+                      <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <button class="btn btn-icon btn-light text-danger" title="Purge Record" (click)="delete(inv.id)">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @empty {
+              <tr>
+                <td colspan="9" class="text-center py-5 text-muted font-monospace fs-8">
+                  <i class="bi bi-box-arrow-in-down-left fs-1 d-block mb-2 text-secondary"></i>No structural cargo metrics mapped inside current storage infrastructure.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-drawer shadow" [class.open]="isDrawerOpen">
+    <div class="drawer-header bg-indigo text-white p-4 d-flex justify-content-between align-items-center">
+      <h5 class="fw-bold mb-0">{{ isEdit ? 'Modify Storage Variables' : 'Allocate Inventory Ledger' }}</h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+    </div>
+
+    <div class="drawer-body p-4" style="overflow-y: auto; height: calc(100vh - 110px);">
+      <form #invForm="ngForm" (ngSubmit)="invForm.valid && save()">
+        
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Target Cargo Product Material</label>
+          <select class="form-select fs-7" [(ngModel)]="stock.productId" name="productId" required [disabled]="isEdit">
+            <option [value]="0">-- Select Catalog Product Vector --</option>
+            @for (p of products; track p.id) {
+              <option [value]="p.id">{{ p.name }} (Code: {{ p.productCode }})</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Operational Storage Warehouse Node</label>
+          <select class="form-select fs-7" [(ngModel)]="stock.warehouseId" name="warehouseId" required [disabled]="isEdit">
+            <option [value]="0">-- Select Storage Warehouse Location --</option>
+            @for (w of warehouses; track w.id) {
+              <option [value]="w.id">{{ w.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Quantity On Hand</label>
+            <input type="number" class="form-control fs-7 font-monospace fw-bold" [(ngModel)]="stock.quantityOnHand" name="quantityOnHand" min="0" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-uppercase text-secondary">Quantity Reserved</label>
+            <input type="number" class="form-control fs-7 font-monospace fw-bold text-danger" [(ngModel)]="stock.quantityReserved" name="quantityReserved" min="0" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Warehouse Rack/Row Location Status</label>
+          <input type="text" class="form-control fs-7" [(ngModel)]="stock.locationStatus" name="locationStatus" placeholder="e.g. Rack-B3, Row-4">
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold small text-uppercase text-secondary">Batch Expiration Boundary Date</label>
+          <input type="date" class="form-control fs-7 font-monospace" [(ngModel)]="stock.expiryDate" name="expiryDate">
+          <small class="text-muted fs-8 d-block mt-1">Leave empty if raw materials or non-perishable hardware node items.</small>
+        </div>
+
+        @if (isEdit) {
+          <div class="mb-4 bg-light p-3 border rounded">
+            <label class="form-label fw-bold small text-uppercase text-secondary d-block">Current Stock Tracking Status (Calculated)</label>
+            <span class="badge bg-indigo fs-8 text-uppercase">{{ stock.stockStatus }}</span>
+          </div>
+        }
+
+        <div class="drawer-footer d-flex gap-2 pt-2 border-top">
+          <button class="btn btn-indigo text-white flex-grow-1 py-2.5 d-flex align-items-center justify-content-center gap-2 fw-bold fs-7 text-uppercase" type="submit">
+            <i class="bi bi-hdd-network-fill"></i> {{ isEdit ? 'Update Stock Coordinates' : 'Commit Stock Ledger' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary px-3 fs-7 text-uppercase" (click)="reset()">Clear</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  @if (isDrawerOpen) {
+    <div class="drawer-backdrop" (click)="closeDrawer()"></div>
+  }
+
+</div>

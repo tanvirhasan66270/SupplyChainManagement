@@ -1,0 +1,238 @@
+.public-navbar {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  transition: all 0.25s ease;
+}
+
+/* Brand Link */
+.brand-link {
+  display: flex;
+  align-items: center;
+}
+
+.logo-box {
+  width: 40px;
+  height: 40px;
+  background-color: #0f1010;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 10px rgba(11, 94, 215, 0.25);
+}
+
+.brand-name {
+  font-size: 1.2rem;
+  color: #0f172a;
+}
+
+.brand-tagline {
+  font-size: 0.68rem;
+  letter-spacing: 0.3px;
+  display: block;
+}
+
+/* Nav Item Links */
+.nav-links-menu {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item-link {
+  text-decoration: none;
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.925rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-item-link:hover {
+  color: #0B5ED7;
+  background-color: #f1f5f9;
+}
+
+/* Dropdown Wrap & Panels */
+.dropdown-wrap {
+  position: relative;
+}
+
+.dropdown-panel {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  width: 220px;
+  background-color: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dropdown-item-link {
+  text-decoration: none;
+  color: #475569;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-item-link:hover {
+  background-color: #f8fafc;
+  color: #0B5ED7;
+  padding-left: 15px;
+}
+
+/* Mega Dropdown Panels */
+.mega-menu-panel {
+  position: absolute;
+  top: 42px;
+  left: -200px;
+  width: 820px;
+  background-color: #ffffff;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: dropdownFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.mega-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #0f172a;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.mega-list li {
+  margin-bottom: 6px;
+}
+
+.mega-list a {
+  text-decoration: none;
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.mega-list a:hover {
+  color: #0B5ED7;
+  transform: translateX(4px);
+}
+
+/* Modal and Backdrop overlays */
+.modal-backdrop-glass {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-wrap {
+  width: 550px;
+  max-width: 90%;
+  animation: modalScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Mobile responsive drawer */
+.mobile-drawer {
+  background-color: #ffffff;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+  animation: mobileSlideDown 0.25s ease-out forwards;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modalScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes mobileSlideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+/* Dark Mode Overrides */
+body.dark-theme .public-navbar {
+  background-color: #0f172a !important;
+  border-bottom-color: #1e293b !important;
+}
+
+body.dark-theme .brand-name {
+  color: #ffffff !important;
+}
+
+body.dark-theme .nav-item-link {
+  color: #cbd5e1 !important;
+}
+
+body.dark-theme .nav-item-link:hover {
+  background-color: #1e293b !important;
+  color: #3b82f6 !important;
+}
+
+body.dark-theme .dropdown-panel,
+body.dark-theme .mega-menu-panel,
+body.dark-theme .modal-wrap,
+body.dark-theme .mobile-drawer {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.dark-theme .dropdown-item-link,
+body.dark-theme .mega-list a,
+body.dark-theme .mega-title {
+  color: #94a3b8 !important;
+}
+
+body.dark-theme .dropdown-item-link:hover {
+  background-color: #334155 !important;
+  color: #3b82f6 !important;
+}
